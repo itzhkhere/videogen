@@ -1,0 +1,32 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Inter;font-weight:400;src:url(../assets/Inter-Regular.otf)}
+@font-face{font-family:Inter;font-weight:700;src:url(../assets/Inter-Bold.otf)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1280px;height:720px;overflow:hidden}
+body{font-family:Inter;background:#f8fafc;color:#0f172a}
+body{background:radial-gradient(circle at 30% 20%, #1e3a8a 0%, #0b1020 60%);color:#fff}
+.a{position:absolute;left:60px;top:60px;width:320px;height:200px;border-radius:24px;overflow:hidden;box-shadow:0 30px 60px rgba(0,0,0,.5);
+  animation:tilt 2s ease-in-out infinite alternate}
+.a img{width:100%;height:100%;display:block}
+.b{position:absolute;left:460px;top:60px;width:300px;height:200px;border-radius:50%;background:conic-gradient(from 0deg,#f43f5e,#f59e0b,#10b981,#3b82f6,#f43f5e);animation:spin 4s linear infinite}
+.c{position:absolute;left:860px;top:70px;width:340px;height:180px;background:linear-gradient(90deg,#22d3ee,#a855f7);border-radius:20px;transform:skewX(-12deg);opacity:.85}
+.d{position:absolute;left:60px;top:340px;width:520px;padding:28px;border-radius:20px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.25)}
+.d h2{font-size:34px;font-weight:700}.d p{margin-top:8px;font-size:18px;color:#cbd5e1;line-height:1.5}
+.e{position:absolute;left:660px;top:340px;display:flex;gap:16px;align-items:flex-end}
+.bar{width:56px;border-radius:12px 12px 4px 4px;background:linear-gradient(#fbbf24,#ea580c);animation:grow 1.2s cubic-bezier(.34,1.56,.64,1) both}
+.e .bar:nth-child(2){animation-delay:.1s}.e .bar:nth-child(3){animation-delay:.2s}.e .bar:nth-child(4){animation-delay:.3s}.e .bar:nth-child(5){animation-delay:.4s}
+svg{position:absolute;left:1060px;top:360px}
+@keyframes tilt{from{transform:rotate(-4deg) scale(.96)}to{transform:rotate(4deg) scale(1.04)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes grow{from{height:0}}
+</style></head><body>
+<div class="a"><img src="../assets/photo.png"></div>
+<div class="b"></div><div class="c"></div>
+<div class="d"><h2>Glass card</h2><p>Translucent fill, 1px border, radial page gradient, image with rounded overflow clip.</p></div>
+<div class="e"><div class="bar" style="height:80px"></div><div class="bar" style="height:150px"></div><div class="bar" style="height:110px"></div><div class="bar" style="height:220px"></div><div class="bar" style="height:180px"></div></div>
+<svg width="160" height="160" viewBox="0 0 160 160"><circle cx="80" cy="80" r="64" fill="none" stroke="#34d399" stroke-width="14" stroke-dasharray="300 402" stroke-linecap="round"/><text x="80" y="92" text-anchor="middle" font-size="34" font-weight="700" fill="#fff" font-family="Inter">75%</text></svg>
+<script>
+// The page contract: window.seek(ms) shows the page at ms. Pause every CSS animation there.
+window.seek = (ms) => { for (const a of document.getAnimations()) { a.pause(); a.currentTime = ms } }
+</script>
+</body></html>

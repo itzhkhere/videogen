@@ -1,0 +1,12 @@
+[graphify extract] --force --code-only: full AST re-scan, existing semantic layer preserved (no semantic pass this run)
+[graphify extract] --force: full re-scan, semantic cache reads skipped
+[graphify extract] scanning /workspace/scratch/c8e044c78604/canvas-html
+[graphify extract] --code-only: skipping 15 non-code file(s) (14 docs, 0 papers, 1 images) — no LLM extraction
+[graphify extract] found 59 code, 0 docs, 0 papers, 0 images
+[graphify extract] 2 file(s) not classified (no supported extension or shebang), skipped: .graphifyignore, model_b.rs.pending
+[graphify extract] AST extraction on 59 code files...
+  warning: 9 code file(s) yielded no symbols (0.01 MB) — a data file, or source this extractor models no symbols for: Cargo.toml, experiments/deno-canvas-bridge/Cargo.toml, experiments/deno-core-smoke/Cargo.toml, experiments/deno-napi-coexist/Cargo.toml, experiments/phase2/addon/Cargo.toml (+4 more)
+[graphify] Replaced 447 node(s) from re-extracted source file(s).
+[graphify extract] wrote /workspace/scratch/c8e044c78604/canvas-html/experiments/phase2/evidence/graphify/graphify-out/graph.json: 539 nodes, 843 edges, 32 communities
+[graphify extract] wrote /workspace/scratch/c8e044c78604/canvas-html/experiments/phase2/evidence/graphify/graphify-out/.graphify_analysis.json
+[graphify extract] next: run `graphify cluster-only /workspace/scratch/c8e044c78604/canvas-html/experiments/phase2/evidence/graphify` to generate GRAPH_REPORT.md and name communities

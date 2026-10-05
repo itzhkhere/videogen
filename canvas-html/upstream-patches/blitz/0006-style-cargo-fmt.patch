@@ -1,0 +1,172 @@
+From 17b5c86058847927ca4f76b7e010c78b8941edb5 Mon Sep 17 00:00:00 2001
+From: local <l@l>
+Date: Mon, 5 Oct 2026 11:06:43 +0000
+Subject: [PATCH 6/6] style: cargo fmt
+
+---
+ packages/blitz-dom/src/layout/construct.rs    | 30 +++++++++++++++----
+ packages/blitz-paint/src/render/background.rs | 20 +++++++++++--
+ packages/blitz-paint/src/text.rs              | 19 +++++++++---
+ 3 files changed, 57 insertions(+), 12 deletions(-)
+
+diff --git a/packages/blitz-dom/src/layout/construct.rs b/packages/blitz-dom/src/layout/construct.rs
+index 5b5a2ae..516a4b4 100644
+--- a/packages/blitz-dom/src/layout/construct.rs
++++ b/packages/blitz-dom/src/layout/construct.rs
+@@ -1096,7 +1096,13 @@ pub(crate) fn build_inline_layout_into(
+ 
+     let at_word_start = &mut true;
+     if let Some(before_id) = root_node.before() {
+-        build_inline_layout_recursive(&mut builder, nodes, before_id, text_transform, at_word_start);
++        build_inline_layout_recursive(
++            &mut builder,
++            nodes,
++            before_id,
++            text_transform,
++            at_word_start,
++        );
+     }
+     for child_id in root_node.children.iter().copied() {
+         build_inline_layout_recursive(&mut builder, nodes, child_id, text_transform, at_word_start);
+@@ -1172,7 +1178,13 @@ pub(crate) fn build_inline_layout_into(
+                         );
+                         for child_id in node.children.iter().copied() {
+                             // node.remove_damage(CONSTRUCT_DESCENDENT | CONSTRUCT_FC | CONSTRUCT_BOX);
+-                            build_inline_layout_recursive(builder, nodes, child_id, text_transform, at_word_start);
++                            build_inline_layout_recursive(
++                                builder,
++                                nodes,
++                                child_id,
++                                text_transform,
++                                at_word_start,
++                            );
+                         }
+                         builder.pop_style_span();
+                     }
+@@ -1221,7 +1233,8 @@ pub(crate) fn build_inline_layout_into(
+                                     builder,
+                                     nodes,
+                                     before_id,
+-                                    text_transform, at_word_start,
++                                    text_transform,
++                                    at_word_start,
+                                 );
+                             }
+ 
+@@ -1230,7 +1243,8 @@ pub(crate) fn build_inline_layout_into(
+                                     builder,
+                                     nodes,
+                                     child_id,
+-                                    text_transform, at_word_start,
++                                    text_transform,
++                                    at_word_start,
+                                 );
+                             }
+                             if let Some(after_id) = node.after() {
+@@ -1238,7 +1252,8 @@ pub(crate) fn build_inline_layout_into(
+                                     builder,
+                                     nodes,
+                                     after_id,
+-                                    text_transform, at_word_start,
++                                    text_transform,
++                                    at_word_start,
+                                 );
+                             }
+ 
+@@ -1340,6 +1355,9 @@ mod capitalize_tests {
+         assert_eq!(capitalize_words("hello wide", &mut start), "Hello Wide");
+         // "wide" + "r world": the second node continues the word "wider"
+         assert_eq!(capitalize_words("r world", &mut start), "r World");
+-        assert_eq!(capitalize_words(" (quoted) well-known", &mut start), " (Quoted) Well-known");
++        assert_eq!(
++            capitalize_words(" (quoted) well-known", &mut start),
++            " (Quoted) Well-known"
++        );
+     }
+ }
+diff --git a/packages/blitz-paint/src/render/background.rs b/packages/blitz-paint/src/render/background.rs
+index 5aa5931..8756829 100644
+--- a/packages/blitz-paint/src/render/background.rs
++++ b/packages/blitz-paint/src/render/background.rs
+@@ -149,9 +149,25 @@ impl ElementCx<'_, '_> {
+             && self.element.inline_layout_data.is_some();
+         if clip_to_text {
+             let bounds = self.frame.border_box_path();
+-            scene.push_layer(Fill::NonZero, Mix::Normal, 1.0, self.transform, &bounds, None, None);
++            scene.push_layer(
++                Fill::NonZero,
++                Mix::Normal,
++                1.0,
++                self.transform,
++                &bounds,
++                None,
++                None,
++            );
+             self.draw_background_layers(scene);
+-            scene.push_layer(Fill::NonZero, Compose::DestIn, 1.0, self.transform, &bounds, None, None);
++            scene.push_layer(
++                Fill::NonZero,
++                Compose::DestIn,
++                1.0,
++                self.transform,
++                &bounds,
++                None,
++                None,
++            );
+             self.draw_text_glyph_mask(scene);
+             scene.pop_layer();
+             scene.pop_layer();
+diff --git a/packages/blitz-paint/src/text.rs b/packages/blitz-paint/src/text.rs
+index addf1db..4dfa7ad 100644
+--- a/packages/blitz-paint/src/text.rs
++++ b/packages/blitz-paint/src/text.rs
+@@ -585,7 +585,10 @@ pub(crate) fn stroke_text<'a>(
+         // `text-overflow`: when this line runs past the end of the clipping box, the glyphs
+         // that do not fit together with the ellipsis are dropped and the ellipsis is drawn
+         // after the last one that does (left-to-right lines only for now).
+-        let mut overflow_cut = ellipsis.as_ref().filter(|e| e.line_overflows(&line)).cloned();
++        let mut overflow_cut = ellipsis
++            .as_ref()
++            .filter(|e| e.line_overflows(&line))
++            .cloned();
+         // `text-shadow` is painted below all of the line's text.
+         draw_line_text_shadows(scene, &line, doc, transform, scale, overflow_cut.clone());
+         // Decorations accumulated for this line, keyed by decorating box, so each box is
+@@ -863,7 +866,10 @@ fn draw_line_text_shadows(
+         if shadows.is_empty() {
+             continue;
+         }
+-        let glyphs: Vec<anyrender::Glyph> = glyphs.into_iter().chain(marker.unwrap_or_default()).collect();
++        let glyphs: Vec<anyrender::Glyph> = glyphs
++            .into_iter()
++            .chain(marker.unwrap_or_default())
++            .collect();
+         let synthesis = run.synthesis();
+         let glyph_xform = synthesis
+             .skew()
+@@ -884,7 +890,10 @@ fn draw_line_text_shadows(
+         );
+ 
+         for shadow in shadows.iter().rev() {
+-            let color = shadow.color.resolve_to_absolute(&current_color).as_srgb_color();
++            let color = shadow
++                .color
++                .resolve_to_absolute(&current_color)
++                .as_srgb_color();
+             let dx = shadow.horizontal.px() as f64 * scale;
+             let dy = shadow.vertical.px() as f64 * scale;
+             let blur = shadow.blur.px() as f64 * scale;
+@@ -900,7 +909,9 @@ fn draw_line_text_shadows(
+                     1.0,
+                     shadow_transform,
+                     &bounds,
+-                    Some(Arc::new(Filter::linear_list(std::iter::once(FilterEffect::blur(std_dev as f32))))),
++                    Some(Arc::new(Filter::linear_list(std::iter::once(
++                        FilterEffect::blur(std_dev as f32),
++                    )))),
+                     None,
+                 );
+             }
+-- 
+2.43.0
+

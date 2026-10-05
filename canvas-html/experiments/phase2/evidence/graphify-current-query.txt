@@ -1,0 +1,302 @@
+Graph: canvas-html/experiments/phase2/evidence/graphify/graphify-out/graph.json (539 nodes) | Traversal: BFS depth=2 | Start: ['DomHost', 'DenoRuntime', 'ScriptRuntime', 'Document', 'ExperimentalDenoRenderer'] | 112 nodes found
+
+[i] Complete answer over budget: all 112 nodes and 186 edges shown (~9536 tokens vs the requested ~5000-token budget). Edges are never dropped once every node fits, so this is already the full answer — raising --budget further will not shrink it. Narrow with context_filter=['call'] or use get_node for a specific symbol to reduce size instead.
+
+NODE DomHost [src=experiments/phase2/host/src/lib.rs loc=L4 community=Community 2]
+NODE DenoRuntime [src=experiments/phase2/engine/src/lib.rs loc=L57 community=Community 2]
+NODE ScriptRuntime [src=experiments/phase2/host/src/lib.rs loc=L8 community=Community 2]
+NODE Document [src=experiments/phase2/addon/src/document.rs loc=L15 community=Community 5]
+NODE ExperimentalDenoRenderer [src=experiments/phase2/addon/src/lib.rs loc=L37 community=Community 3]
+NODE addon/src/lib.rs [src=experiments/phase2/addon/src/lib.rs loc=L1 community=Community 3]
+NODE engine/src/lib.rs [src=experiments/phase2/engine/src/lib.rs loc=L1 community=Community 2]
+NODE document.rs [src=experiments/phase2/addon/src/document.rs loc=L1 community=Community 5]
+NODE Watchdog [src=experiments/phase2/engine/src/lib.rs loc=L24 community=Community 2]
+NODE .request() [src=experiments/phase2/addon/src/lib.rs loc=L39 community=Community 3]
+NODE Runtime [src=experiments/runtime-poc/src/lib.rs loc=L33 community=Community 7]
+NODE .bounded() [src=experiments/phase2/engine/src/lib.rs loc=L76 community=Community 2]
+NODE Renderer [src=experiments/phase2/addon/src/lib.rs loc=L16 community=Community 3]
+NODE Command [src=experiments/phase2/addon/src/lib.rs loc=L33 community=Community 3]
+NODE .render() [src=experiments/phase2/addon/src/lib.rs loc=L88 community=Community 3]
+NODE .advance_to() [src=experiments/phase2/engine/src/lib.rs loc=L105 community=Community 2]
+NODE .eval_json() [src=experiments/phase2/engine/src/lib.rs loc=L103 community=Community 2]
+NODE .new() [src=experiments/phase2/engine/src/lib.rs loc=L65 community=Community 2]
+NODE .raw_eval() [src=experiments/phase2/engine/src/lib.rs loc=L83 community=Community 2]
+NODE .dispatch() [src=experiments/phase2/addon/src/document.rs loc=L51 community=Community 5]
+NODE .eval() [src=experiments/phase2/addon/src/lib.rs loc=L84 community=Community 3]
+NODE .new() [src=experiments/phase2/addon/src/lib.rs loc=L54 community=Community 3]
+NODE .stats() [src=experiments/phase2/addon/src/lib.rs loc=L92 community=Community 3]
+NODE .stop() [src=experiments/phase2/addon/src/lib.rs loc=L44 community=Community 3]
+NODE .raw_drain() [src=experiments/phase2/engine/src/lib.rs loc=L90 community=Community 2]
+NODE host/src/lib.rs [src=experiments/phase2/host/src/lib.rs loc=L1 community=Community 2]
+NODE .new() [src=experiments/phase2/addon/src/document.rs loc=L21 community=Community 5]
+NODE .style() [src=experiments/phase2/addon/src/document.rs loc=L44 community=Community 5]
+NODE .drop() [src=experiments/phase2/addon/src/lib.rs loc=L97 community=Community 3]
+NODE .seek() [src=experiments/phase2/addon/src/lib.rs loc=L86 community=Community 3]
+NODE .drain_jobs() [src=experiments/phase2/engine/src/lib.rs loc=L104 community=Community 2]
+NODE .render() [src=experiments/phase2/addon/src/document.rs loc=L31 community=Community 5]
+NODE HtmlDocument [src= loc= community=Community 5]
+NODE SkiaImageRenderer [src= loc= community=Community 5]
+NODE .close() [src=experiments/phase2/addon/src/lib.rs loc=L94 community=Community 3]
+NODE .js_errors() [src=experiments/phase2/addon/src/lib.rs loc=L90 community=Community 3]
+NODE .drop() [src=experiments/phase2/engine/src/lib.rs loc=L120 community=Community 2]
+NODE .heap_stats() [src=experiments/phase2/engine/src/lib.rs loc=L95 community=Community 2]
+NODE .set_time() [src=experiments/phase2/engine/src/lib.rs loc=L91 community=Community 2]
+NODE State [src=experiments/phase2/engine/src/lib.rs loc=L11 community=Community 2]
+NODE .dispatch() [src=experiments/phase2/host/src/lib.rs loc=L5 community=Community 2]
+NODE .eval_json() [src=experiments/phase2/host/src/lib.rs loc=L9 community=Community 2]
+NODE ThreadId [src= loc= community=Community 3]
+NODE .set_time() [src=experiments/phase2/addon/src/document.rs loc=L50 community=Community 5]
+NODE JoinHandle [src= loc= community=Community 3]
+NODE JsRuntime [src= loc= community=Community 2]
+NODE .set_time() [src=experiments/phase2/host/src/lib.rs loc=L6 community=Community 2]
+NODE .advance_to() [src=experiments/phase2/host/src/lib.rs loc=L10 community=Community 2]
+NODE .drain_jobs() [src=experiments/phase2/host/src/lib.rs loc=L11 community=Community 2]
+NODE Sender [src= loc= community=Community 3]
+NODE runtime-poc/src/lib.rs [src=experiments/runtime-poc/src/lib.rs loc=L1 community=Community 7]
+NODE Kind [src=experiments/phase2/addon/src/lib.rs loc=L31 community=Community 3]
+NODE Response [src=experiments/phase2/addon/src/lib.rs loc=L32 community=Community 3]
+NODE .handle() [src=experiments/phase2/addon/src/lib.rs loc=L19 community=Community 3]
+NODE anyhow [src= loc= community=Community 5]
+NODE Value [src= loc= community=Community 3]
+NODE .eval() [src=experiments/runtime-poc/src/lib.rs loc=L48 community=Community 7]
+NODE .new() [src=experiments/runtime-poc/src/lib.rs loc=L36 community=Community 7]
+NODE Value [src= loc= community=Community 2]
+NODE .advance_to() [src=experiments/runtime-poc/src/lib.rs loc=L66 community=Community 7]
+NODE std [src= loc= community=Community 5]
+NODE anyrender [src= loc= community=Community 5]
+NODE blitz_dom [src= loc= community=Community 5]
+NODE .remember() [src=experiments/phase2/addon/src/lib.rs loc=L18 community=Community 3]
+NODE op_phase2_dom() [src=experiments/phase2/engine/src/lib.rs loc=L16 community=Community 2]
+NODE .new() [src=experiments/phase2/engine/src/lib.rs loc=L26 community=Community 2]
+NODE Value [src= loc= community=Community 2]
+NODE .drain_jobs() [src=experiments/runtime-poc/src/lib.rs loc=L56 community=Community 7]
+NODE napi [src= loc= community=Community 20]
+NODE paint_scene [src= loc= community=Community 5]
+NODE serde_json [src= loc= community=Community 2]
+NODE shell [src= loc= community=Community 5]
+NODE deno_core [src= loc= community=Community 7]
+NODE EXECUTION_THREADS [src=experiments/phase2/addon/src/lib.rs loc=L12 community=Community 3]
+NODE ExperimentalOptions [src=experiments/phase2/addon/src/lib.rs loc=L15 community=Community 3]
+NODE Eval [src=experiments/phase2/addon/src/lib.rs loc=L31 community=Community 3]
+NODE Render [src=experiments/phase2/addon/src/lib.rs loc=L31 community=Community 3]
+NODE Seek [src=experiments/phase2/addon/src/lib.rs loc=L31 community=Community 3]
+NODE Stats [src=experiments/phase2/addon/src/lib.rs loc=L31 community=Community 3]
+NODE lifecycle_stats() [src=experiments/phase2/addon/src/lib.rs loc=L107 community=Community 3]
+NODE native_memory() [src=experiments/phase2/addon/src/lib.rs loc=L109 community=Community 3]
+NODE OPEN [src=experiments/phase2/addon/src/lib.rs loc=L11 community=Community 3]
+NODE PLATFORM_INITIALIZED [src=experiments/phase2/addon/src/lib.rs loc=L13 community=Community 3]
+NODE ThreadCount [src=experiments/phase2/addon/src/lib.rs loc=L34 community=Community 3]
+NODE counters() [src=experiments/phase2/engine/src/lib.rs loc=L126 community=Community 2]
+NODE CREATED [src=experiments/phase2/engine/src/lib.rs loc=L8 community=Community 2]
+NODE Deadline [src=experiments/phase2/engine/src/lib.rs loc=L23 community=Community 2]
+NODE DROPPED [src=experiments/phase2/engine/src/lib.rs loc=L9 community=Community 2]
+NODE op_phase2_now() [src=experiments/phase2/engine/src/lib.rs loc=L13 community=Community 2]
+NODE .finish() [src=experiments/phase2/engine/src/lib.rs loc=L48 community=Community 2]
+NODE .start() [src=experiments/phase2/engine/src/lib.rs loc=L47 community=Community 2]
+NODE WATCHDOGS [src=experiments/phase2/engine/src/lib.rs loc=L10 community=Community 2]
+NODE .drop() [src=experiments/runtime-poc/src/lib.rs loc=L87 community=Community 7]
+NODE .take_mutations() [src=experiments/runtime-poc/src/lib.rs loc=L62 community=Community 7]
+NODE JsErrorBox [src= loc= community=Community 2]
+NODE parley [src= loc= community=Community 5]
+NODE peniko [src= loc= community=Community 5]
+NODE phase2_host [src= loc= community=Community 2]
+NODE Condvar [src= loc= community=Community 2]
+NODE Value [src= loc= community=Community 5]
+NODE err() [src=experiments/phase2/addon/src/lib.rs loc=L103 community=Community 3]
+NODE init_platform() [src=experiments/phase2/addon/src/lib.rs loc=L105 community=Community 3]
+NODE Buffer [src= loc= community=Community 3]
+NODE init_platform() [src=experiments/phase2/engine/src/lib.rs loc=L127 community=Community 2]
+NODE JoinHandle [src= loc= community=Community 2]
+NODE Mutex [src= loc= community=Community 2]
+NODE T [src= loc= community=Community 2]
+NODE .drop() [src=experiments/phase2/engine/src/lib.rs loc=L51 community=Community 2]
+NODE JsRuntime [src= loc= community=Community 7]
+NODE NodeId [src= loc= community=Community 5]
+NODE result [src= loc= community=Community 2]
+NODE SyncSender [src= loc= community=Community 3]
+EDGE ExperimentalDenoRenderer --references [EXTRACTED context=field]--> ThreadId at=experiments/phase2/addon/src/lib.rs:L37
+EDGE ExperimentalDenoRenderer --references [EXTRACTED context=generic_arg]--> Command at=experiments/phase2/addon/src/lib.rs:L37
+EDGE ExperimentalDenoRenderer --references [EXTRACTED context=generic_arg]--> JoinHandle at=experiments/phase2/addon/src/lib.rs:L37
+EDGE ExperimentalDenoRenderer --references [EXTRACTED context=generic_arg]--> Sender at=experiments/phase2/addon/src/lib.rs:L37
+EDGE addon/src/lib.rs --contains [EXTRACTED]--> ExperimentalDenoRenderer at=experiments/phase2/addon/src/lib.rs:L37
+EDGE ExperimentalDenoRenderer --method [EXTRACTED]--> .request() at=experiments/phase2/addon/src/lib.rs:L39
+EDGE ExperimentalDenoRenderer --method [EXTRACTED]--> .stop() at=experiments/phase2/addon/src/lib.rs:L44
+EDGE ExperimentalDenoRenderer --method [EXTRACTED]--> .new() at=experiments/phase2/addon/src/lib.rs:L54
+EDGE ExperimentalDenoRenderer --method [EXTRACTED]--> .eval() at=experiments/phase2/addon/src/lib.rs:L84
+EDGE ExperimentalDenoRenderer --method [EXTRACTED]--> .seek() at=experiments/phase2/addon/src/lib.rs:L86
+EDGE ExperimentalDenoRenderer --method [EXTRACTED]--> .render() at=experiments/phase2/addon/src/lib.rs:L88
+EDGE ExperimentalDenoRenderer --method [EXTRACTED]--> .js_errors() at=experiments/phase2/addon/src/lib.rs:L90
+EDGE ExperimentalDenoRenderer --method [EXTRACTED]--> .stats() at=experiments/phase2/addon/src/lib.rs:L92
+EDGE ExperimentalDenoRenderer --method [EXTRACTED]--> .close() at=experiments/phase2/addon/src/lib.rs:L94
+EDGE ExperimentalDenoRenderer --method [EXTRACTED]--> .drop() at=experiments/phase2/addon/src/lib.rs:L97
+EDGE Renderer --references [EXTRACTED context=field]--> DenoRuntime at=experiments/phase2/addon/src/lib.rs:L16
+EDGE DenoRuntime --references [EXTRACTED context=field]--> Runtime at=experiments/phase2/engine/src/lib.rs:L59
+EDGE DenoRuntime --references [EXTRACTED context=generic_arg]--> JsRuntime at=experiments/phase2/engine/src/lib.rs:L58
+EDGE DenoRuntime --references [EXTRACTED context=generic_arg]--> Watchdog at=experiments/phase2/engine/src/lib.rs:L60
+EDGE addon/src/lib.rs --imports_from [EXTRACTED context=import]--> DenoRuntime at=experiments/phase2/addon/src/lib.rs:L6
+EDGE engine/src/lib.rs --contains [EXTRACTED]--> DenoRuntime at=experiments/phase2/engine/src/lib.rs:L57
+EDGE DenoRuntime --method [EXTRACTED]--> .eval_json() at=experiments/phase2/engine/src/lib.rs:L103
+EDGE DenoRuntime --method [EXTRACTED]--> .drain_jobs() at=experiments/phase2/engine/src/lib.rs:L104
+EDGE DenoRuntime --method [EXTRACTED]--> .advance_to() at=experiments/phase2/engine/src/lib.rs:L105
+EDGE DenoRuntime --method [EXTRACTED]--> .drop() at=experiments/phase2/engine/src/lib.rs:L120
+EDGE DenoRuntime --method [EXTRACTED]--> .new() at=experiments/phase2/engine/src/lib.rs:L65
+EDGE DenoRuntime --method [EXTRACTED]--> .bounded() at=experiments/phase2/engine/src/lib.rs:L76
+EDGE DenoRuntime --method [EXTRACTED]--> .raw_eval() at=experiments/phase2/engine/src/lib.rs:L83
+EDGE DenoRuntime --method [EXTRACTED]--> .raw_drain() at=experiments/phase2/engine/src/lib.rs:L90
+EDGE DenoRuntime --method [EXTRACTED]--> .set_time() at=experiments/phase2/engine/src/lib.rs:L91
+EDGE DenoRuntime --method [EXTRACTED]--> .heap_stats() at=experiments/phase2/engine/src/lib.rs:L95
+EDGE .new() --references [EXTRACTED context=generic_arg]--> DomHost at=experiments/phase2/engine/src/lib.rs:L65
+EDGE State --references [EXTRACTED context=generic_arg]--> DomHost at=experiments/phase2/engine/src/lib.rs:L11
+EDGE document.rs --imports_from [EXTRACTED context=import]--> DomHost at=experiments/phase2/addon/src/document.rs:L11
+EDGE host/src/lib.rs --contains [EXTRACTED]--> DomHost at=experiments/phase2/host/src/lib.rs:L4
+EDGE DomHost --method [EXTRACTED]--> .dispatch() at=experiments/phase2/host/src/lib.rs:L5
+EDGE DomHost --method [EXTRACTED]--> .set_time() at=experiments/phase2/host/src/lib.rs:L6
+EDGE Document --references [EXTRACTED context=field]--> HtmlDocument at=experiments/phase2/addon/src/document.rs:L16
+EDGE Document --references [EXTRACTED context=field]--> SkiaImageRenderer at=experiments/phase2/addon/src/document.rs:L17
+EDGE Renderer --references [EXTRACTED context=generic_arg]--> Document at=experiments/phase2/addon/src/lib.rs:L16
+EDGE addon/src/lib.rs --imports_from [EXTRACTED context=import]--> Document at=experiments/phase2/addon/src/lib.rs:L3
+EDGE document.rs --contains [EXTRACTED]--> Document at=experiments/phase2/addon/src/document.rs:L15
+EDGE Document --method [EXTRACTED]--> .new() at=experiments/phase2/addon/src/document.rs:L21
+EDGE Document --method [EXTRACTED]--> .render() at=experiments/phase2/addon/src/document.rs:L31
+EDGE Document --method [EXTRACTED]--> .style() at=experiments/phase2/addon/src/document.rs:L44
+EDGE Document --method [EXTRACTED]--> .set_time() at=experiments/phase2/addon/src/document.rs:L50
+EDGE Document --method [EXTRACTED]--> .dispatch() at=experiments/phase2/addon/src/document.rs:L51
+EDGE host/src/lib.rs --contains [EXTRACTED]--> ScriptRuntime at=experiments/phase2/host/src/lib.rs:L8
+EDGE ScriptRuntime --method [EXTRACTED]--> .advance_to() at=experiments/phase2/host/src/lib.rs:L10
+EDGE ScriptRuntime --method [EXTRACTED]--> .drain_jobs() at=experiments/phase2/host/src/lib.rs:L11
+EDGE ScriptRuntime --method [EXTRACTED]--> .eval_json() at=experiments/phase2/host/src/lib.rs:L9
+EDGE .seek() --references [EXTRACTED context=constructor]--> Seek at=experiments/phase2/addon/src/lib.rs:L86
+EDGE Renderer --method [EXTRACTED]--> .remember() at=experiments/phase2/addon/src/lib.rs:L18
+EDGE Renderer --method [EXTRACTED]--> .handle() at=experiments/phase2/addon/src/lib.rs:L19
+EDGE .eval_json() --references [EXTRACTED context=generic_arg]--> Value at=experiments/phase2/host/src/lib.rs:L9
+EDGE .new() --calls [EXTRACTED context=call]--> .new() at=experiments/phase2/engine/src/lib.rs:L27
+EDGE .request() --references [EXTRACTED context=generic_arg]--> Response at=experiments/phase2/addon/src/lib.rs:L39
+EDGE .request() --references [EXTRACTED context=parameter_type]--> Kind at=experiments/phase2/addon/src/lib.rs:L39
+EDGE .heap_stats() --references [EXTRACTED context=return_type]--> Value at=experiments/phase2/engine/src/lib.rs:L95
+EDGE document.rs --imports_from [EXTRACTED context=import]--> peniko at=experiments/phase2/addon/src/document.rs:L10
+EDGE document.rs --imports_from [EXTRACTED context=import]--> serde_json at=experiments/phase2/addon/src/document.rs:L12
+EDGE document.rs --imports_from [EXTRACTED context=import]--> std at=experiments/phase2/addon/src/document.rs:L13
+EDGE document.rs --imports_from [EXTRACTED context=import]--> anyhow at=experiments/phase2/addon/src/document.rs:L2
+EDGE document.rs --imports_from [EXTRACTED context=import]--> anyrender at=experiments/phase2/addon/src/document.rs:L3
+EDGE document.rs --imports_from [EXTRACTED context=import]--> blitz_dom at=experiments/phase2/addon/src/document.rs:L5
+EDGE document.rs --imports_from [EXTRACTED context=import]--> paint_scene at=experiments/phase2/addon/src/document.rs:L7
+EDGE document.rs --imports_from [EXTRACTED context=import]--> shell at=experiments/phase2/addon/src/document.rs:L8
+EDGE document.rs --imports_from [EXTRACTED context=import]--> parley at=experiments/phase2/addon/src/document.rs:L9
+EDGE .eval() --references [EXTRACTED context=constructor]--> Eval at=experiments/phase2/addon/src/lib.rs:L84
+EDGE .eval() --references [EXTRACTED context=generic_arg]--> Value at=experiments/phase2/addon/src/lib.rs:L84
+EDGE host/src/lib.rs --imports_from [EXTRACTED context=import]--> result at=experiments/phase2/host/src/lib.rs:L2
+EDGE host/src/lib.rs --imports_from [EXTRACTED context=import]--> Value at=experiments/phase2/host/src/lib.rs:L3
+EDGE .stats() --references [EXTRACTED context=constructor]--> Stats at=experiments/phase2/addon/src/lib.rs:L92
+EDGE .stats() --references [EXTRACTED context=generic_arg]--> Value at=experiments/phase2/addon/src/lib.rs:L92
+EDGE .raw_eval() --references [EXTRACTED context=generic_arg]--> Value at=experiments/phase2/engine/src/lib.rs:L83
+EDGE .dispatch() --references [EXTRACTED context=generic_arg]--> Value at=experiments/phase2/host/src/lib.rs:L5
+EDGE .new() --calls [EXTRACTED context=call]--> .handle() at=experiments/phase2/addon/src/lib.rs:L74
+EDGE .new() --references [EXTRACTED context=parameter_type]--> ExperimentalOptions at=experiments/phase2/addon/src/lib.rs:L54
+EDGE .style() --references [EXTRACTED context=parameter_type]--> NodeId at=experiments/phase2/addon/src/document.rs:L44
+EDGE Runtime --references [EXTRACTED context=generic_arg]--> JsRuntime at=experiments/runtime-poc/src/lib.rs:L33
+EDGE runtime-poc/src/lib.rs --contains [EXTRACTED]--> Runtime at=experiments/runtime-poc/src/lib.rs:L33
+EDGE Runtime --method [EXTRACTED]--> .new() at=experiments/runtime-poc/src/lib.rs:L36
+EDGE Runtime --method [EXTRACTED]--> .eval() at=experiments/runtime-poc/src/lib.rs:L48
+EDGE Runtime --method [EXTRACTED]--> .drain_jobs() at=experiments/runtime-poc/src/lib.rs:L56
+EDGE Runtime --method [EXTRACTED]--> .take_mutations() at=experiments/runtime-poc/src/lib.rs:L62
+EDGE Runtime --method [EXTRACTED]--> .advance_to() at=experiments/runtime-poc/src/lib.rs:L66
+EDGE Runtime --method [EXTRACTED]--> .drop() at=experiments/runtime-poc/src/lib.rs:L87
+EDGE engine/src/lib.rs --imports_from [EXTRACTED context=import]--> anyhow at=experiments/phase2/engine/src/lib.rs:L1
+EDGE engine/src/lib.rs --imports_from [EXTRACTED context=import]--> deno_core at=experiments/phase2/engine/src/lib.rs:L2
+EDGE engine/src/lib.rs --imports_from [EXTRACTED context=import]--> JsErrorBox at=experiments/phase2/engine/src/lib.rs:L3
+EDGE engine/src/lib.rs --imports_from [EXTRACTED context=import]--> phase2_host at=experiments/phase2/engine/src/lib.rs:L4
+EDGE engine/src/lib.rs --imports_from [EXTRACTED context=import]--> serde_json at=experiments/phase2/engine/src/lib.rs:L5
+EDGE engine/src/lib.rs --imports_from [EXTRACTED context=import]--> std at=experiments/phase2/engine/src/lib.rs:L6
+EDGE engine/src/lib.rs --contains [EXTRACTED]--> WATCHDOGS at=experiments/phase2/engine/src/lib.rs:L10
+EDGE engine/src/lib.rs --contains [EXTRACTED]--> counters() at=experiments/phase2/engine/src/lib.rs:L126
+EDGE engine/src/lib.rs --contains [EXTRACTED]--> init_platform() at=experiments/phase2/engine/src/lib.rs:L127
+EDGE engine/src/lib.rs --contains [EXTRACTED]--> op_phase2_now() at=experiments/phase2/engine/src/lib.rs:L13
+EDGE engine/src/lib.rs --contains [EXTRACTED]--> op_phase2_dom() at=experiments/phase2/engine/src/lib.rs:L16
+EDGE engine/src/lib.rs --contains [EXTRACTED]--> Deadline at=experiments/phase2/engine/src/lib.rs:L23
+EDGE engine/src/lib.rs --contains [EXTRACTED]--> CREATED at=experiments/phase2/engine/src/lib.rs:L8
+EDGE engine/src/lib.rs --contains [EXTRACTED]--> DROPPED at=experiments/phase2/engine/src/lib.rs:L9
+EDGE .eval_json() --references [EXTRACTED context=generic_arg]--> Value at=experiments/phase2/engine/src/lib.rs:L103
+EDGE .dispatch() --references [EXTRACTED context=generic_arg]--> Value at=experiments/phase2/addon/src/document.rs:L51
+EDGE .bounded() --calls [EXTRACTED context=call]--> .start() at=experiments/phase2/engine/src/lib.rs:L78
+EDGE .bounded() --calls [EXTRACTED context=call]--> .finish() at=experiments/phase2/engine/src/lib.rs:L80
+EDGE .bounded() --references [EXTRACTED context=generic_arg]--> T at=experiments/phase2/engine/src/lib.rs:L76
+EDGE .handle() --calls [EXTRACTED context=call]--> .render() at=experiments/phase2/addon/src/lib.rs:L24
+EDGE .render() --references [EXTRACTED context=constructor]--> Render at=experiments/phase2/addon/src/lib.rs:L88
+EDGE .render() --references [EXTRACTED context=generic_arg]--> Buffer at=experiments/phase2/addon/src/lib.rs:L88
+EDGE addon/src/lib.rs --imports_from [EXTRACTED context=import]--> anyhow at=experiments/phase2/addon/src/lib.rs:L2
+EDGE addon/src/lib.rs --imports_from [EXTRACTED context=import]--> napi at=experiments/phase2/addon/src/lib.rs:L5
+EDGE addon/src/lib.rs --imports_from [EXTRACTED context=import]--> phase2_host at=experiments/phase2/addon/src/lib.rs:L7
+EDGE addon/src/lib.rs --imports_from [EXTRACTED context=import]--> serde_json at=experiments/phase2/addon/src/lib.rs:L8
+EDGE addon/src/lib.rs --imports_from [EXTRACTED context=import]--> std at=experiments/phase2/addon/src/lib.rs:L9
+EDGE addon/src/lib.rs --contains [EXTRACTED]--> err() at=experiments/phase2/addon/src/lib.rs:L103
+EDGE addon/src/lib.rs --contains [EXTRACTED]--> init_platform() at=experiments/phase2/addon/src/lib.rs:L105
+EDGE addon/src/lib.rs --contains [EXTRACTED]--> lifecycle_stats() at=experiments/phase2/addon/src/lib.rs:L107
+EDGE addon/src/lib.rs --contains [EXTRACTED]--> native_memory() at=experiments/phase2/addon/src/lib.rs:L109
+EDGE addon/src/lib.rs --contains [EXTRACTED]--> OPEN at=experiments/phase2/addon/src/lib.rs:L11
+EDGE addon/src/lib.rs --contains [EXTRACTED]--> EXECUTION_THREADS at=experiments/phase2/addon/src/lib.rs:L12
+EDGE addon/src/lib.rs --contains [EXTRACTED]--> PLATFORM_INITIALIZED at=experiments/phase2/addon/src/lib.rs:L13
+EDGE addon/src/lib.rs --contains [EXTRACTED]--> ExperimentalOptions at=experiments/phase2/addon/src/lib.rs:L15
+EDGE addon/src/lib.rs --contains [EXTRACTED]--> Kind at=experiments/phase2/addon/src/lib.rs:L31
+EDGE addon/src/lib.rs --contains [EXTRACTED]--> Response at=experiments/phase2/addon/src/lib.rs:L32
+EDGE addon/src/lib.rs --contains [EXTRACTED]--> ThreadCount at=experiments/phase2/addon/src/lib.rs:L34
+EDGE Watchdog --references [EXTRACTED context=generic_arg]--> Condvar at=experiments/phase2/engine/src/lib.rs:L24
+EDGE Watchdog --references [EXTRACTED context=generic_arg]--> Deadline at=experiments/phase2/engine/src/lib.rs:L24
+EDGE Watchdog --references [EXTRACTED context=generic_arg]--> JoinHandle at=experiments/phase2/engine/src/lib.rs:L24
+EDGE Watchdog --references [EXTRACTED context=generic_arg]--> Mutex at=experiments/phase2/engine/src/lib.rs:L24
+EDGE Watchdog --method [EXTRACTED]--> .new() at=experiments/phase2/engine/src/lib.rs:L26
+EDGE Watchdog --method [EXTRACTED]--> .start() at=experiments/phase2/engine/src/lib.rs:L47
+EDGE Watchdog --method [EXTRACTED]--> .finish() at=experiments/phase2/engine/src/lib.rs:L48
+EDGE Watchdog --method [EXTRACTED]--> .drop() at=experiments/phase2/engine/src/lib.rs:L51
+EDGE Command --references [EXTRACTED context=field]--> Kind at=experiments/phase2/addon/src/lib.rs:L33
+EDGE Command --references [EXTRACTED context=field]--> SyncSender at=experiments/phase2/addon/src/lib.rs:L33
+EDGE Command --references [EXTRACTED context=generic_arg]--> Response at=experiments/phase2/addon/src/lib.rs:L33
+EDGE runtime-poc/src/lib.rs --imports_from [EXTRACTED context=import]--> anyhow at=experiments/runtime-poc/src/lib.rs:L1
+EDGE runtime-poc/src/lib.rs --imports_from [EXTRACTED context=import]--> deno_core at=experiments/runtime-poc/src/lib.rs:L2
+EDGE document.rs --imports_from [EXTRACTED context=import]--> SkiaImageRenderer at=experiments/phase2/addon/src/document.rs:L4
+EDGE document.rs --imports_from [EXTRACTED context=import]--> HtmlDocument at=experiments/phase2/addon/src/document.rs:L6
+EDGE Document --implements [EXTRACTED]--> DomHost at=experiments/phase2/addon/src/document.rs:L49
+EDGE .dispatch() --calls [EXTRACTED context=call]--> .new() at=experiments/phase2/addon/src/document.rs:L58
+EDGE .dispatch() --calls [EXTRACTED context=call]--> .style() at=experiments/phase2/addon/src/document.rs:L81
+EDGE .render() --calls [EXTRACTED context=call]--> .new() at=experiments/phase2/addon/src/document.rs:L33
+EDGE addon/src/lib.rs --contains [EXTRACTED]--> Renderer at=experiments/phase2/addon/src/lib.rs:L16
+EDGE addon/src/lib.rs --contains [EXTRACTED]--> Command at=experiments/phase2/addon/src/lib.rs:L33
+EDGE .close() --calls [EXTRACTED context=call]--> .stop() at=experiments/phase2/addon/src/lib.rs:L94
+EDGE .drop() --calls [EXTRACTED context=call]--> .stop() at=experiments/phase2/addon/src/lib.rs:L98
+EDGE .new() --calls [EXTRACTED context=call]--> .drop() at=experiments/phase2/addon/src/lib.rs:L73
+EDGE .eval() --calls [EXTRACTED context=call]--> .request() at=experiments/phase2/addon/src/lib.rs:L84
+EDGE .js_errors() --calls [EXTRACTED context=call]--> .request() at=experiments/phase2/addon/src/lib.rs:L90
+EDGE .render() --calls [EXTRACTED context=call]--> .request() at=experiments/phase2/addon/src/lib.rs:L88
+EDGE .seek() --calls [EXTRACTED context=call]--> .request() at=experiments/phase2/addon/src/lib.rs:L86
+EDGE .stats() --calls [EXTRACTED context=call]--> .request() at=experiments/phase2/addon/src/lib.rs:L92
+EDGE .stop() --calls [EXTRACTED context=call]--> .request() at=experiments/phase2/addon/src/lib.rs:L46
+EDGE .handle() --references [EXTRACTED context=parameter_type]--> Kind at=experiments/phase2/addon/src/lib.rs:L19
+EDGE Kind --case_of [EXTRACTED]--> Eval at=experiments/phase2/addon/src/lib.rs:L31
+EDGE Kind --case_of [EXTRACTED]--> Render at=experiments/phase2/addon/src/lib.rs:L31
+EDGE Kind --case_of [EXTRACTED]--> Seek at=experiments/phase2/addon/src/lib.rs:L31
+EDGE Kind --case_of [EXTRACTED]--> Stats at=experiments/phase2/addon/src/lib.rs:L31
+EDGE lifecycle_stats() --references [EXTRACTED context=return_type]--> Value at=experiments/phase2/addon/src/lib.rs:L107
+EDGE native_memory() --references [EXTRACTED context=return_type]--> Value at=experiments/phase2/addon/src/lib.rs:L109
+EDGE Renderer --references [EXTRACTED context=field]--> ThreadId at=experiments/phase2/addon/src/lib.rs:L16
+EDGE .handle() --calls [EXTRACTED context=call]--> .remember() at=experiments/phase2/addon/src/lib.rs:L22
+EDGE .handle() --references [EXTRACTED context=generic_arg]--> Response at=experiments/phase2/addon/src/lib.rs:L19
+EDGE Response --references [EXTRACTED context=field]--> Value at=experiments/phase2/addon/src/lib.rs:L32
+EDGE engine/src/lib.rs --contains [EXTRACTED]--> State at=experiments/phase2/engine/src/lib.rs:L11
+EDGE engine/src/lib.rs --contains [EXTRACTED]--> Watchdog at=experiments/phase2/engine/src/lib.rs:L24
+EDGE counters() --references [EXTRACTED context=return_type]--> Value at=experiments/phase2/engine/src/lib.rs:L126
+EDGE DenoRuntime --implements [EXTRACTED]--> ScriptRuntime at=experiments/phase2/engine/src/lib.rs:L102
+EDGE .advance_to() --calls [EXTRACTED context=call]--> .bounded() at=experiments/phase2/engine/src/lib.rs:L108
+EDGE .advance_to() --calls [EXTRACTED context=call]--> .raw_drain() at=experiments/phase2/engine/src/lib.rs:L109
+EDGE .advance_to() --calls [EXTRACTED context=call]--> .raw_eval() at=experiments/phase2/engine/src/lib.rs:L111
+EDGE .advance_to() --calls [EXTRACTED context=call]--> .set_time() at=experiments/phase2/engine/src/lib.rs:L112
+EDGE .drain_jobs() --calls [EXTRACTED context=call]--> .bounded() at=experiments/phase2/engine/src/lib.rs:L104
+EDGE .eval_json() --calls [EXTRACTED context=call]--> .bounded() at=experiments/phase2/engine/src/lib.rs:L103
+EDGE .drain_jobs() --calls [EXTRACTED context=call]--> .raw_drain() at=experiments/phase2/engine/src/lib.rs:L104
+EDGE .new() --calls [EXTRACTED context=call]--> .drop() at=experiments/phase2/engine/src/lib.rs:L73
+EDGE .eval_json() --calls [EXTRACTED context=call]--> .raw_drain() at=experiments/phase2/engine/src/lib.rs:L103
+EDGE .eval_json() --calls [EXTRACTED context=call]--> .raw_eval() at=experiments/phase2/engine/src/lib.rs:L103
+EDGE .raw_eval() --calls [EXTRACTED context=call]--> .new() at=experiments/phase2/engine/src/lib.rs:L86
+EDGE op_phase2_dom() --references [EXTRACTED context=generic_arg]--> JsErrorBox at=experiments/phase2/engine/src/lib.rs:L16
+EDGE .advance_to() --calls [EXTRACTED context=call]--> .drain_jobs() at=experiments/runtime-poc/src/lib.rs:L69
+EDGE .advance_to() --calls [EXTRACTED context=call]--> .eval() at=experiments/runtime-poc/src/lib.rs:L71
+EDGE .new() --calls [EXTRACTED context=call]--> .drop() at=experiments/runtime-poc/src/lib.rs:L45
+EDGE .eval() --calls [EXTRACTED context=call]--> .new() at=experiments/runtime-poc/src/lib.rs:L53

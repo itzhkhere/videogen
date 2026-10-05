@@ -1,0 +1,44 @@
+[
+  {
+    "mode": "memory-cycles-construct",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 7381.9056519999995
+  },
+  {
+    "mode": "memory-cycles-eval",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 7427.040566
+  },
+  {
+    "mode": "memory-cycles-render",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 8555.64969
+  },
+  {
+    "mode": "memory-long-eval",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 816.5713240000005
+  },
+  {
+    "mode": "memory-long-seek",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 685.3541430000005
+  },
+  {
+    "mode": "memory-long-render",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 2020.0529769999994
+  },
+  {
+    "mode": "memory-long-style",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 1165.274161999998
+  }
+]

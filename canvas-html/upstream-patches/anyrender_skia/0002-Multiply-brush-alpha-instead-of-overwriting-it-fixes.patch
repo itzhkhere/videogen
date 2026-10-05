@@ -1,0 +1,30 @@
+From 3d946674ec7e3120866e8ba57f2bd4d2303c3a1f Mon Sep 17 00:00:00 2001
+From: local <l@l>
+Date: Mon, 5 Oct 2026 11:03:05 +0000
+Subject: [PATCH 2/2] Multiply brush alpha instead of overwriting it (fixes
+ transparent/rgba text colors)
+
+---
+ src/scene.rs | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/src/scene.rs b/src/scene.rs
+index 1b45614..745ee95 100644
+--- a/src/scene.rs
++++ b/src/scene.rs
+@@ -91,8 +91,11 @@ impl SkiaScenePainter<'_> {
+         self.cache.paint.set_anti_alias(true);
+     }
+ 
++    /// Multiplies the paint's alpha (which a solid brush colour may already have set) by `alpha`.
++    /// Replacing it instead would turn `rgba(.., 0.5)` or `transparent` text fully opaque.
+     fn set_paint_alpha(&mut self, alpha: f32) {
+-        self.cache.paint.set_alpha_f(alpha);
++        let current = self.cache.paint.alpha_f();
++        self.cache.paint.set_alpha_f(current * alpha);
+     }
+ 
+     fn set_paint_filter(&mut self, filter: ImageFilter) {
+-- 
+2.43.0
+

@@ -1,0 +1,9 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> canvas-html@0.5.0 test
+> node test/smoke.mjs && node test/smoke-js.mjs && node test/smoke-waapi.mjs && node test/smoke-fonts.mjs
+
+smoke: all passed
+smoke-js: all passed
+smoke-waapi: all passed
+smoke-fonts: all passed

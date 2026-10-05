@@ -1,0 +1,134 @@
+From ce7fa6cb041e0928fa8145652b905f26a18a9f71 Mon Sep 17 00:00:00 2001
+From: local <l@l>
+Date: Mon, 5 Oct 2026 11:06:11 +0000
+Subject: [PATCH 5/6] paint: support background-clip: text (mask background
+ with the element's glyphs)
+
+---
+ packages/blitz-paint/src/render/background.rs | 39 +++++++++++++++-
+ packages/blitz-paint/src/text.rs              | 45 +++++++++++++++++++
+ 2 files changed, 83 insertions(+), 1 deletion(-)
+
+diff --git a/packages/blitz-paint/src/render/background.rs b/packages/blitz-paint/src/render/background.rs
+index ba7e5b0..5aa5931 100644
+--- a/packages/blitz-paint/src/render/background.rs
++++ b/packages/blitz-paint/src/render/background.rs
+@@ -5,7 +5,7 @@ use anyrender::PaintScene;
+ use blitz_dom::NodeId;
+ use blitz_dom::node::{ImageData, ImageResourceData, SpecialElementData};
+ use kurbo::{self, Affine, BezPath, Point, Rect, Shape, Size, Vec2};
+-use peniko::{self, Fill};
++use peniko::{self, Compose, Fill, Mix};
+ use style::{
+     computed_values::border_collapse::T as BorderCollapse,
+     properties::{
+@@ -51,6 +51,9 @@ impl From<StyloBackgroundClip> for BoxModelBox {
+ 
+             // TODO: support BorderArea
+             StyloBackgroundClip::BorderArea => Self::BorderBox,
++            // `text` paints the background in the border box, then masks it with the
++            // element's glyphs (see `draw_background`).
++            StyloBackgroundClip::Text => Self::BorderBox,
+         }
+     }
+ }
+@@ -134,6 +137,40 @@ impl<'a> ImageLayerStyles<'a> {
+ 
+ impl ElementCx<'_, '_> {
+     pub(super) fn draw_background(&self, scene: &mut impl PaintScene) {
++        let bg_styles = &self.style.get_background();
++        // `background-clip: text`: paint the background into an isolated layer, then keep it
++        // only where the element's text glyphs are (DestIn compositing with the glyphs).
++        // Simplification: if any layer clips to text, the whole background does.
++        let clip_to_text = bg_styles
++            .background_clip
++            .0
++            .iter()
++            .any(|c| matches!(c, StyloBackgroundClip::Text))
++            && self.element.inline_layout_data.is_some();
++        if clip_to_text {
++            let bounds = self.frame.border_box_path();
++            scene.push_layer(Fill::NonZero, Mix::Normal, 1.0, self.transform, &bounds, None, None);
++            self.draw_background_layers(scene);
++            scene.push_layer(Fill::NonZero, Compose::DestIn, 1.0, self.transform, &bounds, None, None);
++            self.draw_text_glyph_mask(scene);
++            scene.pop_layer();
++            scene.pop_layer();
++        } else {
++            self.draw_background_layers(scene);
++        }
++    }
++
++    /// Paint this element's own text glyphs opaquely, as the mask for `background-clip: text`.
++    fn draw_text_glyph_mask(&self, scene: &mut impl PaintScene) {
++        let Some(text_layout) = self.element.inline_layout_data.as_ref() else {
++            return;
++        };
++        let origin = self.frame.content_box.origin();
++        let transform = self.transform * Affine::translate((origin.x, origin.y));
++        crate::text::draw_glyph_mask(scene, text_layout.layout.lines(), transform);
++    }
++
++    fn draw_background_layers(&self, scene: &mut impl PaintScene) {
+         let bg_styles = &self.style.get_background();
+         let image_data = &self.element.background_images;
+         let layer_count = bg_styles.background_image.0.len();
+diff --git a/packages/blitz-paint/src/text.rs b/packages/blitz-paint/src/text.rs
+index a0a2534..addf1db 100644
+--- a/packages/blitz-paint/src/text.rs
++++ b/packages/blitz-paint/src/text.rs
+@@ -774,6 +774,51 @@ pub(crate) fn draw_text_selection(
+     });
+ }
+ 
++/// Paint every glyph of `lines` in opaque black: the coverage mask used to clip a background to
++/// the text (`background-clip: text`).
++pub(crate) fn draw_glyph_mask<'a>(
++    scene: &mut impl PaintScene,
++    lines: impl Iterator<Item = Line<'a, TextBrush>>,
++    transform: Affine,
++) {
++    for line in lines {
++        for item in line.items() {
++            let PositionedLayoutItem::GlyphRun(glyph_run) = item else {
++                continue;
++            };
++            let run = glyph_run.run();
++            let font_size = run.font_size();
++            let synthesis = run.synthesis();
++            let glyph_xform = synthesis
++                .skew()
++                .map(|angle| Affine::skew(angle.to_radians().tan() as f64, 0.0));
++            let embolden = if synthesis.embolden() {
++                kurbo::Vec2::splat(font_size as f64 / 28.0)
++            } else {
++                kurbo::Vec2::default()
++            };
++            let normalized_coords: &[i16] = bytemuck::cast_slice(run.normalized_coords());
++            scene.draw_glyphs(
++                &run.font().font,
++                font_size,
++                false, // hint
++                normalized_coords,
++                embolden,
++                Fill::NonZero,
++                &anyrender::Paint::from(Color::BLACK),
++                1.0,
++                transform,
++                glyph_xform,
++                glyph_run.positioned_glyphs().map(|glyph| anyrender::Glyph {
++                    id: glyph.id as _,
++                    x: glyph.x,
++                    y: glyph.y,
++                }),
++            );
++        }
++    }
++}
++
+ /// Paint the `text-shadow`s of every glyph run on `line`: each shadow is the run's glyphs in
+ /// the shadow colour, offset, and (for a non-zero blur radius) blurred with a gaussian of
+ /// standard deviation radius / 2, as the spec defines. Shadows are painted back to front, so
+-- 
+2.43.0
+

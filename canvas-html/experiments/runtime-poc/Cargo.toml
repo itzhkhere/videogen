@@ -1,0 +1,10 @@
+[package]
+name = "runtime-poc"
+version = "0.1.0"
+edition = "2024"
+publish = false
+[dependencies]
+deno_core.workspace = true
+anyhow.workspace = true
+serde_json.workspace = true
+tokio.workspace = true

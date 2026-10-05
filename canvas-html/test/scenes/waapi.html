@@ -1,0 +1,53 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Inter;font-weight:400;src:url(../assets/Inter-Regular.otf)}
+@font-face{font-family:Inter;font-weight:700;src:url(../assets/Inter-Bold.otf)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1280px;height:720px;overflow:hidden}
+body{font-family:Inter;background:#0f172a;color:#cbd5e1;display:grid;grid-template-columns:repeat(4,320px);grid-auto-rows:180px}
+.c{position:relative;border-right:1px solid #1e293b;border-bottom:1px solid #1e293b;padding:10px 12px;font-size:12px}
+.box{position:absolute;left:20px;top:70px;width:60px;height:60px;border-radius:12px;background:#6366f1}
+@keyframes slide{from{transform:translateX(0)}to{transform:translateX(200px)}}
+@keyframes multi{0%{transform:translateX(0);animation-timing-function:ease-in}50%{transform:translateX(200px) rotate(90deg);animation-timing-function:ease-out}100%{transform:translateX(100px) rotate(180deg)}}
+#c1 .box{animation:slide 1s ease both}
+#c2 .box{animation:multi 2s linear both}
+</style></head><body>
+<div class="c" id="c1">1 CSS keyframes, ease<div class="box"></div></div>
+<div class="c" id="c2">2 CSS 3-stop, keyframe easings<div class="box"></div></div>
+<div class="c" id="c3">3 animate(), 2 frames, ease-in-out<div class="box" id="b3"></div></div>
+<div class="c" id="c4">4 animate(), 3 frames, overall ease-out<div class="box" id="b4"></div></div>
+<div class="c" id="c5">5 property-indexed form<div class="box" id="b5"></div></div>
+<div class="c" id="c6">6 offsets + keyframe easing<div class="box" id="b6"></div></div>
+<div class="c" id="c7">7 iterations 2, alternate<div class="box" id="b7"></div></div>
+<div class="c" id="c8">8 delay 300, fill backwards<div class="box" id="b8"></div></div>
+<div class="c" id="c9">9 fill none (back to base after)<div class="box" id="b9"></div></div>
+<div class="c" id="c10">10 steps(4)<div class="box" id="b10"></div></div>
+<div class="c" id="c11">11 colour, radius, size<div class="box" id="b11"></div></div>
+<div class="c" id="c12">12 playbackRate 2, single keyframe<div class="box" id="b12"></div></div>
+<script>
+const opts = (o) => Object.assign({ duration: 1000, fill: 'both' }, o)
+b3.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(200px)' }], opts({ easing: 'ease-in-out', id: 'a3' }))
+b4.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(160px)', offset: 0.3 }, { transform: 'translateX(200px)' }], opts({ easing: 'ease-out', id: 'a4' }))
+b5.animate({ transform: ['translateX(0)', 'translateX(200px)'], opacity: [1, 0.2, 1] }, opts({ id: 'a5' }))
+b6.animate([
+  { transform: 'translateX(0)', easing: 'cubic-bezier(.34,1.56,.64,1)' },
+  { transform: 'translateX(120px)', offset: 0.4, easing: 'ease-in' },
+  { transform: 'translateX(200px) scale(.6)' },
+], opts({ id: 'a6' }))
+b7.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(200px)' }], opts({ duration: 600, iterations: 2, direction: 'alternate', easing: 'ease-in', id: 'a7' }))
+b8.animate([{ transform: 'translateX(40px)', opacity: 0.3 }, { transform: 'translateX(200px)', opacity: 1 }], opts({ delay: 300, fill: 'backwards', id: 'a8' }))
+b9.animate([{ transform: 'translateX(60px)' }, { transform: 'translateX(200px)' }], { duration: 1000, id: 'a9' })
+b10.animate([{ transform: 'translateX(0)', easing: 'steps(4)' }, { transform: 'translateX(200px)' }], opts({ id: 'a10' }))
+b11.animate([{ backgroundColor: '#6366f1', borderRadius: '12px', width: '60px' }, { backgroundColor: '#f43f5e', borderRadius: '30px', width: '160px' }], opts({ id: 'a11' }))
+const a12 = b12.animate([{ transform: 'translateX(200px) rotate(45deg)' }], opts({ duration: 2000, id: 'a12' }))
+a12.playbackRate = 2
+let all
+window.seek = (t) => {
+  all = all || document.getAnimations()
+  for (const a of all) { a.pause(); a.currentTime = t }
+}
+window.state = () => (all || document.getAnimations()).map((a) => {
+  const ct = a.effect.getComputedTiming()
+  return [a.id || a.animationName || '', a.currentTime, a.playState, ct.progress == null ? null : Math.round(ct.progress * 1000) / 1000, ct.currentIteration]
+}).sort((x, y) => String(x[0]).localeCompare(String(y[0])))
+</script>
+</body></html>

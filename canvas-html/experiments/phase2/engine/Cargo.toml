@@ -1,0 +1,12 @@
+[package]
+name = "phase2-engine"
+version = "0.1.0"
+edition = "2024"
+publish = false
+[dependencies]
+phase2-host = { path = "../host" }
+deno_core.workspace = true
+anyhow.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+deno_error = "=0.7.1"

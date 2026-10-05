@@ -1,0 +1,81 @@
+From b0dfa609cebac1208742402b203a99582c1bda15 Mon Sep 17 00:00:00 2001
+From: canvas-html <canvas-html@localhost>
+Date: Mon, 5 Oct 2026 17:11:36 +0000
+Subject: [PATCH 5/5] Compute keyframes from the underlying style, without
+ animation rules
+
+The servo path passed the element's new style to the keyframe computation. That style already
+holds the values of the element's running animations, so an implicit from or to keyframe (e.g.
+a single keyframe) started from the last animated value instead of the element's own value, and
+each restyle moved it further. Use the style without animation and transition rules
+(StyleResolverForElement::style_without_animation_rules).
+---
+ matching.rs       |  8 +++++++-
+ style_resolver.rs | 29 +++++++++++++++++++++++++++++
+ 2 files changed, 36 insertions(+), 1 deletion(-)
+
+diff --git a/matching.rs b/matching.rs
+index 4aae362..e064103 100644
+--- a/matching.rs
++++ b/matching.rs
+@@ -747,10 +747,16 @@ trait PrivateMatchMethods: TElement {
+                 PseudoElementResolution::IfApplicable,
+             );
+ 
++            // Keyframes are computed from the underlying style. `new_values` already holds the
++            // values of the running animations, so an implicit `from` keyframe would otherwise
++            // start from the last animated frame instead of the element's own value.
++            let base_values = resolver
++                .style_without_animation_rules(new_values)
++                .unwrap_or_else(|| new_values.clone());
+             animation_set.update_animations_for_new_style::<Self>(
+                 *self,
+                 &shared_context,
+-                &new_values,
++                &base_values,
+                 &mut resolver,
+             );
+         }
+diff --git a/style_resolver.rs b/style_resolver.rs
+index 0cc0c37..abae63d 100644
+--- a/style_resolver.rs
++++ b/style_resolver.rs
+@@ -631,6 +631,35 @@ where
+         Some(self.cascade_style_and_visited_with_default_parents(inputs))
+     }
+ 
++    /// The element's style without the rules of CSS animations and transitions. Implicit
++    /// `from` and `to` keyframes start from this underlying value. Returns None when the
++    /// style has no such rules.
++    pub fn style_without_animation_rules(
++        &mut self,
++        primary_style: &Arc<ComputedValues>,
++    ) -> Option<Arc<ComputedValues>> {
++        let rule_node = primary_style.rules();
++        let without_animation_rules = self
++            .context
++            .shared
++            .stylist
++            .rule_tree()
++            .remove_animation_rules(rule_node);
++        if without_animation_rules == *rule_node {
++            return None;
++        }
++
++        let inputs = CascadeInputs {
++            rules: Some(without_animation_rules),
++            visited_rules: primary_style.visited_rules().cloned(),
++            flags: primary_style.flags.for_cascade_inputs(),
++            included_cascade_flags: RuleCascadeFlags::empty(),
++        };
++
++        let style = self.cascade_style_and_visited_with_default_parents(inputs);
++        Some(style.0)
++    }
++
+     /// If there is no transition rule in the ComputedValues, it returns None.
+     pub fn after_change_style(
+         &mut self,
+-- 
+2.43.0
+

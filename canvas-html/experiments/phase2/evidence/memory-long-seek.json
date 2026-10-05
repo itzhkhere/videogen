@@ -1,0 +1,273 @@
+{
+  "mode": "memory-long-seek",
+  "points": [
+    {
+      "label": "loaded",
+      "peakRssBytes": 53460992,
+      "node": {
+        "heapTotal": 12054528,
+        "heapUsed": 8191064,
+        "external": 3900446
+      },
+      "currentRssUnavailable": "ENOENT: no such file or directory, uv_resident_set_memory",
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 5697536,
+        "allocated": 4448272,
+        "freeInArenas": 1249264,
+        "mapped": 0,
+        "mappedRegions": 0
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 0,
+          "dropped": 0,
+          "watchdogs": 0
+        },
+        "openRenderers": 0,
+        "executionThreads": 0,
+        "wrongThreadDrops": 0
+      },
+      "deno": []
+    },
+    {
+      "label": "one live",
+      "peakRssBytes": 81510400,
+      "node": {
+        "heapTotal": 12054528,
+        "heapUsed": 8240304,
+        "external": 3900446
+      },
+      "currentRssUnavailable": "ENOENT: no such file or directory, uv_resident_set_memory",
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 7933952,
+        "allocated": 6050752,
+        "freeInArenas": 1883200,
+        "mapped": 606208,
+        "mappedRegions": 1
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 1,
+          "dropped": 0,
+          "watchdogs": 1
+        },
+        "openRenderers": 1,
+        "executionThreads": 1,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 3145728,
+          "usedHeap": 1308768,
+          "physicalHeap": 3145728,
+          "external": 104708,
+          "malloced": 131184,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "1000 operations",
+      "peakRssBytes": 82755584,
+      "node": {
+        "heapTotal": 12054528,
+        "heapUsed": 8308296,
+        "external": 3900446
+      },
+      "currentRssUnavailable": "ENOENT: no such file or directory, uv_resident_set_memory",
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 7933952,
+        "allocated": 6220560,
+        "freeInArenas": 1713392,
+        "mapped": 606208,
+        "mappedRegions": 1
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 1,
+          "dropped": 0,
+          "watchdogs": 1
+        },
+        "openRenderers": 1,
+        "executionThreads": 1,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 4718592,
+          "usedHeap": 1536424,
+          "physicalHeap": 4718592,
+          "external": 132708,
+          "malloced": 131184,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "5000 operations",
+      "peakRssBytes": 88391680,
+      "node": {
+        "heapTotal": 12054528,
+        "heapUsed": 8484624,
+        "external": 3900446
+      },
+      "currentRssUnavailable": "ENOENT: no such file or directory, uv_resident_set_memory",
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 8458240,
+        "allocated": 6722576,
+        "freeInArenas": 1735664,
+        "mapped": 606208,
+        "mappedRegions": 1
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 1,
+          "dropped": 0,
+          "watchdogs": 1
+        },
+        "openRenderers": 1,
+        "executionThreads": 1,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 5767168,
+          "usedHeap": 2455712,
+          "physicalHeap": 5767168,
+          "external": 244708,
+          "malloced": 131184,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "10000 operations",
+      "peakRssBytes": 90357760,
+      "node": {
+        "heapTotal": 12054528,
+        "heapUsed": 8488296,
+        "external": 3900446
+      },
+      "currentRssUnavailable": "ENOENT: no such file or directory, uv_resident_set_memory",
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 9093120,
+        "allocated": 7360128,
+        "freeInArenas": 1732992,
+        "mapped": 606208,
+        "mappedRegions": 1
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 1,
+          "dropped": 0,
+          "watchdogs": 1
+        },
+        "openRenderers": 1,
+        "executionThreads": 1,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 6815744,
+          "usedHeap": 3857264,
+          "physicalHeap": 6815744,
+          "external": 384708,
+          "malloced": 131184,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "Deno GC",
+      "peakRssBytes": 90357760,
+      "node": {
+        "heapTotal": 12054528,
+        "heapUsed": 8492584,
+        "external": 3900446
+      },
+      "currentRssUnavailable": "ENOENT: no such file or directory, uv_resident_set_memory",
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 9129984,
+        "allocated": 6268112,
+        "freeInArenas": 2861872,
+        "mapped": 606208,
+        "mappedRegions": 1
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 1,
+          "dropped": 0,
+          "watchdogs": 1
+        },
+        "openRenderers": 1,
+        "executionThreads": 1,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 1310720,
+          "usedHeap": 915776,
+          "physicalHeap": 1056768,
+          "external": 100613,
+          "malloced": 81984,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "closed GC",
+      "peakRssBytes": 90357760,
+      "node": {
+        "heapTotal": 12578816,
+        "heapUsed": 7189112,
+        "external": 3900410
+      },
+      "currentRssUnavailable": "ENOENT: no such file or directory, uv_resident_set_memory",
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 9265152,
+        "allocated": 4451712,
+        "freeInArenas": 4813440,
+        "mapped": 0,
+        "mappedRegions": 0
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 1,
+          "dropped": 1,
+          "watchdogs": 0
+        },
+        "openRenderers": 0,
+        "executionThreads": 0,
+        "wrongThreadDrops": 0
+      },
+      "deno": []
+    }
+  ],
+  "lifecycle": {
+    "engine": {
+      "created": 1,
+      "dropped": 1,
+      "watchdogs": 0
+    },
+    "openRenderers": 0,
+    "executionThreads": 0,
+    "wrongThreadDrops": 0
+  }
+}

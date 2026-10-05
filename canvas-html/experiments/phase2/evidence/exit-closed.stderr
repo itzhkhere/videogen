@@ -1,0 +1,1 @@
+PHASE2_DROP {"hadRuntime":false,"owner":"ThreadId(2)","current":"ThreadId(2)","runtimeOwner":"ThreadId(1)","cleanupError":null,"lifecycle":{"engine":{"created":1,"dropped":1,"watchdogs":0},"openRenderers":0,"executionThreads":0,"wrongThreadDrops":0}}

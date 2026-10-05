@@ -1,0 +1,26 @@
+{
+  "name": "canvas-html",
+  "version": "0.5.0",
+  "description": "HTML, CSS and JavaScript rendered to pixels in Node, without a browser (Blitz layout, Skia painting, Boa JS).",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "license": "MIT OR Apache-2.0",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "*.node"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "cargo build --release && cp target/release/libcanvas_html.so canvas-html.linux-x64-gnu.node",
+    "test": "node test/smoke.mjs && node test/smoke-js.mjs && node test/smoke-waapi.mjs && node test/smoke-fonts.mjs",
+    "compare": "node test/compare.mjs"
+  },
+  "devDependencies": {
+    "gsap": "^3.15.0",
+    "playwright-core": "^1.63.0",
+    "pngjs": "^7.0.0"
+  }
+}

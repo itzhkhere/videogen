@@ -1,0 +1,34 @@
+From d51766d40ed316543d81755b8df3e2b367b65b68 Mon Sep 17 00:00:00 2001
+From: canvas-html <canvas-html@localhost>
+Date: Mon, 5 Oct 2026 18:00:30 +0000
+Subject: [PATCH 10/12] layout: keep the height of a block whose inline content
+ is empty
+
+A block whose only children are empty inline elements (<div style="height: 52px"><span></span></div>,
+an empty line in a code view) short-circuited to a 0x0 box, ignoring its own height and
+min-height. Only collapse through when the node has no height of its own.
+---
+ packages/blitz-dom/src/layout/inline.rs | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/packages/blitz-dom/src/layout/inline.rs b/packages/blitz-dom/src/layout/inline.rs
+index cd22e90..13b7b3f 100644
+--- a/packages/blitz-dom/src/layout/inline.rs
++++ b/packages/blitz-dom/src/layout/inline.rs
+@@ -286,8 +286,12 @@ impl BaseDocument {
+ 
+         drop(style);
+ 
+-        // Short circuit if inline context contains no text or inline boxes
++        // Short circuit if inline context contains no text or inline boxes, unless the node
++        // has a height of its own (e.g. an empty line `<div style="height: 52px"><span></span>`).
++        let has_own_height = matches!(node_size.height, Some(h) if h > 0.0)
++            || matches!(node_min_size.height, Some(h) if h > 0.0);
+         if !has_styles_preventing_being_collapsed_through
++            && !has_own_height
+             && inline_layout.text.is_empty()
+             && inline_layout.layout.inline_boxes().len() == 0
+         {
+-- 
+2.43.0
+

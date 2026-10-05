@@ -1,0 +1,8 @@
+[package]
+name = "deno-core-smoke"
+version = "0.1.0"
+edition = "2024"
+publish = false
+[dependencies]
+runtime-poc = { path = "../runtime-poc" }
+anyhow.workspace = true

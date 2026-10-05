@@ -1,0 +1,99 @@
+{
+  "builtUtc": "2026-10-05T21:18:34.268217+00:00",
+  "version": "0.9.77",
+  "command": "graphify extract canvas-html --code-only --force --out canvas-html/experiments/phase2/evidence/graphify",
+  "files": [
+    {
+      "file": "experiments/phase2/addon/Cargo.toml",
+      "sha256": "8813a413f2d5bdaa61e2b5bf9809b8f1b364d133c1c5b06cd1d18c2e3de8d038"
+    },
+    {
+      "file": "experiments/phase2/addon/build.rs",
+      "sha256": "ecb96453115886c5a351106ddfac12196fde54c34cdcc731fd483024bd66afb8"
+    },
+    {
+      "file": "experiments/phase2/addon/src/document.rs",
+      "sha256": "02476974e758490819dffff65c2ad3079108585301d950fb6a4304150761fd36"
+    },
+    {
+      "file": "experiments/phase2/addon/src/lib.rs",
+      "sha256": "dadbaca20ee01fc3983b746c4bf6d3760d09c954ecc7dec617a7c31c296a2bb6"
+    },
+    {
+      "file": "experiments/phase2/engine/Cargo.toml",
+      "sha256": "d809dc558fefaf6a5409edd5ed92de6390b31ff6d3b08ec7d5c839da6d982748"
+    },
+    {
+      "file": "experiments/phase2/engine/src/bootstrap.js",
+      "sha256": "e67376bf6b9363206bdc0b41d103db90dfb414fc2b845b0237551de572e618c5"
+    },
+    {
+      "file": "experiments/phase2/engine/src/lib.rs",
+      "sha256": "bd02c3efb369bba0379ffccc13b3f34fa1b108f34628a4611fa78af47c1afac7"
+    },
+    {
+      "file": "experiments/phase2/host/Cargo.toml",
+      "sha256": "4e72e80d3cddcbcda606f16b88c237584fa5093fca8f67dc0141f24722ef7d4f"
+    },
+    {
+      "file": "experiments/phase2/host/src/lib.rs",
+      "sha256": "dfaa0547f08e5f935799786880f3376b4cf5d6e88f641648784574a98820ee6c"
+    },
+    {
+      "file": "experiments/phase2/tests/benchmark.mjs",
+      "sha256": "2ca371e2754e91655df6173f9cddbab85c9fbd0e576a6b1715ce2625e980edae"
+    },
+    {
+      "file": "experiments/phase2/tests/common.mjs",
+      "sha256": "07276aab412f5f93d333a1d57c41b6296b39d33d9d32e273afbea277882846ad"
+    },
+    {
+      "file": "experiments/phase2/tests/memory-footprint.mjs",
+      "sha256": "b8758def59b6b46991afe6a51f17820a5d3f4717ef95f0a2844c2dcc6e8d2ac1"
+    },
+    {
+      "file": "experiments/phase2/tests/memory-probe.mjs",
+      "sha256": "5660b19be12b2bc6f1b86d874920a652c6ff4c379327302595b5ee5ade0d2f62"
+    },
+    {
+      "file": "experiments/phase2/tests/model-a-probe.mjs",
+      "sha256": "1c92aa52036d9d203f0282345b47a22da6d24b1a6e4f85e7034e5be092b33a1b"
+    },
+    {
+      "file": "experiments/phase2/tests/probe-model-a-single.mjs",
+      "sha256": "e49b04498b3026400613f11a669594ee33ff4e32d9ee92c27b226feeed625820"
+    },
+    {
+      "file": "experiments/phase2/tests/probe-model-a.mjs",
+      "sha256": "fc025bb129f3b51e85f8bd879b41c0170c312d500c7f0c894719e058eb02ec3e"
+    },
+    {
+      "file": "experiments/phase2/tests/process.mjs",
+      "sha256": "89c147262c93faf8dbb1512a66e99b5c8a70c74120e543004572fcd3ff230216"
+    },
+    {
+      "file": "experiments/phase2/tests/run.mjs",
+      "sha256": "35d294acdf12d690d0652a3bb4de89f01fbf19e22c240f005422b871155c3fc0"
+    },
+    {
+      "file": "experiments/phase2/tests/startup-worker.mjs",
+      "sha256": "86f42e6651fa3b38e1106c71b6483ee11d9f8c5addd732ba30954d9c3199b279"
+    },
+    {
+      "file": "experiments/phase2/tests/suite.mjs",
+      "sha256": "97550614449a9e272b692bd644537982890930d4a28555e9fb6170775702de10"
+    },
+    {
+      "file": "experiments/phase2/tests/worker-startup.mjs",
+      "sha256": "d75ac2c26db402a65cc0fc94b8ee79663047da0ff1f3b060d6563f37496afbd7"
+    },
+    {
+      "file": "experiments/phase2/tests/worker.mjs",
+      "sha256": "0a4ea5f458c4628e2ebcce17e6920bb810cd9a32fc18c639ca187ce561c490ed"
+    },
+    {
+      "file": "experiments/phase2/tests/workers.mjs",
+      "sha256": "ffb5cf5ec27cba8314d2bc6b6effe84fe1502558025a38380ecf22bf7e6f7774"
+    }
+  ]
+}

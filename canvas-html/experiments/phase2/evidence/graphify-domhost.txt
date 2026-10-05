@@ -1,0 +1,15 @@
+Node: DomHost
+  ID:        experiments_phase2_host_src_lib_domhost
+  Source:    experiments/phase2/host/src/lib.rs L4
+  Type:      code
+  Community: Community 2
+  Degree:    7
+
+Connections (7):
+  <-- document.rs [imports_from] [EXTRACTED] experiments/phase2/addon/src/document.rs:L11
+  <-- Document [implements] [EXTRACTED] experiments/phase2/addon/src/document.rs:L49
+  <-- .new() [references] [EXTRACTED] experiments/phase2/engine/src/lib.rs:L65
+  <-- host/src/lib.rs [contains] [EXTRACTED] experiments/phase2/host/src/lib.rs:L4
+  --> .dispatch() [method] [EXTRACTED] experiments/phase2/host/src/lib.rs:L5
+  <-- State [references] [EXTRACTED] experiments/phase2/engine/src/lib.rs:L11
+  --> .set_time() [method] [EXTRACTED] experiments/phase2/host/src/lib.rs:L6

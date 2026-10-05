@@ -1,0 +1,70 @@
+From d7c028ce737327064725f261fbac983b7c6d7dd0 Mon Sep 17 00:00:00 2001
+From: local <l@l>
+Date: Mon, 5 Oct 2026 10:33:48 +0000
+Subject: [PATCH 1/2] Per-glyph skew for synthetic italic (font skewX) and
+ honour embolden (synthetic bold)
+
+---
+ src/scene.rs | 29 ++++++++++++++++++++++++++---
+ 1 file changed, 26 insertions(+), 3 deletions(-)
+
+diff --git a/src/scene.rs b/src/scene.rs
+index aea443f..1b45614 100644
+--- a/src/scene.rs
++++ b/src/scene.rs
+@@ -515,7 +515,7 @@ impl PaintScene for SkiaScenePainter<'_> {
+         font_size: f32,
+         hint: bool,
+         normalized_coords: &'a [anyrender::NormalizedCoord],
+-        _embolden: kurbo::Vec2,
++        embolden: kurbo::Vec2,
+         style: impl Into<peniko::StyleRef<'a>>,
+         brush: impl Into<anyrender::PaintRef<'a>>,
+         brush_alpha: f32,
+@@ -525,8 +525,24 @@ impl PaintScene for SkiaScenePainter<'_> {
+     ) {
+         self.set_matrix(transform);
+ 
++        // `glyph_transform` applies to each glyph around its own origin (e.g. the skew of a
++        // synthetic italic). Concatenating it to the canvas matrix would also move the glyph
++        // *positions*, shearing the whole run around the page origin. A pure horizontal skew
++        // maps onto Skia's per-glyph font skew; anything else falls back to the old behaviour.
++        let mut font_skew_x = None;
+         if let Some(glyph_transform) = glyph_transform {
+-            self.concat_matrix(glyph_transform);
++            let [a, b, c, d, e, f] = glyph_transform.as_coeffs();
++            let is_skew_x = (a - 1.0).abs() < 1e-6
++                && b.abs() < 1e-6
++                && (d - 1.0).abs() < 1e-6
++                && e.abs() < 1e-6
++                && f.abs() < 1e-6;
++            if is_skew_x {
++                // Glyph transforms are in font space (y up); Skia's skew is in y-down space.
++                font_skew_x = Some(-c as f32);
++            } else {
++                self.concat_matrix(glyph_transform);
++            }
+         }
+ 
+         self.reset_paint();
+@@ -534,9 +550,16 @@ impl PaintScene for SkiaScenePainter<'_> {
+         self.set_paint_style(style);
+         self.set_paint_alpha(brush_alpha);
+ 
+-        let Some(font) = self.get_or_cache_font(font, normalized_coords, font_size, hint) else {
++        let Some(mut font) = self.get_or_cache_font(font, normalized_coords, font_size, hint) else {
+             return;
+         };
++        if let Some(skew) = font_skew_x {
++            font.set_skew_x(skew);
++        }
++        // Synthetic bold: callers pass a non-zero embolden strength.
++        if embolden != kurbo::Vec2::ZERO {
++            font.set_embolden(true);
++        }
+ 
+         let (min_size, _) = glyphs.size_hint();
+         self.cache.glyph_id_buf.reserve(min_size);
+-- 
+2.43.0
+

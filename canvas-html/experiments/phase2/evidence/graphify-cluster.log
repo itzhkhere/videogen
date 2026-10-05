@@ -1,0 +1,6 @@
+[graphify] community set changed since labeling (12 saved labels, 30 communities now; renamed 12 community(ies) by their hub). Run `graphify label` to refresh names with the LLM.
+Loading existing graph...
+Graph: 530 nodes, 815 edges
+Re-clustering...
+[graphify] backed up curated graph (5 files) -> 2026-10-06/
+Done - 30 communities. GRAPH_REPORT.md, graph.json and graph.html updated.

@@ -1,0 +1,92 @@
+[
+  {
+    "mode": "cycles",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 52806.817736
+  },
+  {
+    "mode": "long",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 1407.2381810000006
+  },
+  {
+    "mode": "workers",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 7468.841340999999
+  },
+  {
+    "mode": "exit-alive",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 162.50068699999974,
+    "finalizers": 1,
+    "finalState": {
+      "engine": {
+        "created": 1,
+        "dropped": 1,
+        "watchdogs": 0
+      },
+      "openRenderers": 0,
+      "executionThreads": 0,
+      "wrongThreadDrops": 0
+    },
+    "ownerMatches": true
+  },
+  {
+    "mode": "exit-closed",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 209.63936300000205,
+    "finalizers": 1,
+    "finalState": {
+      "engine": {
+        "created": 1,
+        "dropped": 1,
+        "watchdogs": 0
+      },
+      "openRenderers": 0,
+      "executionThreads": 0,
+      "wrongThreadDrops": 0
+    },
+    "ownerMatches": true
+  },
+  {
+    "mode": "exit-multiple",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 303.6800989999974,
+    "finalizers": 8,
+    "finalState": {
+      "engine": {
+        "created": 8,
+        "dropped": 8,
+        "watchdogs": 0
+      },
+      "openRenderers": 0,
+      "executionThreads": 0,
+      "wrongThreadDrops": 0
+    },
+    "ownerMatches": true
+  },
+  {
+    "mode": "exit-exception",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 158.8863199999978,
+    "finalizers": 1,
+    "finalState": {
+      "engine": {
+        "created": 1,
+        "dropped": 1,
+        "watchdogs": 0
+      },
+      "openRenderers": 0,
+      "executionThreads": 0,
+      "wrongThreadDrops": 0
+    },
+    "ownerMatches": true
+  }
+]

@@ -1,0 +1,44 @@
+[
+  {
+    "file": "Cargo.toml",
+    "sourceZipEntry": "canvas-html/Cargo.toml",
+    "sha256": "8c70d8509e76fa68f11252219643f20062759e7ddcf756e2d3aaaef383167d15",
+    "unchanged": true
+  },
+  {
+    "file": "Cargo.lock",
+    "sourceZipEntry": "canvas-html/Cargo.lock",
+    "sha256": "d01b3e889f3d82418ff9e39c23da5981d5679a81ae0188d160830782fd3d3f46",
+    "unchanged": true
+  },
+  {
+    "file": "src/lib.rs",
+    "sourceZipEntry": "canvas-html/src/lib.rs",
+    "sha256": "c6a6cd8daea9cbdb8ad1506a2f143ba2290473b40e7cb89d3e3c210c29696b67",
+    "unchanged": true
+  },
+  {
+    "file": "src/prelude.js",
+    "sourceZipEntry": "canvas-html/src/prelude.js",
+    "sha256": "2bebd4c99532f3d9654d616ead9ea04ef63ec91201d3026800c69b0ab5b4ca10",
+    "unchanged": true
+  },
+  {
+    "file": "index.js",
+    "sourceZipEntry": "canvas-html/index.js",
+    "sha256": "70f7ec9c4034f8d57b4aea5b0141ab48080abb4bad33b0f8f771f79b6743e970",
+    "unchanged": true
+  },
+  {
+    "file": "index.d.ts",
+    "sourceZipEntry": "canvas-html/index.d.ts",
+    "sha256": "806d0f45729ef24fe0bb0f54f5ec786e064c5f56d6fa53137a4e06a140d8d33e",
+    "unchanged": true
+  },
+  {
+    "file": "package.json",
+    "sourceZipEntry": "canvas-html/package.json",
+    "sha256": "ddc5051141a1e7c176c2f7d85a0d1d94b5c875b696d1bb33c7fd450597284874",
+    "unchanged": true
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "mode": "memory-long-render",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 2218.262218
+  },
+  {
+    "mode": "memory-long-render-gc",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 3891.8798559999996
+  },
+  {
+    "mode": "memory-boa-render",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 3454.635593
+  }
+]

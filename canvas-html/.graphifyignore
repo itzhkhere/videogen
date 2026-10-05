@@ -1,0 +1,10 @@
+target/
+node_modules/
+vendor/
+test/report/
+test/assets/
+upstream-patches/
+*.node
+# Phase 2 generated evidence is not source.
+experiments/target/
+experiments/phase2/evidence/

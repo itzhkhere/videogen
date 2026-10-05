@@ -1,0 +1,68 @@
+From 607f6b9aac609515836481f8e68755a300dd211f Mon Sep 17 00:00:00 2001
+From: canvas-html <canvas-html@localhost>
+Date: Mon, 5 Oct 2026 17:10:56 +0000
+Subject: [PATCH 8/9] dom: skip restyling animating elements when the animation
+ timeline has not moved
+
+Every resolve marked every element with an animation for a full restyle. A restyle requested
+from script at the same time (getComputedStyle, getBoundingClientRect) therefore restyled all
+animating elements again, though their animated values cannot have changed. Now they are only
+marked when the timeline time differs from the last restyle.
+---
+ packages/blitz-dom/src/document.rs |  3 +++
+ packages/blitz-dom/src/stylo.rs    | 11 +++++++++--
+ 2 files changed, 12 insertions(+), 2 deletions(-)
+
+diff --git a/packages/blitz-dom/src/document.rs b/packages/blitz-dom/src/document.rs
+index 82a6f24..5fe1432 100644
+--- a/packages/blitz-dom/src/document.rs
++++ b/packages/blitz-dom/src/document.rs
+@@ -292,6 +292,8 @@ pub struct BaseDocument {
+     /// The time (in seconds) passed to the most recent `resolve`: the document's animation
+     /// timeline. Restyles triggered from script (layout queries) reuse it.
+     pub(crate) animation_time: f64,
++    /// The animation time of the last restyle of animating elements.
++    pub(crate) animations_styled_at: Option<f64>,
+     /// Whether there is a `<canvas>` element in the DOM (so we should re-render every frame)
+     pub(crate) has_canvas: bool,
+     /// Whether there are subdocuments that are animating (so we should re-render every frame)
+@@ -473,6 +475,7 @@ impl BaseDocument {
+             mousedown_node_id: None,
+             has_active_animations: false,
+             animation_time: 0.0,
++            animations_styled_at: None,
+             subdoc_is_animating: false,
+             has_canvas: false,
+             sub_document_nodes: HashSet::new(),
+diff --git a/packages/blitz-dom/src/stylo.rs b/packages/blitz-dom/src/stylo.rs
+index 7611eee..a19c86f 100644
+--- a/packages/blitz-dom/src/stylo.rs
++++ b/packages/blitz-dom/src/stylo.rs
+@@ -79,7 +79,12 @@ impl crate::document::BaseDocument {
+             .flush(&guards)
+             .process_style(root, Some(&self.snapshots));
+ 
+-        // Mark actively animating nodes as dirty
++        // Mark actively animating nodes as dirty, unless the timeline has not moved since the
++        // last restyle: then their animated values are the same, and a restyle requested from
++        // script (a layout query) does not need to restyle every animating element again.
++        // (Script that seeks an animation marks that element itself.)
++        let timeline_moved = self.animations_styled_at != Some(now);
++        self.animations_styled_at = Some(now);
+         let mut sets = self.animations.sets.write();
+         for (key, set) in sets.iter_mut() {
+             let node_id = NodeId::from_u64(key.node.id() as u64);
+@@ -100,7 +105,9 @@ impl crate::document::BaseDocument {
+                 continue;
+             }
+ 
+-            self.nodes[node_id].set_restyle_hint(RestyleHint::RESTYLE_SELF);
++            if timeline_moved {
++                self.nodes[node_id].set_restyle_hint(RestyleHint::RESTYLE_SELF);
++            }
+ 
+             for animation in set.animations.iter_mut() {
+                 if animation.state == AnimationState::Pending && animation.started_at <= now {
+-- 
+2.43.0
+

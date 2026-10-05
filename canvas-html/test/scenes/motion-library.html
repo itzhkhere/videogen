@@ -1,0 +1,36 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Inter;font-weight:400;src:url(../assets/Inter-Regular.otf)}
+@font-face{font-family:Inter;font-weight:700;src:url(../assets/Inter-Bold.otf)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1280px;height:720px;overflow:hidden}
+body{font-family:Inter;background:#0f172a;color:#fff}
+#title{position:absolute;left:80px;top:70px;font-size:72px;font-weight:700;letter-spacing:-2px}
+#sub{position:absolute;left:82px;top:165px;font-size:28px;color:#94a3b8}
+.row{position:absolute;left:80px;top:250px;display:flex;gap:24px}
+.tile{width:200px;height:150px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:40px;font-weight:700;background:#334155}
+#dot{position:absolute;left:80px;top:540px;width:60px;height:60px;border-radius:30px;background:#a3e635}
+#count{position:absolute;right:80px;top:450px;font-size:96px;font-weight:700;color:#fbbf24}
+#bar{position:absolute;left:80px;top:620px;width:0;height:12px;border-radius:6px;background:#38bdf8}
+</style></head><body>
+<div id="title">Motion, no browser</div><div id="sub">motion.dev animate() on canvas-html</div>
+<div class="row"><div class="tile">A</div><div class="tile">B</div><div class="tile">C</div><div class="tile">D</div><div class="tile">E</div></div>
+<div id="dot"></div><div id="count">0</div><div id="bar"></div>
+<script src="../assets/motion.min.js"></script>
+<script>
+const { animate, stagger } = Motion
+// opacity and transform strings run through element.animate (Web Animations); x, scale, rotate,
+// colours and width run on Motion's own JS frame loop. Both kinds are seekable.
+const controls = [
+  animate('#title', { opacity: [0, 1], transform: ['translateY(40px)', 'none'] }, { duration: 0.8, ease: [0.22, 1, 0.36, 1] }),
+  animate('#sub', { opacity: [0, 1] }, { duration: 0.6, delay: 0.3 }),
+  animate('.tile', { scale: [0.5, 1], rotate: [-15, 0], opacity: [0, 1] }, { duration: 0.7, delay: stagger(0.12, { startDelay: 0.6 }), ease: 'easeOut' }),
+  animate('.tile', { backgroundColor: ['#334155', '#6366f1'] }, { duration: 1, delay: stagger(0.15, { startDelay: 1.4 }) }),
+  animate('#dot', { x: [0, 900] }, { type: 'spring', stiffness: 120, damping: 9, delay: 1 }),
+  animate('#bar', { width: ['0px', '1120px'] }, { duration: 2, delay: 1, ease: 'easeInOut' }),
+  animate(0, 100, { duration: 2, delay: 1, ease: 'linear', onUpdate: (v) => { document.getElementById('count').textContent = Math.round(v) + '%' } }),
+]
+for (const c of controls) c.pause()
+// The page contract: window.seek(ms) shows the page at ms.
+window.seek = (ms) => { for (const c of controls) c.time = ms / 1000 }
+seek(0)
+</script></body></html>

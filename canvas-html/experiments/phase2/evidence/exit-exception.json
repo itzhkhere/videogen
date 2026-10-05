@@ -1,0 +1,13 @@
+{
+  "mode": "exception",
+  "beforeExit": {
+    "engine": {
+      "created": 1,
+      "dropped": 0,
+      "watchdogs": 1
+    },
+    "openRenderers": 1,
+    "executionThreads": 1,
+    "wrongThreadDrops": 0
+  }
+}

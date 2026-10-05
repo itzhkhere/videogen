@@ -1,0 +1,25 @@
+[workspace]
+resolver = "3"
+members = ["runtime-poc", "deno-core-smoke", "deno-napi-coexist", "deno-canvas-bridge", "phase2/host", "phase2/engine", "phase2/addon"]
+
+[workspace.dependencies]
+deno_core = "=0.412.0"
+anyhow = "1"
+serde_json = "1"
+tokio = { version = "1", features = ["rt"] }
+
+[profile.release]
+lto = "thin"
+codegen-units = 4
+
+[patch."https://github.com/DioxusLabs/blitz"]
+blitz-dom = { path = "../../blitz/packages/blitz-dom" }
+blitz-html = { path = "../../blitz/packages/blitz-html" }
+blitz-paint = { path = "../../blitz/packages/blitz-paint" }
+blitz-traits = { path = "../../blitz/packages/blitz-traits" }
+blitz-vibey-script = { path = "../../blitz/packages/blitz-vibey-script" }
+
+[patch.crates-io]
+anyrender = { path = "../vendor/anyrender" }
+anyrender_skia = { path = "../vendor/anyrender_skia" }
+stylo = { path = "../vendor/stylo" }

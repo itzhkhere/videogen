@@ -1,0 +1,32 @@
+<!doctype html><html><head><meta charset="utf-8"><style>
+@font-face{font-family:Inter;font-weight:400;src:url(../assets/Inter-Regular.otf)}
+@font-face{font-family:Inter;font-weight:700;src:url(../assets/Inter-Bold.otf)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:1280px;height:720px;overflow:hidden;background:#000}
+@keyframes k_blob{0%{transform:translate(0px, 0px) rotate(0deg) scale(1)}50%{transform:translate(0px, 0px) rotate(180deg) scale(1.15)}100%{transform:translate(0px, 0px) rotate(360deg) scale(1)}}
+#blob{animation:k_blob 6000ms cubic-bezier(0,0,1,1) 0ms 1 normal both}
+@keyframes k_dot{0%{transform:translate(0px, 0px) rotate(0deg) scale(1)}50%{transform:translate(200px, -40px) rotate(0deg) scale(1)}100%{transform:translate(0px, 0px) rotate(0deg) scale(1)}}
+#dot{animation:k_dot 3000ms cubic-bezier(0.65,0,0.35,1) 0ms 2 normal both}
+@keyframes k_title{0%{opacity:0;transform:translate(0px, 40px) rotate(0deg) scale(1)}100%{opacity:1;transform:translate(0px, 0px) rotate(0deg) scale(1)}}
+#title{animation:k_title 900ms cubic-bezier(0.16,1,0.3,1) 200ms 1 normal both}
+@keyframes k_sub{0%{opacity:0;transform:translate(0px, 30px) rotate(0deg) scale(1)}100%{opacity:1;transform:translate(0px, 0px) rotate(0deg) scale(1)}}
+#sub{animation:k_sub 900ms cubic-bezier(0.16,1,0.3,1) 600ms 1 normal both}
+@keyframes k_b1{0%{opacity:0;transform:translate(0px, 30px) rotate(0deg) scale(0.6)}100%{opacity:1;transform:translate(0px, 0px) rotate(0deg) scale(1)}}
+#b1{animation:k_b1 700ms cubic-bezier(0.34,1.56,0.64,1) 1400ms 1 normal both}
+@keyframes k_a1{0%{opacity:0;transform:translate(-20px, 0px) rotate(0deg) scale(1)}100%{opacity:1;transform:translate(0px, 0px) rotate(0deg) scale(1)}}
+#a1{animation:k_a1 500ms cubic-bezier(0.16,1,0.3,1) 1700ms 1 normal both}
+@keyframes k_b2{0%{opacity:0;transform:translate(0px, 30px) rotate(0deg) scale(0.6)}100%{opacity:1;transform:translate(0px, 0px) rotate(0deg) scale(1)}}
+#b2{animation:k_b2 700ms cubic-bezier(0.34,1.56,0.64,1) 1900ms 1 normal both}
+@keyframes k_a2{0%{opacity:0;transform:translate(-20px, 0px) rotate(0deg) scale(1)}100%{opacity:1;transform:translate(0px, 0px) rotate(0deg) scale(1)}}
+#a2{animation:k_a2 500ms cubic-bezier(0.16,1,0.3,1) 2200ms 1 normal both}
+@keyframes k_b3{0%{opacity:0;transform:translate(0px, 30px) rotate(0deg) scale(0.6)}100%{opacity:1;transform:translate(0px, 0px) rotate(0deg) scale(1)}}
+#b3{animation:k_b3 700ms cubic-bezier(0.34,1.56,0.64,1) 2400ms 1 normal both}
+@keyframes k_fill{0%{width:0px;background-color:#6366f1}100%{width:1120px;background-color:#22d3ee}}
+#fill{animation:k_fill 2800ms cubic-bezier(0.65,0,0.35,1) 2800ms 1 normal both}
+@keyframes k_cap{0%{opacity:0}100%{opacity:1}}
+#cap{animation:k_cap 600ms cubic-bezier(0.16,1,0.3,1) 2800ms 1 normal both}
+</style></head><body><div id="root" style="position:relative;width:1280px;height:720px;display:flex;overflow:hidden;background-image:linear-gradient(135deg, #0f172a 0%, #312e81 100%);font-family:Inter"><div id="blob" style="position:absolute;left:1010px;top:60px;width:150px;height:150px;border-radius:36px;background-image:linear-gradient(135deg, #f472b6 0%, #fb923c 100%);transform-origin:50% 50%"></div><div id="dot" style="position:absolute;left:940px;top:230px;width:36px;height:36px;border-radius:18px;background-color:#22d3ee;transform-origin:50% 50%"></div><div id="title" style="position:absolute;left:80px;top:80px;font-size:88px;font-weight:700;color:#ffffff;letter-spacing:-2px;transform-origin:50% 50%">HTML → Video</div><div id="sub" style="position:absolute;left:84px;top:196px;font-size:34px;font-weight:400;color:#c7d2fe;transform-origin:50% 50%">no browser in the loop</div><div id="row" style="position:absolute;left:80px;top:320px;width:1120px;height:170px;display:flex;flex-direction:row;align-items:center;justify-content:space-between"><div id="b1" style="width:300px;height:150px;border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;background-color:rgba(255,255,255,0.08);border:2px solid rgba(165,180,252,0.55);box-shadow:0 20px 40px rgba(0,0,0,0.35);transform-origin:50% 50%"><div id="b1L" style="font-size:44px;font-weight:700;color:#ffffff">HTML</div><div id="b1S" style="font-size:20px;font-weight:400;color:#a5b4fc;margin-top:6px">markup + css</div></div><div id="a1" style="font-size:56px;font-weight:700;color:#818cf8;transform-origin:50% 50%">→</div><div id="b2" style="width:300px;height:150px;border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;background-color:rgba(255,255,255,0.08);border:2px solid rgba(165,180,252,0.55);box-shadow:0 20px 40px rgba(0,0,0,0.35);transform-origin:50% 50%"><div id="b2L" style="font-size:44px;font-weight:700;color:#ffffff">Layout</div><div id="b2S" style="font-size:20px;font-weight:400;color:#a5b4fc;margin-top:6px">flexbox, text</div></div><div id="a2" style="font-size:56px;font-weight:700;color:#818cf8;transform-origin:50% 50%">→</div><div id="b3" style="width:300px;height:150px;border-radius:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;background-color:rgba(255,255,255,0.08);border:2px solid rgba(165,180,252,0.55);box-shadow:0 20px 40px rgba(0,0,0,0.35);transform-origin:50% 50%"><div id="b3L" style="font-size:44px;font-weight:700;color:#ffffff">Pixels</div><div id="b3S" style="font-size:20px;font-weight:400;color:#a5b4fc;margin-top:6px">rgba frames</div></div></div><div id="track" style="position:absolute;left:80px;top:590px;width:1120px;height:14px;border-radius:7px;background-color:rgba(255,255,255,0.12);display:flex"><div id="fill" style="position:absolute;left:0px;top:0px;height:14px;border-radius:7px;width:0px;background-color:#6366f1"></div></div><div id="cap" style="position:absolute;left:80px;top:624px;font-size:22px;font-weight:400;color:#94a3b8">encoding 180 frames</div></div><script>
+// The page contract: window.seek(ms) shows the page at ms. Pause every CSS animation there.
+window.seek = (ms) => { for (const a of document.getAnimations()) { a.pause(); a.currentTime = ms } }
+</script>
+</body></html>

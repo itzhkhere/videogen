@@ -1,0 +1,132 @@
+From 283a1d314987cc1574d3aa9100d3ff167af477cb Mon Sep 17 00:00:00 2001
+From: canvas-html <canvas-html@localhost>
+Date: Mon, 5 Oct 2026 17:10:56 +0000
+Subject: [PATCH 9/9] dom, vibey-script: seek paused CSS animations from script
+ without a style change
+
+BaseDocument::set_paused_animation_time(node, name, seconds) moves a paused Stylo animation to a
+current time, and the vibey global __blitz_set_animation_time(element, name, seconds) exposes it.
+Seeking through animation-delay instead rewrites the style attribute, and every such change
+recomputes all keyframe styles of the element. This is the building block for
+Animation.currentTime in a Web Animations implementation. Needs the Stylo change that adds
+Animation::set_paused_time.
+---
+ packages/blitz-dom/src/resolve.rs          | 42 +++++++++++++++++++++-
+ packages/blitz-vibey-script/src/runtime.rs | 34 ++++++++++++++++++
+ 2 files changed, 75 insertions(+), 1 deletion(-)
+
+diff --git a/packages/blitz-dom/src/resolve.rs b/packages/blitz-dom/src/resolve.rs
+index 6150393..1d7534e 100644
+--- a/packages/blitz-dom/src/resolve.rs
++++ b/packages/blitz-dom/src/resolve.rs
+@@ -34,7 +34,6 @@ use crate::{
+ };
+ 
+ impl BaseDocument {
+-    /// Restyle the tree and then relayout it
+     /// The time (in seconds) of the document's animation timeline, as given to the most recent
+     /// [`resolve`](Self::resolve). Use it to restyle without moving animations, for example for
+     /// layout queries made from script.
+@@ -47,6 +46,47 @@ impl BaseDocument {
+         self.resolve(self.animation_time);
+     }
+ 
++    /// Move a paused CSS animation of an element to `held_time` seconds after the animation
++    /// was created (its current time; progress is `(held_time - delay) / duration`).
++    ///
++    /// This is how script seeks an animation (as with `Animation.currentTime`) without writing
++    /// styles: no style changes, so the keyframes are not computed again. The element is
++    /// restyled with the new animated values in the next [`resolve`](Self::resolve).
++    /// Returns false when the element has no paused animation of that name.
++    pub fn set_paused_animation_time(
++        &mut self,
++        node_id: NodeId,
++        name: &str,
++        held_time: f64,
++    ) -> bool {
++        use style::animation::{AnimationSetKey, AnimationState};
++        use style::dom::OpaqueNode;
++
++        let key = AnimationSetKey::new_for_non_pseudo(OpaqueNode(node_id.as_u64() as usize));
++        let name = style::Atom::from(name);
++        let now = self.animation_time;
++        let mut sets = self.animations.sets.write();
++        let Some(set) = sets.get_mut(&key) else {
++            return false;
++        };
++        let Some(animation) = set
++            .animations
++            .iter_mut()
++            .find(|a| a.name == name && matches!(a.state, AnimationState::Paused(_)))
++        else {
++            return false;
++        };
++        animation.set_paused_time(held_time, now);
++        drop(sets);
++        if let Some(node) = self.nodes.get_mut(node_id) {
++            node.set_restyle_hint(
++                style::invalidation::element::restyle_hints::RestyleHint::RESTYLE_SELF,
++            );
++        }
++        true
++    }
++
++    /// Restyle the tree and then relayout it
+     pub fn resolve(&mut self, current_time_for_animations: f64) {
+         self.animation_time = current_time_for_animations;
+         if TDocument::as_node(&self.root_node())
+diff --git a/packages/blitz-vibey-script/src/runtime.rs b/packages/blitz-vibey-script/src/runtime.rs
+index 2dc5bcf..45fb2ad 100644
+--- a/packages/blitz-vibey-script/src/runtime.rs
++++ b/packages/blitz-vibey-script/src/runtime.rs
+@@ -1397,6 +1397,12 @@ impl ScriptRuntime {
+         // `getComputedStyle`
+         register_global_fn(&mut context, "getComputedStyle", 1, get_computed_style);
+         register_global_fn(&mut context, "__blitz_parse_transform", 1, parse_transform);
++        register_global_fn(
++            &mut context,
++            "__blitz_set_animation_time",
++            3,
++            set_animation_time,
++        );
+ 
+         // CSSOM stylesheet natives (`__blitz_sheet_*`), used by the bootstrap's
+         // `CSSStyleSheet` / `CSSRule` implementation
+@@ -2301,6 +2307,34 @@ fn get_computed_style(_: &JsValue, args: &[JsValue], context: &mut Context) -> J
+     Ok(wrap_style_object(obj, context))
+ }
+ 
++/// `__blitz_set_animation_time(element, name, seconds)`: move the element's paused CSS
++/// animation `name` to `seconds` after its creation, without a style change (see
++/// `BaseDocument::set_paused_animation_time`). Returns whether such an animation exists; a
++/// newly declared animation exists once styles have been resolved.
++fn set_animation_time(_: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
++    let ctx = dom_ctx(context)?;
++    let Some(node_id) = args.first().and_then(node_id_of_value) else {
++        return Err(boa_engine::JsNativeError::typ()
++            .with_message("__blitz_set_animation_time: argument is not an Element")
++            .into());
++    };
++    let name = to_rust_string(args.get(1).unwrap_or(&JsValue::undefined()), context)?;
++    let seconds = args
++        .get(2)
++        .unwrap_or(&JsValue::undefined())
++        .to_number(context)?;
++    if !seconds.is_finite() {
++        return Err(boa_engine::JsNativeError::range()
++            .with_message("__blitz_set_animation_time: time must be finite")
++            .into());
++    }
++    let found = ctx
++        .doc
++        .borrow_mut()
++        .set_paused_animation_time(node_id, &name, seconds);
++    Ok(JsValue::from(found))
++}
++
+ fn send_message(_: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+     let ctx = dom_ctx(context)?;
+     let message = args
+-- 
+2.43.0
+

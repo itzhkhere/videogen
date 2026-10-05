@@ -1,0 +1,45 @@
+From bc425a491f216aecc25f92467faa641e4b7339f1 Mon Sep 17 00:00:00 2001
+From: canvas-html <canvas-html@localhost>
+Date: Mon, 5 Oct 2026 17:11:36 +0000
+Subject: [PATCH 3/5] servo/animation: update every animation of an element,
+ not only the first
+
+maybe_start_animations returned from the whole function after updating the first existing
+animation it matched, so with `animation: a 1s, b 2s` a style change never reached b.
+---
+ servo/animation.rs | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/servo/animation.rs b/servo/animation.rs
+index 2ee792c..f3c201a 100644
+--- a/servo/animation.rs
++++ b/servo/animation.rs
+@@ -1955,6 +1955,9 @@ pub fn maybe_start_animations<E>(
+         animation_state.dirty = true;
+ 
+         // If the animation was already present in the list for the node, just update its state.
++        // Then go on with the next animation name: returning here would skip the updates of
++        // every later animation of the element.
++        let mut updated = false;
+         for existing_animation in animation_state.animations.iter_mut() {
+             if existing_animation.state == AnimationState::Canceled {
+                 continue;
+@@ -1963,10 +1966,13 @@ pub fn maybe_start_animations<E>(
+             if new_animation.name == existing_animation.name {
+                 existing_animation
+                     .update_from_other(&new_animation, context.current_time_for_animations);
+-                return;
++                updated = true;
++                break;
+             }
+         }
+ 
+-        animation_state.animations.push(new_animation);
++        if !updated {
++            animation_state.animations.push(new_animation);
++        }
+     }
+ }
+-- 
+2.43.0
+
