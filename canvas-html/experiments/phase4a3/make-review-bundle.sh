@@ -48,7 +48,7 @@ git log --format='%h %an <%ae> | %cn <%ce> | %aI | %s' > "$out/git-authors.txt"
 # Test logs
 {
   echo "# Test logs (Phase 4A.3)"
-  for f in check.log check-gpu.log phase3.log l4-run.log; do
+  for f in check.log check-gpu.log phase3.log l4-run.log fresh-clone-check.log; do
     [ -f "$logs/$f" ] || continue
     echo; echo "## $f"; echo; echo '```'; grep -v '^\s*\(Compiling\|Checking\|Downloaded\|Downloading\)' "$logs/$f" | grep -v '^$' | tail -150; echo '```'
   done

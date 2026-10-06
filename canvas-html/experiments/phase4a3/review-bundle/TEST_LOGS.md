@@ -307,6 +307,69 @@ TIMING_EXIT=0
 ALL_DONE
 ```
 
+## fresh-clone-check.log
+
+```
+Blitz ready at /tmp/claude-0/-home-user-videogen/fc66e88c-4246-59e8-87f3-462058d15114/scratchpad/fresh/third_party/blitz (branch patched, 14 patches)
+== cargo fmt --check
+== cargo clippy (default features)
+    Finished `release` profile [optimized] target(s) in 1m 17s
+== cargo test (dom-host)
+    Finished `release` profile [optimized] target(s) in 2m 39s
+     Running unittests src/lib.rs (/home/user/harender-target/release/deps/dom_host-4ab6c633b08dbb5a)
+running 9 tests
+test clock::tests::contract_values ... ok
+test style::tests::declared ... ok
+test events::tests::dedupe_and_capture ... ok
+test timers::tests::deadline_then_insertion_order ... ok
+test timers::tests::not_due_stays ... ok
+test style::tests::names ... ok
+test timers::tests::many_equal_deadlines_keep_insertion_order ... ok
+test timers::tests::rescheduled_interval_runs_after_waiting_timers ... ok
+test events::tests::once_and_removed_during_dispatch ... ok
+test result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+     Running tests/document.rs (/home/user/harender-target/release/deps/document-05c4700988aa1a28)
+running 7 tests
+test inline_style_policy ... ok
+test computed_style_and_geometry_follow_mutations ... ok
+test class_list ... ok
+test lookup_and_identity ... ok
+test stale_and_detached_handles ... ok
+test created_elements_and_event_path ... ok
+test text_and_attributes ... ok
+test result: ok. 7 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+   Doc-tests dom_host
+running 0 tests
+test result: ok. 0 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s
+== release build
+    Finished `release` profile [optimized] target(s) in 3m 01s
+== npm test
+smoke: all passed
+smoke-js: all passed
+smoke-waapi: all passed
+smoke-fonts: all passed
+render-into: all passed
+render-into-examples: all passed
+hardening: all passed
+== workers
+CSS motion, 30 fps       identical | 1 renderer 1.20 s, 2 workers 0.80 s (1.5x)
+GSAP, 30 fps             identical | 1 renderer 0.71 s, 2 workers 0.55 s (1.3x)
+Motion library, 24 fps   identical | 1 renderer 0.68 s, 2 workers 0.54 s (1.3x)
+transfer   1 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0, 2 buffers allocated for 24 frames, use-after-transfer rejected 24/24, 52.5 fps
+transfer   2 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0,0, 4 buffers allocated for 24 frames, use-after-transfer rejected 24/24, 72.8 fps
+transfer   4 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0,0,0,0, 8 buffers allocated for 24 frames, use-after-transfer rejected 24/24, 86.1 fps
+in-process 1 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0, 52.1 fps
+in-process 2 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0,0, 74.7 fps
+in-process 4 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0,0,0,0, 100.7 fps
+render-into-workers: all passed
+== TypeScript (strict) type tests
+all checks passed
+real	7m24.200s
+user	15m22.489s
+sys	1m54.982s
+EXIT=0
+```
+
 ## per-commit verification (experiments/phase4a3/history/verify.log)
 
 ```
