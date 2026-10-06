@@ -3,7 +3,7 @@
 # formatting, clippy, Rust unit tests, a release build, the npm test suite, the worker tests and
 # the TypeScript type tests. Run from anywhere; set CARGO_TARGET_DIR to build elsewhere.
 #   scripts/check.sh            all checks
-#   SKIP_TYPES=1 scripts/check.sh   without the TypeScript checks (they fetch tsc with npx)
+#   SKIP_TYPES=1 scripts/check.sh   without the TypeScript checks (they download tsc and @types/node)
 set -euo pipefail
 cd "$(dirname "$0")/.."
 target=${CARGO_TARGET_DIR:-target}
@@ -33,7 +33,10 @@ node test/render-into-workers.mjs
 
 if [ -z "${SKIP_TYPES:-}" ]; then
   step "TypeScript (strict) type tests"
-  npx --yes -p typescript@5.9 -p @types/node@24 tsc -p test/types
+  tools=$(mktemp -d)
+  npm install --silent --no-save --no-package-lock --prefix "$tools" typescript@5.9 @types/node@24
+  "$tools/node_modules/.bin/tsc" -p test/types --typeRoots "$tools/node_modules/@types"
+  rm -rf "$tools"
 fi
 
 printf '\nall checks passed\n'
