@@ -332,7 +332,7 @@ impl SkiaGpuImageRenderer {
     pub fn render_timed<F: FnOnce(&mut SkiaScenePainter<'_>)>(
         &mut self,
         draw_fn: F,
-        out: Option<&mut Vec<u8>>,
+        out: Option<&mut [u8]>,
     ) -> Result<GpuFrameTimings, GpuError> {
         self.device.make_current()?;
         if self.device.context.borrow_mut().abandoned() {
@@ -374,8 +374,10 @@ impl SkiaGpuImageRenderer {
         if let Some(out) = out {
             let start = Instant::now();
             let row_bytes = self.image_info.min_row_bytes();
-            out.resize(self.image_info.compute_min_byte_size(), 0);
-            if !self.surface.read_pixels(&self.image_info, &mut out[..], row_bytes, (0, 0)) {
+            if out.len() != self.image_info.compute_min_byte_size() {
+                return Err(GpuError(format!("output buffer is {} bytes, the frame needs {}", out.len(), self.image_info.compute_min_byte_size())));
+            }
+            if !self.surface.read_pixels(&self.image_info, out, row_bytes, (0, 0)) {
                 return Err(GpuError("GPU readback failed".into()));
             }
             t.readback_ns = start.elapsed().as_nanos();

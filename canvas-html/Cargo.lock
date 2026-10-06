@@ -600,6 +600,7 @@ dependencies = [
  "blitz-vibey-script",
  "bytes",
  "canvas-dom-host",
+ "libc",
  "napi",
  "napi-build",
  "napi-derive",

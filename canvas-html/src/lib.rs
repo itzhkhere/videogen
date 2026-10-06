@@ -5,6 +5,8 @@
 
 use std::sync::{Arc, Mutex};
 
+mod frames;
+
 use anyrender::{ImageRenderer, PaintScene as _};
 use anyrender_skia::SkiaImageRenderer;
 use base64::Engine as _;
@@ -190,7 +192,13 @@ pub struct HtmlRenderer {
     /// The script clock's origin (virtual or real Instant).
     script_start: Option<Instant>,
     renderer: Painter,
+    /// Scratch frame for paths that keep the pixels (PNG, no-readback timing). RGBA frames are
+    /// not kept: each is handed to Node and the next frame gets a new allocation.
     buffer: Vec<u8>,
+    /// Bytes of one RGBA frame (pixelWidth × pixelHeight × 4).
+    frame_bytes: usize,
+    /// Experimental Design B: frames returned by Buffer finalizers, reused (Phase 4A.1).
+    pool: Option<Arc<frames::FramePool>>,
     errors: Arc<Mutex<Vec<String>>>,
     js_errors: Vec<String>,
     epoch_ms: Option<f64>,
@@ -336,8 +344,17 @@ impl HtmlRenderer {
         Ok(v.get("ok").cloned().unwrap_or(serde_json::Value::Null))
     }
 
-    /// Paint into `self.buffer` (with `readback`, always on CPU) and report where the time went.
-    fn paint(&mut self, readback: bool) -> Result<PaintTimings> {
+    /// Paint the current document. With `out`, the RGBA pixels land there (CPU: Skia
+    /// rasterizes into it; GPU: read back into it). Without, the CPU rasterizes into the scratch
+    /// frame and the GPU keeps the frame on the GPU.
+    fn paint_into(&mut self, out: Option<&mut [u8]>) -> Result<PaintTimings> {
+        if let Some(o) = &out {
+            if o.len() != self.frame_bytes {
+                return Err(Error::from_reason(format!("output buffer is {} bytes, the frame needs {}", o.len(), self.frame_bytes)));
+            }
+        } else if matches!(self.renderer, Painter::Cpu(_)) && self.buffer.len() != self.frame_bytes {
+            self.buffer = frames::alloc_frame(self.frame_bytes).map_err(Error::from_reason)?;
+        }
         let pw = (self.width as f64 * self.dpr).round() as u32;
         let ph = (self.height as f64 * self.dpr).round() as u32;
         let bg = self.background;
@@ -350,27 +367,61 @@ impl HtmlRenderer {
         match &mut self.renderer {
             Painter::Closed => Err(Error::from_reason("renderer is closed")),
             Painter::Cpu(renderer) => {
-                let _ = readback; // the CPU rasterizes into memory: there is nothing to read back
                 let start = Instant::now();
-                renderer.render_to_vec(draw, &mut self.buffer);
+                match out {
+                    Some(o) => renderer.render(draw, o),
+                    None => renderer.render(draw, &mut self.buffer[..]),
+                }
                 Ok(PaintTimings { record_ns: start.elapsed().as_nanos(), ..Default::default() })
             }
             #[cfg(feature = "experimental-gpu")]
             Painter::Gpu(renderer) => {
                 let t = renderer
-                    .render_timed(draw, readback.then_some(&mut self.buffer))
+                    .render_timed(draw, out)
                     .map_err(|e| Error::from_reason(format!("GPU render failed ({}): {e}", renderer.device().kind().name())))?;
                 Ok(PaintTimings { record_ns: t.record_ns, submit_ns: t.submit_ns, wait_ns: t.wait_ns, readback_ns: t.readback_ns })
             }
             #[cfg(feature = "experimental-graphite")]
             Painter::Graphite(renderer) => {
                 let t = renderer
-                    .render_timed(draw, readback.then_some(&mut self.buffer))
+                    .render_timed(draw, out)
                     .map_err(|e| Error::from_reason(format!("GPU render failed (graphite-vulkan): {e}")))?;
                 Ok(PaintTimings { record_ns: t.record_ns, submit_ns: t.submit_ns, wait_ns: t.wait_ns, readback_ns: t.readback_ns })
             }
         }
     }
+
+    /// A frame to paint into: the scratch frame if it has the right size, else a new one.
+    fn next_frame(&mut self) -> Result<Vec<u8>> {
+        let v = std::mem::take(&mut self.buffer);
+        if v.len() == self.frame_bytes {
+            return Ok(v);
+        }
+        frames::alloc_frame(self.frame_bytes).map_err(Error::from_reason)
+    }
+
+    /// The frame-JS / resolve part of a render (everything before painting).
+    fn prepare_frame(&mut self) -> Result<()> {
+        self.doc_mut()?;
+        self.run_due_timers();
+        if let Some(Doc::Script(doc)) = self.doc.as_mut() {
+            doc.eval("globalThis.__canvasHtml.frame();");
+            self.js_errors.extend(doc.take_js_errors());
+        }
+        self.resolve()
+    }
+}
+
+fn encode_png(rgba: &[u8], pw: u32, ph: u32) -> Result<Vec<u8>> {
+    let mut out = Vec::new();
+    {
+        let mut enc = png::Encoder::new(&mut out, pw, ph);
+        enc.set_color(png::ColorType::Rgba);
+        enc.set_depth(png::BitDepth::Eight);
+        let mut w = enc.write_header().map_err(|e| Error::from_reason(e.to_string()))?;
+        w.write_image_data(rgba).map_err(|e| Error::from_reason(e.to_string()))?;
+    }
+    Ok(out)
 }
 
 #[derive(Default, Clone, Copy)]
@@ -491,18 +542,12 @@ pub struct TimedRenderOptions {
     /// Also time Blitz's paint-command generation alone (an extra pass into a no-op painter),
     /// reported as `paintPrep`. Default false.
     pub measure_paint_prep: Option<bool>,
+    /// RGBA output: "transfer" (default; what render() does), "clone" (Phase 4A) or "pool".
+    pub output: Option<String>,
+    /// Design B: frames the pool keeps for reuse (default 3).
+    pub pool_size: Option<u32>,
 }
 
-#[napi(object)]
-pub struct TimedRender {
-    /// The backend that rendered this frame: "cpu-raster", "ganesh-gl" or "ganesh-vulkan".
-    pub backend: String,
-    /// Nanoseconds per step: frameJs (rAF + animations), resolve (style + layout), paint
-    /// (CPU: command generation + rasterization; GPU: command generation + Skia recording),
-    /// gpuSubmit, gpuWait, readback, buffer (Node Buffer creation), png, total.
-    pub timings_ns: HashMap<String, f64>,
-    pub pixels: Option<Buffer>,
-}
 
 #[napi]
 impl HtmlRenderer {
@@ -517,6 +562,7 @@ impl HtmlRenderer {
         }
         let pw = (options.width as f64 * dpr).round() as u32;
         let ph = (options.height as f64 * dpr).round() as u32;
+        let frame_bytes = frames::frame_len(pw, ph).map_err(Error::from_reason)?;
         Ok(Self {
             width: options.width,
             height: options.height,
@@ -551,7 +597,9 @@ impl HtmlRenderer {
             loaded_at: Instant::now(),
             script_start: None,
             renderer: Painter::new(options.experimental_backend.as_deref(), options.experimental_gpu_share.as_deref(), pw, ph)?,
-            buffer: Vec::with_capacity((pw * ph * 4) as usize),
+            buffer: Vec::new(),
+            frame_bytes,
+            pool: None,
             errors: Arc::new(Mutex::new(Vec::new())),
             js_errors: Vec::new(),
             epoch_ms: match options.epoch_ms {
@@ -605,27 +653,18 @@ impl HtmlRenderer {
             Some("png") => true,
             Some(other) => return Err(Error::from_reason(format!("format must be \"rgba\" or \"png\", got {other:?}"))),
         };
-        self.doc_mut()?;
-        self.run_due_timers();
-        if let Some(Doc::Script(doc)) = self.doc.as_mut() {
-            doc.eval("globalThis.__canvasHtml.frame();");
-            self.js_errors.extend(doc.take_js_errors());
-        }
-        self.resolve()?;
-        self.paint(true)?;
+        self.prepare_frame()?;
+        let mut frame = self.next_frame()?;
+        self.paint_into(Some(&mut frame))?;
         if !png {
-            return Ok(Buffer::from(self.buffer.clone()));
+            // The frame Vec becomes the Buffer's memory (napi external buffer, no copy) and is
+            // freed by its finalizer. The renderer keeps no reference to it.
+            return Ok(Buffer::from(frame));
         }
         let pw = (self.width as f64 * self.dpr).round() as u32;
         let ph = (self.height as f64 * self.dpr).round() as u32;
-        let mut out = Vec::new();
-        {
-            let mut enc = png::Encoder::new(&mut out, pw, ph);
-            enc.set_color(png::ColorType::Rgba);
-            enc.set_depth(png::BitDepth::Eight);
-            let mut w = enc.write_header().map_err(|e| Error::from_reason(e.to_string()))?;
-            w.write_image_data(&self.buffer).map_err(|e| Error::from_reason(e.to_string()))?;
-        }
+        let out = encode_png(&frame, pw, ph)?;
+        self.buffer = frame;
         Ok(Buffer::from(out))
     }
 
@@ -783,17 +822,8 @@ impl HtmlRenderer {
         self.errors.lock().unwrap().clone()
     }
 
-    /// Experimental (Phase 4A): render like `render()` and report the time of every step. The
-    /// backend that drew the frame is named in the result; nothing falls back silently.
-    #[napi(js_name = "_renderTimed")]
-    pub fn render_timed(&mut self, options: Option<TimedRenderOptions>) -> Result<TimedRender> {
-        let total = Instant::now();
-        let (format, readback, measure_prep) = match options {
-            Some(o) => (o.format.unwrap_or_else(|| "rgba".into()), o.readback.unwrap_or(true), o.measure_paint_prep.unwrap_or(false)),
-            None => ("rgba".into(), true, false),
-        };
-        let readback = readback || format != "none";
-        let mut t: HashMap<String, f64> = HashMap::new();
+    /// Frame JS and style/layout, timed, plus Blitz's command generation alone when asked.
+    fn prepare_timed(&mut self, t: &mut HashMap<String, f64>, measure_prep: bool) -> Result<()> {
         self.doc_mut()?;
         self.run_due_timers();
         let start = Instant::now();
@@ -814,41 +844,174 @@ impl HtmlRenderer {
             doc.with_base(|b| paint_scene(&mut anyrender::NullScenePainter, b, dpr, pw, ph, 0, 0));
             t.insert("paintPrep".into(), start.elapsed().as_nanos() as f64);
         }
-        let p = self.paint(readback)?;
+        Ok(())
+    }
+
+    fn paint_timed(&mut self, t: &mut HashMap<String, f64>, out: Option<&mut [u8]>) -> Result<()> {
+        let p = self.paint_into(out)?;
         t.insert("paint".into(), p.record_ns as f64);
         t.insert("gpuSubmit".into(), p.submit_ns as f64);
         t.insert("gpuWait".into(), p.wait_ns as f64);
         t.insert("readback".into(), p.readback_ns as f64);
-        let pixels = match format.as_str() {
-            "none" => None,
-            "rgba" => {
-                let start = Instant::now();
-                let b = Buffer::from(self.buffer.clone());
-                t.insert("buffer".into(), start.elapsed().as_nanos() as f64);
-                Some(b)
+        Ok(())
+    }
+
+    fn timed_result<'env>(&self, env: &'env Env, t: HashMap<String, f64>, pixels: Option<BufferSlice<'env>>) -> Result<Object<'env>> {
+        let mut o = Object::new(env)?;
+        o.set("backend", self.renderer.name())?;
+        o.set("timingsNs", t)?;
+        if let Some(p) = pixels {
+            o.set("pixels", p)?;
+        }
+        Ok(o)
+    }
+
+    /// Experimental (Phase 4A, 4A.1): render like `render()` and report the time of every step.
+    /// The backend that drew the frame is named in the result; nothing falls back silently.
+    /// `output` picks how an RGBA frame leaves the renderer: "transfer" (default, what render()
+    /// does: the frame Vec becomes the Buffer), "clone" (the Phase 4A path: copy the renderer's
+    /// frame into a new Buffer) or "pool" (Design B: reuse frames returned by finalizers).
+    #[napi(js_name = "_renderTimed")]
+    pub fn render_timed<'env>(&mut self, env: &'env Env, options: Option<TimedRenderOptions>) -> Result<Object<'env>> {
+        let total = Instant::now();
+        let o = options.unwrap_or(TimedRenderOptions { format: None, readback: None, measure_paint_prep: None, output: None, pool_size: None });
+        let format = o.format.unwrap_or_else(|| "rgba".into());
+        let output = o.output.unwrap_or_else(|| "transfer".into());
+        let readback = o.readback.unwrap_or(true) || format != "none";
+        if !matches!(format.as_str(), "rgba" | "png" | "none") {
+            return Err(Error::from_reason(format!("format must be \"rgba\", \"png\" or \"none\", got {format:?}")));
+        }
+        if !matches!(output.as_str(), "transfer" | "transfer-huge" | "clone" | "pool") {
+            return Err(Error::from_reason(format!("output must be \"transfer\", \"transfer-huge\", \"clone\" or \"pool\", got {output:?}")));
+        }
+        let mut t: HashMap<String, f64> = HashMap::new();
+        self.prepare_timed(&mut t, o.measure_paint_prep.unwrap_or(false))?;
+        let pixels = match (format.as_str(), output.as_str()) {
+            ("none", _) => {
+                if readback {
+                    let mut frame = self.next_frame()?;
+                    let r = self.paint_timed(&mut t, Some(&mut frame));
+                    self.buffer = frame;
+                    r?;
+                } else {
+                    self.paint_timed(&mut t, None)?;
+                }
+                None
             }
-            "png" => {
+            ("png", _) => {
                 let start = Instant::now();
+                let mut frame = self.next_frame()?;
+                t.insert("alloc".into(), start.elapsed().as_nanos() as f64);
+                self.paint_timed(&mut t, Some(&mut frame))?;
                 let pw = (self.width as f64 * self.dpr).round() as u32;
                 let ph = (self.height as f64 * self.dpr).round() as u32;
-                let mut out = Vec::new();
-                {
-                    let mut enc = png::Encoder::new(&mut out, pw, ph);
-                    enc.set_color(png::ColorType::Rgba);
-                    enc.set_depth(png::BitDepth::Eight);
-                    let mut w = enc.write_header().map_err(|e| Error::from_reason(e.to_string()))?;
-                    w.write_image_data(&self.buffer).map_err(|e| Error::from_reason(e.to_string()))?;
-                }
-                t.insert("png".into(), start.elapsed().as_nanos() as f64);
                 let start = Instant::now();
-                let b = Buffer::from(out);
+                let out = encode_png(&frame, pw, ph)?;
+                t.insert("png".into(), start.elapsed().as_nanos() as f64);
+                self.buffer = frame;
+                let start = Instant::now();
+                let b = BufferSlice::from_data(env, out)?;
                 t.insert("buffer".into(), start.elapsed().as_nanos() as f64);
                 Some(b)
             }
-            other => return Err(Error::from_reason(format!("format must be \"rgba\", \"png\" or \"none\", got {other:?}"))),
+            (_, "clone") => {
+                // Phase 4A: paint into the renderer's frame, copy it into a new Vec for Node.
+                let start = Instant::now();
+                let mut frame = self.next_frame()?;
+                t.insert("alloc".into(), start.elapsed().as_nanos() as f64);
+                let r = self.paint_timed(&mut t, Some(&mut frame));
+                if let Err(e) = r {
+                    self.buffer = frame;
+                    return Err(e);
+                }
+                let start = Instant::now();
+                let copy = frame.clone();
+                t.insert("copy".into(), start.elapsed().as_nanos() as f64);
+                self.buffer = frame;
+                let start = Instant::now();
+                let b = BufferSlice::from_data(env, copy)?;
+                t.insert("buffer".into(), start.elapsed().as_nanos() as f64);
+                Some(b)
+            }
+            (_, "transfer" | "transfer-huge") => {
+                let start = Instant::now();
+                let mut frame = if output == "transfer-huge" {
+                    frames::alloc_frame_huge(self.frame_bytes).map_err(Error::from_reason)?
+                } else {
+                    self.next_frame()?
+                };
+                t.insert("alloc".into(), start.elapsed().as_nanos() as f64);
+                self.paint_timed(&mut t, Some(&mut frame))?;
+                let start = Instant::now();
+                let b = BufferSlice::from_data(env, frame)?;
+                t.insert("buffer".into(), start.elapsed().as_nanos() as f64);
+                Some(b)
+            }
+            _ => {
+                let size = o.pool_size.unwrap_or(3).clamp(1, 64) as usize;
+                let pool = match &self.pool {
+                    Some(p) if p.max_free() == size && p.len() == self.frame_bytes => p.clone(),
+                    _ => {
+                        let p = frames::FramePool::new(self.frame_bytes, size);
+                        self.pool = Some(p.clone());
+                        p
+                    }
+                };
+                let start = Instant::now();
+                let mut frame = pool.take().map_err(Error::from_reason)?;
+                t.insert("alloc".into(), start.elapsed().as_nanos() as f64);
+                if let Err(e) = self.paint_timed(&mut t, Some(&mut frame)) {
+                    pool.give_back(frame);
+                    return Err(e);
+                }
+                let start = Instant::now();
+                let ptr = frame.as_mut_ptr();
+                let len = frame.len();
+                // SAFETY: `ptr`/`len` describe `frame`'s heap block, which moves into the finalize
+                // hint unchanged (moving a Vec does not move its heap memory) and is only freed or
+                // reused after V8 finalizes this Buffer. The renderer keeps no reference to it.
+                let b = unsafe {
+                    BufferSlice::from_external(env, ptr, len, (pool, frame), |_, (pool, frame): (Arc<frames::FramePool>, Vec<u8>)| pool.give_back(frame))?
+                };
+                t.insert("buffer".into(), start.elapsed().as_nanos() as f64);
+                Some(b)
+            }
         };
         t.insert("total".into(), total.elapsed().as_nanos() as f64);
-        Ok(TimedRender { backend: self.renderer.name().into(), timings_ns: t, pixels })
+        self.timed_result(env, t, pixels)
+    }
+
+    /// Experimental (Phase 4A.1, Design C): render into a caller-owned Buffer of exactly
+    /// pixelWidth × pixelHeight × 4 bytes. No allocation and no copy in canvas-html: the CPU
+    /// rasterizes, or the GPU reads back, straight into it. The caller decides when to reuse it;
+    /// while this call runs the Buffer must not be shared with another thread. Returns the
+    /// timings.
+    #[napi(js_name = "_renderInto")]
+    pub fn render_into<'env>(&mut self, env: &'env Env, mut target: BufferSlice<'env>) -> Result<Object<'env>> {
+        let total = Instant::now();
+        self.check_open()?;
+        if target.len() != self.frame_bytes {
+            return Err(Error::from_reason(format!("target Buffer is {} bytes, the frame needs {}", target.len(), self.frame_bytes)));
+        }
+        let mut t: HashMap<String, f64> = HashMap::new();
+        self.prepare_timed(&mut t, false)?;
+        self.paint_timed(&mut t, Some(&mut target[..]))?;
+        t.insert("total".into(), total.elapsed().as_nanos() as f64);
+        self.timed_result(env, t, None)
+    }
+
+    /// Experimental (Phase 4A.1): Design B pool counters, or null without a pool.
+    #[napi(js_name = "_poolStats")]
+    pub fn pool_stats(&self) -> serde_json::Value {
+        use std::sync::atomic::Ordering::Relaxed;
+        match &self.pool {
+            None => serde_json::Value::Null,
+            Some(p) => serde_json::json!({
+                "frameBytes": p.len(), "maxFree": p.max_free(), "free": p.free_count(),
+                "allocated": p.allocated.load(Relaxed), "reused": p.reused.load(Relaxed),
+                "returned": p.returned.load(Relaxed), "discarded": p.discarded.load(Relaxed),
+            }),
+        }
     }
 
     /// Experimental: the backend, the GPU device description and Skia's GPU resource cache.
@@ -922,6 +1085,8 @@ impl HtmlRenderer {
         self.html = None;
         self.fonts.clear();
         self.buffer = Vec::new();
+        // Outstanding pooled Buffers keep the pool alive through their finalizers.
+        self.pool = None;
         self.renderer = Painter::Closed;
     }
 

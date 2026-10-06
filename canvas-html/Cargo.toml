@@ -35,6 +35,8 @@ bytes = "1.7"
 base64 = "0.22"
 percent-encoding = "2.3"
 png = "0.18"
+# Phase 4A.1: madvise(MADV_HUGEPAGE) for fresh output frames (already in the dependency tree)
+libc = "0.2"
 # Engine-neutral DOM host shared with the experimental Deno/V8 adapter (see dom-host/)
 canvas-dom-host = { path = "dom-host" }
 
