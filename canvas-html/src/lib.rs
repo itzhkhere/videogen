@@ -362,6 +362,13 @@ impl HtmlRenderer {
                     .map_err(|e| Error::from_reason(format!("GPU render failed ({}): {e}", renderer.device().kind().name())))?;
                 Ok(PaintTimings { record_ns: t.record_ns, submit_ns: t.submit_ns, wait_ns: t.wait_ns, readback_ns: t.readback_ns })
             }
+            #[cfg(feature = "experimental-graphite")]
+            Painter::Graphite(renderer) => {
+                let t = renderer
+                    .render_timed(draw, readback.then_some(&mut self.buffer))
+                    .map_err(|e| Error::from_reason(format!("GPU render failed (graphite-vulkan): {e}")))?;
+                Ok(PaintTimings { record_ns: t.record_ns, submit_ns: t.submit_ns, wait_ns: t.wait_ns, readback_ns: t.readback_ns })
+            }
         }
     }
 }
@@ -382,6 +389,8 @@ enum Painter {
     Cpu(SkiaImageRenderer),
     #[cfg(feature = "experimental-gpu")]
     Gpu(anyrender_skia::SkiaGpuImageRenderer),
+    #[cfg(feature = "experimental-graphite")]
+    Graphite(anyrender_skia::SkiaGraphiteImageRenderer),
 }
 
 #[cfg(feature = "experimental-gpu")]
@@ -391,44 +400,73 @@ thread_local! {
     static SHARED_GPU: std::cell::RefCell<Vec<std::rc::Weak<anyrender_skia::GpuDevice>>> = const { std::cell::RefCell::new(Vec::new()) };
 }
 
+#[cfg(feature = "experimental-graphite")]
+thread_local! {
+    static SHARED_GRAPHITE: std::cell::RefCell<Vec<std::rc::Weak<anyrender_skia::GraphiteDevice>>> = const { std::cell::RefCell::new(Vec::new()) };
+}
+
 impl Painter {
     fn new(backend: Option<&str>, share: Option<&str>, pw: u32, ph: u32) -> Result<Self> {
-        match backend.unwrap_or("cpu") {
-            "cpu" => Ok(Painter::Cpu(SkiaImageRenderer::new(pw, ph))),
-            #[cfg(feature = "experimental-gpu")]
-            name => {
-                use anyrender_skia::{GpuApi, GpuDevice, SkiaGpuImageRenderer};
-                let api = GpuApi::parse(name).map_err(|e| Error::from_reason(e.to_string()))?;
-                let shared = match share.unwrap_or("renderer") {
-                    "renderer" => false,
-                    "thread" => true,
-                    other => return Err(Error::from_reason(format!("experimentalGpuShare must be \"renderer\" or \"thread\", got {other:?}"))),
-                };
-                let existing = shared
-                    .then(|| SHARED_GPU.with(|s| s.borrow().iter().filter_map(|w| w.upgrade()).find(|d| d.kind() == api && !d.is_abandoned())))
-                    .flatten();
-                let device = match existing {
-                    Some(d) => d,
-                    None => {
-                        let d = GpuDevice::new(api).map_err(|e| Error::from_reason(format!("GPU initialization failed ({}): {e}", api.name())))?;
-                        if shared {
-                            SHARED_GPU.with(|s| {
-                                let mut s = s.borrow_mut();
-                                s.retain(|w| w.strong_count() > 0);
-                                s.push(std::rc::Rc::downgrade(&d));
-                            });
-                        }
-                        d
+        let name = backend.unwrap_or("cpu");
+        if name == "cpu" {
+            return Ok(Painter::Cpu(SkiaImageRenderer::new(pw, ph)));
+        }
+        let shared = match share.unwrap_or("renderer") {
+            "renderer" => false,
+            "thread" => true,
+            other => return Err(Error::from_reason(format!("experimentalGpuShare must be \"renderer\" or \"thread\", got {other:?}"))),
+        };
+        #[cfg(feature = "experimental-graphite")]
+        if name == "gpu-graphite" || name == "gpu-graphite-vulkan" {
+            use anyrender_skia::{GraphiteDevice, SkiaGraphiteImageRenderer};
+            let existing = shared
+                .then(|| SHARED_GRAPHITE.with(|s| s.borrow().iter().filter_map(|w| w.upgrade()).find(|d| !d.is_device_lost())))
+                .flatten();
+            let device = match existing {
+                Some(d) => d,
+                None => {
+                    let d = GraphiteDevice::new().map_err(|e| Error::from_reason(format!("GPU initialization failed (graphite-vulkan): {e}")))?;
+                    if shared {
+                        SHARED_GRAPHITE.with(|s| {
+                            let mut s = s.borrow_mut();
+                            s.retain(|w| w.strong_count() > 0);
+                            s.push(std::rc::Rc::downgrade(&d));
+                        });
                     }
-                };
-                let r = SkiaGpuImageRenderer::new(device, pw, ph).map_err(|e| Error::from_reason(e.to_string()))?;
-                Ok(Painter::Gpu(r))
-            }
-            #[cfg(not(feature = "experimental-gpu"))]
-            other => {
-                let _ = share;
-                Err(Error::from_reason(format!("experimentalBackend {other:?} needs a build with the experimental-gpu feature")))
-            }
+                    d
+                }
+            };
+            let r = SkiaGraphiteImageRenderer::new(device, pw, ph).map_err(|e| Error::from_reason(e.to_string()))?;
+            return Ok(Painter::Graphite(r));
+        }
+        #[cfg(feature = "experimental-gpu")]
+        {
+            use anyrender_skia::{GpuApi, GpuDevice, SkiaGpuImageRenderer};
+            let api = GpuApi::parse(name).map_err(|e| Error::from_reason(e.to_string()))?;
+            let existing = shared
+                .then(|| SHARED_GPU.with(|s| s.borrow().iter().filter_map(|w| w.upgrade()).find(|d| d.kind() == api && !d.is_abandoned())))
+                .flatten();
+            let device = match existing {
+                Some(d) => d,
+                None => {
+                    let d = GpuDevice::new(api).map_err(|e| Error::from_reason(format!("GPU initialization failed ({}): {e}", api.name())))?;
+                    if shared {
+                        SHARED_GPU.with(|s| {
+                            let mut s = s.borrow_mut();
+                            s.retain(|w| w.strong_count() > 0);
+                            s.push(std::rc::Rc::downgrade(&d));
+                        });
+                    }
+                    d
+                }
+            };
+            let r = SkiaGpuImageRenderer::new(device, pw, ph).map_err(|e| Error::from_reason(e.to_string()))?;
+            return Ok(Painter::Gpu(r));
+        }
+        #[allow(unreachable_code)]
+        {
+            let _ = shared;
+            Err(Error::from_reason(format!("unsupported GPU backend {name:?} in this build (experimentalBackend needs an experimental GPU feature)")))
         }
     }
 
@@ -438,6 +476,8 @@ impl Painter {
             Painter::Cpu(_) => "cpu-raster",
             #[cfg(feature = "experimental-gpu")]
             Painter::Gpu(r) => r.device().kind().name(),
+            #[cfg(feature = "experimental-graphite")]
+            Painter::Graphite(r) => r.device().name(),
         }
     }
 }
@@ -825,6 +865,13 @@ impl HtmlRenderer {
                     "abandoned": r.device().is_abandoned(),
                 })
             }
+            #[cfg(feature = "experimental-graphite")]
+            Painter::Graphite(r) => serde_json::json!({
+                "backend": r.device().name(),
+                "device": r.device().description(),
+                "sharedDeviceRefs": std::rc::Rc::strong_count(r.device()),
+                "abandoned": r.device().is_device_lost(),
+            }),
         }
     }
 
@@ -855,6 +902,8 @@ impl HtmlRenderer {
                 r.device().abandon_for_testing();
                 Ok(())
             }
+            #[cfg(feature = "experimental-graphite")]
+            Painter::Graphite(_) => Err(Error::from_reason("Graphite has no abandon: device loss cannot be simulated")),
         }
     }
 

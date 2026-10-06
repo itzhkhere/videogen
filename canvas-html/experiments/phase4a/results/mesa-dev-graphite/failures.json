@@ -1,0 +1,111 @@
+{
+  "rows": [
+    {
+      "probe": "init-failure",
+      "backend": "gpu-graphite",
+      "exitCode": 0,
+      "signal": null,
+      "crashed": false,
+      "result": {
+        "create": {
+          "ok": false,
+          "error": "GPU initialization failed (graphite-vulkan): Vulkan device 99 does not exist"
+        },
+        "cpuAfter": {
+          "ok": true,
+          "value": "6c466dc160e601c2"
+        }
+      }
+    },
+    {
+      "probe": "unsupported-backend",
+      "backend": "-",
+      "exitCode": 0,
+      "signal": null,
+      "crashed": false,
+      "result": {
+        "create": {
+          "ok": false,
+          "error": "unsupported GPU backend \"gpu-metal\" in this build (experimentalBackend needs an experimental GPU feature)"
+        },
+        "shareOption": {
+          "ok": false,
+          "error": "experimentalGpuShare must be \"renderer\" or \"thread\", got \"process\""
+        }
+      }
+    },
+    {
+      "probe": "surface-failure",
+      "backend": "gpu-graphite",
+      "exitCode": 0,
+      "signal": null,
+      "crashed": false,
+      "result": {
+        "create": {
+          "ok": false,
+          "error": "GPU surface 70000x16 could not be created"
+        },
+        "gpuAfter": {
+          "ok": true,
+          "value": "a8e99dc75b53aa46"
+        }
+      }
+    },
+    {
+      "probe": "device-lost",
+      "backend": "gpu-graphite",
+      "exitCode": 0,
+      "signal": null,
+      "crashed": false,
+      "result": {
+        "abandon": {
+          "ok": false,
+          "error": "Graphite has no abandon: device loss cannot be simulated"
+        },
+        "note": "device loss cannot be simulated on this backend"
+      }
+    },
+    {
+      "probe": "use-after-close",
+      "backend": "gpu-graphite",
+      "exitCode": 0,
+      "signal": null,
+      "crashed": false,
+      "result": {
+        "render": {
+          "ok": false,
+          "error": "renderer is closed"
+        },
+        "info": {
+          "backend": "closed"
+        },
+        "closeAgain": {
+          "ok": true
+        }
+      }
+    },
+    {
+      "probe": "gc-finalize",
+      "backend": "gpu-graphite",
+      "exitCode": 0,
+      "signal": null,
+      "crashed": false,
+      "result": {
+        "after": {
+          "ok": true,
+          "value": "a8e99dc75b53aa46"
+        }
+      }
+    },
+    {
+      "probe": "exit-with-live-renderers",
+      "backend": "gpu-graphite",
+      "exitCode": 0,
+      "signal": null,
+      "crashed": false,
+      "result": {
+        "note": "process exits right after this line without close()"
+      }
+    }
+  ]
+}

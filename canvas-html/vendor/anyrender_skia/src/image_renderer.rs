@@ -68,6 +68,8 @@ impl ImageRenderer for SkiaImageRenderer {
         draw_fn(&mut SkiaScenePainter {
             inner: surface.canvas(),
             cache: &mut self.scene_cache,
+            #[cfg(feature = "headless-graphite")]
+            graphite_recorder: None,
         });
         timer.record_time("render");
 
@@ -94,6 +96,8 @@ impl ImageRenderer for SkiaImageRenderer {
         draw_fn(&mut SkiaScenePainter {
             inner: surface.canvas(),
             cache: &mut self.scene_cache,
+            #[cfg(feature = "headless-graphite")]
+            graphite_recorder: None,
         });
         timer.record_time("render");
 

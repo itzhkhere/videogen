@@ -1,0 +1,12 @@
+[10:56:58] cpu        -        1 create 8.786 ms, 4.745 fps (frame median 210.725), rss 58.2→107.6→98.8 MiB, gpu null, close 1.485 ms, exit 0
+[10:56:59] cpu        -        2 create 23.677 ms, 7.582 fps (frame median 131.88), rss 58.2→142.2→124.4 MiB, gpu null, close 2.136 ms, exit 0
+[10:57:02] cpu        -        4 create 41.372 ms, 5.942 fps (frame median 163.743), rss 58.1→212→175.6 MiB, gpu null, close 4.672 ms, exit 0
+[10:57:06] cpu        -        8 create 58.494 ms, 6.493 fps (frame median 149.586), rss 58.4→350.8→278 MiB, gpu null, close 6.337 ms, exit 0
+[10:57:08] gpu-graphite renderer 1 create 51.55 ms, 1.706 fps (frame median 586.234), rss 58.1→399.9→209.3 MiB, gpu null, close 51.166 ms, exit 0
+[10:57:13] gpu-graphite renderer 2 create 77.812 ms, 1.672 fps (frame median 597.904), rss 58.2→639.4→275.2 MiB, gpu null, close 69.427 ms, exit 0
+[10:57:22] gpu-graphite renderer 4 create 147.93 ms, 1.877 fps (frame median 531.747), rss 58→1118→406.4 MiB, gpu null, close 151.838 ms, exit 0
+[10:57:39] gpu-graphite renderer 8 create 229.106 ms, 2.014 fps (frame median 491.411), rss 57.9→2073.2→666.6 MiB, gpu null, close 310.622 ms, exit 0
+[10:57:41] gpu-graphite thread   1 create 44.109 ms, 1.794 fps (frame median 557.367), rss 58.1→399.9→209.1 MiB, gpu null, close 33.524 ms, exit 0
+[10:57:45] gpu-graphite thread   2 create 53.76 ms, 1.732 fps (frame median 577.322), rss 58.1→505.7→235.6 MiB, gpu null, close 47.335 ms, exit 0
+[10:57:53] gpu-graphite thread   4 create 90.134 ms, 1.924 fps (frame median 519.396), rss 58→719.6→290.5 MiB, gpu null, close 69.772 ms, exit 0
+[10:58:07] gpu-graphite thread   8 create 136.991 ms, 1.902 fps (frame median 527.531), rss 58→1139.5→396.9 MiB, gpu null, close 115.788 ms, exit 0

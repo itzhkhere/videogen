@@ -28,6 +28,32 @@ export interface RendererOptions {
    * Default: the wall-clock time at load.
    */
   epochMs?: number
+  /**
+   * Experimental (Phase 4A; private, may change): the paint surface. "cpu" (default, Skia raster) is
+   * the only backend of default builds. "gpu-gl" / "gpu-vulkan" (Skia Ganesh) need a build with the
+   * experimental-gpu(-vulkan) feature, "gpu-graphite" (Skia Graphite on Vulkan) a build with
+   * experimental-graphite. A backend that cannot start throws; there is no silent fallback.
+   */
+  experimentalBackend?: 'cpu' | 'gpu-gl' | 'gpu-vulkan' | 'gpu-graphite'
+  /** Experimental: "renderer" (default): own GPU device; "thread": share one with this thread's renderers. */
+  experimentalGpuShare?: 'renderer' | 'thread'
+}
+/** Experimental (Phase 4A): options of _renderTimed. */
+export interface TimedRenderOptions {
+  /** "rgba" (default), "png", or "none" (no pixels returned). */
+  format?: 'rgba' | 'png' | 'none'
+  /** GPU: copy the frame back to the CPU (default true; forced by "rgba"/"png"). */
+  readback?: boolean
+  /** Also time Blitz paint-command generation alone (an extra pass), as `paintPrep`. */
+  measurePaintPrep?: boolean
+}
+/** Experimental (Phase 4A): a frame and where its time went. */
+export interface TimedRender {
+  /** The backend that drew the frame: "cpu-raster", "ganesh-gl", "ganesh-vulkan" or "graphite-vulkan". */
+  backend: string
+  /** Nanoseconds: frameJs, resolve, paintPrep?, paint, gpuSubmit, gpuWait, readback, buffer, png?, total. */
+  timingsNs: Record<string, number>
+  pixels?: Buffer
 }
 export interface RenderOptions {
   /** "rgba" (default): raw pixels, 4 bytes per pixel, row by row. "png": a PNG file. */
@@ -83,4 +109,14 @@ export declare class HtmlRenderer {
    * wrappers become stale and throw an InvalidStateError DOMException when used.
    */
   _dropNodeForTesting(selector: string): boolean
+  /** Experimental (Phase 4A): render like render() and report the time of every step. */
+  _renderTimed(options?: TimedRenderOptions): TimedRender
+  /** Experimental: backend, GPU device and Skia GPU resource cache usage. */
+  _backendInfo(): Record<string, unknown>
+  /** Experimental: free purgeable GPU resources (no-op on CPU). */
+  _gpuFreeResources(): void
+  /** Testing only (Ganesh): make the GPU context unusable, as a lost device would. */
+  _gpuAbandonForTesting(): void
+  /** Experimental (font-retention probe): drop Skia's process-wide glyph cache. */
+  _purgeSkiaFontCache(): { fontCacheBytesBefore: number; fontCacheBytesAfter: number }
 }

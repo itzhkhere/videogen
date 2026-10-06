@@ -76,6 +76,10 @@ impl Default for SkiaSceneCache {
 pub struct SkiaScenePainter<'a> {
     pub(crate) inner: &'a Canvas,
     pub(crate) cache: &'a mut SkiaSceneCache,
+    /// canvas-html (Graphite): the recorder behind `inner`. Graphite drops draws of raster
+    /// images, so images are uploaded with it first (once: the image shader cache keeps them).
+    #[cfg(feature = "headless-graphite")]
+    pub(crate) graphite_recorder: Option<&'a mut skia_safe::gpu::graphite::Recorder>,
 }
 
 impl SkiaScenePainter<'_> {
@@ -83,6 +87,8 @@ impl SkiaScenePainter<'_> {
         SkiaScenePainter {
             inner: canvas,
             cache,
+            #[cfg(feature = "headless-graphite")]
+            graphite_recorder: None,
         }
     }
 
@@ -154,7 +160,16 @@ impl SkiaScenePainter<'_> {
                     return;
                 }
 
-                let image_shader = sk_peniko::shader_from_image_brush(image_brush, brush_transform);
+                #[cfg(feature = "headless-graphite")]
+                let image_shader = {
+                    let recorder = self.graphite_recorder.as_deref_mut();
+                    sk_peniko::shader_from_image_brush(image_brush, brush_transform, |image| match recorder {
+                        Some(r) => skia_safe::gpu::graphite::images::texture_from_image(r, &image).unwrap_or(image),
+                        None => image,
+                    })
+                };
+                #[cfg(not(feature = "headless-graphite"))]
+                let image_shader = sk_peniko::shader_from_image_brush(image_brush, brush_transform, |image| image);
 
                 if let Some(shader) = &image_shader {
                     self.cache.image_shader.insert(
@@ -978,6 +993,7 @@ mod sk_peniko {
     pub(super) fn shader_from_image_brush(
         image_brush: ImageBrush<&ImageData>,
         brush_transform: Option<kurbo::Affine>,
+        prepare: impl FnOnce(skia_safe::Image) -> skia_safe::Image,
     ) -> Option<SkShader> {
         let image_data = image_brush.image;
 
@@ -1000,6 +1016,7 @@ mod sk_peniko {
         let image =
             skia_safe::images::raster_from_data(&image_info, pixels, image_info.min_row_bytes())
                 .unwrap();
+        let image = prepare(image);
 
         let sampling = match image_brush.sampler.quality {
             peniko::ImageQuality::Low => {

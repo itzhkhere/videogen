@@ -36,6 +36,7 @@ Known limits worth mentioning in the PRs:
 |---|---|
 | 0001 per-glyph skew + embolden | `glyph_transform` was concatenated to the canvas matrix, shearing glyph *positions* around the page origin. That is why synthetic italic came out garbled. A pure horizontal skew now maps to `Font::set_skew_x` (sign flipped, because glyph transforms are y-up). The `embolden` argument was ignored; it now sets `Font::set_embolden`. Synthetic italic went from 15.5 to 33.3 dB. |
 | 0002 brush alpha | `set_paint_alpha` replaced the colour's alpha instead of multiplying it, so `color: transparent` and `rgba(…, 0.5)` text were painted opaque. |
+| 0003 headless GPU renderers (Phase 4A, experimental) | Offscreen GPU image renderers next to the CPU one: Ganesh (OpenGL via an EGL device and a surfaceless context; Vulkan without surface extensions) and Graphite (Vulkan), with per-frame record/submit/wait/readback timings. skia-safe `gl` becomes the default feature `ganesh-gl` so a Graphite-only Skia binary can be linked (rust-skia ships none with both engines). Graphite drops raster images and rust-skia does not bind Recorder image providers, so the scene painter uploads images through the recorder. Off by default; the window renderer and the default feature set are unchanged. |
 
 ## servo/stylo (base: 0.22.0)
 

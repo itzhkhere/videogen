@@ -1,0 +1,379 @@
+{
+  "dpr": 1.5,
+  "rounds": 1,
+  "scene": "E",
+  "rows": [
+    {
+      "backend": "cpu",
+      "renderers": 1,
+      "share": "-",
+      "rssBaselineMiB": 58.2,
+      "gpuBaseline": null,
+      "createAllMs": 8.786,
+      "frameMs": {
+        "n": 1,
+        "median": 210.725,
+        "mean": 210.725,
+        "p95": 210.725,
+        "min": 210.725,
+        "max": 210.725,
+        "cv": 0
+      },
+      "fps": 4.745,
+      "rssLoadedMiB": 107.6,
+      "gpuLoaded": null,
+      "backendInfo": {
+        "backend": "cpu-raster"
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 1.485,
+      "rssClosedMiB": 98.8,
+      "gpuClosed": null,
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "cpu",
+      "renderers": 2,
+      "share": "-",
+      "rssBaselineMiB": 58.2,
+      "gpuBaseline": null,
+      "createAllMs": 23.677,
+      "frameMs": {
+        "n": 2,
+        "median": 131.88,
+        "mean": 131.88,
+        "p95": 132.948,
+        "min": 130.813,
+        "max": 132.948,
+        "cv": 0.008
+      },
+      "fps": 7.582,
+      "rssLoadedMiB": 142.2,
+      "gpuLoaded": null,
+      "backendInfo": {
+        "backend": "cpu-raster"
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 2.136,
+      "rssClosedMiB": 124.4,
+      "gpuClosed": null,
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "cpu",
+      "renderers": 4,
+      "share": "-",
+      "rssBaselineMiB": 58.1,
+      "gpuBaseline": null,
+      "createAllMs": 41.372,
+      "frameMs": {
+        "n": 4,
+        "median": 163.743,
+        "mean": 168.275,
+        "p95": 202.711,
+        "min": 142.905,
+        "max": 202.711,
+        "cv": 0.129
+      },
+      "fps": 5.942,
+      "rssLoadedMiB": 212,
+      "gpuLoaded": null,
+      "backendInfo": {
+        "backend": "cpu-raster"
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 4.672,
+      "rssClosedMiB": 175.6,
+      "gpuClosed": null,
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "cpu",
+      "renderers": 8,
+      "share": "-",
+      "rssBaselineMiB": 58.4,
+      "gpuBaseline": null,
+      "createAllMs": 58.494,
+      "frameMs": {
+        "n": 8,
+        "median": 149.586,
+        "mean": 154.016,
+        "p95": 182.476,
+        "min": 140.214,
+        "max": 182.476,
+        "cv": 0.09
+      },
+      "fps": 6.493,
+      "rssLoadedMiB": 350.8,
+      "gpuLoaded": null,
+      "backendInfo": {
+        "backend": "cpu-raster"
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 6.337,
+      "rssClosedMiB": 278,
+      "gpuClosed": null,
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-graphite",
+      "renderers": 1,
+      "share": "renderer",
+      "rssBaselineMiB": 58.1,
+      "gpuBaseline": null,
+      "createAllMs": 51.55,
+      "frameMs": {
+        "n": 1,
+        "median": 586.234,
+        "mean": 586.234,
+        "p95": 586.234,
+        "min": 586.234,
+        "max": 586.234,
+        "cv": 0
+      },
+      "fps": 1.706,
+      "rssLoadedMiB": 399.9,
+      "gpuLoaded": null,
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "graphite-vulkan",
+        "device": "graphite-vulkan: llvmpipe (LLVM 20.1.2, 256 bits) (CPU), driver 0x6402008, API 1.4.318",
+        "sharedDeviceRefs": 1
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 51.166,
+      "rssClosedMiB": 209.3,
+      "gpuClosed": null,
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-graphite",
+      "renderers": 2,
+      "share": "renderer",
+      "rssBaselineMiB": 58.2,
+      "gpuBaseline": null,
+      "createAllMs": 77.812,
+      "frameMs": {
+        "n": 2,
+        "median": 597.904,
+        "mean": 597.904,
+        "p95": 617.14,
+        "min": 578.667,
+        "max": 617.14,
+        "cv": 0.032
+      },
+      "fps": 1.672,
+      "rssLoadedMiB": 639.4,
+      "gpuLoaded": null,
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "graphite-vulkan",
+        "device": "graphite-vulkan: llvmpipe (LLVM 20.1.2, 256 bits) (CPU), driver 0x6402008, API 1.4.318",
+        "sharedDeviceRefs": 1
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 69.427,
+      "rssClosedMiB": 275.2,
+      "gpuClosed": null,
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-graphite",
+      "renderers": 4,
+      "share": "renderer",
+      "rssBaselineMiB": 58,
+      "gpuBaseline": null,
+      "createAllMs": 147.93,
+      "frameMs": {
+        "n": 4,
+        "median": 531.747,
+        "mean": 532.758,
+        "p95": 557.781,
+        "min": 509.758,
+        "max": 557.781,
+        "cv": 0.034
+      },
+      "fps": 1.877,
+      "rssLoadedMiB": 1118,
+      "gpuLoaded": null,
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "graphite-vulkan",
+        "device": "graphite-vulkan: llvmpipe (LLVM 20.1.2, 256 bits) (CPU), driver 0x6402008, API 1.4.318",
+        "sharedDeviceRefs": 1
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 151.838,
+      "rssClosedMiB": 406.4,
+      "gpuClosed": null,
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-graphite",
+      "renderers": 8,
+      "share": "renderer",
+      "rssBaselineMiB": 57.9,
+      "gpuBaseline": null,
+      "createAllMs": 229.106,
+      "frameMs": {
+        "n": 8,
+        "median": 491.411,
+        "mean": 496.626,
+        "p95": 531.073,
+        "min": 475.607,
+        "max": 531.073,
+        "cv": 0.038
+      },
+      "fps": 2.014,
+      "rssLoadedMiB": 2073.2,
+      "gpuLoaded": null,
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "graphite-vulkan",
+        "device": "graphite-vulkan: llvmpipe (LLVM 20.1.2, 256 bits) (CPU), driver 0x6402008, API 1.4.318",
+        "sharedDeviceRefs": 1
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 310.622,
+      "rssClosedMiB": 666.6,
+      "gpuClosed": null,
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-graphite",
+      "renderers": 1,
+      "share": "thread",
+      "rssBaselineMiB": 58.1,
+      "gpuBaseline": null,
+      "createAllMs": 44.109,
+      "frameMs": {
+        "n": 1,
+        "median": 557.367,
+        "mean": 557.367,
+        "p95": 557.367,
+        "min": 557.367,
+        "max": 557.367,
+        "cv": 0
+      },
+      "fps": 1.794,
+      "rssLoadedMiB": 399.9,
+      "gpuLoaded": null,
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "graphite-vulkan",
+        "device": "graphite-vulkan: llvmpipe (LLVM 20.1.2, 256 bits) (CPU), driver 0x6402008, API 1.4.318",
+        "sharedDeviceRefs": 1
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 33.524,
+      "rssClosedMiB": 209.1,
+      "gpuClosed": null,
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-graphite",
+      "renderers": 2,
+      "share": "thread",
+      "rssBaselineMiB": 58.1,
+      "gpuBaseline": null,
+      "createAllMs": 53.76,
+      "frameMs": {
+        "n": 2,
+        "median": 577.322,
+        "mean": 577.322,
+        "p95": 594.864,
+        "min": 559.779,
+        "max": 594.864,
+        "cv": 0.03
+      },
+      "fps": 1.732,
+      "rssLoadedMiB": 505.7,
+      "gpuLoaded": null,
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "graphite-vulkan",
+        "device": "graphite-vulkan: llvmpipe (LLVM 20.1.2, 256 bits) (CPU), driver 0x6402008, API 1.4.318",
+        "sharedDeviceRefs": 2
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 47.335,
+      "rssClosedMiB": 235.6,
+      "gpuClosed": null,
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-graphite",
+      "renderers": 4,
+      "share": "thread",
+      "rssBaselineMiB": 58,
+      "gpuBaseline": null,
+      "createAllMs": 90.134,
+      "frameMs": {
+        "n": 4,
+        "median": 519.396,
+        "mean": 519.833,
+        "p95": 531.73,
+        "min": 508.812,
+        "max": 531.73,
+        "cv": 0.016
+      },
+      "fps": 1.924,
+      "rssLoadedMiB": 719.6,
+      "gpuLoaded": null,
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "graphite-vulkan",
+        "device": "graphite-vulkan: llvmpipe (LLVM 20.1.2, 256 bits) (CPU), driver 0x6402008, API 1.4.318",
+        "sharedDeviceRefs": 4
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 69.772,
+      "rssClosedMiB": 290.5,
+      "gpuClosed": null,
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-graphite",
+      "renderers": 8,
+      "share": "thread",
+      "rssBaselineMiB": 58,
+      "gpuBaseline": null,
+      "createAllMs": 136.991,
+      "frameMs": {
+        "n": 8,
+        "median": 527.531,
+        "mean": 525.796,
+        "p95": 559.292,
+        "min": 480.973,
+        "max": 559.292,
+        "cv": 0.042
+      },
+      "fps": 1.902,
+      "rssLoadedMiB": 1139.5,
+      "gpuLoaded": null,
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "graphite-vulkan",
+        "device": "graphite-vulkan: llvmpipe (LLVM 20.1.2, 256 bits) (CPU), driver 0x6402008, API 1.4.318",
+        "sharedDeviceRefs": 8
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 115.788,
+      "rssClosedMiB": 396.9,
+      "gpuClosed": null,
+      "exitCode": 0,
+      "signal": null
+    }
+  ]
+}

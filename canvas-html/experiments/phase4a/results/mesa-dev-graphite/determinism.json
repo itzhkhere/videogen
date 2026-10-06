@@ -1,0 +1,320 @@
+{
+  "dpr": 1.5,
+  "scenes": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G1000"
+  ],
+  "backends": {
+    "cpu": {
+      "fresh": {
+        "A": {
+          "hashes": [
+            "e181f067408c296f",
+            "e181f067408c296f",
+            "e181f067408c296f",
+            "e181f067408c296f",
+            "e181f067408c296f"
+          ],
+          "identical": true
+        },
+        "B": {
+          "hashes": [
+            "ff312d8d6b3913fb",
+            "ff312d8d6b3913fb",
+            "ff312d8d6b3913fb",
+            "ff312d8d6b3913fb",
+            "ff312d8d6b3913fb"
+          ],
+          "identical": true
+        },
+        "C": {
+          "hashes": [
+            "31ceb41daa323db8",
+            "31ceb41daa323db8",
+            "31ceb41daa323db8",
+            "31ceb41daa323db8",
+            "31ceb41daa323db8"
+          ],
+          "identical": true
+        },
+        "D": {
+          "hashes": [
+            "4cc655ff2b1cf294",
+            "4cc655ff2b1cf294",
+            "4cc655ff2b1cf294",
+            "4cc655ff2b1cf294",
+            "4cc655ff2b1cf294"
+          ],
+          "identical": true
+        },
+        "E": {
+          "hashes": [
+            "760dcb60d87746dd",
+            "760dcb60d87746dd",
+            "760dcb60d87746dd",
+            "760dcb60d87746dd",
+            "760dcb60d87746dd"
+          ],
+          "identical": true
+        },
+        "F": {
+          "hashes": [
+            "9ba66e47acaa77f4",
+            "9ba66e47acaa77f4",
+            "9ba66e47acaa77f4",
+            "9ba66e47acaa77f4",
+            "9ba66e47acaa77f4"
+          ],
+          "identical": true
+        },
+        "G1000": {
+          "hashes": [
+            "5bf13005144892d4",
+            "5bf13005144892d4",
+            "5bf13005144892d4",
+            "5bf13005144892d4",
+            "5bf13005144892d4"
+          ],
+          "identical": true
+        }
+      },
+      "processes": [
+        "760dcb60d87746dd",
+        "760dcb60d87746dd",
+        "760dcb60d87746dd"
+      ],
+      "longLived": {
+        "B": {
+          "sameDocument": {
+            "distinct": 1,
+            "matchesFresh": true
+          },
+          "reloaded": {
+            "distinct": 1,
+            "matchesFresh": true,
+            "worstVsFresh": {
+              "differingPixels": 0,
+              "differingPct": 0,
+              "maxDelta": 0,
+              "meanDelta": 0,
+              "over8Pct": 0,
+              "over32Pct": 0,
+              "over64Pct": 0,
+              "edgeFraction": 0,
+              "over32EdgeFraction": 0,
+              "severity": "exact"
+            }
+          }
+        },
+        "E": {
+          "sameDocument": {
+            "distinct": 1,
+            "matchesFresh": true
+          },
+          "reloaded": {
+            "distinct": 1,
+            "matchesFresh": true,
+            "worstVsFresh": {
+              "differingPixels": 0,
+              "differingPct": 0,
+              "maxDelta": 0,
+              "meanDelta": 0,
+              "over8Pct": 0,
+              "over32Pct": 0,
+              "over64Pct": 0,
+              "edgeFraction": 0,
+              "over32EdgeFraction": 0,
+              "severity": "exact"
+            }
+          }
+        },
+        "F": {
+          "sameDocument": {
+            "distinct": 1,
+            "matchesFresh": true
+          },
+          "reloaded": {
+            "distinct": 1,
+            "matchesFresh": true,
+            "worstVsFresh": {
+              "differingPixels": 0,
+              "differingPct": 0,
+              "maxDelta": 0,
+              "meanDelta": 0,
+              "over8Pct": 0,
+              "over32Pct": 0,
+              "over64Pct": 0,
+              "edgeFraction": 0,
+              "over32EdgeFraction": 0,
+              "severity": "exact"
+            }
+          }
+        }
+      },
+      "animation": {
+        "frames": 60,
+        "firstPlayVsReplay": 30,
+        "replayVsReplay": 0
+      },
+      "processesIdentical": true
+    },
+    "gpu-graphite": {
+      "fresh": {
+        "A": {
+          "hashes": [
+            "b0d8644841ea2f01",
+            "b0d8644841ea2f01",
+            "b0d8644841ea2f01",
+            "b0d8644841ea2f01",
+            "b0d8644841ea2f01"
+          ],
+          "identical": true
+        },
+        "B": {
+          "hashes": [
+            "b2528b58f387e6a0",
+            "b2528b58f387e6a0",
+            "b2528b58f387e6a0",
+            "b2528b58f387e6a0",
+            "b2528b58f387e6a0"
+          ],
+          "identical": true
+        },
+        "C": {
+          "hashes": [
+            "eb4b1053382b6b61",
+            "eb4b1053382b6b61",
+            "eb4b1053382b6b61",
+            "eb4b1053382b6b61",
+            "eb4b1053382b6b61"
+          ],
+          "identical": true
+        },
+        "D": {
+          "hashes": [
+            "b7699ec2d9a68b60",
+            "b7699ec2d9a68b60",
+            "b7699ec2d9a68b60",
+            "b7699ec2d9a68b60",
+            "b7699ec2d9a68b60"
+          ],
+          "identical": true
+        },
+        "E": {
+          "hashes": [
+            "21e7a83830d87f31",
+            "21e7a83830d87f31",
+            "21e7a83830d87f31",
+            "21e7a83830d87f31",
+            "21e7a83830d87f31"
+          ],
+          "identical": true
+        },
+        "F": {
+          "hashes": [
+            "2ea23108ae12f561",
+            "2ea23108ae12f561",
+            "2ea23108ae12f561",
+            "2ea23108ae12f561",
+            "2ea23108ae12f561"
+          ],
+          "identical": true
+        },
+        "G1000": {
+          "hashes": [
+            "58d00cea279b8afb",
+            "58d00cea279b8afb",
+            "58d00cea279b8afb",
+            "58d00cea279b8afb",
+            "58d00cea279b8afb"
+          ],
+          "identical": true
+        }
+      },
+      "processes": [
+        "21e7a83830d87f31",
+        "21e7a83830d87f31",
+        "21e7a83830d87f31"
+      ],
+      "longLived": {
+        "B": {
+          "sameDocument": {
+            "distinct": 20,
+            "matchesFresh": false
+          },
+          "reloaded": {
+            "distinct": 15,
+            "matchesFresh": false,
+            "worstVsFresh": {
+              "differingPixels": 356,
+              "differingPct": 0.0172,
+              "maxDelta": 9,
+              "meanDelta": 1.64,
+              "over8Pct": 0.0001,
+              "over32Pct": 0,
+              "over64Pct": 0,
+              "edgeFraction": 0.941,
+              "over32EdgeFraction": 0,
+              "severity": "minor"
+            }
+          }
+        },
+        "E": {
+          "sameDocument": {
+            "distinct": 1,
+            "matchesFresh": true
+          },
+          "reloaded": {
+            "distinct": 1,
+            "matchesFresh": true,
+            "worstVsFresh": {
+              "differingPixels": 0,
+              "differingPct": 0,
+              "maxDelta": 0,
+              "meanDelta": 0,
+              "over8Pct": 0,
+              "over32Pct": 0,
+              "over64Pct": 0,
+              "edgeFraction": 0,
+              "over32EdgeFraction": 0,
+              "severity": "exact"
+            }
+          }
+        },
+        "F": {
+          "sameDocument": {
+            "distinct": 1,
+            "matchesFresh": true
+          },
+          "reloaded": {
+            "distinct": 1,
+            "matchesFresh": true,
+            "worstVsFresh": {
+              "differingPixels": 0,
+              "differingPct": 0,
+              "maxDelta": 0,
+              "meanDelta": 0,
+              "over8Pct": 0,
+              "over32Pct": 0,
+              "over64Pct": 0,
+              "edgeFraction": 0,
+              "over32EdgeFraction": 0,
+              "severity": "exact"
+            }
+          }
+        }
+      },
+      "animation": {
+        "frames": 60,
+        "firstPlayVsReplay": 30,
+        "replayVsReplay": 0
+      },
+      "processesIdentical": true
+    }
+  }
+}

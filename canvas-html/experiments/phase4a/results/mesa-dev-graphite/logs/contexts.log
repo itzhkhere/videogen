@@ -1,0 +1,10 @@
+[10:56:48] A cpu        reuse        frame median 6.463 ms
+[10:56:48] A cpu        new-renderer frame median 16.189 ms (create 4.194, load 1.87, render 9.847, close 0.267)
+[10:56:48] A gpu-graphite reuse        frame median 23.311 ms
+[10:56:49] A gpu-graphite new-renderer frame median 146.965 ms (create 26.465, load 2.469, render 105.817, close 12.196)
+[10:56:49] A gpu-graphite new-surface  frame median 89.084 ms (create 6.227, load 2.56, render 79.075, close 1.202)
+[10:56:50] E cpu        reuse        frame median 155.676 ms
+[10:56:50] E cpu        new-renderer frame median 159.296 ms (create 5.187, load 3.629, render 149.631, close 0.824)
+[10:56:54] E gpu-graphite reuse        frame median 550.927 ms
+[10:56:56] E gpu-graphite new-renderer frame median 1020.365 ms (create 26.572, load 3.353, render 957.954, close 32.469)
+[10:56:58] E gpu-graphite new-surface  frame median 801.502 ms (create 5.313, load 3.405, render 786.4, close 6.371)

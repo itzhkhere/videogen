@@ -16,7 +16,7 @@ const steps = process.argv.slice(2).length ? process.argv.slice(2) : ALL
 prepareAssets()
 const env = environment()
 writeResult('environment.json', env)
-log('environment', JSON.stringify({ cpu: env.cpu, gpu: env.nvidiaSmi, gl: env.backends['gpu-gl'].device ?? env.backends['gpu-gl'].error, vulkan: env.backends['gpu-vulkan'].device ?? env.backends['gpu-vulkan'].error }))
+log('environment', JSON.stringify({ cpu: env.cpu, gpu: env.nvidiaSmi, addon: env.addon, backends: Object.fromEntries(Object.entries(env.backends).map(([b, i]) => [b, i.device ?? i.error])) }))
 if (process.env.PHASE4A_REQUIRE_HW) {
   const soft = Object.entries(env.backends).filter(([, i]) => !i.device || /software|llvmpipe|\(CPU\)/i.test(i.device))
   if (soft.length) { log('ABORT: not on a hardware GPU:', JSON.stringify(soft)); process.exit(2) }

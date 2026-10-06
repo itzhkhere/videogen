@@ -5,7 +5,7 @@ import path from 'node:path'
 import { execFileSync, spawnSync } from 'node:child_process'
 import { createHash } from 'node:crypto'
 import { HtmlRenderer, nativePath } from './native.mjs'
-import { VIEWPORT, baseUrl, root } from './scenes.mjs'
+import { VIEWPORT, baseUrl, root, BACKENDS } from './scenes.mjs'
 
 export { HtmlRenderer }
 export const TAG = process.env.PHASE4A_TAG ?? 'local'
@@ -27,7 +27,7 @@ export function make(backend, html, { dpr = 1, share, scripts = false, url = bas
 
 /** The backend that actually renders (never assumed): checks the result's `backend`. */
 export function expectBackend(result, backend) {
-  const want = backend === 'cpu' ? 'cpu-raster' : backend === 'gpu-gl' ? 'ganesh-gl' : 'ganesh-vulkan'
+  const want = { cpu: 'cpu-raster', 'gpu-gl': 'ganesh-gl', 'gpu-vulkan': 'ganesh-vulkan', 'gpu-graphite': 'graphite-vulkan' }[backend]
   if (result.backend !== want) throw new Error(`asked for ${backend}, rendered by ${result.backend}`)
   return result
 }
@@ -104,7 +104,7 @@ export function environment() {
     addonBytes: fs.statSync(nativePath).size,
     nvidiaSmi: tryRun('nvidia-smi', ['--query-gpu=name,driver_version,memory.total,clocks.max.sm', '--format=csv,noheader']),
     vulkanSummary: tryRun('sh', ['-c', 'vulkaninfo --summary 2>/dev/null | grep -E "deviceName|driverName|driverInfo|apiVersion"']),
-    backends: { 'gpu-gl': probe('gpu-gl'), 'gpu-vulkan': probe('gpu-vulkan') },
+    backends: Object.fromEntries(BACKENDS.filter((b) => b !== 'cpu').map((b) => [b, probe(b)])),
     gpuDeviceEnv: process.env.CANVAS_HTML_GPU_DEVICE ?? null,
   }
 }

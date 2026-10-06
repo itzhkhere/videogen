@@ -36,9 +36,17 @@ log_frame_times = [
 pixels_window_renderer = ["dep:pixels_window_renderer"]
 softbuffer_window_renderer = ["dep:softbuffer_window_renderer"]
 vulkan = ["skia-safe/vulkan"]
-# canvas-html: offscreen GPU rendering (SkiaGpuImageRenderer). Off by default; the GL path uses
-# the glutin/EGL and skia-safe "gl" dependencies already present, Vulkan needs `vulkan` too.
-headless-gpu = []
+# canvas-html: Skia's "gl" (Ganesh + OpenGL) was unconditional; it is a default feature so that a
+# Graphite-only build (`headless-graphite`, no Ganesh/GL binary) is possible. The window renderer
+# needs it (or Metal).
+default = ["ganesh-gl"]
+ganesh-gl = ["skia-safe/gl"]
+# canvas-html: offscreen GPU rendering with Ganesh (SkiaGpuImageRenderer): OpenGL via EGL, plus
+# Vulkan with `vulkan`. Off by default.
+headless-gpu = ["ganesh-gl"]
+# canvas-html: offscreen GPU rendering with Graphite on Vulkan (SkiaGraphiteImageRenderer). Needs
+# default-features = false (rust-skia ships no Ganesh+Graphite binary).
+headless-graphite = ["vulkan", "skia-safe/graphite"]
 
 [lib]
 name = "anyrender_skia"
@@ -129,7 +137,7 @@ features = [
 
 [target.'cfg(not(any(target_os = "macos", target_os = "ios")))'.dependencies.skia-safe]
 version = "0.153.3"
-features = ["gl"]
+features = []
 
 [target.'cfg(target_os = "ios")'.dependencies.objc2-ui-kit]
 version = "0.3.2"

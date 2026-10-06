@@ -1,0 +1,10 @@
+[10:58:10] cpu        1 workers: 18.836 fps (wall 424.724 ms), create median 45.267 ms, mismatches 0
+[10:58:10] cpu        2 workers: 27.839 fps (wall 287.368 ms), create median 42.95 ms, mismatches 0
+[10:58:10] cpu        4 workers: 28.201 fps (wall 283.674 ms), create median 53.921 ms, mismatches 0
+[10:58:10] cpu        8 workers: 20.165 fps (wall 396.725 ms), create median 93.609 ms, mismatches 0
+[10:58:10] cpu        terminate probe {"exitCodes":[1,1],"renderAfterTerminate":true} exit 0
+[10:58:17] gpu-graphite 1 workers: 7.604 fps (wall 1052.137 ms), create median 89.889 ms, mismatches 0
+[10:58:17] gpu-graphite 2 workers: 8.63 fps (wall 926.975 ms), create median 79.889 ms, mismatches 0
+[10:58:17] gpu-graphite 4 workers: 7.345 fps (wall 1089.237 ms), create median 140.069 ms, mismatches 0
+[10:58:17] gpu-graphite 8 workers: 4.758 fps (wall 1681.459 ms), create median 243.179 ms, mismatches 0
+[10:58:17] gpu-graphite terminate probe {"exitCodes":[1,1],"renderAfterTerminate":true} exit 0

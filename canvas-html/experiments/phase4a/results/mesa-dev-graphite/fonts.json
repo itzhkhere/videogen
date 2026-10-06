@@ -1,0 +1,166 @@
+{
+  "iterations": 40,
+  "scene": "B",
+  "rows": [
+    {
+      "backend": "cpu",
+      "mode": "per-renderer",
+      "points": [
+        {
+          "i": 0,
+          "rssMiB": 61.4
+        },
+        {
+          "i": 10,
+          "rssMiB": 88.9,
+          "gpu": null,
+          "gpuResourceMiB": null
+        },
+        {
+          "i": 20,
+          "rssMiB": 88.9,
+          "gpu": null,
+          "gpuResourceMiB": null
+        },
+        {
+          "i": 30,
+          "rssMiB": 89.2,
+          "gpu": null,
+          "gpuResourceMiB": null
+        },
+        {
+          "i": 40,
+          "rssMiB": 89.2,
+          "gpu": null,
+          "gpuResourceMiB": null
+        }
+      ],
+      "rssAfterCloseMiB": 89.2,
+      "purge": {
+        "fontCacheBytesAfter": 0,
+        "fontCacheBytesBefore": 1465295
+      },
+      "rssAfterPurgeMiB": 89.2
+    },
+    {
+      "backend": "cpu",
+      "mode": "reused",
+      "points": [
+        {
+          "i": 0,
+          "rssMiB": 61.3
+        },
+        {
+          "i": 10,
+          "rssMiB": 101.4,
+          "gpu": null,
+          "gpuResourceMiB": 0
+        },
+        {
+          "i": 20,
+          "rssMiB": 104.9,
+          "gpu": null,
+          "gpuResourceMiB": 0
+        },
+        {
+          "i": 30,
+          "rssMiB": 104.9,
+          "gpu": null,
+          "gpuResourceMiB": 0
+        },
+        {
+          "i": 40,
+          "rssMiB": 104.8,
+          "gpu": null,
+          "gpuResourceMiB": 0
+        }
+      ],
+      "rssAfterCloseMiB": 101.3,
+      "purge": {
+        "fontCacheBytesAfter": 0,
+        "fontCacheBytesBefore": 1465295
+      },
+      "rssAfterPurgeMiB": 101.3
+    },
+    {
+      "backend": "gpu-graphite",
+      "mode": "per-renderer",
+      "points": [
+        {
+          "i": 0,
+          "rssMiB": 61.4
+        },
+        {
+          "i": 10,
+          "rssMiB": 196.7,
+          "gpu": null,
+          "gpuResourceMiB": null
+        },
+        {
+          "i": 20,
+          "rssMiB": 202.3,
+          "gpu": null,
+          "gpuResourceMiB": null
+        },
+        {
+          "i": 30,
+          "rssMiB": 207.9,
+          "gpu": null,
+          "gpuResourceMiB": null
+        },
+        {
+          "i": 40,
+          "rssMiB": 212.6,
+          "gpu": null,
+          "gpuResourceMiB": null
+        }
+      ],
+      "rssAfterCloseMiB": 212.6,
+      "purge": {
+        "fontCacheBytesAfter": 0,
+        "fontCacheBytesBefore": 1465295
+      },
+      "rssAfterPurgeMiB": 212.6
+    },
+    {
+      "backend": "gpu-graphite",
+      "mode": "reused",
+      "points": [
+        {
+          "i": 0,
+          "rssMiB": 61.2
+        },
+        {
+          "i": 10,
+          "rssMiB": 346.1,
+          "gpu": null,
+          "gpuResourceMiB": 0
+        },
+        {
+          "i": 20,
+          "rssMiB": 349.5,
+          "gpu": null,
+          "gpuResourceMiB": 0
+        },
+        {
+          "i": 30,
+          "rssMiB": 352.4,
+          "gpu": null,
+          "gpuResourceMiB": 0
+        },
+        {
+          "i": 40,
+          "rssMiB": 354.1,
+          "gpu": null,
+          "gpuResourceMiB": 0
+        }
+      ],
+      "rssAfterCloseMiB": 183.8,
+      "purge": {
+        "fontCacheBytesAfter": 0,
+        "fontCacheBytesBefore": 1465295
+      },
+      "rssAfterPurgeMiB": 183.8
+    }
+  ]
+}

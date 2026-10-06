@@ -28,7 +28,7 @@ blitz-vibey-script = { git = "https://github.com/DioxusLabs/blitz", rev = "0db8c
 # must be the exact parley revision Blitz uses so FontContext is the same type
 parley = { git = "https://github.com/linebender/parley", rev = "718dcb721941fd8e72128833122d31f5a4e80504", default-features = false, features = ["std", "system"] }
 anyrender = "0.14"
-anyrender_skia = "0.12"
+anyrender_skia = { version = "0.12", default-features = false }
 peniko = "0.6"
 url = "2.5"
 bytes = "1.7"
@@ -39,12 +39,17 @@ png = "0.18"
 canvas-dom-host = { path = "dom-host" }
 
 [features]
-default = []
+# The production Skia binary: Ganesh + GL (rendering is CPU raster; this is what it always linked)
+default = ["skia-ganesh-gl"]
+skia-ganesh-gl = ["anyrender_skia/ganesh-gl"]
 # Phase 4A experiment: an offscreen GPU (Skia Ganesh) backend next to the CPU renderer, chosen with
 # the private `experimentalBackend` option. Off by default; the default build is CPU only.
-experimental-gpu = ["anyrender_skia/headless-gpu"]
+experimental-gpu = ["skia-ganesh-gl", "anyrender_skia/headless-gpu"]
 # Also Vulkan (switches the prebuilt Skia binary to ganesh-gl-vulkan)
 experimental-gpu-vulkan = ["experimental-gpu", "anyrender_skia/vulkan"]
+# Graphite on Vulkan (the prebuilt Skia binary graphite-vulkan has no Ganesh/GL), so it is built
+# with --no-default-features --features experimental-graphite. CPU raster stays available.
+experimental-graphite = ["anyrender_skia/headless-graphite"]
 
 [build-dependencies]
 napi-build = "2"

@@ -1,0 +1,72 @@
+[10:56:38] css 10 cpu        median 18.117 ms, p95 20.505, total 241.753 ms (41.364 fps) | no-readback median 12.769
+[10:56:40] css 10 gpu-graphite median 32.733 ms, p95 111.33, total 463.13 ms (21.592 fps) | no-readback median 25.386 | vs cpu: minor,minor,minor
+[10:56:40] gsap 10 cpu        median 7.686 ms, p95 9.301, total 136.956 ms (73.016 fps) | no-readback median 3.092
+[10:56:42] gsap 10 gpu-graphite median 22.645 ms, p95 30.446, total 294.769 ms (33.925 fps) | no-readback median 15.785 | vs cpu: minor,minor,minor
+[10:56:44] effects 10 cpu        median 31.126 ms, p95 42.406, total 390.228 ms (25.626 fps) | no-readback median 31.434
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[skia] WARNING - Couldn't convert SkImage to a Graphite-backed representation
+[skia] WARNING - Key context creation failed in Device::drawGeometry, draw dropped!
+[10:56:48] effects 10 gpu-graphite median 51.878 ms, p95 58.62, total 585.347 ms (17.084 fps) | no-readback median 36.917 | vs cpu: major,major,major

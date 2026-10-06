@@ -45,25 +45,12 @@ impl GpuApi {
     }
 }
 
-#[derive(Debug, Clone)]
-pub struct GpuError(pub String);
-
-impl std::fmt::Display for GpuError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.0)
-    }
-}
-
-impl std::error::Error for GpuError {}
-
-fn err(context: &str, e: impl std::fmt::Display) -> GpuError {
-    GpuError(format!("{context}: {e}"))
-}
+use crate::gpu_common::{GpuError, GpuFrameTimings, err};
 
 enum Api {
     Gl(GlDevice),
     #[cfg(feature = "vulkan")]
-    Vulkan(#[allow(dead_code)] vk::VkDevice), // held for its Drop
+    Vulkan(#[allow(dead_code)] crate::gpu_common::VkDevice), // held for its Drop
 }
 
 /// The GPU, its API objects and Skia's context. Drop order: Skia's context first, then the API.
@@ -94,7 +81,13 @@ impl GpuDevice {
             }
             #[cfg(feature = "vulkan")]
             GpuApi::Vulkan => {
-                let (vk, context, description) = vk::VkDevice::new()?;
+                let vk = crate::gpu_common::VkDevice::new(Some(ash::vk::API_VERSION_1_1), "ganesh-vulkan")?;
+                let context = vk
+                    .with_backend(Some(skia_safe::gpu::vk::Version::new(1, 1, 0)), |backend| {
+                        gpu::direct_contexts::make_vulkan(backend, &gpu::ContextOptions::default())
+                    })
+                    .ok_or_else(|| GpuError("Skia Vulkan context creation failed".into()))?;
+                let description = vk.description.clone();
                 (Api::Vulkan(vk), context, description)
             }
         };
@@ -254,135 +247,7 @@ impl GlDevice {
     }
 }
 
-// ------------------------------------------------------------------------------------- Vulkan
-
-#[cfg(feature = "vulkan")]
-mod vk {
-    use super::{GpuError, err};
-    use ash::vk::{self as avk, Handle};
-    use skia_safe::gpu::{
-        ContextOptions, DirectContext, direct_contexts,
-        vk::{BackendContext, GetProcOf, Version},
-    };
-    use std::ffi::CStr;
-
-    pub(super) struct VkDevice {
-        _entry: ash::Entry,
-        instance: ash::Instance,
-        device: ash::Device,
-    }
-
-    impl VkDevice {
-        pub(super) fn new() -> Result<(Self, DirectContext, String), GpuError> {
-            let entry = unsafe { ash::Entry::load() }.map_err(|e| err("Vulkan loader not found", e))?;
-            let app = avk::ApplicationInfo::default()
-                .application_name(c"canvas-html")
-                .api_version(avk::make_api_version(0, 1, 1, 0));
-            let instance = unsafe { entry.create_instance(&avk::InstanceCreateInfo::default().application_info(&app), None) }
-                .map_err(|e| err("vkCreateInstance failed", e))?;
-            let devices = unsafe { instance.enumerate_physical_devices() }.map_err(|e| err("no Vulkan devices", e))?;
-            let candidates: Vec<(avk::PhysicalDevice, u32, avk::PhysicalDeviceProperties)> = devices
-                .into_iter()
-                .filter_map(|pd| {
-                    let props = unsafe { instance.get_physical_device_properties(pd) };
-                    let q = unsafe { instance.get_physical_device_queue_family_properties(pd) }
-                        .iter()
-                        .position(|q| q.queue_flags.contains(avk::QueueFlags::GRAPHICS))?;
-                    Some((pd, q as u32, props))
-                })
-                .collect();
-            if candidates.is_empty() {
-                unsafe { instance.destroy_instance(None) };
-                return Err(GpuError("no Vulkan device with a graphics queue".into()));
-            }
-            let pick = match std::env::var("CANVAS_HTML_GPU_DEVICE").ok().and_then(|s| s.parse::<usize>().ok()) {
-                Some(i) if i < candidates.len() => i,
-                Some(i) => {
-                    unsafe { instance.destroy_instance(None) };
-                    return Err(GpuError(format!("Vulkan device {i} does not exist")));
-                }
-                None => candidates.iter().position(|c| c.2.device_type != avk::PhysicalDeviceType::CPU).unwrap_or(0),
-            };
-            let (physical, queue_family, props) = candidates[pick];
-            let priorities = [1.0f32];
-            let queue_info = [avk::DeviceQueueCreateInfo::default().queue_family_index(queue_family).queue_priorities(&priorities)];
-            let device = unsafe { instance.create_device(physical, &avk::DeviceCreateInfo::default().queue_create_infos(&queue_info), None) }
-                .map_err(|e| err("vkCreateDevice failed", e))?;
-            let queue = unsafe { device.get_device_queue(queue_family, 0) };
-
-            // Skia resolves the Vulkan functions it needs while creating the context, so the
-            // loader closure (which borrows `entry` and `instance`) ends with this block.
-            let ctx = {
-                let get_proc = |gpo: GetProcOf| unsafe {
-                    match gpo {
-                        GetProcOf::Instance(i, name) => entry.get_instance_proc_addr(avk::Instance::from_raw(i as _), name),
-                        GetProcOf::Device(d, name) => (instance.fp_v1_0().get_device_proc_addr)(avk::Device::from_raw(d as _), name),
-                    }
-                    .map(|f| f as _)
-                    .unwrap_or(std::ptr::null())
-                };
-                let backend = unsafe {
-                    BackendContext::new_builder(
-                        instance.handle().as_raw() as _,
-                        physical.as_raw() as _,
-                        device.handle().as_raw() as _,
-                        (queue.as_raw() as _, queue_family as usize),
-                        &get_proc,
-                        Some(Version::new(1, 1, 0)),
-                    )
-                    .build()
-                };
-                direct_contexts::make_vulkan(&backend, &ContextOptions::default())
-                    .ok_or_else(|| GpuError("Skia Vulkan context creation failed".into()))
-            };
-            let ctx = match ctx {
-                Ok(c) => c,
-                Err(e) => {
-                    unsafe {
-                        device.destroy_device(None);
-                        instance.destroy_instance(None);
-                    }
-                    return Err(e);
-                }
-            };
-            let name = unsafe { CStr::from_ptr(props.device_name.as_ptr()) }.to_string_lossy().into_owned();
-            let description = format!(
-                "ganesh-vulkan: {name} ({:?}), driver {:#x}, API {}.{}.{}",
-                props.device_type,
-                props.driver_version,
-                avk::api_version_major(props.api_version),
-                avk::api_version_minor(props.api_version),
-                avk::api_version_patch(props.api_version)
-            );
-            Ok((VkDevice { _entry: entry, instance, device }, ctx, description))
-        }
-    }
-
-    impl Drop for VkDevice {
-        fn drop(&mut self) {
-            unsafe {
-                let _ = self.device.device_wait_idle();
-                self.device.destroy_device(None);
-                self.instance.destroy_instance(None);
-            }
-        }
-    }
-}
-
 // ---------------------------------------------------------------------------------- renderer
-
-/// Where one GPU frame spends its time (nanoseconds, measured on the calling thread).
-#[derive(Debug, Clone, Copy, Default)]
-pub struct GpuFrameTimings {
-    /// Painting into the canvas: AnyRender commands recorded into Skia's GPU op lists.
-    pub record_ns: u128,
-    /// `flush` + `submit`: Skia turns its ops into API commands and hands them to the driver.
-    pub submit_ns: u128,
-    /// Waiting for the GPU to finish the frame (`submit(SyncCpu::Yes)` after the flush).
-    pub wait_ns: u128,
-    /// GPU → CPU copy of the pixels (0 when not read back).
-    pub readback_ns: u128,
-}
 
 /// An offscreen GPU render target that paints AnyRender scenes with Skia Ganesh.
 /// The surface, the scene cache and the device are reused across frames.
@@ -460,7 +325,12 @@ impl SkiaGpuImageRenderer {
 
         let start = Instant::now();
         self.surface.canvas().clear(Color::TRANSPARENT);
-        draw_fn(&mut SkiaScenePainter { inner: self.surface.canvas(), cache: &mut self.scene_cache });
+        draw_fn(&mut SkiaScenePainter {
+            inner: self.surface.canvas(),
+            cache: &mut self.scene_cache,
+            #[cfg(feature = "headless-graphite")]
+            graphite_recorder: None,
+        });
         self.scene_cache.next_gen();
         t.record_ns = start.elapsed().as_nanos();
 

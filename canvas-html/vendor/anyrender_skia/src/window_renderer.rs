@@ -181,6 +181,8 @@ impl WindowRenderer for SkiaWindowRenderer {
         draw_fn(&mut SkiaScenePainter {
             inner: surface.canvas(),
             cache: &mut state.scene_cache,
+            #[cfg(feature = "headless-graphite")]
+            graphite_recorder: None,
         });
         timer.record_time("cmd");
 

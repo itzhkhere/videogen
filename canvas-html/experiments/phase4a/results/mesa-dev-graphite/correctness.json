@@ -1,0 +1,503 @@
+{
+  "resolutions": {
+    "720p": {
+      "A": {
+        "hashes": {
+          "cpu": "909c4dbc0285eca8",
+          "gpu-graphite": "082d691578b035f3"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 7013,
+          "differingPct": 0.761,
+          "maxDelta": 53,
+          "meanDelta": 1.69,
+          "over8Pct": 0.0212,
+          "over32Pct": 0.0053,
+          "over64Pct": 0,
+          "edgeFraction": 1,
+          "over32EdgeFraction": 1,
+          "severity": "minor"
+        }
+      },
+      "B": {
+        "hashes": {
+          "cpu": "7131a2eb84243857",
+          "gpu-graphite": "ceacf4eadd6c78a2"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 675814,
+          "differingPct": 73.3305,
+          "maxDelta": 13,
+          "meanDelta": 1.47,
+          "over8Pct": 0.0005,
+          "over32Pct": 0,
+          "over64Pct": 0,
+          "edgeFraction": 0.585,
+          "over32EdgeFraction": 0,
+          "severity": "minor"
+        }
+      },
+      "C": {
+        "hashes": {
+          "cpu": "dc9bc76092224a95",
+          "gpu-graphite": "c4b7ae365993f3b1"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 779329,
+          "differingPct": 84.5626,
+          "maxDelta": 84,
+          "meanDelta": 3.36,
+          "over8Pct": 6.4492,
+          "over32Pct": 0.016,
+          "over64Pct": 0.0008,
+          "edgeFraction": 0.059,
+          "over32EdgeFraction": 1,
+          "severity": "minor"
+        }
+      },
+      "D": {
+        "hashes": {
+          "cpu": "435c22e045abcd22",
+          "gpu-graphite": "d7bd77929b258638"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 786829,
+          "differingPct": 85.3764,
+          "maxDelta": 62,
+          "meanDelta": 1.49,
+          "over8Pct": 0.1879,
+          "over32Pct": 0.0122,
+          "over64Pct": 0,
+          "edgeFraction": 0.042,
+          "over32EdgeFraction": 1,
+          "severity": "minor"
+        }
+      },
+      "E": {
+        "hashes": {
+          "cpu": "6c466dc160e601c2",
+          "gpu-graphite": "a8e99dc75b53aa46"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 820340,
+          "differingPct": 89.0126,
+          "maxDelta": 75,
+          "meanDelta": 1.96,
+          "over8Pct": 0.123,
+          "over32Pct": 0.0116,
+          "over64Pct": 0.0004,
+          "edgeFraction": 0.059,
+          "over32EdgeFraction": 1,
+          "severity": "minor"
+        }
+      },
+      "F": {
+        "hashes": {
+          "cpu": "1c8f22fb32ba1c48",
+          "gpu-graphite": "4848671a30e46fa3"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 470881,
+          "differingPct": 51.0939,
+          "maxDelta": 136,
+          "meanDelta": 5.91,
+          "over8Pct": 9.5091,
+          "over32Pct": 2.3841,
+          "over64Pct": 0.2878,
+          "edgeFraction": 0.453,
+          "over32EdgeFraction": 1,
+          "severity": "edge-aa"
+        }
+      },
+      "G100": {
+        "hashes": {
+          "cpu": "c8cdb815b4c4542a",
+          "gpu-graphite": "f4be78e6bc04a16e"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 119534,
+          "differingPct": 12.9703,
+          "maxDelta": 71,
+          "meanDelta": 2.49,
+          "over8Pct": 0.7224,
+          "over32Pct": 0.0406,
+          "over64Pct": 0.0001,
+          "edgeFraction": 0.394,
+          "over32EdgeFraction": 1,
+          "severity": "minor"
+        }
+      },
+      "G500": {
+        "hashes": {
+          "cpu": "4dbb364815b2e826",
+          "gpu-graphite": "7551278ed22d276c"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 420142,
+          "differingPct": 45.5883,
+          "maxDelta": 67,
+          "meanDelta": 2.56,
+          "over8Pct": 2.7788,
+          "over32Pct": 0.1252,
+          "over64Pct": 0.0002,
+          "edgeFraction": 0.456,
+          "over32EdgeFraction": 1,
+          "severity": "edge-aa"
+        }
+      },
+      "G1000": {
+        "hashes": {
+          "cpu": "572cb1195487768e",
+          "gpu-graphite": "c8cae2ca381660ab"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 621783,
+          "differingPct": 67.4678,
+          "maxDelta": 84,
+          "meanDelta": 2.63,
+          "over8Pct": 3.9715,
+          "over32Pct": 0.1616,
+          "over64Pct": 0.001,
+          "edgeFraction": 0.501,
+          "over32EdgeFraction": 1,
+          "severity": "edge-aa"
+        }
+      }
+    }
+  },
+  "attribution": {
+    "A": {
+      "severity": "minor",
+      "class": "text rasterization difference",
+      "dominant": "text",
+      "ablations": {
+        "text": {
+          "differingPixels": 255,
+          "over32Pct": 0.0053,
+          "removedShare": 0.964
+        },
+        "filters": {
+          "differingPixels": 7013,
+          "over32Pct": 0.0053,
+          "removedShare": 0
+        },
+        "shadows": {
+          "differingPixels": 7013,
+          "over32Pct": 0.0053,
+          "removedShare": 0
+        },
+        "images": {
+          "differingPixels": 7013,
+          "over32Pct": 0.0053,
+          "removedShare": 0
+        },
+        "gradients": {
+          "differingPixels": 7013,
+          "over32Pct": 0.0053,
+          "removedShare": 0
+        },
+        "opacity": {
+          "differingPixels": 7013,
+          "over32Pct": 0.0053,
+          "removedShare": 0
+        }
+      }
+    },
+    "B": {
+      "severity": "minor",
+      "class": "text rasterization difference",
+      "dominant": "text",
+      "ablations": {
+        "text": {
+          "differingPixels": 0,
+          "over32Pct": 0,
+          "removedShare": 1
+        },
+        "filters": {
+          "differingPixels": 675814,
+          "over32Pct": 0,
+          "removedShare": 0
+        },
+        "shadows": {
+          "differingPixels": 675814,
+          "over32Pct": 0,
+          "removedShare": 0
+        },
+        "images": {
+          "differingPixels": 675814,
+          "over32Pct": 0,
+          "removedShare": 0
+        },
+        "gradients": {
+          "differingPixels": 675814,
+          "over32Pct": 0,
+          "removedShare": 0
+        },
+        "opacity": {
+          "differingPixels": 126290,
+          "over32Pct": 0,
+          "removedShare": 0.813
+        }
+      }
+    },
+    "C": {
+      "severity": "minor",
+      "class": "image sampling difference",
+      "dominant": "images",
+      "ablations": {
+        "text": {
+          "differingPixels": 779329,
+          "over32Pct": 0.016,
+          "removedShare": 0
+        },
+        "filters": {
+          "differingPixels": 779329,
+          "over32Pct": 0.016,
+          "removedShare": 0
+        },
+        "shadows": {
+          "differingPixels": 779329,
+          "over32Pct": 0.016,
+          "removedShare": 0
+        },
+        "images": {
+          "differingPixels": 0,
+          "over32Pct": 0,
+          "removedShare": 1
+        },
+        "gradients": {
+          "differingPixels": 779329,
+          "over32Pct": 0.016,
+          "removedShare": 0
+        },
+        "opacity": {
+          "differingPixels": 423918,
+          "over32Pct": 0.1392,
+          "removedShare": 0.456
+        }
+      }
+    },
+    "D": {
+      "severity": "minor",
+      "class": "gradient interpolation difference",
+      "dominant": "gradients",
+      "ablations": {
+        "text": {
+          "differingPixels": 786829,
+          "over32Pct": 0.0122,
+          "removedShare": 0
+        },
+        "filters": {
+          "differingPixels": 786829,
+          "over32Pct": 0.0122,
+          "removedShare": 0
+        },
+        "shadows": {
+          "differingPixels": 786829,
+          "over32Pct": 0.0122,
+          "removedShare": 0
+        },
+        "images": {
+          "differingPixels": 786829,
+          "over32Pct": 0.0122,
+          "removedShare": 0
+        },
+        "gradients": {
+          "differingPixels": 0,
+          "over32Pct": 0,
+          "removedShare": 1
+        },
+        "opacity": {
+          "differingPixels": 256846,
+          "over32Pct": 0.0262,
+          "removedShare": 0.674
+        }
+      }
+    },
+    "E": {
+      "severity": "minor",
+      "class": "shadow/blur precision difference",
+      "dominant": "shadows",
+      "ablations": {
+        "text": {
+          "differingPixels": 818464,
+          "over32Pct": 0.0117,
+          "removedShare": 0.002
+        },
+        "filters": {
+          "differingPixels": 836291,
+          "over32Pct": 0.0109,
+          "removedShare": -0.019
+        },
+        "shadows": {
+          "differingPixels": 494127,
+          "over32Pct": 0.013,
+          "removedShare": 0.398
+        },
+        "images": {
+          "differingPixels": 820340,
+          "over32Pct": 0.0116,
+          "removedShare": 0
+        },
+        "gradients": {
+          "differingPixels": 820340,
+          "over32Pct": 0.0116,
+          "removedShare": 0
+        },
+        "opacity": {
+          "differingPixels": 716407,
+          "over32Pct": 0.0177,
+          "removedShare": 0.127
+        }
+      }
+    },
+    "F": {
+      "severity": "edge-aa",
+      "class": "geometry antialiasing difference",
+      "dominant": "none",
+      "ablations": {
+        "text": {
+          "differingPixels": 470881,
+          "over32Pct": 2.3841,
+          "removedShare": 0
+        },
+        "filters": {
+          "differingPixels": 470881,
+          "over32Pct": 2.3841,
+          "removedShare": 0
+        },
+        "shadows": {
+          "differingPixels": 470881,
+          "over32Pct": 2.3841,
+          "removedShare": 0
+        },
+        "images": {
+          "differingPixels": 470881,
+          "over32Pct": 2.3841,
+          "removedShare": 0
+        },
+        "gradients": {
+          "differingPixels": 470881,
+          "over32Pct": 2.3841,
+          "removedShare": 0
+        },
+        "opacity": {
+          "differingPixels": 470881,
+          "over32Pct": 2.3841,
+          "removedShare": 0
+        }
+      }
+    },
+    "G100": {
+      "severity": "minor",
+      "class": "layer/opacity blending difference",
+      "dominant": "opacity",
+      "ablations": {
+        "text": {
+          "differingPixels": 119534,
+          "over32Pct": 0.0406,
+          "removedShare": 0
+        },
+        "filters": {
+          "differingPixels": 119534,
+          "over32Pct": 0.0406,
+          "removedShare": 0
+        },
+        "shadows": {
+          "differingPixels": 119534,
+          "over32Pct": 0.0406,
+          "removedShare": 0
+        },
+        "images": {
+          "differingPixels": 119534,
+          "over32Pct": 0.0406,
+          "removedShare": 0
+        },
+        "gradients": {
+          "differingPixels": 119534,
+          "over32Pct": 0.0406,
+          "removedShare": 0
+        },
+        "opacity": {
+          "differingPixels": 35875,
+          "over32Pct": 0.1718,
+          "removedShare": 0.7
+        }
+      }
+    },
+    "G500": {
+      "severity": "edge-aa",
+      "class": "layer/opacity blending difference",
+      "dominant": "opacity",
+      "ablations": {
+        "text": {
+          "differingPixels": 420142,
+          "over32Pct": 0.1252,
+          "removedShare": 0
+        },
+        "filters": {
+          "differingPixels": 420142,
+          "over32Pct": 0.1252,
+          "removedShare": 0
+        },
+        "shadows": {
+          "differingPixels": 420142,
+          "over32Pct": 0.1252,
+          "removedShare": 0
+        },
+        "images": {
+          "differingPixels": 420142,
+          "over32Pct": 0.1252,
+          "removedShare": 0
+        },
+        "gradients": {
+          "differingPixels": 420142,
+          "over32Pct": 0.1252,
+          "removedShare": 0
+        },
+        "opacity": {
+          "differingPixels": 128076,
+          "over32Pct": 0.5594,
+          "removedShare": 0.695
+        }
+      }
+    },
+    "G1000": {
+      "severity": "edge-aa",
+      "class": "layer/opacity blending difference",
+      "dominant": "opacity",
+      "ablations": {
+        "text": {
+          "differingPixels": 621783,
+          "over32Pct": 0.1616,
+          "removedShare": 0
+        },
+        "filters": {
+          "differingPixels": 621783,
+          "over32Pct": 0.1616,
+          "removedShare": 0
+        },
+        "shadows": {
+          "differingPixels": 621783,
+          "over32Pct": 0.1616,
+          "removedShare": 0
+        },
+        "images": {
+          "differingPixels": 621783,
+          "over32Pct": 0.1616,
+          "removedShare": 0
+        },
+        "gradients": {
+          "differingPixels": 621783,
+          "over32Pct": 0.1616,
+          "removedShare": 0
+        },
+        "opacity": {
+          "differingPixels": 186489,
+          "over32Pct": 0.6997,
+          "removedShare": 0.7
+        }
+      }
+    }
+  }
+}

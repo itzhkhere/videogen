@@ -24,7 +24,8 @@ const PROBES = {
     const r = make(b, html, { share: 'thread' })
     const sibling = make(b, html, { share: 'thread' })
     r._renderTimed({ format: 'none' })
-    r._gpuAbandonForTesting()
+    const abandon = attempt(() => r._gpuAbandonForTesting())
+    if (!abandon.ok) { r.close(); sibling.close(); return { abandon, note: 'device loss cannot be simulated on this backend' } }
     const out = {
       render: attempt(() => r._renderTimed({ format: 'rgba' })),
       renderNoReadback: attempt(() => r._renderTimed({ format: 'none', readback: false })),
