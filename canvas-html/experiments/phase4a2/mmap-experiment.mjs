@@ -4,6 +4,7 @@
 //          frame (median ms per frame, wall time around the call)
 //   retain: 100 4K frames retained, then dropped + turns + gc: RSS before/while/after
 // node mmap-experiment.mjs   → evidence/mmap-experiment.json
+// Needs the build of commit 9fd0be7 (the "mmap" output was removed after the experiment).
 import fs from 'node:fs'
 import path from 'node:path'
 import { spawnSync } from 'node:child_process'

@@ -1,0 +1,2 @@
+$ tsc -p test/types  (typescript 5.9.3, @types/node 24)
+OK: 0 errors; every @ts-expect-error line is an error

@@ -47,15 +47,14 @@ export interface TimedRenderOptions {
   /** Also time Blitz paint-command generation alone (an extra pass), as `paintPrep`. */
   measurePaintPrep?: boolean
   /**
-   * Experimental (Phase 4A.1): how RGBA pixels reach Node. "transfer" (default; what render()
-   * does): the frame is handed to the Buffer, no copy. "clone": painted into a reused scratch
-   * frame, then copied (Phase 4A). "pool": like "transfer", but the Buffer's finalizer returns the
-   * frame to a small pool for reuse (Design B).
+   * Diagnostics: how RGBA pixels reach Node. "transfer" (default; what render() does): the
+   * frame is handed to the Buffer, no copy. "clone": painted into a reused scratch frame, then
+   * copied (the Phase 4A path, for A/B measurements only).
    */
-  output?: 'transfer' | 'clone' | 'pool'
-  /** "pool" output: frames the pool keeps for reuse. Default 3. */
-  poolSize?: number
+  output?: 'transfer' | 'clone'
 }
+/** A caller-owned frame target for renderInto: a Buffer, Uint8Array or Uint8ClampedArray. */
+export type FrameTarget = Buffer | Uint8Array | Uint8ClampedArray
 /** Experimental (Phase 4A): a frame and where its time went. */
 export interface TimedRender {
   /** The backend that drew the frame: "cpu-raster", "ganesh-gl", "ganesh-vulkan" or "graphite-vulkan". */
@@ -116,6 +115,11 @@ export declare class HtmlRenderer {
    * native memory is freed when Node finalizes the Buffer, which happens on event-loop turns:
    * a synchronous loop of renders keeps every frame until it yields. The Buffer can be sent to a
    * worker by copy (postMessage(buf)) but not transferred (Node rejects external memory).
+   * For sequences, workers and encoders, use renderInto() with buffers you reuse.
+   *
+   * RGBA bytes: R, G, B, A per pixel, rows top to bottom, no padding (stride pixelWidth × 4),
+   * sRGB values, alpha premultiplied. With an opaque `background` (the default) every alpha
+   * byte is 255.
    */
   render(options?: { format?: 'rgba' }): Buffer
   render(options: { format: 'png' }): Buffer
@@ -141,6 +145,29 @@ export declare class HtmlRenderer {
   readonly loadErrors: string[]
   readonly pixelWidth: number
   readonly pixelHeight: number
+  /**
+   * Bytes of one RGBA frame: pixelWidth × pixelHeight × 4. The exact size renderInto() needs.
+   * Fixed for the renderer's life.
+   */
+  readonly frameByteLength: number
+  /**
+   * Draw the document as it is now into `target`, a Buffer, Uint8Array or Uint8ClampedArray you
+   * own, of exactly frameByteLength bytes. The same frame step and the same bytes as render(),
+   * without any allocation or copy in canvas-html.
+   *
+   * Synchronous: when it returns, `target` holds the complete frame. The renderer keeps no
+   * reference to `target` and never touches it after returning, so you may read, reuse or
+   * transfer it at once (e.g. postMessage(target.buffer, [target.buffer]) when the view covers
+   * its whole ArrayBuffer). The next renderInto(target) overwrites it.
+   *
+   * Throws, before running anything (no frame step, no write):
+   * - Error "renderer is closed" after close();
+   * - TypeError ERR_INVALID_ARG_TYPE for any other type (other typed arrays, DataView,
+   *   ArrayBuffer, arrays) and for views over a SharedArrayBuffer (not supported);
+   * - TypeError ERR_INVALID_ARG_VALUE for a view whose ArrayBuffer was transferred (detached);
+   * - RangeError ERR_OUT_OF_RANGE when its byte length is not frameByteLength.
+   */
+  renderInto(target: FrameTarget): void
   /** Release the document and script runtime now. Idempotent; later calls throw "renderer is closed". */
   close(): void
   /**
@@ -150,32 +177,23 @@ export declare class HtmlRenderer {
   _dropNodeForTesting(selector: string): boolean
   /** Experimental (Phase 4A): render like render() and report the time of every step. */
   _renderTimed(options?: TimedRenderOptions): TimedRender
-  /**
-   * Experimental (Phase 4A.1, Design C): render into a caller-owned byte view of exactly
-   * pixelWidth × pixelHeight × 4 bytes (Buffer, Uint8Array, or a view of an ArrayBuffer or
-   * SharedArrayBuffer; any other typed array of that byte length is written as raw bytes).
-   * Nothing is allocated or copied in canvas-html. The view is overwritten;
-   * the caller decides when to reuse it, and must not let another thread touch it during the
-   * call. Returns the timings (nanoseconds).
-   */
-  _renderInto(target: Uint8Array): { backend: string; timingsNs: Record<string, number> }
+  /** Diagnostics: renderInto() that also returns the time of every step (nanoseconds). */
+  _renderIntoTimed(target: FrameTarget): { backend: string; timingsNs: Record<string, number> }
   /**
    * Experimental (Phase 4A.1): render a sequence. For every time (ms), move the page there, render
    * it and write its pixels into targets[i % targets.length] (each exactly one frame), in order.
    * With a pipelined mode, a target is reused only after the frame written to it `targets.length`
    * frames earlier; consume them after the call returns.
    */
-  _renderFramesExperimental(times: number[], targets: Uint8Array[], options?: FramesOptions): FramesResult
+  _renderFramesExperimental(times: number[], targets: FrameTarget[], options?: FramesOptions): FramesResult
   /** Experimental (Phase 4A.1, GPU builds): start a readback pipeline of up to `depth` (1–8) frames in flight. */
   _pipelineStart(mode: 'deferred' | 'pbo', depth: number): void
   /** Experimental (Phase 4A.1): render the document as it is now into the pipeline without waiting. Throws when full. */
   _pipelineSubmit(): { index: number; timingsNs: Record<string, number> }
   /** Experimental (Phase 4A.1): finish the oldest frame in flight into `target` (exactly one frame of bytes). */
-  _pipelineComplete(target: Uint8Array): { index: number; timingsNs: Record<string, number> }
+  _pipelineComplete(target: FrameTarget): { index: number; timingsNs: Record<string, number> }
   /** Experimental (Phase 4A.1): wait for the GPU, discard frames in flight, free the pipeline. Returns the number discarded. close() does this too. */
   _pipelineStop(): number
-  /** Experimental (Phase 4A.1): pool counters of the "pool" output, or null. */
-  _poolStats(): { frameBytes: number; maxFree: number; free: number; allocated: number; reused: number; returned: number; discarded: number } | null
   /** Experimental (Phase 4A.1): the C heap (glibc mallinfo2), or null on other platforms. */
   _nativeHeap(): { inUseBytes: number; mmapBytes: number; arenaBytes: number; freeBytes: number } | null
   /** Experimental: backend, GPU device and Skia GPU resource cache usage. */

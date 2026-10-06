@@ -893,8 +893,8 @@ impl HtmlRenderer {
         if !matches!(format.as_str(), "rgba" | "png" | "none") {
             return Err(Error::from_reason(format!("format must be \"rgba\", \"png\" or \"none\", got {format:?}")));
         }
-        if !matches!(output.as_str(), "transfer" | "clone" | "mmap") {
-            return Err(Error::from_reason(format!("output must be \"transfer\", \"clone\" or \"mmap\", got {output:?}")));
+        if !matches!(output.as_str(), "transfer" | "clone") {
+            return Err(Error::from_reason(format!("output must be \"transfer\" or \"clone\", got {output:?}")));
         }
         let mut t: HashMap<String, f64> = HashMap::new();
         self.prepare_timed(&mut t, o.measure_paint_prep.unwrap_or(false))?;
@@ -942,22 +942,6 @@ impl HtmlRenderer {
                 self.buffer = frame;
                 let start = Instant::now();
                 let b = BufferSlice::from_data(env, copy)?;
-                t.insert("buffer".into(), start.elapsed().as_nanos() as f64);
-                Some(b)
-            }
-            #[cfg(unix)]
-            (_, "mmap") => {
-                // Phase 4A.2 experiment: the frame in its own mapping, unmapped by the finalizer.
-                let start = Instant::now();
-                let mut frame = frames::MmapFrame::new(self.frame_bytes).map_err(Error::from_reason)?;
-                t.insert("alloc".into(), start.elapsed().as_nanos() as f64);
-                self.paint_timed(&mut t, Some(frame.as_mut_slice()))?;
-                let start = Instant::now();
-                let (ptr, len) = (frame.as_mut_ptr(), frame.len());
-                // SAFETY: `ptr`/`len` describe `frame`'s mapping, which moves into the finalize
-                // hint unchanged and is unmapped only when V8 finalizes this Buffer (or at once
-                // after napi-rs copied it, on runtimes without external buffers).
-                let b = unsafe { BufferSlice::from_external(env, ptr, len, frame, |_, f: frames::MmapFrame| drop(f))? };
                 t.insert("buffer".into(), start.elapsed().as_nanos() as f64);
                 Some(b)
             }

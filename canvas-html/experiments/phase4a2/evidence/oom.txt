@@ -1,0 +1,2 @@
+address-space limit 3072 MiB; exit 0
+{"framesRetainedBeforeFailure":51,"failure":{"at":51,"name":"Error","message":"could not allocate a 31 MiB frame"},"renderIntoAtLimit":"ok","renderAfterRelease":"ok"}

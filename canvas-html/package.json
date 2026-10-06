@@ -15,7 +15,7 @@
   },
   "scripts": {
     "build": "cargo build --release && cp target/release/libcanvas_html.so canvas-html.linux-x64-gnu.node",
-    "test": "node test/smoke.mjs && node test/smoke-js.mjs && node test/smoke-waapi.mjs && node test/smoke-fonts.mjs",
+    "test": "node test/smoke.mjs && node test/smoke-js.mjs && node test/smoke-waapi.mjs && node test/smoke-fonts.mjs && node --expose-gc test/render-into.mjs && node test/render-into-examples.mjs",
     "compare": "node test/compare.mjs"
   },
   "devDependencies": {

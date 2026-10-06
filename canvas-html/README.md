@@ -15,6 +15,9 @@ r.call('seek', 1500)              // run a function of the page (see "Making vid
 const rgba = r.render()           // RGBA pixels, 4 bytes per pixel, row by row
 const png = r.render({ format: 'png' })
 
+const frame = Buffer.alloc(r.frameByteLength)
+r.renderInto(frame)               // same pixels into memory you own and reuse (see "Frames")
+
 r.eval('document.title')          // run code in the page; the result comes back through JSON
 r.boxes()                         // layout boxes of elements with an id
 r.missingGlyphs()                 // text that no available font can draw
@@ -54,6 +57,68 @@ for (let i = 0; i < 180; i++) {
 ```
 
 A page that plays on its own (GSAP without `paused`, a rAF loop) also works: step it with `advanceClock(1000 / fps)` and `render()`, in order. Seeking is better for video, because any frame costs the same and workers can share the work.
+
+## Frames: render() and renderInto()
+
+| | `render()` | `renderInto(target)` |
+|---|---|---|
+| For | occasional frames, convenience | sequences, workers, encoders |
+| Memory | a new Buffer per frame, owned by the Buffer | yours: a `Buffer`, `Uint8Array` or `Uint8ClampedArray` of exactly `frameByteLength` bytes, reused |
+| Cost | allocation and first-touch of a new frame each time; freed when Node finalizes the Buffer (on event-loop turns, so a synchronous loop keeps every frame until it yields) | no allocation and no copy in canvas-html; flat memory |
+| Returns | the Buffer | nothing; `target` holds the frame |
+
+Both run the same frame step (Web Animations, `requestAnimationFrame` callbacks, style, layout, paint) and produce the same bytes. `renderInto` is synchronous: when it returns, the frame is complete, and the renderer keeps no reference to `target` and never writes it again. In Phase 4A.1 measurements it made 4K raw output 3–4× faster and animated sequences 1.2–2.3× faster than `render()`.
+
+**A sequence into one buffer.** Finish with the bytes before the next call overwrites them:
+
+```js
+const frame = Buffer.alloc(r.frameByteLength)
+for (let i = 0; i < 300; i++) {
+  r.call('seek', (i * 1000) / 30)   // or r.advanceClock(1000 / 30) for a page that plays itself
+  r.renderInto(frame)
+  consume(frame)                    // must be done with the bytes before the next renderInto(frame)
+}
+```
+
+**Asynchronous consumers.** `stream.write(buf)` does not copy, so a buffer is busy until its write completes. Use a few buffers in turn and reuse one only after its write callback:
+
+```js
+const ring = Array.from({ length: 3 }, () => ({ buf: Buffer.alloc(r.frameByteLength), done: Promise.resolve() }))
+for (let i = 0; i < 300; i++) {
+  const slot = ring[i % ring.length]
+  await slot.done                                   // this buffer's previous frame was written
+  r.call('seek', (i * 1000) / 30)
+  r.renderInto(slot.buf)
+  slot.done = new Promise((ok, fail) => ffmpeg.stdin.write(slot.buf, (e) => (e ? fail(e) : ok())))
+}
+```
+
+**Workers, without copying.** Render into a transferable `ArrayBuffer` and move it to the parent:
+
+```js
+// in the worker
+const ab = new ArrayBuffer(r.frameByteLength)
+r.renderInto(new Uint8Array(ab))
+parentPort.postMessage(ab, [ab])   // moves the memory: no copy; `ab` is now detached here
+```
+
+The transfer moves the memory: the parent owns it, and the worker's `ab` (and every view of it) is detached, so the next frame needs another buffer. Either allocate one, or have the parent send buffers back (`worker.postMessage(ab, [ab])`) and reuse those (`test/render-into-workers.mjs` does that: about two buffers per worker for any number of frames). Passing a detached view to `renderInto` throws. Do not try to transfer a `render()` Buffer: its memory is owned by native code, so Node rejects the transfer (`DataCloneError`), and `postMessage(buf)` without a transfer list copies it.
+
+**Accepted and rejected targets.** Only `Buffer`, `Uint8Array` and `Uint8ClampedArray` (at any offset into an ordinary or resizable `ArrayBuffer`) of exactly `frameByteLength` bytes. A rejected call throws before anything runs (no frame step, nothing written):
+
+| target | error |
+|---|---|
+| wrong byte length (also 0, and a shrunk resizable buffer) | `RangeError`, `code: 'ERR_OUT_OF_RANGE'` |
+| other typed arrays (`Float32Array`, `Uint32Array`, …), `DataView`, `ArrayBuffer`, arrays, anything else | `TypeError`, `code: 'ERR_INVALID_ARG_TYPE'` |
+| a view over a `SharedArrayBuffer` | `TypeError`, `code: 'ERR_INVALID_ARG_TYPE'`: not supported (see below) |
+| a view whose `ArrayBuffer` was transferred (detached) | `TypeError`, `code: 'ERR_INVALID_ARG_VALUE'` |
+| any target after `close()` | `Error: renderer is closed` |
+
+`SharedArrayBuffer` targets are rejected on purpose: native code writes the frame without synchronization, and another thread could read or write the same memory during the call. They may be supported later with an explicit hand-off protocol.
+
+**Pixel format** (both APIs, every backend): 4 bytes per pixel in the order R, G, B, A; rows from top to bottom; no padding between rows (stride `pixelWidth × 4`); 8-bit sRGB values as CSS gives them, blended in sRGB like browsers; **alpha premultiplied**. With an opaque `background` (the default `#ffffff`) every alpha byte is 255. With a transparent or translucent `background`, alpha is the real coverage and colours are premultiplied: 50 % red over a transparent background is `[128, 0, 0, 128]`.
+
+**Electron and V8's memory sandbox.** Where native memory cannot back a Buffer (Electron builds with the V8 sandbox), `render()` still works, but napi-rs copies the frame once. `renderInto` writes into memory you allocated in JS, so it does not depend on that.
 
 ## Scope
 
