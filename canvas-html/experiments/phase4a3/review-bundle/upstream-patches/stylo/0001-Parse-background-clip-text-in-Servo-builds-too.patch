@@ -1,0 +1,32 @@
+From 721084835272d639856823ea69f100c9db2a0007 Mon Sep 17 00:00:00 2001
+From: local <l@l>
+Date: Mon, 5 Oct 2026 10:57:12 +0000
+Subject: [PATCH] Parse background-clip: text in Servo builds too
+
+---
+ values/specified/background.rs | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/values/specified/background.rs b/values/specified/background.rs
+index 405d50e..662f90b 100644
+--- a/values/specified/background.rs
++++ b/values/specified/background.rs
+@@ -210,7 +210,6 @@ pub enum BackgroundClip {
+     #[value_info(skip)]
+     NoClip,
+     // TODO: text and border-area are supposed to combine in backgrounds-4...
+-    #[cfg(feature = "gecko")]
+     Text,
+     #[parse(condition = "background_clip_border_area_enabled")]
+     #[value_info(skip)]
+@@ -241,7 +240,6 @@ impl BackgroundClip {
+             Self::ViewBox => ClipValidity::MASK,
+             #[cfg(feature = "gecko")]
+             Self::NoClip => ClipValidity::MASK,
+-            #[cfg(feature = "gecko")]
+             Self::Text => ClipValidity::BACKGROUND,
+             Self::BorderArea => ClipValidity::BACKGROUND,
+         }
+-- 
+2.43.0
+

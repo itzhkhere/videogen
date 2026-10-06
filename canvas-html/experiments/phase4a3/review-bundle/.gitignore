@@ -1,0 +1,11 @@
+# Build products
+/target/
+/target-*/
+*.node
+node_modules
+# Blitz is cloned and patched here by scripts/setup-blitz.sh
+/third_party/blitz/
+# Experiment build outputs and downloads
+/experiments/**/build/
+*.tgz
+*.zip

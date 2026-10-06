@@ -1,0 +1,91 @@
+From 48e8bc3d8d91f6bd4bbc6dc927237ccfa3f5165a Mon Sep 17 00:00:00 2001
+From: html-renderer <html-renderer@localhost>
+Date: Mon, 5 Oct 2026 17:11:36 +0000
+Subject: [PATCH 2/5] servo/animation: let paused animations keep their current
+ time across style changes
+
+When the style of a paused animation changed (a new animation-delay, duration, iteration count
+or direction), update_from_other could only move it forward by whole iterations and kept the old
+direction. Setting animation-delay on a paused animation to seek it backwards, or across an
+iteration of an alternating animation, gave the wrong frame.
+
+A paused animation now holds its current time (time since creation); with a new paused style,
+the iteration, direction and progress are recomputed from that time. Animation::set_paused_time
+does the same for callers that seek an animation directly (Animation.currentTime). The progress
+is snapped to an iteration boundary when it is within 1e-6, because durations are stored as f32
+and an end value of exactly 1.0 decides whether fill applies.
+---
+ servo/animation.rs | 50 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+
+diff --git a/servo/animation.rs b/servo/animation.rs
+index 8376bd7..2ee792c 100644
+--- a/servo/animation.rs
++++ b/servo/animation.rs
+@@ -752,6 +752,31 @@ impl Animation {
+         *self = other.clone();
+         self.current_direction = old_direction;
+ 
++        // A paused animation holds its current time (the time since it was created, as the
++        // timeline sees it). When the new style keeps it paused, recompute the iteration,
++        // direction and progress from that held time and the new delay, duration, iteration
++        // count and direction. The general code below can only move forward by whole
++        // iterations and keeps the old direction, so seeking a paused animation backwards,
++        // across iterations or with a new duration gave the wrong frame.
++        if let AnimationState::Paused(_) = other.state {
++            let old_iterations = match old_iteration_state {
++                KeyframesIterationState::Finite(current, _) => current,
++                KeyframesIterationState::Infinite(current) => current,
++            };
++            let held_time = match old_state {
++                Paused(progress) => Some((old_iterations + progress) * old_duration + old_delay),
++                Running | Pending | Finished => {
++                    let created_at = old_started_at - old_delay - old_iterations * old_duration;
++                    Some(now - created_at)
++                },
++                Canceled => None,
++            };
++            if let Some(held_time) = held_time {
++                self.set_paused_time(held_time, now);
++                return;
++            }
++        }
++
+         if self.delay != old_delay {
+             // `started_at` incorporates the delay, so changing the delay necessarily changes `started_at`.
+             // Note: `started_at` may actually be in the future.
+@@ -838,6 +863,31 @@ impl Animation {
+         }
+     }
+ 
++    /// Put this animation in the paused state at `held_time` seconds after its creation (its
++    /// current time), with the iteration and direction that time falls in. This is how script
++    /// seeks a CSS animation.
++    pub fn set_paused_time(&mut self, held_time: f64, now: f64) {
++        match self.iteration_state {
++            KeyframesIterationState::Finite(ref mut current, _) => *current = 0.0,
++            KeyframesIterationState::Infinite(ref mut current) => *current = 0.0,
++        }
++        self.current_direction = match self.direction {
++            AnimationDirection::Normal | AnimationDirection::Alternate => AnimationDirection::Normal,
++            AnimationDirection::Reverse | AnimationDirection::AlternateReverse => {
++                AnimationDirection::Reverse
++            },
++        };
++        // Durations and delays are stored as f32 seconds, so an exact boundary (an iteration's
++        // end, where fill decides the value) can come out a hair short. Snap to it.
++        let mut progress = (held_time - self.delay) / self.duration;
++        if (progress - progress.round()).abs() < 1e-6 {
++            progress = progress.round();
++        }
++        self.started_at = now - held_time + self.delay;
++        self.state = AnimationState::Paused(progress);
++        self.iterate_by(progress);
++    }
++
+     /// Fill in an `AnimationValueMap` with values calculated from this animation at
+     /// the given time value.
+     fn get_property_declaration_at_time(&self, now: f64, map: &mut AnimationValueMap) {
+-- 
+2.43.0
+

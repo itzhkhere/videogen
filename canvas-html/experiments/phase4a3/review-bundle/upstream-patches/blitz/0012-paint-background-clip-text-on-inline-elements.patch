@@ -1,0 +1,192 @@
+From 8621d319ed6bbc114066e87fdefcbdcf8b49b105 Mon Sep 17 00:00:00 2001
+From: html-renderer <html-renderer@localhost>
+Date: Mon, 5 Oct 2026 18:00:30 +0000
+Subject: [PATCH 12/12] paint: background-clip: text on inline elements
+
+A gradient word inside a heading (<h1>One engine. <span class=grad>No Chrome.</span></h1>) was
+not painted: inline elements only got background-color, per glyph run. For each inline element
+with background-clip: text, paint its background layers over the box that covers its glyph runs,
+then keep it only under those glyphs (DestIn). Limit: an element that wraps gets one box over
+all its line fragments.
+---
+ packages/blitz-paint/src/render.rs            |   2 +
+ packages/blitz-paint/src/render/background.rs | 119 ++++++++++++++++++
+ packages/blitz-paint/src/text.rs              |  13 ++
+ 3 files changed, 134 insertions(+)
+
+diff --git a/packages/blitz-paint/src/render.rs b/packages/blitz-paint/src/render.rs
+index c91d00b..37d19f3 100644
+--- a/packages/blitz-paint/src/render.rs
++++ b/packages/blitz-paint/src/render.rs
+@@ -858,6 +858,8 @@ impl ElementCx<'_, '_> {
+                 transform,
+                 self.node.id,
+             );
++            // `background-clip: text` on inline elements (a gradient word in a heading)
++            self.draw_inline_clip_text_backgrounds(scene, &text_layout.layout, transform);
+ 
+             // Render text selection highlight (if any) using cached selection ranges
+             if let Some(&(sel_start, sel_end)) = self.context.selection_ranges.get(&self.node.id) {
+diff --git a/packages/blitz-paint/src/render/background.rs b/packages/blitz-paint/src/render/background.rs
+index 8756829..0fa3914 100644
+--- a/packages/blitz-paint/src/render/background.rs
++++ b/packages/blitz-paint/src/render/background.rs
+@@ -176,6 +176,125 @@ impl ElementCx<'_, '_> {
+         }
+     }
+ 
++    /// `background-clip: text` on inline elements inside this element's inline layout (such as
++    /// a gradient word in a heading). For each such element, paint its background over the box
++    /// that covers its glyph runs (the union of the runs' ascent-to-descent boxes), then keep
++    /// the background only under those glyphs. `inline_transform` places the layout's origin.
++    ///
++    /// Simplification: an element that wraps onto several lines gets one box over all its
++    /// fragments, so the background is not sliced per line as with
++    /// `box-decoration-break: slice`.
++    pub(super) fn draw_inline_clip_text_backgrounds(
++        &self,
++        scene: &mut impl PaintScene,
++        layout: &parley::Layout<blitz_dom::node::TextBrush>,
++        inline_transform: Affine,
++    ) {
++        use parley::PositionedLayoutItem;
++
++        let dom = self.context.dom;
++        let root_id = self.node.id;
++        // The nearest inline ancestor (or the run's own node) that clips its background to text.
++        let clip_owner = |mut id: NodeId| -> Option<NodeId> {
++            while id != root_id {
++                let node = dom.get_node(id)?;
++                if let Some(styles) = node.primary_styles() {
++                    if styles
++                        .get_background()
++                        .background_clip
++                        .0
++                        .iter()
++                        .any(|c| matches!(c, StyloBackgroundClip::Text))
++                    {
++                        return Some(id);
++                    }
++                }
++                id = node.parent?;
++            }
++            None
++        };
++
++        let mut groups: Vec<(NodeId, Rect)> = Vec::new();
++        for line in layout.lines() {
++            for item in line.items() {
++                let PositionedLayoutItem::GlyphRun(glyph_run) = item else {
++                    continue;
++                };
++                let Some(owner) = clip_owner(glyph_run.style().brush.id) else {
++                    continue;
++                };
++                let metrics = glyph_run.run().font_metrics();
++                let x = glyph_run.offset() as f64;
++                let baseline = glyph_run.baseline() as f64;
++                let rect = Rect::new(
++                    x,
++                    baseline - metrics.ascent as f64,
++                    x + glyph_run.advance() as f64,
++                    baseline + metrics.descent as f64,
++                );
++                match groups.iter_mut().find(|(id, _)| *id == owner) {
++                    Some((_, r)) => *r = r.union(rect),
++                    None => groups.push((owner, rect)),
++                }
++            }
++        }
++
++        for (owner, rect) in groups {
++            let Some(node) = dom.get_node(owner) else {
++                continue;
++            };
++            let (Some(style), Some(element)) = (node.primary_styles(), node.element_data()) else {
++                continue;
++            };
++            let frame = crate::kurbo_css::CssBox::new(
++                Rect::from_origin_size(Point::ZERO, rect.size()),
++                kurbo::Insets::ZERO,
++                kurbo::Insets::ZERO,
++                0.0,
++                crate::kurbo_css::NonUniformRoundedRectRadii::default(),
++            );
++            let cx = ElementCx {
++                context: self.context,
++                frame,
++                style: (*style).clone(),
++                scale: self.scale,
++                node,
++                element,
++                transform: inline_transform * Affine::translate(rect.origin().to_vec2()),
++                #[cfg(feature = "svg")]
++                svg: None,
++                text_input: None,
++                list_item: None,
++                devtools: self.devtools,
++                custom_widget_scene: None,
++            };
++            scene.push_layer(
++                Fill::NonZero,
++                Mix::Normal,
++                1.0,
++                inline_transform,
++                &rect,
++                None,
++                None,
++            );
++            cx.draw_background_layers(scene);
++            scene.push_layer(
++                Fill::NonZero,
++                Compose::DestIn,
++                1.0,
++                inline_transform,
++                &rect,
++                None,
++                None,
++            );
++            crate::text::draw_glyph_mask_where(scene, layout.lines(), inline_transform, |brush| {
++                clip_owner(brush.id) == Some(owner)
++            });
++            scene.pop_layer();
++            scene.pop_layer();
++        }
++    }
++
+     /// Paint this element's own text glyphs opaquely, as the mask for `background-clip: text`.
+     fn draw_text_glyph_mask(&self, scene: &mut impl PaintScene) {
+         let Some(text_layout) = self.element.inline_layout_data.as_ref() else {
+diff --git a/packages/blitz-paint/src/text.rs b/packages/blitz-paint/src/text.rs
+index 4dfa7ad..8da18c6 100644
+--- a/packages/blitz-paint/src/text.rs
++++ b/packages/blitz-paint/src/text.rs
+@@ -783,12 +783,25 @@ pub(crate) fn draw_glyph_mask<'a>(
+     scene: &mut impl PaintScene,
+     lines: impl Iterator<Item = Line<'a, TextBrush>>,
+     transform: Affine,
++) {
++    draw_glyph_mask_where(scene, lines, transform, |_| true);
++}
++
++/// Like [`draw_glyph_mask`], for the glyph runs whose brush passes `keep`.
++pub(crate) fn draw_glyph_mask_where<'a>(
++    scene: &mut impl PaintScene,
++    lines: impl Iterator<Item = Line<'a, TextBrush>>,
++    transform: Affine,
++    keep: impl Fn(&TextBrush) -> bool,
+ ) {
+     for line in lines {
+         for item in line.items() {
+             let PositionedLayoutItem::GlyphRun(glyph_run) = item else {
+                 continue;
+             };
++            if !keep(&glyph_run.style().brush) {
++                continue;
++            }
+             let run = glyph_run.run();
+             let font_size = run.font_size();
+             let synthesis = run.synthesis();
+-- 
+2.43.0
+

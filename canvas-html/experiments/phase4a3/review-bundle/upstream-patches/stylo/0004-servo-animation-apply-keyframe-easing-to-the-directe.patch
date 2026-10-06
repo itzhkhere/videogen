@@ -1,0 +1,67 @@
+From 0804d41caef16e0c898e0514d8e8c17c77b5bfdb Mon Sep 17 00:00:00 2001
+From: html-renderer <html-renderer@localhost>
+Date: Mon, 5 Oct 2026 17:11:36 +0000
+Subject: [PATCH 4/5] servo/animation: apply keyframe easing to the directed
+ progress in reverse iterations
+
+In a reverse iteration the interval was taken from the later keyframe with that keyframe's
+timing function, so `ease-in` played as a mirrored `ease-out`. Browsers (and the Web Animations
+model) compute the directed progress first and then use the forward interval and its timing
+function. Mirror the progress and look the interval up in forward order.
+---
+ servo/animation.rs | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
+
+diff --git a/servo/animation.rs b/servo/animation.rs
+index f3c201a..6c8e7f6 100644
+--- a/servo/animation.rs
++++ b/servo/animation.rs
+@@ -956,11 +956,26 @@ impl Animation {
+             return;
+         }
+ 
++        // Keyframe easing works on the directed progress, as in the Web Animations model: in a
++        // reverse iteration the interval and its timing function are the forward ones, with the
++        // progress mirrored. (Interpolating from the later keyframe with its own timing function
++        // played `ease-in` as a mirrored `ease-out`, unlike every browser.)
++        let total_progress = match self.current_direction {
++            AnimationDirection::Normal => total_progress,
++            AnimationDirection::Reverse => 1.0 - total_progress,
++            _ => unreachable!("Current animation direction can only be `normal` or `reverse`."),
++        };
++        if total_progress == 1.0 {
++            add_declarations_to_map(self.computed_steps.last().unwrap());
++            return;
++        }
++        let lookup_direction = AnimationDirection::Normal;
++
+         // Get the indices of the previous (from) keyframe and the next (to) keyframe.
+         let next_keyframe_index;
+         let prev_keyframe_index;
+         let num_steps = self.computed_steps.len();
+-        match self.current_direction {
++        match lookup_direction {
+             AnimationDirection::Normal => {
+                 next_keyframe_index = self
+                     .computed_steps
+@@ -1015,7 +1030,7 @@ impl Animation {
+         }
+ 
+         // Interpolate a new value for each animating property
+-        let reversed = self.current_direction != AnimationDirection::Normal;
++        let reversed = lookup_direction != AnimationDirection::Normal;
+         for property_index in 0..self.number_of_animating_properties {
+             let Some(previous_keyframe) = self.next_relevant_keyframe_for_property_in_direction(
+                 property_index,
+@@ -1042,7 +1057,7 @@ impl Animation {
+             let percentage_between_keyframes =
+                 (next_keyframe.start_percentage - previous_keyframe.start_percentage).abs();
+             let duration_between_keyframes = percentage_between_keyframes * self.duration;
+-            let direction_aware_prev_keyframe_start_percentage = match self.current_direction {
++            let direction_aware_prev_keyframe_start_percentage = match lookup_direction {
+                 AnimationDirection::Normal => previous_keyframe.start_percentage,
+                 AnimationDirection::Reverse => 1. - previous_keyframe.start_percentage,
+                 _ => unreachable!(),
+-- 
+2.43.0
+

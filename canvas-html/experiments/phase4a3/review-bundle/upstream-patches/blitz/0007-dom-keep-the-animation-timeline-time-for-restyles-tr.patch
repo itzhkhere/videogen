@@ -1,0 +1,275 @@
+From c59b2d6749f3dd3f60ff2344410695ab75d28a65 Mon Sep 17 00:00:00 2001
+From: local <l@l>
+Date: Mon, 5 Oct 2026 16:08:10 +0000
+Subject: [PATCH 7/9] dom: keep the animation timeline time for restyles
+ triggered from script (layout queries no longer reset animations to t=0)
+
+---
+ packages/blitz-dom/src/document.rs            |  4 +++
+ packages/blitz-dom/src/resolve.rs             | 13 ++++++++
+ packages/blitz-dom/src/stylo.rs               |  2 +-
+ .../blitz-vibey-script/src/dom/document.rs    |  4 +--
+ .../blitz-vibey-script/src/dom/element.rs     | 30 +++++++++----------
+ packages/blitz-vibey-script/src/dom/style.rs  |  2 +-
+ packages/blitz-vibey-script/src/runtime.rs    |  4 +--
+ 7 files changed, 38 insertions(+), 21 deletions(-)
+
+diff --git a/packages/blitz-dom/src/document.rs b/packages/blitz-dom/src/document.rs
+index 41154db..82a6f24 100644
+--- a/packages/blitz-dom/src/document.rs
++++ b/packages/blitz-dom/src/document.rs
+@@ -289,6 +289,9 @@ pub struct BaseDocument {
+     // TODO: collapse animating state into a bitflags
+     /// Whether there are active CSS animations/transitions (so we should re-render every frame)
+     pub(crate) has_active_animations: bool,
++    /// The time (in seconds) passed to the most recent `resolve`: the document's animation
++    /// timeline. Restyles triggered from script (layout queries) reuse it.
++    pub(crate) animation_time: f64,
+     /// Whether there is a `<canvas>` element in the DOM (so we should re-render every frame)
+     pub(crate) has_canvas: bool,
+     /// Whether there are subdocuments that are animating (so we should re-render every frame)
+@@ -469,6 +472,7 @@ impl BaseDocument {
+             active_node_id: None,
+             mousedown_node_id: None,
+             has_active_animations: false,
++            animation_time: 0.0,
+             subdoc_is_animating: false,
+             has_canvas: false,
+             sub_document_nodes: HashSet::new(),
+diff --git a/packages/blitz-dom/src/resolve.rs b/packages/blitz-dom/src/resolve.rs
+index 7eac5d7..6150393 100644
+--- a/packages/blitz-dom/src/resolve.rs
++++ b/packages/blitz-dom/src/resolve.rs
+@@ -35,7 +35,20 @@ use crate::{
+ 
+ impl BaseDocument {
+     /// Restyle the tree and then relayout it
++    /// The time (in seconds) of the document's animation timeline, as given to the most recent
++    /// [`resolve`](Self::resolve). Use it to restyle without moving animations, for example for
++    /// layout queries made from script.
++    pub fn animation_time(&self) -> f64 {
++        self.animation_time
++    }
++
++    /// Restyle and relayout at the current animation time (see [`animation_time`](Self::animation_time)).
++    pub fn resolve_at_current_time(&mut self) {
++        self.resolve(self.animation_time);
++    }
++
+     pub fn resolve(&mut self, current_time_for_animations: f64) {
++        self.animation_time = current_time_for_animations;
+         if TDocument::as_node(&self.root_node())
+             .first_element_child()
+             .is_none()
+diff --git a/packages/blitz-dom/src/stylo.rs b/packages/blitz-dom/src/stylo.rs
+index 96998d7..7611eee 100644
+--- a/packages/blitz-dom/src/stylo.rs
++++ b/packages/blitz-dom/src/stylo.rs
+@@ -212,7 +212,7 @@ impl crate::document::BaseDocument {
+             guards,
+             visited_styles_enabled: false,
+             animations: self.animations.clone(),
+-            current_time_for_animations: 0.0,
++            current_time_for_animations: self.animation_time,
+             snapshot_map: &self.snapshots,
+             registered_speculative_painters: &RegisteredPaintersImpl,
+         };
+diff --git a/packages/blitz-vibey-script/src/dom/document.rs b/packages/blitz-vibey-script/src/dom/document.rs
+index be244a8..2c39d88 100644
+--- a/packages/blitz-vibey-script/src/dom/document.rs
++++ b/packages/blitz-vibey-script/src/dom/document.rs
+@@ -312,7 +312,7 @@ fn element_from_point(
+     let element_id = {
+         let mut doc = ctx.doc.borrow_mut();
+         // Hit testing consults layout, so make sure it is up to date
+-        doc.resolve(0.0);
++        doc.resolve_at_current_time();
+         doc.element_from_point(x, y)
+     };
+     Ok(node_or_null(&ctx, element_id, context))
+@@ -329,7 +329,7 @@ fn elements_from_point(
+ 
+     let element_ids: Vec<NodeId> = {
+         let mut doc = ctx.doc.borrow_mut();
+-        doc.resolve(0.0);
++        doc.resolve_at_current_time();
+         doc.elements_from_point(x, y)
+     };
+ 
+diff --git a/packages/blitz-vibey-script/src/dom/element.rs b/packages/blitz-vibey-script/src/dom/element.rs
+index dc8ad4b..3b97812 100644
+--- a/packages/blitz-vibey-script/src/dom/element.rs
++++ b/packages/blitz-vibey-script/src/dom/element.rs
+@@ -737,7 +737,7 @@ fn get_selection_start(this: &JsValue, _: &[JsValue], context: &mut Context) ->
+     let node_id = this_node_id(this)?;
+     let mut doc = ctx.doc.borrow_mut();
+     // The text editor is created during layout construction
+-    doc.resolve(0.0);
++    doc.resolve_at_current_time();
+     Ok(match selection_utf16_range(&doc, node_id) {
+         Some((start, _)) => JsValue::from(start as u32),
+         None => JsValue::null(),
+@@ -749,7 +749,7 @@ fn get_selection_end(this: &JsValue, _: &[JsValue], context: &mut Context) -> Js
+     let node_id = this_node_id(this)?;
+     let mut doc = ctx.doc.borrow_mut();
+     // The text editor is created during layout construction
+-    doc.resolve(0.0);
++    doc.resolve_at_current_time();
+     Ok(match selection_utf16_range(&doc, node_id) {
+         Some((_, end)) => JsValue::from(end as u32),
+         None => JsValue::null(),
+@@ -769,7 +769,7 @@ fn set_selection_start(
+         .to_number(context)?
+         .max(0.0) as usize;
+     let mut doc = ctx.doc.borrow_mut();
+-    doc.resolve(0.0);
++    doc.resolve_at_current_time();
+     if let Some((_, end)) = selection_utf16_range(&doc, node_id) {
+         set_selection_utf16_range(&mut doc, node_id, start, end.max(start));
+     }
+@@ -785,7 +785,7 @@ fn set_selection_end(this: &JsValue, args: &[JsValue], context: &mut Context) ->
+         .to_number(context)?
+         .max(0.0) as usize;
+     let mut doc = ctx.doc.borrow_mut();
+-    doc.resolve(0.0);
++    doc.resolve_at_current_time();
+     if let Some((start, _)) = selection_utf16_range(&doc, node_id) {
+         set_selection_utf16_range(&mut doc, node_id, start.min(end), end);
+     }
+@@ -810,7 +810,7 @@ fn set_selection_range(
+         .to_number(context)?
+         .max(0.0) as usize;
+     let mut doc = ctx.doc.borrow_mut();
+-    doc.resolve(0.0);
++    doc.resolve_at_current_time();
+     set_selection_utf16_range(&mut doc, node_id, start, end);
+     Ok(JsValue::undefined())
+ }
+@@ -935,7 +935,7 @@ fn layout_value(
+     let ctx = dom_ctx(context)?;
+     let node_id = this_node_id(this)?;
+     let mut doc = ctx.doc.borrow_mut();
+-    doc.resolve(0.0);
++    doc.resolve_at_current_time();
+     let value = doc.get_node(node_id).map(f).unwrap_or(0.0);
+     Ok(JsValue::from(value as f64))
+ }
+@@ -952,7 +952,7 @@ fn offset_value(
+     let ctx = dom_ctx(context)?;
+     let node_id = this_node_id(this)?;
+     let mut doc = ctx.doc.borrow_mut();
+-    doc.resolve(0.0);
++    doc.resolve_at_current_time();
+     let value = doc.offset_rect(node_id).map(|rect| f(&rect)).unwrap_or(0.0);
+     Ok(JsValue::from(value.round()))
+ }
+@@ -984,7 +984,7 @@ fn client_size(
+     let ctx = dom_ctx(context)?;
+     let node_id = this_node_id(this)?;
+     let mut doc = ctx.doc.borrow_mut();
+-    doc.resolve(0.0);
++    doc.resolve_at_current_time();
+     let Some(node) = doc.get_node(node_id) else {
+         return Ok(JsValue::from(0.0));
+     };
+@@ -1153,7 +1153,7 @@ fn set_scroll_top(this: &JsValue, args: &[JsValue], context: &mut Context) -> Js
+     let ctx = dom_ctx(context)?;
+     let node_id = this_node_id(this)?;
+     let mut doc = ctx.doc.borrow_mut();
+-    doc.resolve(0.0);
++    doc.resolve_at_current_time();
+     let current = current_scroll_offset(&doc, node_id);
+     doc.scroll_to(node_id, current.x, value, ScrollBehavior::Auto);
+     Ok(JsValue::undefined())
+@@ -1164,7 +1164,7 @@ fn set_scroll_left(this: &JsValue, args: &[JsValue], context: &mut Context) -> J
+     let ctx = dom_ctx(context)?;
+     let node_id = this_node_id(this)?;
+     let mut doc = ctx.doc.borrow_mut();
+-    doc.resolve(0.0);
++    doc.resolve_at_current_time();
+     let current = current_scroll_offset(&doc, node_id);
+     doc.scroll_to(node_id, value, current.y, ScrollBehavior::Auto);
+     Ok(JsValue::undefined())
+@@ -1175,7 +1175,7 @@ fn scroll_to_method(this: &JsValue, args: &[JsValue], context: &mut Context) ->
+     let ctx = dom_ctx(context)?;
+     let node_id = this_node_id(this)?;
+     let mut doc = ctx.doc.borrow_mut();
+-    doc.resolve(0.0);
++    doc.resolve_at_current_time();
+     let current = current_scroll_offset(&doc, node_id);
+     doc.scroll_to(
+         node_id,
+@@ -1191,7 +1191,7 @@ fn scroll_by_method(this: &JsValue, args: &[JsValue], context: &mut Context) ->
+     let ctx = dom_ctx(context)?;
+     let node_id = this_node_id(this)?;
+     let mut doc = ctx.doc.borrow_mut();
+-    doc.resolve(0.0);
++    doc.resolve_at_current_time();
+     doc.scroll_by(
+         node_id,
+         parsed.left.unwrap_or(0.0),
+@@ -1256,7 +1256,7 @@ fn scroll_into_view(this: &JsValue, args: &[JsValue], context: &mut Context) ->
+     let ctx = dom_ctx(context)?;
+     let node_id = this_node_id(this)?;
+     let mut doc = ctx.doc.borrow_mut();
+-    doc.resolve(0.0);
++    doc.resolve_at_current_time();
+     doc.scroll_into_view(node_id, behavior, block, inline);
+     Ok(JsValue::undefined())
+ }
+@@ -1288,7 +1288,7 @@ fn get_bounding_client_rect(
+ ) -> JsResult<JsValue> {
+     let ctx = dom_ctx(context)?;
+     let node_id = this_node_id(this)?;
+-    ctx.doc.borrow_mut().resolve(0.0);
++    ctx.doc.borrow_mut().resolve_at_current_time();
+     let rect = ctx.doc.borrow().get_client_bounding_rect(node_id);
+     let (x, y, width, height) = match rect {
+         Some(rect) => (rect.x, rect.y, rect.width, rect.height),
+@@ -1300,7 +1300,7 @@ fn get_bounding_client_rect(
+ fn get_client_rects(this: &JsValue, _: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+     let ctx = dom_ctx(context)?;
+     let node_id = this_node_id(this)?;
+-    ctx.doc.borrow_mut().resolve(0.0);
++    ctx.doc.borrow_mut().resolve_at_current_time();
+ 
+     // One rect per box fragment: a single border-box rect for nodes with their
+     // own layout box, one rect per line box for non-atomic inline elements,
+diff --git a/packages/blitz-vibey-script/src/dom/style.rs b/packages/blitz-vibey-script/src/dom/style.rs
+index 7875824..40c299f 100644
+--- a/packages/blitz-vibey-script/src/dom/style.rs
++++ b/packages/blitz-vibey-script/src/dom/style.rs
+@@ -80,7 +80,7 @@ fn get_resolved_property_value(
+     let mut doc = ctx.doc.borrow_mut();
+     // Resolved values of layout-dependent properties are used values, so make
+     // sure style and layout are up to date before reading.
+-    doc.resolve(0.0);
++    doc.resolve_at_current_time();
+     let value = doc.resolved_style_value(node_id, &name);
+     Ok(js_str(&value))
+ }
+diff --git a/packages/blitz-vibey-script/src/runtime.rs b/packages/blitz-vibey-script/src/runtime.rs
+index 383a3c8..2dc5bcf 100644
+--- a/packages/blitz-vibey-script/src/runtime.rs
++++ b/packages/blitz-vibey-script/src/runtime.rs
+@@ -2152,7 +2152,7 @@ fn window_scroll_to(_: &JsValue, args: &[JsValue], context: &mut Context) -> JsR
+     let parsed = crate::dom::element::parse_scroll_to_args(args, context)?;
+     let ctx = dom_ctx(context)?;
+     let mut doc = ctx.doc.borrow_mut();
+-    doc.resolve(0.0);
++    doc.resolve_at_current_time();
+     let Some(root_id) = doc.try_root_element().map(|root| root.id) else {
+         return Ok(JsValue::undefined());
+     };
+@@ -2170,7 +2170,7 @@ fn window_scroll_by(_: &JsValue, args: &[JsValue], context: &mut Context) -> JsR
+     let parsed = crate::dom::element::parse_scroll_to_args(args, context)?;
+     let ctx = dom_ctx(context)?;
+     let mut doc = ctx.doc.borrow_mut();
+-    doc.resolve(0.0);
++    doc.resolve_at_current_time();
+     let Some(root_id) = doc.try_root_element().map(|root| root.id) else {
+         return Ok(JsValue::undefined());
+     };
+-- 
+2.43.0
+

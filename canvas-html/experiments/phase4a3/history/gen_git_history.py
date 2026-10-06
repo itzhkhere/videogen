@@ -5,6 +5,7 @@ import json, subprocess
 from pathlib import Path
 here = Path(__file__).resolve().parent
 REPO = '/home/user/harender'
+ARCHIVE = subprocess.run(['git', '-C', '/home/user/videogen', 'rev-parse', '--short', 'archive/research-scratch-20261006^{commit}'], capture_output=True, text=True, check=True).stdout.strip()
 plan = json.loads((here / 'plan.json').read_text())['steps']
 log = subprocess.run(['git', '-C', REPO, 'log', '--reverse', '--format=%h%x09%s'], capture_output=True, text=True, check=True).stdout.splitlines()
 log = [l.split('\t', 1) for l in log]
@@ -76,9 +77,17 @@ Research commits: `951dc13` v0.5.0 baseline · `9b0d148` shared DOM host · `65b
 
 ## Archive
 
-The research history is preserved, not rewritten: tag `archive/research-scratch-20261006` in
-`itzhkhere/videogen` points at the last research commit of Phase 4A.3 (if the tag could not be
-pushed, the branch `claude/serene-ritchie-o55j58` is the same history).
-"""
+The research history is preserved, not rewritten: branch `claude/serene-ritchie-o55j58` of
+`itzhkhere/videogen` holds every research commit. The annotated tag
+`archive/research-scratch-20261006` marks research commit `{ARCHIVE}` (Phase 4A.3 with its L4
+results); the session that created it could not push tags, so push it from a clone of the
+research repository:
+
+```sh
+git fetch origin claude/serene-ritchie-o55j58
+git tag -a archive/research-scratch-20261006 -m "Research history at the end of Phase 4A.3" {ARCHIVE}
+git push origin archive/research-scratch-20261006
+```
+""".replace('{ARCHIVE}', ARCHIVE)
 (here / 'overlay/final/docs/GIT-HISTORY.md').write_text(doc)
 print('wrote', len(rows), 'rows')

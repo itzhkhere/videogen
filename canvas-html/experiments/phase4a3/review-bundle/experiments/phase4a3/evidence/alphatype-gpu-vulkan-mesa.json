@@ -1,0 +1,90 @@
+[
+ {
+  "case": "opaque scene@1x",
+  "identical": true,
+  "differingBytes": 0,
+  "maxDelta": 0,
+  "minAlpha": 255,
+  "opaqueBuildPremultiplied": true,
+  "premulBuildPremultiplied": true,
+  "hashOpaque": "ee393c24e38e6c7d",
+  "hashPremul": "ee393c24e38e6c7d"
+ },
+ {
+  "case": "opaque scene@2x",
+  "identical": true,
+  "differingBytes": 0,
+  "maxDelta": 0,
+  "minAlpha": 255,
+  "opaqueBuildPremultiplied": true,
+  "premulBuildPremultiplied": true,
+  "hashOpaque": "e5ef03bbdf685a04",
+  "hashPremul": "e5ef03bbdf685a04"
+ },
+ {
+  "case": "transparent background@1x",
+  "identical": true,
+  "differingBytes": 0,
+  "maxDelta": 0,
+  "minAlpha": 0,
+  "opaqueBuildPremultiplied": true,
+  "premulBuildPremultiplied": true,
+  "hashOpaque": "c53bcf64610c5748",
+  "hashPremul": "c53bcf64610c5748"
+ },
+ {
+  "case": "transparent background@2x",
+  "identical": true,
+  "differingBytes": 0,
+  "maxDelta": 0,
+  "minAlpha": 0,
+  "opaqueBuildPremultiplied": true,
+  "premulBuildPremultiplied": true,
+  "hashOpaque": "04891a2eb2123c2d",
+  "hashPremul": "04891a2eb2123c2d"
+ },
+ {
+  "case": "translucent background@1x",
+  "identical": true,
+  "differingBytes": 0,
+  "maxDelta": 0,
+  "minAlpha": 128,
+  "opaqueBuildPremultiplied": true,
+  "premulBuildPremultiplied": true,
+  "hashOpaque": "56e607738ca8766a",
+  "hashPremul": "56e607738ca8766a"
+ },
+ {
+  "case": "translucent background@2x",
+  "identical": true,
+  "differingBytes": 0,
+  "maxDelta": 0,
+  "minAlpha": 128,
+  "opaqueBuildPremultiplied": true,
+  "premulBuildPremultiplied": true,
+  "hashOpaque": "bb8a32606359675f",
+  "hashPremul": "bb8a32606359675f"
+ },
+ {
+  "case": "dark opaque background@1x",
+  "identical": true,
+  "differingBytes": 0,
+  "maxDelta": 0,
+  "minAlpha": 255,
+  "opaqueBuildPremultiplied": true,
+  "premulBuildPremultiplied": true,
+  "hashOpaque": "967e7357c0597525",
+  "hashPremul": "967e7357c0597525"
+ },
+ {
+  "case": "dark opaque background@2x",
+  "identical": true,
+  "differingBytes": 0,
+  "maxDelta": 0,
+  "minAlpha": 255,
+  "opaqueBuildPremultiplied": true,
+  "premulBuildPremultiplied": true,
+  "hashOpaque": "c682caa98a613ed7",
+  "hashPremul": "c682caa98a613ed7"
+ }
+]

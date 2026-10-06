@@ -1,0 +1,30 @@
+From 2ffcbc372fc968731a694685ee7763b39ef668fc Mon Sep 17 00:00:00 2001
+From: local <l@l>
+Date: Mon, 5 Oct 2026 10:33:48 +0000
+Subject: [PATCH 1/6] paint: use font synthesis embolden for synthetic bold
+
+---
+ packages/blitz-paint/src/text.rs | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/packages/blitz-paint/src/text.rs b/packages/blitz-paint/src/text.rs
+index c68e6fa..35623a1 100644
+--- a/packages/blitz-paint/src/text.rs
++++ b/packages/blitz-paint/src/text.rs
+@@ -628,7 +628,12 @@ pub(crate) fn stroke_text<'a>(
+                 // inherits, so the innermost inline element already carries the right value.
+                 let text_color = stack.last().map(|e| e.text_color).unwrap_or(Color::BLACK);
+ 
+-                let embolden = if FONT_EMBOLDEN_ENABLED {
++                let embolden = if synthesis.embolden() {
++                    // Synthetic bold: the font has no face heavy enough for the requested
++                    // weight. Outline growth of ~1/28 em, close to Skia/Chrome's fake bold.
++                    let em = font_size as f64;
++                    kurbo::Vec2::splat(em / 28.0)
++                } else if FONT_EMBOLDEN_ENABLED {
+                     let fs = font_size as f64 / scale;
+                     kurbo::Vec2::new((0.015125 * fs).min(0.3), (0.0121 * fs).min(0.3))
+                 } else {
+-- 
+2.43.0
+

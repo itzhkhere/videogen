@@ -29,7 +29,9 @@ git diff --stat "$base" HEAD -- vendor/stylo > "$out/PATCH-vendor-stylo.stat"
 # History
 git log --oneline --decorate --graph --all > "$out/git-log-graph.txt"
 git status > "$out/git-status.txt"
-git remote -v | sed -E 's#://[^/@]*@#://<redacted>@#' > "$out/git-remote.txt"
+{ echo "# canonical ($repo)"; git remote -v; echo "# research ($(git -C "$here" rev-parse --show-toplevel))"; git -C "$here" remote -v; } \
+  | sed -E 's#://[^/@]*@#://<redacted>@#' > "$out/git-remote.txt"
+cp docs/phases/PHASE4A3_RESULTS.md "$out/PHASE4A3_RESULTS.md"
 git log --format='%h %an <%ae> | %cn <%ce> | %aI | %s' > "$out/git-authors.txt"
 {
   echo "# Commit plan (as executed)"

@@ -1,0 +1,56 @@
+v24.19.0
+fc6b1e4
+== smoke
+smoke: all passed
+== smoke-js
+smoke-js: all passed
+== smoke-waapi
+smoke-waapi: all passed
+== smoke-fonts
+smoke-fonts: all passed
+== hardening
+hardening: all passed
+== render-into
+render-into: all passed
+== render-into-examples
+render-into-examples: all passed
+== render-into-workers
+render-into-workers: all passed
+== workers
+CSS motion, 30 fps       identical | 1 renderer 0.79 s, 2 workers 0.52 s (1.5x)
+GSAP, 30 fps             identical | 1 renderer 0.50 s, 2 workers 0.36 s (1.4x)
+Motion library, 24 fps   identical | 1 renderer 0.46 s, 2 workers 0.39 s (1.2x)
+== output regression vs 4A.1 (= 4A.2) CPU
+cpu: 39 frames; 4A.1 render() vs 4A.2 render(): 0 differ; 4A.2 render() vs renderInto(): 0 differ
+== output regression Mesa gpu-gl
+gpu-gl: 39 frames; 4A.1 render() vs 4A.2 render(): 0 differ; 4A.2 render() vs renderInto(): 0 differ
+== render-into + hardening Mesa gpu-gl
+hardening (gpu-gl): all passed
+render-into (gpu-gl): all passed
+== output regression Mesa gpu-vulkan
+gpu-vulkan: 39 frames; 4A.1 render() vs 4A.2 render(): 0 differ; 4A.2 render() vs renderInto(): 0 differ
+== render-into + hardening Mesa gpu-vulkan
+hardening (gpu-vulkan): all passed
+render-into (gpu-vulkan): all passed
+== phase3 contract/run.mjs
+30/30 cases pass on both engines with identical results
+exit 0
+== phase3 contract/scenes.mjs
+determinism boa: 5 fresh replays identical=true, distinct frame hashes=5
+determinism deno: 5 fresh replays identical=true, distinct frame hashes=5
+gsap paused boa: version 3.15.0, expected values=true, errors=0, console=null
+gsap paused deno: version 3.15.0, expected values=true, errors=0, console=[]
+gsap auto boa: version 3.15.0, expected values=true, errors=0, console=null
+gsap auto deno: version 3.15.0, expected values=true, errors=0, console=[]
+exit 0
+== phase3 tests/run.mjs
+{"mode":"contracts","status":0,"signal":null,"elapsedMs":590.781987}
+{"mode":"cycles","status":0,"signal":null,"elapsedMs":46874.159001}
+{"mode":"long","status":0,"signal":null,"elapsedMs":717.1700889999993}
+{"mode":"simultaneous","status":0,"signal":null,"elapsedMs":1233.9785619999966}
+{"mode":"workers","status":0,"signal":null,"elapsedMs":6296.96905}
+{"mode":"exit-alive","status":0,"signal":null,"elapsedMs":222.61385499999597}
+{"mode":"exit-closed","status":0,"signal":null,"elapsedMs":223.71294399999897}
+{"mode":"exit-multiple","status":0,"signal":null,"elapsedMs":474.9291999999987}
+{"mode":"exit-exception","status":0,"signal":null,"elapsedMs":87.96856700000353}
+exit 0

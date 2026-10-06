@@ -1,0 +1,32 @@
+From 174f79c004c6686104c9a55a71bb059d0811b900 Mon Sep 17 00:00:00 2001
+From: html-renderer <html-renderer@localhost>
+Date: Mon, 5 Oct 2026 18:00:30 +0000
+Subject: [PATCH 11/12] paint: centre angled linear gradients on their tile
+
+An angled linear-gradient used the element's border box centre instead of the tile's. With
+background-size, every tile but one sat outside the gradient line, so a 90deg grid line
+(linear-gradient(90deg, c 1px, transparent 1px) at 80px tiles) filled whole tiles.
+---
+ packages/blitz-paint/src/gradient.rs | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/packages/blitz-paint/src/gradient.rs b/packages/blitz-paint/src/gradient.rs
+index 9ad3b36..f0e5606 100644
+--- a/packages/blitz-paint/src/gradient.rs
++++ b/packages/blitz-paint/src/gradient.rs
+@@ -94,7 +94,11 @@ fn linear_gradient(
+ ) -> (peniko::Gradient, Option<Affine>) {
+     let (direction, items, flags) = gradient;
+ 
+-    let center = bounding_box.center();
++    // The gradient image is sized to its tile (`rect`), so an angled gradient line goes
++    // through the tile's centre. (The element's box differs from the tile when
++    // `background-size` is set, and a 90deg grid line then covered the whole tile.)
++    let _ = bounding_box;
++    let center = rect.center();
+     let (start, end) = match direction {
+         LineDirection::Angle(angle) => {
+             let angle = -angle.radians64() + std::f64::consts::PI;
+-- 
+2.43.0
+

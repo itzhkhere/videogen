@@ -1,0 +1,17 @@
+[package]
+name = "dom-host"
+version = "0.1.0"
+edition = "2024"
+description = "Engine-neutral DOM/Web behaviour shared by html-renderer's script runtimes (Boa, Deno/V8)"
+publish = false
+
+# This crate must never depend on a JavaScript engine (boa_*, deno_core, v8).
+# It sits between the script adapters and the Blitz document; layout and paint
+# never see it.
+[dependencies]
+blitz-dom = { path = "../third_party/blitz/packages/blitz-dom", default-features = false }
+serde_json = "1"
+
+[dev-dependencies]
+blitz-html = { path = "../third_party/blitz/packages/blitz-html" }
+blitz-traits = { path = "../third_party/blitz/packages/blitz-traits" }

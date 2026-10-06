@@ -1,0 +1,159 @@
+From 7bbe0994de1bf740f44f94951da4c249da23938e Mon Sep 17 00:00:00 2001
+From: local <l@l>
+Date: Mon, 5 Oct 2026 10:41:52 +0000
+Subject: [PATCH 2/6] layout: support text-transform: capitalize across inline
+ text nodes
+
+---
+ packages/blitz-dom/src/layout/construct.rs | 73 +++++++++++++++++++---
+ 1 file changed, 66 insertions(+), 7 deletions(-)
+
+diff --git a/packages/blitz-dom/src/layout/construct.rs b/packages/blitz-dom/src/layout/construct.rs
+index f34387f..5b5a2ae 100644
+--- a/packages/blitz-dom/src/layout/construct.rs
++++ b/packages/blitz-dom/src/layout/construct.rs
+@@ -1094,14 +1094,15 @@ pub(crate) fn build_inline_layout_into(
+         }
+     };
+ 
++    let at_word_start = &mut true;
+     if let Some(before_id) = root_node.before() {
+-        build_inline_layout_recursive(&mut builder, nodes, before_id, text_transform);
++        build_inline_layout_recursive(&mut builder, nodes, before_id, text_transform, at_word_start);
+     }
+     for child_id in root_node.children.iter().copied() {
+-        build_inline_layout_recursive(&mut builder, nodes, child_id, text_transform);
++        build_inline_layout_recursive(&mut builder, nodes, child_id, text_transform, at_word_start);
+     }
+     if let Some(after_id) = root_node.after() {
+-        build_inline_layout_recursive(&mut builder, nodes, after_id, text_transform);
++        build_inline_layout_recursive(&mut builder, nodes, after_id, text_transform, at_word_start);
+     }
+ 
+     text_layout.text = builder.build_into(&mut text_layout.layout);
+@@ -1112,6 +1113,9 @@ pub(crate) fn build_inline_layout_into(
+         nodes: &crate::NodeTree,
+         node_id: NodeId,
+         parent_text_transform: TextTransform,
++        // Whether the next letter starts a word, carried across text nodes and inline
++        // elements so that `text-transform: capitalize` works on `foo <b>bar</b>`.
++        at_word_start: &mut bool,
+     ) {
+         let node = &nodes[node_id];
+ 
+@@ -1168,7 +1172,7 @@ pub(crate) fn build_inline_layout_into(
+                         );
+                         for child_id in node.children.iter().copied() {
+                             // node.remove_damage(CONSTRUCT_DESCENDENT | CONSTRUCT_FC | CONSTRUCT_BOX);
+-                            build_inline_layout_recursive(builder, nodes, child_id, text_transform);
++                            build_inline_layout_recursive(builder, nodes, child_id, text_transform, at_word_start);
+                         }
+                         builder.pop_style_span();
+                     }
+@@ -1217,7 +1221,7 @@ pub(crate) fn build_inline_layout_into(
+                                     builder,
+                                     nodes,
+                                     before_id,
+-                                    text_transform,
++                                    text_transform, at_word_start,
+                                 );
+                             }
+ 
+@@ -1226,7 +1230,7 @@ pub(crate) fn build_inline_layout_into(
+                                     builder,
+                                     nodes,
+                                     child_id,
+-                                    text_transform,
++                                    text_transform, at_word_start,
+                                 );
+                             }
+                             if let Some(after_id) = node.after() {
+@@ -1234,7 +1238,7 @@ pub(crate) fn build_inline_layout_into(
+                                     builder,
+                                     nodes,
+                                     after_id,
+-                                    text_transform,
++                                    text_transform, at_word_start,
+                                 );
+                             }
+ 
+@@ -1243,6 +1247,7 @@ pub(crate) fn build_inline_layout_into(
+                     }
+                     // Inline box
+                     (_, _) => {
++                        *at_word_start = true;
+                         builder.push_inline_box(InlineBox {
+                             id: node_id.as_u64(),
+                             kind: box_kind,
+@@ -1272,10 +1277,16 @@ pub(crate) fn build_inline_layout_into(
+                     TextTransform::LOWERCASE => {
+                         builder.push_text(&data.content.to_lowercase());
+                     }
++                    TextTransform::CAPITALIZE => {
++                        builder.push_text(&capitalize_words(&data.content, at_word_start));
++                    }
+                     _ => {
+                         builder.push_text(&data.content);
+                     }
+                 }
++                if parent_text_transform != TextTransform::CAPITALIZE {
++                    update_word_start(&data.content, at_word_start);
++                }
+             }
+             NodeData::Comment { .. } => {
+                 // node.remove_damage(CONSTRUCT_DESCENDENT | CONSTRUCT_FC | CONSTRUCT_BOX);
+@@ -1284,3 +1295,51 @@ pub(crate) fn build_inline_layout_into(
+         }
+     }
+ }
++
++/// `text-transform: capitalize`: uppercase the first letter or digit of each word. A word
++/// starts after whitespace (or at the start of the inline formatting context); punctuation
++/// before the first letter, as in "(hello", does not end the word start.
++fn capitalize_words(text: &str, at_word_start: &mut bool) -> String {
++    let mut out = String::with_capacity(text.len());
++    for c in text.chars() {
++        if c.is_whitespace() {
++            *at_word_start = true;
++            out.push(c);
++        } else if c.is_alphanumeric() {
++            if *at_word_start {
++                out.extend(c.to_uppercase());
++                *at_word_start = false;
++            } else {
++                out.push(c);
++            }
++        } else {
++            out.push(c);
++        }
++    }
++    out
++}
++
++/// Track word starts through text that is not capitalized itself.
++fn update_word_start(text: &str, at_word_start: &mut bool) {
++    for c in text.chars() {
++        if c.is_whitespace() {
++            *at_word_start = true;
++        } else if c.is_alphanumeric() {
++            *at_word_start = false;
++        }
++    }
++}
++
++#[cfg(test)]
++mod capitalize_tests {
++    use super::capitalize_words;
++
++    #[test]
++    fn capitalizes_each_word_across_text_nodes() {
++        let mut start = true;
++        assert_eq!(capitalize_words("hello wide", &mut start), "Hello Wide");
++        // "wide" + "r world": the second node continues the word "wider"
++        assert_eq!(capitalize_words("r world", &mut start), "r World");
++        assert_eq!(capitalize_words(" (quoted) well-known", &mut start), " (Quoted) Well-known");
++    }
++}
+-- 
+2.43.0
+

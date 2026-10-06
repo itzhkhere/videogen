@@ -1,0 +1,221 @@
+== step 0: cb1ad7c build: import the v0.5.0 engine
+   Blitz ready at /home/user/harender/third_party/blitz (branch patched, 12 patches)
+   release build ok
+   smoke: all passed
+   smoke-js: all passed
+   smoke-waapi: all passed
+   smoke-fonts: all passed
+   npm test ok
+   step 0 verified (cb1ad7c)
+== step 1: 1dbc75e docs(experiments): phase 2 runtime research and the phase 3 handoff
+   docs/experiments only: code unchanged, build and tests as the previous commit
+== step 2: d6ec43b refactor(dom): introduce the shared engine-neutral DOM host
+   Blitz ready at /home/user/harender/third_party/blitz (branch patched, 13 patches)
+   release build ok
+   smoke: all passed
+   smoke-js: all passed
+   smoke-waapi: all passed
+   smoke-fonts: all passed
+   npm test ok
+   step 2 verified (d6ec43b)
+== step 3: 2780cb2 feat(experiments): experimental Deno/V8 runtime adapter and shared contract suite
+   docs/experiments only: code unchanged, build and tests as the previous commit
+== step 4: 8be1f2c feat(gpu): experimental headless GPU backends (Ganesh GL/Vulkan, Graphite)
+   Blitz ready at /home/user/harender/third_party/blitz (branch patched, 13 patches)
+   release build ok
+   smoke: all passed
+   smoke-js: all passed
+   smoke-waapi: all passed
+   smoke-fonts: all passed
+   npm test ok
+   gpu build ok
+   gpu-gl ganesh-gl pixels differing from CPU by >64: 0
+   gpu-vulkan ganesh-vulkan pixels differing from CPU by >64: 0
+   step 4 verified (8be1f2c)
+== step 5: 9bf9e44 fix(gpu): deterministic Ganesh output across document reloads
+   Blitz ready at /home/user/harender/third_party/blitz (branch patched, 13 patches)
+   release build ok
+   smoke: all passed
+   smoke-js: all passed
+   smoke-waapi: all passed
+   smoke-fonts: all passed
+   npm test ok
+   gpu build ok
+   gpu-gl ganesh-gl pixels differing from CPU by >64: 0
+   gpu-vulkan ganesh-vulkan pixels differing from CPU by >64: 0
+   step 5 verified (9bf9e44)
+== step 6: a84fd2d docs(experiments): phase 4A GPU backend research and results
+   docs/experiments only: code unchanged, build and tests as the previous commit
+== step 7: 3a8a34f perf(output): hand render() frames to Node without a copy
+   Blitz ready at /home/user/harender/third_party/blitz (branch patched, 13 patches)
+   release build ok
+   smoke: all passed
+   smoke-js: all passed
+   smoke-waapi: all passed
+   smoke-fonts: all passed
+   npm test ok
+   gpu build ok
+   gpu-gl ganesh-gl pixels differing from CPU by >64: 0
+   gpu-vulkan ganesh-vulkan pixels differing from CPU by >64: 0
+   step 7 verified (3a8a34f)
+== step 8: f0de9cb feat(gpu): experimental pipelined GPU readback; types for the output experiments
+   Blitz ready at /home/user/harender/third_party/blitz (branch patched, 13 patches)
+   release build ok
+   smoke: all passed
+   smoke-js: all passed
+   smoke-waapi: all passed
+   smoke-fonts: all passed
+   npm test ok
+   gpu build ok
+   gpu-gl ganesh-gl pixels differing from CPU by >64: 0
+   gpu-vulkan ganesh-vulkan pixels differing from CPU by >64: 0
+   step 8 verified (f0de9cb)
+== step 9: 593182c docs(experiments): phase 4A.1 output-path research
+   docs/experiments only: code unchanged, build and tests as the previous commit
+== step 10: 2d47861 feat(api): add renderInto() and frameByteLength
+   Blitz ready at /home/user/harender/third_party/blitz (branch patched, 13 patches)
+   release build ok
+   smoke: all passed
+   smoke-js: all passed
+   smoke-waapi: all passed
+   smoke-fonts: all passed
+   npm test ok
+   gpu build ok
+   gpu-gl ganesh-gl pixels differing from CPU by >64: 0
+   gpu-vulkan ganesh-vulkan pixels differing from CPU by >64: 0
+   step 10 verified (2d47861)
+== step 11: de0ce23 test(frame-api): renderInto contract, workers and documented examples
+   Blitz ready at /home/user/harender/third_party/blitz (branch patched, 13 patches)
+   release build ok
+   smoke: all passed
+   smoke-js: all passed
+   smoke-waapi: all passed
+   smoke-fonts: all passed
+   render-into: all passed
+   render-into-examples: all passed
+   npm test ok
+   step 11 verified (de0ce23)
+== step 12: 7b85faf docs(frame-api): document render(), renderInto() and the pixel format
+   docs/experiments only: code unchanged, build and tests as the previous commit
+== step 13: 8c480ee docs(gpu): SAFETY comments on the pipelined GL readback
+   Blitz ready at /home/user/harender/third_party/blitz (branch patched, 13 patches)
+   release build ok
+   smoke: all passed
+   smoke-js: all passed
+   smoke-waapi: all passed
+   smoke-fonts: all passed
+   render-into: all passed
+   render-into-examples: all passed
+   npm test ok
+   gpu build ok
+   gpu-gl ganesh-gl pixels differing from CPU by >64: 0
+   gpu-vulkan ganesh-vulkan pixels differing from CPU by >64: 0
+   step 13 verified (8c480ee)
+== step 14: 47d7ade docs(experiments): phase 4A.2 frame API research
+   docs/experiments only: code unchanged, build and tests as the previous commit
+== step 15: b53479a fix(render): malformed input is a JS error, never a panic
+   Blitz ready at /home/user/harender/third_party/blitz (branch patched, 14 patches)
+   release build ok
+   smoke: all passed
+   smoke-js: all passed
+   smoke-waapi: all passed
+   smoke-fonts: all passed
+   render-into: all passed
+   render-into-examples: all passed
+   hardening: all passed
+   npm test ok
+   gpu build ok
+   gpu-gl ganesh-gl pixels differing from CPU by >64: 0
+   gpu-vulkan ganesh-vulkan pixels differing from CPU by >64: 0
+   step 15 verified (b53479a)
+== step 16: 8300701 fix(png): encode transparent output with straight alpha
+   Blitz ready at /home/user/harender/third_party/blitz (branch patched, 14 patches)
+   release build ok
+   smoke: all passed
+   smoke-js: all passed
+   smoke-waapi: all passed
+   smoke-fonts: all passed
+   render-into: all passed
+   render-into-examples: all passed
+   hardening: all passed
+   npm test ok
+   gpu build ok
+   gpu-gl ganesh-gl pixels differing from CPU by >64: 0
+   gpu-vulkan ganesh-vulkan pixels differing from CPU by >64: 0
+   step 16 verified (8300701)
+== step 17: e39c901 style: rustfmt configuration, cargo fmt, clippy clean
+   Blitz ready at /home/user/harender/third_party/blitz (branch patched, 14 patches)
+   release build ok
+   smoke: all passed
+   smoke-js: all passed
+   smoke-waapi: all passed
+   smoke-fonts: all passed
+   render-into: all passed
+   render-into-examples: all passed
+   hardening: all passed
+   npm test ok
+   gpu build ok
+   gpu-gl ganesh-gl pixels differing from CPU by >64: 0
+   gpu-vulkan ganesh-vulkan pixels differing from CPU by >64: 0
+   step 17 verified (e39c901)
+== step 18: 49a3da8 docs: project status, contracts, trust model, third-party notices, local checks
+   Blitz ready at /home/user/harender/third_party/blitz (branch patched, 14 patches)
+   release build ok
+   smoke: all passed
+   smoke-js: all passed
+   smoke-waapi: all passed
+   smoke-fonts: all passed
+   render-into: all passed
+   render-into-examples: all passed
+   hardening: all passed
+   npm test ok
+   step 18 verified (49a3da8)
+== step 19: 9466c86 chore(release): 0.6.0-rc.1
+   Blitz ready at /home/user/harender/third_party/blitz (branch patched, 14 patches)
+   release build ok
+   smoke: all passed
+   smoke-js: all passed
+   smoke-waapi: all passed
+   smoke-fonts: all passed
+   render-into: all passed
+   render-into-examples: all passed
+   hardening: all passed
+   npm test ok
+   gpu build ok
+   gpu-gl ganesh-gl pixels differing from CPU by >64: 0
+   gpu-vulkan ganesh-vulkan pixels differing from CPU by >64: 0
+   step 19 verified (9466c86)
+== regenerating steps 18-19 after fixing scripts/check.sh (TypeScript tools) and scripts/check-gpu.sh (addon path)
+== step 18: e184ea2 docs: project status, contracts, trust model, third-party notices, local checks
+   Blitz ready at /home/user/harender/third_party/blitz (branch patched, 14 patches)
+   release build ok
+   smoke: all passed
+   smoke-js: all passed
+   smoke-waapi: all passed
+   smoke-fonts: all passed
+   render-into: all passed
+   render-into-examples: all passed
+   hardening: all passed
+   npm test ok
+   step 18 verified (e184ea2)
+== step 19: 4065915 chore(release): 0.6.0-rc.1
+   Blitz ready at /home/user/harender/third_party/blitz (branch patched, 14 patches)
+   release build ok
+   smoke: all passed
+   smoke-js: all passed
+   smoke-waapi: all passed
+   smoke-fonts: all passed
+   render-into: all passed
+   render-into-examples: all passed
+   hardening: all passed
+   npm test ok
+   gpu build ok
+   gpu-gl ganesh-gl pixels differing from CPU by >64: 0
+   gpu-vulkan ganesh-vulkan pixels differing from CPU by >64: 0
+   step 19 verified (4065915)
+== step 20: a98ea85 docs(experiments): phase 4A.3 hardening and repository normalization
+   docs/experiments only: code unchanged, build and tests as the previous commit
+== step 20: a14cf62 docs(experiments): phase 4A.3 hardening and repository normalization
+   docs/experiments only: code unchanged, build and tests as the previous commit
+== step 20: 032f605 docs(experiments): phase 4A.3 hardening and repository normalization
+   docs/experiments only: code unchanged, build and tests as the previous commit

@@ -1,0 +1,21 @@
+* 9c7e738 (HEAD -> main) docs(experiments): phase 4A.3 hardening and repository normalization
+* 4065915 chore(release): 0.6.0-rc.1
+* e184ea2 docs: project status, contracts, trust model, third-party notices, local checks
+* e39c901 style: rustfmt configuration, cargo fmt, clippy clean
+* 8300701 fix(png): encode transparent output with straight alpha
+* b53479a fix(render): malformed input is a JS error, never a panic
+* 47d7ade docs(experiments): phase 4A.2 frame API research
+* 8c480ee docs(gpu): SAFETY comments on the pipelined GL readback
+* 7b85faf docs(frame-api): document render(), renderInto() and the pixel format
+* de0ce23 test(frame-api): renderInto contract, workers and documented examples
+* 2d47861 feat(api): add renderInto() and frameByteLength
+* 593182c docs(experiments): phase 4A.1 output-path research
+* f0de9cb feat(gpu): experimental pipelined GPU readback; types for the output experiments
+* 3a8a34f perf(output): hand render() frames to Node without a copy
+* a84fd2d docs(experiments): phase 4A GPU backend research and results
+* 9bf9e44 fix(gpu): deterministic Ganesh output across document reloads
+* 8be1f2c feat(gpu): experimental headless GPU backends (Ganesh GL/Vulkan, Graphite)
+* 2780cb2 feat(experiments): experimental Deno/V8 runtime adapter and shared contract suite
+* d6ec43b refactor(dom): introduce the shared engine-neutral DOM host
+* 1dbc75e docs(experiments): phase 2 runtime research and the phase 3 handoff
+* cb1ad7c build: import the v0.5.0 engine

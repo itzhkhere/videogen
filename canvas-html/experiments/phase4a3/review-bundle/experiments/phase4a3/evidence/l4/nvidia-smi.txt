@@ -1,0 +1,2 @@
+name, driver_version, clocks.max.sm [MHz], temperature.gpu
+NVIDIA L4, 580.82.07, 2040 MHz, 36

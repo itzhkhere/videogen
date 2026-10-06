@@ -1,0 +1,64 @@
+From 24fc1715ed30dbe6eaa25a192d903ff94ba295b9 Mon Sep 17 00:00:00 2001
+From: local <l@l>
+Date: Tue, 6 Oct 2026 14:17:20 +0000
+Subject: [PATCH 4/5] Ganesh context options from HTML_RENDERER_GANESH_OPTIONS
+ (experiments only)
+
+Lets experiments turn off Ganesh path renderers and caches without a
+rebuild: no-atlas-paths, no-path-mask-cache, no-tessellation,
+no-sdf-paths, msaa0. html-renderer used it to find the cause of
+frame drift after a reload. Not intended for upstream as is; an
+upstream version would take ContextOptions from the caller.
+---
+ src/gpu_image_renderer.rs | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/src/gpu_image_renderer.rs b/src/gpu_image_renderer.rs
+index 0e5c14d..f53d611 100644
+--- a/src/gpu_image_renderer.rs
++++ b/src/gpu_image_renderer.rs
+@@ -47,6 +47,23 @@ impl GpuApi {
+ 
+ use crate::gpu_common::{GpuError, GpuFrameTimings, err};
+ 
++/// Ganesh context options. Experiments only: `HTML_RENDERER_GANESH_OPTIONS` takes a comma-separated
++/// list of `no-atlas-paths`, `no-path-mask-cache`, `no-tessellation`, `no-sdf-paths`, `msaa0`.
++fn ganesh_options() -> gpu::ContextOptions {
++    let mut o = gpu::ContextOptions::default();
++    for flag in std::env::var("HTML_RENDERER_GANESH_OPTIONS").unwrap_or_default().split(',') {
++        match flag.trim() {
++            "no-atlas-paths" => o.disable_coverage_counting_paths = true,
++            "no-path-mask-cache" => o.allow_path_mask_caching = false,
++            "no-tessellation" => o.disable_tessellation_path_renderer = true,
++            "no-sdf-paths" => o.disable_distance_field_paths = true,
++            "msaa0" => o.internal_multisample_count = 0,
++            _ => {}
++        }
++    }
++    o
++}
++
+ enum Api {
+     Gl(GlDevice),
+     #[cfg(feature = "vulkan")]
+@@ -84,7 +101,7 @@ impl GpuDevice {
+                 let vk = crate::gpu_common::VkDevice::new(Some(ash::vk::API_VERSION_1_1), "ganesh-vulkan")?;
+                 let context = vk
+                     .with_backend(Some(skia_safe::gpu::vk::Version::new(1, 1, 0)), |backend| {
+-                        gpu::direct_contexts::make_vulkan(backend, &gpu::ContextOptions::default())
++                        gpu::direct_contexts::make_vulkan(backend, &ganesh_options())
+                     })
+                     .ok_or_else(|| GpuError("Skia Vulkan context creation failed".into()))?;
+                 let description = vk.description.clone();
+@@ -217,7 +234,7 @@ impl GlDevice {
+             display.get_proc_address(CString::new(name).unwrap().as_c_str())
+         })
+         .ok_or_else(|| GpuError("Skia could not load the GL interface".into()))?;
+-        let ctx = gpu::direct_contexts::make_gl(interface, None).ok_or_else(|| GpuError("Skia GL context creation failed".into()))?;
++        let ctx = gpu::direct_contexts::make_gl(interface, &ganesh_options()).ok_or_else(|| GpuError("Skia GL context creation failed".into()))?;
+ 
+         let gl_strings = {
+             type GetString = unsafe extern "C" fn(u32) -> *const std::ffi::c_char;
+-- 
+2.43.0
+

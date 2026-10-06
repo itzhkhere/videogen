@@ -1,0 +1,29 @@
+# Inactive draft: copy to .github/workflows/check.yml to enable. Runs scripts/check.sh on Linux.
+name: check
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+            third_party/blitz
+          key: cargo-${{ runner.os }}-${{ hashFiles('Cargo.lock', 'upstream-patches/blitz/*.patch') }}
+      - run: sudo apt-get update && sudo apt-get install -y libfontconfig1-dev fonts-dejavu-core
+      - run: npm ci
+      - run: scripts/check.sh

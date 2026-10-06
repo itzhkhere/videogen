@@ -1,0 +1,27 @@
+{
+  "name": "html-renderer",
+  "private": true,
+  "version": "0.6.0-rc.1",
+  "description": "HTML, CSS and JavaScript rendered to pixels in Node, without a browser (Blitz layout, Skia painting, Boa JS).",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "license": "UNLICENSED",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "*.node"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "cargo build --release && cp target/release/libhtml_renderer.so html-renderer.linux-x64-gnu.node",
+    "test": "node test/smoke.mjs && node test/smoke-js.mjs && node test/smoke-waapi.mjs && node test/smoke-fonts.mjs && node --expose-gc test/render-into.mjs && node test/render-into-examples.mjs && node test/hardening.mjs",
+    "compare": "node test/compare.mjs"
+  },
+  "devDependencies": {
+    "gsap": "^3.15.0",
+    "playwright-core": "^1.63.0",
+    "pngjs": "^7.0.0"
+  }
+}

@@ -1,0 +1,216 @@
+From 24e7048dffd18c48afc0aa2eb3df6577f625ff77 Mon Sep 17 00:00:00 2001
+From: local <l@l>
+Date: Mon, 5 Oct 2026 10:47:47 +0000
+Subject: [PATCH 3/6] paint: implement text-overflow (ellipsis and string
+ markers) for LTR lines
+
+---
+ packages/blitz-paint/src/text.rs | 165 ++++++++++++++++++++++++++++++-
+ 1 file changed, 160 insertions(+), 5 deletions(-)
+
+diff --git a/packages/blitz-paint/src/text.rs b/packages/blitz-paint/src/text.rs
+index 35623a1..d724d0c 100644
+--- a/packages/blitz-paint/src/text.rs
++++ b/packages/blitz-paint/src/text.rs
+@@ -579,7 +579,13 @@ pub(crate) fn stroke_text<'a>(
+     // ancestor chain on every run, we cache each node's resolved values here and,
+     // for each run, only resolve styles for the nodes newly descended into (popping
+     // as we ascend). `path_scratch` is a reusable buffer for the run's node path.
++    let ellipsis = TextOverflowEllipsis::for_inline_root(doc, inline_root_id, scale);
++
+     for line in lines {
++        // `text-overflow`: when this line runs past the end of the clipping box, the glyphs
++        // that do not fit together with the ellipsis are dropped and the ellipsis is drawn
++        // after the last one that does (left-to-right lines only for now).
++        let mut overflow_cut = ellipsis.as_ref().filter(|e| e.line_overflows(&line)).cloned();
+         // Decorations accumulated for this line, keyed by decorating box, so each box is
+         // painted once (spanning all its runs) using its own font — matching Firefox, which
+         // draws one decoration per box rather than one stepped segment per differently-sized
+@@ -588,6 +594,9 @@ pub(crate) fn stroke_text<'a>(
+ 
+         for item in line.items() {
+             if let PositionedLayoutItem::GlyphRun(glyph_run) = item {
++                if overflow_cut.as_ref().is_some_and(|e| e.done) {
++                    continue;
++                }
+                 let run = glyph_run.run();
+                 let font = &run.font().font;
+                 let font_size = run.font_size();
+@@ -641,6 +650,51 @@ pub(crate) fn stroke_text<'a>(
+                 };
+ 
+                 let normalized_coords: &[i16] = bytemuck::cast_slice(run.normalized_coords());
++
++                // Glyphs to draw: all of them, unless this run crosses the text-overflow cut.
++                let mut glyphs: Vec<anyrender::Glyph> = Vec::new();
++                let mut marker: Option<(Vec<anyrender::Glyph>, bool)> = None;
++                let to_glyph = |glyph: parley::layout::Glyph| anyrender::Glyph {
++                    id: glyph.id as _,
++                    x: glyph.x,
++                    y: glyph.y,
++                };
++                match overflow_cut.as_mut() {
++                    Some(cut) if !run.is_rtl() => {
++                        let (marker_glyphs, marker_width) =
++                            cut.shape_marker(font, font_size, normalized_coords);
++                        let limit = cut.clip_right - marker_width;
++                        let mut end_x = glyph_run.offset();
++                        let mut cut_here = false;
++                        for glyph in glyph_run.positioned_glyphs() {
++                            if glyph.x + glyph.advance > limit + 0.01 {
++                                cut_here = true;
++                                break;
++                            }
++                            end_x = glyph.x + glyph.advance;
++                            glyphs.push(to_glyph(glyph));
++                        }
++                        if cut_here {
++                            let x0 = end_x;
++                            let baseline = glyph_run.baseline();
++                            let mut x = x0;
++                            let placed = marker_glyphs
++                                .into_iter()
++                                .map(|(id, adv)| {
++                                    let g = anyrender::Glyph { id, x, y: baseline };
++                                    x += adv;
++                                    g
++                                })
++                                .collect();
++                            marker = Some((placed, true));
++                            cut.done = true;
++                        } else {
++                            cut.last_end_x = end_x;
++                        }
++                    }
++                    _ => glyphs.extend(glyph_run.positioned_glyphs().map(to_glyph)),
++                }
++
+                 scene.draw_glyphs(
+                     font,
+                     font_size,
+@@ -652,12 +706,23 @@ pub(crate) fn stroke_text<'a>(
+                     1.0, // alpha
+                     transform,
+                     glyph_xform,
+-                    glyph_run.positioned_glyphs().map(|glyph| anyrender::Glyph {
+-                        id: glyph.id as _,
+-                        x: glyph.x,
+-                        y: glyph.y,
+-                    }),
++                    glyphs.into_iter(),
+                 );
++                if let Some((marker_glyphs, _)) = marker {
++                    scene.draw_glyphs(
++                        font,
++                        font_size,
++                        !FONT_EMBOLDEN_ENABLED, // hint
++                        normalized_coords,
++                        embolden,
++                        Fill::NonZero,
++                        &anyrender::Paint::from(text_color),
++                        1.0, // alpha
++                        transform,
++                        glyph_xform,
++                        marker_glyphs.into_iter(),
++                    );
++                }
+ 
+                 // Accumulate this run's contribution to each decorating box on its ancestor
+                 // path. The decoration is drawn once per box after the whole line has been
+@@ -741,3 +806,93 @@ pub(crate) fn draw_text_selection(
+         scene.fill(Fill::NonZero, transform, SELECTION_COLOR, None, &rect);
+     });
+ }
++
++/// `text-overflow: ellipsis | <string>` on an inline root whose `overflow` clips.
++#[derive(Clone)]
++struct TextOverflowEllipsis {
++    /// Right edge of the content box, in the layout's (device pixel) coordinates.
++    clip_right: f32,
++    /// The marker: "…" for `ellipsis`, or the author's string.
++    marker: String,
++    /// Right edge of the glyphs kept so far on the current line.
++    last_end_x: f32,
++    /// The marker has been drawn on the current line; skip the rest of it.
++    done: bool,
++}
++
++impl TextOverflowEllipsis {
++    fn for_inline_root(doc: &BaseDocument, node_id: NodeId, scale: f64) -> Option<Self> {
++        use style::values::computed::Overflow;
++        use style::values::specified::text::TextOverflowSide;
++        let node = doc.get_node(node_id)?;
++        let styles = node.primary_styles()?;
++        if styles.clone_overflow_x() == Overflow::Visible {
++            return None;
++        }
++        // One value applies to the end of the line; with two, the second is the right side.
++        let marker = match styles.clone_text_overflow().second {
++            TextOverflowSide::Clip => return None,
++            TextOverflowSide::Ellipsis => "\u{2026}".to_string(),
++            TextOverflowSide::String(s) => s.to_string(),
++        };
++        let l = node.final_layout();
++        let content_width = l.size.width
++            - l.padding.left
++            - l.padding.right
++            - l.border.left
++            - l.border.right
++            - l.scrollbar_size.width;
++        Some(Self {
++            clip_right: (content_width as f64 * scale) as f32,
++            marker,
++            last_end_x: 0.0,
++            done: false,
++        })
++    }
++
++    /// Whether `line` extends past the clip edge (and so needs a marker).
++    fn line_overflows(&self, line: &Line<'_, TextBrush>) -> bool {
++        let mut right = 0.0f32;
++        for item in line.items() {
++            if let PositionedLayoutItem::GlyphRun(run) = item {
++                right = right.max(run.offset() + run.advance());
++            }
++        }
++        right > self.clip_right + 0.01
++    }
++
++    /// Glyph ids and advances of the marker in the given font (simple cmap lookup; the marker
++    /// is short and typically a single "…"). Characters the font lacks are skipped, and a font
++    /// without U+2026 falls back to "...".
++    fn shape_marker(
++        &self,
++        font: &parley::FontData,
++        font_size: f32,
++        coords: &[i16],
++    ) -> (Vec<(u32, f32)>, f32) {
++        use skrifa::{FontRef, MetadataProvider as _, instance::LocationRef, instance::Size};
++        let Ok(font_ref) = FontRef::from_index(font.data.as_ref(), font.index) else {
++            return (Vec::new(), 0.0);
++        };
++        let charmap = font_ref.charmap();
++        let coords: Vec<skrifa::instance::NormalizedCoord> = coords
++            .iter()
++            .map(|c| skrifa::instance::NormalizedCoord::from_bits(*c))
++            .collect();
++        let metrics = font_ref.glyph_metrics(Size::new(font_size), LocationRef::new(&coords));
++        let shape = |text: &str| -> Option<(Vec<(u32, f32)>, f32)> {
++            let mut out = Vec::new();
++            let mut width = 0.0;
++            for c in text.chars() {
++                let gid = charmap.map(c)?;
++                let adv = metrics.advance_width(gid).unwrap_or(0.0);
++                out.push((gid.to_u32(), adv));
++                width += adv;
++            }
++            Some((out, width))
++        };
++        shape(&self.marker)
++            .or_else(|| (self.marker == "\u{2026}").then(|| shape("...")).flatten())
++            .unwrap_or((Vec::new(), 0.0))
++    }
++}
+-- 
+2.43.0
+

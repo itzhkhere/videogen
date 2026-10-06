@@ -1,0 +1,6 @@
+# canonical (/home/user/harender)
+origin	https://github.com/itzhkhere/harender (fetch)
+origin	https://github.com/itzhkhere/harender (push)
+# research (/home/user/videogen)
+origin	https://github.com/itzhkhere/videogen (fetch)
+origin	https://github.com/itzhkhere/videogen (push)
