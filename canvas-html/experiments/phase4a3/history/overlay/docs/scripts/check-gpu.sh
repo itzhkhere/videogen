@@ -11,7 +11,8 @@ backends=("$@"); [ ${#backends[@]} -gt 0 ] || backends=(gpu-gl gpu-vulkan)
 [ -d third_party/blitz ] || scripts/setup-blitz.sh
 CARGO_TARGET_DIR=$target cargo clippy --release --features experimental-gpu-vulkan -- -D warnings
 CARGO_TARGET_DIR=$target cargo build --release --features experimental-gpu-vulkan
-node=$(pwd)/$target/release/libhtml_renderer.so
+node=$(cd "$target" && pwd)/gpu.node
+cp "$target/release/libhtml_renderer.so" "$node"   # Node loads native addons by the .node extension
 
 for b in "${backends[@]}"; do
   printf '\n== %s\n' "$b"
