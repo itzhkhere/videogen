@@ -1,0 +1,59 @@
+From 73a7f901c5e006d19ac6f745c44f56025548ece7 Mon Sep 17 00:00:00 2001
+From: local <l@l>
+Date: Tue, 6 Oct 2026 16:05:39 +0000
+Subject: [PATCH] CPU image renderer: try_render, an error instead of a panic
+ for a buffer that does not fit
+
+ImageRenderer::render unwrapped surfaces::wrap_pixels, so a buffer shorter than
+width * height * 4 bytes panicked. try_render returns an error instead and draws
+nothing; render keeps its signature and calls it. Embedders that render into
+caller-provided memory (canvas-html's renderInto) can surface the error rather
+than abort the process.
+---
+ src/image_renderer.rs | 18 +++++++++++++++---
+ 1 file changed, 15 insertions(+), 3 deletions(-)
+
+diff --git a/src/image_renderer.rs b/src/image_renderer.rs
+index 5d5edf2..2fc6b63 100644
+--- a/src/image_renderer.rs
++++ b/src/image_renderer.rs
+@@ -80,15 +80,26 @@ impl ImageRenderer for SkiaImageRenderer {
+     }
+ 
+     fn render<F: FnOnce(&mut Self::ScenePainter<'_>)>(&mut self, draw_fn: F, buffer: &mut [u8]) {
++        self.try_render(draw_fn, buffer).unwrap()
++    }
++}
++
++impl SkiaImageRenderer {
++    /// Like `ImageRenderer::render`, but a buffer that does not fit the image (shorter than
++    /// `width * height * 4` bytes) is an error instead of a panic, and nothing is drawn.
++    pub fn try_render<F: FnOnce(&mut SkiaScenePainter<'_>)>(&mut self, draw_fn: F, buffer: &mut [u8]) -> Result<(), String> {
+         debug_timer!(timer, feature = "log_frame_times");
+ 
+-        let mut surface = surfaces::wrap_pixels(
++        let needed = self.image_info.compute_min_byte_size();
++        let len = buffer.len();
++        let Some(mut surface) = surfaces::wrap_pixels(
+             &self.image_info,
+             &mut buffer[..],
+             None,
+             Some(&self.surface_props),
+-        )
+-        .unwrap();
++        ) else {
++            return Err(format!("cannot draw a {}x{} image into {len} bytes (needs {needed})", self.image_info.width(), self.image_info.height()));
++        };
+ 
+         // Clear surface with transparent background to allow transparency in rendered images
+         surface.canvas().clear(Color::TRANSPARENT);
+@@ -105,5 +116,6 @@ impl ImageRenderer for SkiaImageRenderer {
+         timer.record_time("cache next gen");
+ 
+         timer.print_times("skia_raster: ");
++        Ok(())
+     }
+ }
+-- 
+2.43.0
+
