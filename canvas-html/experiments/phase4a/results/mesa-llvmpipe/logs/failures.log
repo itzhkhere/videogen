@@ -1,0 +1,13 @@
+[10:34:40] init-failure               gpu-gl     {"create":{"ok":false,"error":"GPU initialization failed (ganesh-gl): EGL device 99 does not exist (1 found)"},"cpuAfter":{"ok":true,"value":"6c466dc160e601c2"}}
+[10:34:40] init-failure               gpu-vulkan {"create":{"ok":false,"error":"GPU initialization failed (ganesh-vulkan): Vulkan device 99 does not exist"},"cpuAfter":{"ok":true,"value":"6c466dc160e601c2"}}
+[10:34:41] unsupported-backend        -          {"create":{"ok":false,"error":"unsupported GPU backend \"gpu-metal\" in this build"},"shareOption":{"ok":false,"error":"experimentalGpuShare must be \"renderer\" or \"thread\", got \"process\""}}
+[10:34:41] surface-failure            gpu-gl     {"create":{"ok":false,"error":"GPU surface 70000x16 could not be created"},"gpuAfter":{"ok":true,"value":"057f68daf5d459e0"}}
+[10:34:42] surface-failure            gpu-vulkan {"create":{"ok":false,"error":"GPU surface 70000x16 could not be created"},"gpuAfter":{"ok":true,"value":"2c70842a8e444274"}}
+[10:34:43] device-lost                gpu-gl     {"render":{"ok":false,"error":"GPU render failed (ganesh-gl): GPU context is lost (abandoned)"},"renderNoReadback":{"ok":false,"error":"GPU render failed (ganesh-gl): GPU context is lost (abandoned)"},"siblingOnSameDevice":{"ok":false,"error":"GPU render failed (ganesh-gl): GPU context is lost (abandoned)"},"info":{"abandoned":true,"backend":"ganesh-gl","device":"ganesh-gl via EGL device: ? ? (sof
+[10:34:45] device-lost                gpu-vulkan {"render":{"ok":false,"error":"GPU render failed (ganesh-vulkan): GPU context is lost (abandoned)"},"renderNoReadback":{"ok":false,"error":"GPU render failed (ganesh-vulkan): GPU context is lost (abandoned)"},"siblingOnSameDevice":{"ok":false,"error":"GPU render failed (ganesh-vulkan): GPU context is lost (abandoned)"},"info":{"abandoned":true,"backend":"ganesh-vulkan","device":"ganesh-vulkan: llv
+[10:34:46] use-after-close            gpu-gl     {"render":{"ok":false,"error":"renderer is closed"},"info":{"backend":"closed"},"closeAgain":{"ok":true}}
+[10:34:46] use-after-close            gpu-vulkan {"render":{"ok":false,"error":"renderer is closed"},"info":{"backend":"closed"},"closeAgain":{"ok":true}}
+[10:34:48] gc-finalize                gpu-gl     {"after":{"ok":true,"value":"057f68daf5d459e0"}}
+[10:34:50] gc-finalize                gpu-vulkan {"after":{"ok":true,"value":"2c70842a8e444274"}}
+[10:34:51] exit-with-live-renderers   gpu-gl     {"note":"process exits right after this line without close()"}
+[10:34:53] exit-with-live-renderers   gpu-vulkan {"note":"process exits right after this line without close()"}

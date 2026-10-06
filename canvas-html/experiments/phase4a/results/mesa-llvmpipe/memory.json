@@ -1,0 +1,676 @@
+{
+  "dpr": 1.5,
+  "scene": "C",
+  "rows": [
+    {
+      "backend": "cpu",
+      "share": "-",
+      "steps": [
+        {
+          "label": "baseline",
+          "rssMiB": 58.7,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        },
+        {
+          "label": "gpu initialized (1 renderer, empty)",
+          "rssMiB": 61.4,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        },
+        {
+          "label": "1 renderer",
+          "rssMiB": 115.8,
+          "heapMiB": 5.4,
+          "externalMiB": 26.1,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        },
+        {
+          "label": "4 renderers",
+          "rssMiB": 242.4,
+          "heapMiB": 5.4,
+          "externalMiB": 10.3,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        },
+        {
+          "label": "8 renderers",
+          "rssMiB": 408.7,
+          "heapMiB": 5.4,
+          "externalMiB": 34,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        },
+        {
+          "label": "after close",
+          "rssMiB": 408.5,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        }
+      ],
+      "anim": [
+        {
+          "frame": 0,
+          "label": "",
+          "rssMiB": 418.9,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        },
+        {
+          "frame": 100,
+          "label": "",
+          "rssMiB": 418.9,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        },
+        {
+          "frame": 200,
+          "label": "",
+          "rssMiB": 418.9,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        },
+        {
+          "frame": 299,
+          "label": "",
+          "rssMiB": 418.9,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        }
+      ],
+      "cycles": [
+        {
+          "cycle": 10,
+          "label": "",
+          "rssMiB": 418.7,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        },
+        {
+          "cycle": 20,
+          "label": "",
+          "rssMiB": 418.7,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        },
+        {
+          "cycle": 30,
+          "label": "",
+          "rssMiB": 418.8,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        }
+      ]
+    },
+    {
+      "backend": "gpu-gl",
+      "share": "renderer",
+      "steps": [
+        {
+          "label": "baseline",
+          "rssMiB": 58.7,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        },
+        {
+          "label": "gpu initialized (1 renderer, empty)",
+          "rssMiB": 132.3,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 1
+        },
+        {
+          "label": "1 renderer",
+          "rssMiB": 317.6,
+          "heapMiB": 5.4,
+          "externalMiB": 26.1,
+          "gpu": null,
+          "skiaGpuResourceMiB": 97.1,
+          "devices": 1
+        },
+        {
+          "label": "4 renderers",
+          "rssMiB": 802.5,
+          "heapMiB": 5.4,
+          "externalMiB": 10.3,
+          "gpu": null,
+          "skiaGpuResourceMiB": 388.5,
+          "devices": 1
+        },
+        {
+          "label": "8 renderers",
+          "rssMiB": 1447.7,
+          "heapMiB": 5.4,
+          "externalMiB": 34,
+          "gpu": null,
+          "skiaGpuResourceMiB": 777,
+          "devices": 1
+        },
+        {
+          "label": "after close",
+          "rssMiB": 1388.3,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        }
+      ],
+      "anim": [
+        {
+          "frame": 0,
+          "label": "",
+          "rssMiB": 1394.6,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 18.8,
+          "devices": 1
+        },
+        {
+          "frame": 100,
+          "label": "",
+          "rssMiB": 1397.3,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 27.6,
+          "devices": 1
+        },
+        {
+          "frame": 200,
+          "label": "",
+          "rssMiB": 1397.4,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 27.6,
+          "devices": 1
+        },
+        {
+          "frame": 299,
+          "label": "",
+          "rssMiB": 1397.4,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 27.6,
+          "devices": 1
+        }
+      ],
+      "cycles": [
+        {
+          "cycle": 10,
+          "label": "",
+          "rssMiB": 1410.3,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        },
+        {
+          "cycle": 20,
+          "label": "",
+          "rssMiB": 1414.4,
+          "heapMiB": 5.5,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        },
+        {
+          "cycle": 30,
+          "label": "",
+          "rssMiB": 1415.2,
+          "heapMiB": 5.5,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        }
+      ]
+    },
+    {
+      "backend": "gpu-gl",
+      "share": "thread",
+      "steps": [
+        {
+          "label": "baseline",
+          "rssMiB": 58.8,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        },
+        {
+          "label": "gpu initialized (1 renderer, empty)",
+          "rssMiB": 132,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 1
+        },
+        {
+          "label": "1 renderer",
+          "rssMiB": 317.7,
+          "heapMiB": 5.4,
+          "externalMiB": 26.1,
+          "gpu": null,
+          "skiaGpuResourceMiB": 97.1,
+          "devices": 1
+        },
+        {
+          "label": "4 renderers",
+          "rssMiB": 492.2,
+          "heapMiB": 5.4,
+          "externalMiB": 10.3,
+          "gpu": null,
+          "skiaGpuResourceMiB": 585,
+          "devices": 1
+        },
+        {
+          "label": "8 renderers",
+          "rssMiB": 719,
+          "heapMiB": 5.4,
+          "externalMiB": 34,
+          "gpu": null,
+          "skiaGpuResourceMiB": 1693.9,
+          "devices": 1
+        },
+        {
+          "label": "after close",
+          "rssMiB": 669.9,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        }
+      ],
+      "anim": [
+        {
+          "frame": 0,
+          "label": "",
+          "rssMiB": 670.6,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 18.8,
+          "devices": 1
+        },
+        {
+          "frame": 100,
+          "label": "",
+          "rssMiB": 673.8,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 27.6,
+          "devices": 1
+        },
+        {
+          "frame": 200,
+          "label": "",
+          "rssMiB": 673.8,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 27.6,
+          "devices": 1
+        },
+        {
+          "frame": 299,
+          "label": "",
+          "rssMiB": 673.8,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 27.6,
+          "devices": 1
+        }
+      ],
+      "cycles": [
+        {
+          "cycle": 10,
+          "label": "",
+          "rssMiB": 686,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        },
+        {
+          "cycle": 20,
+          "label": "",
+          "rssMiB": 685.9,
+          "heapMiB": 5.5,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        },
+        {
+          "cycle": 30,
+          "label": "",
+          "rssMiB": 685.7,
+          "heapMiB": 5.5,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        }
+      ]
+    },
+    {
+      "backend": "gpu-vulkan",
+      "share": "renderer",
+      "steps": [
+        {
+          "label": "baseline",
+          "rssMiB": 58.8,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        },
+        {
+          "label": "gpu initialized (1 renderer, empty)",
+          "rssMiB": 140.3,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 1
+        },
+        {
+          "label": "1 renderer",
+          "rssMiB": 342.6,
+          "heapMiB": 5.4,
+          "externalMiB": 26.1,
+          "gpu": null,
+          "skiaGpuResourceMiB": 120.8,
+          "devices": 1
+        },
+        {
+          "label": "4 renderers",
+          "rssMiB": 884.3,
+          "heapMiB": 5.4,
+          "externalMiB": 10.3,
+          "gpu": null,
+          "skiaGpuResourceMiB": 483.4,
+          "devices": 1
+        },
+        {
+          "label": "8 renderers",
+          "rssMiB": 1604.3,
+          "heapMiB": 5.4,
+          "externalMiB": 34,
+          "gpu": null,
+          "skiaGpuResourceMiB": 966.7,
+          "devices": 1
+        },
+        {
+          "label": "after close",
+          "rssMiB": 630.8,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        }
+      ],
+      "anim": [
+        {
+          "frame": 0,
+          "label": "",
+          "rssMiB": 693.6,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 28.3,
+          "devices": 1
+        },
+        {
+          "frame": 100,
+          "label": "",
+          "rssMiB": 708.4,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 38.3,
+          "devices": 1
+        },
+        {
+          "frame": 200,
+          "label": "",
+          "rssMiB": 708.8,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 38.3,
+          "devices": 1
+        },
+        {
+          "frame": 299,
+          "label": "",
+          "rssMiB": 709.8,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 38.3,
+          "devices": 1
+        }
+      ],
+      "cycles": [
+        {
+          "cycle": 10,
+          "label": "",
+          "rssMiB": 689,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        },
+        {
+          "cycle": 20,
+          "label": "",
+          "rssMiB": 698.6,
+          "heapMiB": 5.5,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        },
+        {
+          "cycle": 30,
+          "label": "",
+          "rssMiB": 707,
+          "heapMiB": 5.5,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        }
+      ]
+    },
+    {
+      "backend": "gpu-vulkan",
+      "share": "thread",
+      "steps": [
+        {
+          "label": "baseline",
+          "rssMiB": 58.5,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        },
+        {
+          "label": "gpu initialized (1 renderer, empty)",
+          "rssMiB": 140.1,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 1
+        },
+        {
+          "label": "1 renderer",
+          "rssMiB": 342.8,
+          "heapMiB": 5.4,
+          "externalMiB": 26.1,
+          "gpu": null,
+          "skiaGpuResourceMiB": 120.8,
+          "devices": 1
+        },
+        {
+          "label": "4 renderers",
+          "rssMiB": 517.6,
+          "heapMiB": 5.4,
+          "externalMiB": 10.3,
+          "gpu": null,
+          "skiaGpuResourceMiB": 679.8,
+          "devices": 1
+        },
+        {
+          "label": "8 renderers",
+          "rssMiB": 741.8,
+          "heapMiB": 5.4,
+          "externalMiB": 34,
+          "gpu": null,
+          "skiaGpuResourceMiB": 1883.7,
+          "devices": 1
+        },
+        {
+          "label": "after close",
+          "rssMiB": 489.9,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        }
+      ],
+      "anim": [
+        {
+          "frame": 0,
+          "label": "",
+          "rssMiB": 551.9,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 28.3,
+          "devices": 1
+        },
+        {
+          "frame": 100,
+          "label": "",
+          "rssMiB": 563.1,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 38.3,
+          "devices": 1
+        },
+        {
+          "frame": 200,
+          "label": "",
+          "rssMiB": 563.1,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 38.3,
+          "devices": 1
+        },
+        {
+          "frame": 299,
+          "label": "",
+          "rssMiB": 563.9,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 38.3,
+          "devices": 1
+        }
+      ],
+      "cycles": [
+        {
+          "cycle": 10,
+          "label": "",
+          "rssMiB": 542.3,
+          "heapMiB": 5.4,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        },
+        {
+          "cycle": 20,
+          "label": "",
+          "rssMiB": 551.1,
+          "heapMiB": 5.5,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        },
+        {
+          "cycle": 30,
+          "label": "",
+          "rssMiB": 559.9,
+          "heapMiB": 5.5,
+          "externalMiB": 2.4,
+          "gpu": null,
+          "skiaGpuResourceMiB": 0,
+          "devices": 0
+        }
+      ]
+    }
+  ]
+}

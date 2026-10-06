@@ -1,5 +1,5 @@
 assets/
 results/local/
-results/mesa-dev/
+results/mesa-*/images/
 build/
 colab/bundle.tgz
