@@ -40,6 +40,7 @@ Known limits worth mentioning in the PRs:
 | 0004 Ganesh context options from an environment variable (Phase 4A, experiments only) | `CANVAS_HTML_GANESH_OPTIONS` turns off Ganesh path renderers and caches without a rebuild. Used to find the cause of frame drift after a reload. **Not for upstream as is**: an upstream version would take `ContextOptions` from the caller. |
 | 0005 render into the caller's buffer; pipelined readback (Phase 4A.1, experimental) | `render_timed()` writes into a slice the caller owns (length checked) instead of resizing a `Vec`, so pixels go straight into embedder memory. Adds a prototype readback pipeline to `SkiaGpuImageRenderer`: a ring of surfaces read back later (GL or Vulkan), or `glReadPixels` into pixel-pack buffers with fences (GL). rust-skia does not bind Ganesh's async readback, so the GL path uses the `gl` crate on the renderer's context and resets Skia's GL state after. |
 | 0006 `try_render` (Phase 4A.2) | `ImageRenderer::render` unwrapped `surfaces::wrap_pixels`, so a buffer shorter than `width × height × 4` panicked. `SkiaImageRenderer::try_render` returns an error and draws nothing; `render` keeps its signature and calls it. |
+| 0007 SAFETY comments (Phase 4A.2) | Comments only: the invariants of the raw GL blocks in the pipelined pixel-pack-buffer readback (0005). |
 
 ## servo/stylo (base: 0.22.0)
 
