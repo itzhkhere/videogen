@@ -73,11 +73,7 @@ impl<D: Copy + PartialOrd> TimerSchedule<D> {
                 None => Some(i),
                 Some(b) => {
                     let current = &self.entries[b];
-                    if e.deadline < current.deadline || (e.deadline == current.deadline && e.seq < current.seq) {
-                        Some(i)
-                    } else {
-                        Some(b)
-                    }
+                    if e.deadline < current.deadline || (e.deadline == current.deadline && e.seq < current.seq) { Some(i) } else { Some(b) }
                 }
             };
         }

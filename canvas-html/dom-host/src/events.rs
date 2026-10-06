@@ -83,10 +83,7 @@ impl ListenerRegistry {
 
     /// Snapshot of the listeners for one dispatch step, in registration order.
     pub fn listener_ids(&self, target: EventTarget, event_type: &str) -> Vec<ListenerId> {
-        self.map
-            .get(&(target, event_type.to_string()))
-            .map(|l| l.iter().map(|l| l.id).collect())
-            .unwrap_or_default()
+        self.map.get(&(target, event_type.to_string())).map(|l| l.iter().map(|l| l.id).collect()).unwrap_or_default()
     }
 
     /// Called right before invoking a snapshotted listener. Returns `None` if it was removed

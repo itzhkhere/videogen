@@ -57,7 +57,10 @@ impl ByteTarget {
         // SAFETY: `arraybuffer` was just returned by napi_get_typedarray_info for this call.
         check(unsafe { sys::napi_is_arraybuffer(raw_env, arraybuffer, &mut is_plain) })?;
         if !is_plain {
-            return Err(type_error(env, &format!("{what} must not be backed by a SharedArrayBuffer (not supported: renderInto writes without synchronization)")));
+            return Err(type_error(
+                env,
+                &format!("{what} must not be backed by a SharedArrayBuffer (not supported: renderInto writes without synchronization)"),
+            ));
         }
         let mut detached = false;
         // SAFETY: as above; `arraybuffer` is an ArrayBuffer (checked).

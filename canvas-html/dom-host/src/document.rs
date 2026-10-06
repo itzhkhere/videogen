@@ -160,11 +160,7 @@ impl DomHost for BaseDocument {
 
     fn document_element(&self) -> Option<NodeHandle> {
         let root = self.root_node();
-        root.children
-            .iter()
-            .copied()
-            .find(|id| self.get_node(*id).is_some_and(|n| n.element_data().is_some()))
-            .map(NodeHandle::from)
+        root.children.iter().copied().find(|id| self.get_node(*id).is_some_and(|n| n.element_data().is_some())).map(NodeHandle::from)
     }
 
     fn body(&self) -> Option<NodeHandle> {
@@ -235,10 +231,7 @@ impl DomHost for BaseDocument {
     }
 
     fn parent_element(&self, node: NodeHandle) -> DomResult<Option<NodeHandle>> {
-        Ok(live_node(self, node)?
-            .parent
-            .filter(|p| self.get_node(*p).is_some_and(|n| n.element_data().is_some()))
-            .map(NodeHandle::from))
+        Ok(live_node(self, node)?.parent.filter(|p| self.get_node(*p).is_some_and(|n| n.element_data().is_some())).map(NodeHandle::from))
     }
 
     fn element_children(&self, node: NodeHandle) -> DomResult<Vec<NodeHandle>> {
@@ -396,10 +389,10 @@ impl DomHost for BaseDocument {
         }
         let attr = self.get_attribute(node, "style")?.unwrap_or_default();
         // `None`: invalid declaration, ignored (CSSOM)
-        if let Some(new_attr) = self.style_attr_set_property(&attr, &name, value, important) {
-            if new_attr != attr {
-                self.mutate().set_attribute(node.into(), attr_qual_name("style"), &new_attr);
-            }
+        if let Some(new_attr) = self.style_attr_set_property(&attr, &name, value, important)
+            && new_attr != attr
+        {
+            self.mutate().set_attribute(node.into(), attr_qual_name("style"), &new_attr);
         }
         Ok(())
     }
@@ -480,10 +473,7 @@ impl DomHost for BaseDocument {
             let viewport = self.viewport();
             let scale = viewport.scale();
             let scrollbar = n.final_layout().scrollbar_size;
-            (
-                viewport.window_size.0 as f32 / scale - scrollbar.width,
-                viewport.window_size.1 as f32 / scale - scrollbar.height,
-            )
+            (viewport.window_size.0 as f32 / scale - scrollbar.width, viewport.window_size.1 as f32 / scale - scrollbar.height)
         } else {
             (n.client_width(), n.client_height())
         };

@@ -29,7 +29,7 @@ fn lookup_and_identity() {
     assert_eq!(d.query_all(None, "#box").unwrap(), vec![by_id]);
     assert_eq!(d.query_all(None, ".item").unwrap().len(), 2);
     assert_eq!(d.query_first(None, "#missing").unwrap(), None);
-    assert_eq!(d.element_by_id( "missing"), None);
+    assert_eq!(d.element_by_id("missing"), None);
     let err = d.query_first(None, "[").unwrap_err();
     assert!(matches!(err, DomError::InvalidSelector(_)));
     assert_eq!(err.js_error(), JsErrorKind::DomException("SyntaxError"));

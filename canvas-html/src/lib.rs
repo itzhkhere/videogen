@@ -11,22 +11,22 @@ mod target;
 use anyrender::{ImageRenderer, PaintScene as _};
 use anyrender_skia::SkiaImageRenderer;
 use base64::Engine as _;
+use blitz_dom::Document as _;
 use blitz_dom::{BaseDocument, DocumentConfig, util::Color};
 use blitz_html::HtmlDocument;
 use blitz_paint::paint_scene;
 use blitz_traits::net::{Bytes, NetHandler, NetProvider, Request};
 use blitz_traits::shell::{ColorScheme, Viewport};
-use blitz_dom::Document as _;
 use blitz_vibey_script::ScriptDocument;
-use std::time::{Duration, Instant};
 use napi::bindgen_prelude::*;
 use napi_derive::napi;
 use parley::FontContext;
 use parley::fontique::{Blob, Collection, CollectionOptions, FallbackKey, Script, SourceCache};
-use std::collections::HashMap;
-use std::str::FromStr as _;
 use peniko::Fill;
 use peniko::kurbo::Rect;
+use std::collections::HashMap;
+use std::str::FromStr as _;
+use std::time::{Duration, Instant};
 
 /// Origin of the document's animation timeline (seconds). The clock starts at 0 at load, the
 /// same origin that restyles triggered from script use.
@@ -134,6 +134,9 @@ const JS_PRELUDE: &str = include_str!("prelude.js");
 /// Prefix of the messages that carry eval() results back from the page.
 const RESULT_MARK: &str = "\u{1}canvas-html-result:";
 
+// One value per renderer, moved only when a document is built: boxing the large variant would
+// add an indirection to every document access for no gain.
+#[allow(clippy::large_enum_variant)]
 enum Doc {
     Plain(HtmlDocument),
     Script(Box<ScriptDocument>),
@@ -285,11 +288,7 @@ impl HtmlRenderer {
 
     /// Milliseconds since load on the document's clock.
     fn now_ms(&self) -> f64 {
-        if self.real_clock {
-            self.loaded_at.elapsed().as_secs_f64() * 1000.0
-        } else {
-            self.clock_ms
-        }
+        if self.real_clock { self.loaded_at.elapsed().as_secs_f64() * 1000.0 } else { self.clock_ms }
     }
 
     /// The N-API boundary backstop: runs `f`, and if it panics (a bug, never ordinary input:
@@ -369,8 +368,7 @@ impl HtmlRenderer {
             .rev()
             .find_map(|m| m.strip_prefix(RESULT_MARK).map(str::to_string))
             .ok_or_else(|| Error::from_reason("eval produced no result"))?;
-        let v: serde_json::Value =
-            serde_json::from_str(&result).map_err(|e| Error::from_reason(format!("eval result: {e}")))?;
+        let v: serde_json::Value = serde_json::from_str(&result).map_err(|e| Error::from_reason(format!("eval result: {e}")))?;
         if let Some(err) = v.get("error") {
             return Err(Error::from_reason(err.as_str().unwrap_or("error").to_string()));
         }
@@ -489,6 +487,8 @@ struct PaintTimings {
 
 /// The surface the page is painted into. CPU (Skia raster into the output buffer) is the default
 /// and the only backend of default builds.
+// One value per renderer, never moved on a hot path (see Doc).
+#[allow(clippy::large_enum_variant)]
 enum Painter {
     /// After `close()`: the surface (and a GPU device reference) is released.
     Closed,
@@ -531,7 +531,8 @@ impl Painter {
             let device = match existing {
                 Some(d) => d,
                 None => {
-                    let d = GraphiteDevice::new().map_err(|e| Error::from_reason(format!("GPU initialization failed (graphite-vulkan): {e}")))?;
+                    let d = GraphiteDevice::new()
+                        .map_err(|e| Error::from_reason(format!("GPU initialization failed (graphite-vulkan): {e}")))?;
                     if shared {
                         SHARED_GRAPHITE.with(|s| {
                             let mut s = s.borrow_mut();
@@ -555,7 +556,8 @@ impl Painter {
             let device = match existing {
                 Some(d) => d,
                 None => {
-                    let d = GpuDevice::new(api).map_err(|e| Error::from_reason(format!("GPU initialization failed ({}): {e}", api.name())))?;
+                    let d =
+                        GpuDevice::new(api).map_err(|e| Error::from_reason(format!("GPU initialization failed ({}): {e}", api.name())))?;
                     if shared {
                         SHARED_GPU.with(|s| {
                             let mut s = s.borrow_mut();
@@ -572,7 +574,9 @@ impl Painter {
         #[allow(unreachable_code)]
         {
             let _ = shared;
-            Err(Error::from_reason(format!("unsupported GPU backend {name:?} in this build (experimentalBackend needs an experimental GPU feature)")))
+            Err(Error::from_reason(format!(
+                "unsupported GPU backend {name:?} in this build (experimentalBackend needs an experimental GPU feature)"
+            )))
         }
     }
 
@@ -612,7 +616,6 @@ pub struct TimedRenderOptions {
     pub output: Option<String>,
 }
 
-
 #[napi]
 impl HtmlRenderer {
     #[napi(constructor)]
@@ -639,10 +642,8 @@ impl HtmlRenderer {
             background: parse_hex(options.background.as_deref().unwrap_or("#ffffff"))?,
             system_fonts: options.system_fonts.unwrap_or(true),
             fallbacks: {
-                let mut m: HashMap<String, Vec<String>> = DEFAULT_FALLBACKS
-                    .iter()
-                    .map(|(k, v)| (k.to_string(), v.iter().map(|s| s.to_string()).collect()))
-                    .collect();
+                let mut m: HashMap<String, Vec<String>> =
+                    DEFAULT_FALLBACKS.iter().map(|(k, v)| (k.to_string(), v.iter().map(|s| s.to_string()).collect())).collect();
                 if let Some(user) = options.fallback_fonts {
                     for (k, v) in user {
                         m.insert(k, v);
@@ -819,17 +820,17 @@ impl HtmlRenderer {
                 let Some(node) = doc.get_node(id) else { continue };
                 let l = node.final_layout();
                 let (x, y) = (px + l.location.x as f64, py + l.location.y as f64);
-                if let Some(el) = node.element_data() {
-                    if let Some(eid) = el.id.as_ref() {
-                        out.push(ElementBox {
-                            id: eid.to_string(),
-                            tag: el.name.local.to_string(),
-                            x,
-                            y,
-                            width: l.size.width as f64,
-                            height: l.size.height as f64,
-                        });
-                    }
+                if let Some(el) = node.element_data()
+                    && let Some(eid) = el.id.as_ref()
+                {
+                    out.push(ElementBox {
+                        id: eid.to_string(),
+                        tag: el.name.local.to_string(),
+                        x,
+                        y,
+                        width: l.size.width as f64,
+                        height: l.size.height as f64,
+                    });
                 }
                 for &child in node.layout_children.borrow().as_ref().map(|c| c.as_slice()).unwrap_or(&[]) {
                     stack.push((child, x, y));
@@ -854,44 +855,44 @@ impl HtmlRenderer {
             let mut stack = vec![doc.root_element().id];
             while let Some(id) = stack.pop() {
                 let Some(node) = doc.get_node(id) else { continue };
-                if let Some(el) = node.element_data() {
-                    if let Some(text_layout) = el.inline_layout_data.as_ref() {
-                        // A character is drawn when it belongs to a shaped cluster whose glyphs are
-                        // all real (id != 0). Text with no usable font at all gets no run, so we
-                        // check coverage of the text rather than look for .notdef glyphs only.
-                        let text = &text_layout.text;
-                        let mut covered = vec![false; text.len()];
-                        for line in text_layout.layout.lines() {
-                            for item in line.items() {
-                                let parley::PositionedLayoutItem::GlyphRun(run) = item else { continue };
-                                for cluster in run.run().clusters() {
-                                    if cluster.glyphs().all(|g| g.id != 0) {
-                                        let range = cluster.text_range();
-                                        for b in covered.get_mut(range).into_iter().flatten() {
-                                            *b = true;
-                                        }
+                if let Some(el) = node.element_data()
+                    && let Some(text_layout) = el.inline_layout_data.as_ref()
+                {
+                    // A character is drawn when it belongs to a shaped cluster whose glyphs are
+                    // all real (id != 0). Text with no usable font at all gets no run, so we
+                    // check coverage of the text rather than look for .notdef glyphs only.
+                    let text = &text_layout.text;
+                    let mut covered = vec![false; text.len()];
+                    for line in text_layout.layout.lines() {
+                        for item in line.items() {
+                            let parley::PositionedLayoutItem::GlyphRun(run) = item else { continue };
+                            for cluster in run.run().clusters() {
+                                if cluster.glyphs().all(|g| g.id != 0) {
+                                    let range = cluster.text_range();
+                                    for b in covered.get_mut(range).into_iter().flatten() {
+                                        *b = true;
                                     }
                                 }
                             }
                         }
-                        let mut chars = String::new();
-                        let mut count = 0u32;
-                        for (i, c) in text.char_indices() {
-                            if covered[i] || c.is_whitespace() || c.is_control() || c == '\u{FFFC}' {
-                                continue;
-                            }
-                            count += 1;
-                            if !chars.contains(c) {
-                                chars.push(c);
-                            }
+                    }
+                    let mut chars = String::new();
+                    let mut count = 0u32;
+                    for (i, c) in text.char_indices() {
+                        if covered[i] || c.is_whitespace() || c.is_control() || c == '\u{FFFC}' {
+                            continue;
                         }
-                        if count > 0 {
-                            out.push(MissingGlyphs {
-                                element: el.id.as_ref().map(|i| i.to_string()).unwrap_or_else(|| el.name.local.to_string()),
-                                chars,
-                                count,
-                            });
+                        count += 1;
+                        if !chars.contains(c) {
+                            chars.push(c);
                         }
+                    }
+                    if count > 0 {
+                        out.push(MissingGlyphs {
+                            element: el.id.as_ref().map(|i| i.to_string()).unwrap_or_else(|| el.name.local.to_string()),
+                            chars,
+                            count,
+                        });
                     }
                 }
                 for &child in node.layout_children.borrow().as_ref().map(|c| c.as_slice()).unwrap_or(&[]) {
@@ -1114,7 +1115,9 @@ impl HtmlRenderer {
         }
         if page {
             self.run_due_timers();
-            let code = format!("(() => {{ const f = globalThis.seek; if (typeof f !== 'function') throw new TypeError('seek is not a function on the page'); return f({t}); }})()");
+            let code = format!(
+                "(() => {{ const f = globalThis.seek; if (typeof f !== 'function') throw new TypeError('seek is not a function on the page'); return f({t}); }})()"
+            );
             self.eval_json(&code).map(|_| ())
         } else {
             let d = t - self.clock_ms;
@@ -1216,10 +1219,16 @@ impl HtmlRenderer {
         #[cfg(feature = "experimental-gpu")]
         {
             // SAFETY: inside the native call that validated `target`; the only slice of it.
-            let c = self.gpu_renderer()?.pipeline_complete(unsafe { target.bytes() }).map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
+            let c = self
+                .gpu_renderer()?
+                .pipeline_complete(unsafe { target.bytes() })
+                .map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
             let mut o = Object::new(env)?;
             o.set("index", c.index as f64)?;
-            let t: HashMap<String, f64> = [("gpuWait", c.wait_ns), ("readback", c.readback_ns), ("latency", c.latency_ns)].into_iter().map(|(k, v)| (k.to_string(), v as f64)).collect();
+            let t: HashMap<String, f64> = [("gpuWait", c.wait_ns), ("readback", c.readback_ns), ("latency", c.latency_ns)]
+                .into_iter()
+                .map(|(k, v)| (k.to_string(), v as f64))
+                .collect();
             o.set("timingsNs", t)?;
             return Ok(o);
         }
@@ -1248,11 +1257,23 @@ impl HtmlRenderer {
     /// `mode`: "sync" (render, wait, read back; any backend), "deferred" or "pbo" (GPU pipeline
     /// with up to `depth` frames in flight). Returns per-frame timings.
     #[napi(js_name = "_renderFramesExperimental")]
-    pub fn render_frames_experimental<'env>(&mut self, env: &'env Env, times: Vec<f64>, targets: Vec<Unknown<'_>>, options: Option<FramesOptions>) -> Result<Object<'env>> {
+    pub fn render_frames_experimental<'env>(
+        &mut self,
+        env: &'env Env,
+        times: Vec<f64>,
+        targets: Vec<Unknown<'_>>,
+        options: Option<FramesOptions>,
+    ) -> Result<Object<'env>> {
         self.guarded("_renderFramesExperimental", |this| this.render_frames_experimental_impl(env, times, targets, options))
     }
 
-    fn render_frames_experimental_impl<'env>(&mut self, env: &'env Env, times: Vec<f64>, targets: Vec<Unknown<'_>>, options: Option<FramesOptions>) -> Result<Object<'env>> {
+    fn render_frames_experimental_impl<'env>(
+        &mut self,
+        env: &'env Env,
+        times: Vec<f64>,
+        targets: Vec<Unknown<'_>>,
+        options: Option<FramesOptions>,
+    ) -> Result<Object<'env>> {
         self.check_open()?;
         let o = options.unwrap_or(FramesOptions { mode: None, depth: None, seek: None });
         let mode = o.mode.unwrap_or_else(|| "sync".into());
@@ -1309,7 +1330,10 @@ impl HtmlRenderer {
                         push("prepare", start.elapsed().as_nanos() as f64);
                         if self.gpu_renderer()?.pipeline_in_flight() >= depth {
                             // SAFETY: validated in this call; the slice lives for this one write only.
-                            let c = self.gpu_renderer()?.pipeline_complete(unsafe { targets[next_out % k].bytes() }).map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
+                            let c = self
+                                .gpu_renderer()?
+                                .pipeline_complete(unsafe { targets[next_out % k].bytes() })
+                                .map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
                             next_out += 1;
                             push("gpuWait", c.wait_ns as f64);
                             push("readback", c.readback_ns as f64);
@@ -1321,7 +1345,10 @@ impl HtmlRenderer {
                     }
                     while self.gpu_renderer()?.pipeline_in_flight() > 0 {
                         // SAFETY: validated in this call; the slice lives for this one write only.
-                        let c = self.gpu_renderer()?.pipeline_complete(unsafe { targets[next_out % k].bytes() }).map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
+                        let c = self
+                            .gpu_renderer()?
+                            .pipeline_complete(unsafe { targets[next_out % k].bytes() })
+                            .map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
                         next_out += 1;
                         push("gpuWait", c.wait_ns as f64);
                         push("readback", c.readback_ns as f64);
