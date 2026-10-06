@@ -96,9 +96,9 @@ copy (`Cow`, no copy for fully opaque frames).
 Decoded-pixel checks (`test/hardening.mjs`, pngjs): 25 %, 50 %, 75 % and opaque red; coloured
 translucent fills; a translucent background; translucent text; every PNG pixel compared with the
 straight-alpha value computed from the raw frame of the same renderer, plus fixed spot values
-(`[128,0,0,128]` raw → `[255,0,0,128]` PNG). **Identical results on CPU, Mesa GL, Mesa Vulkan,
-L4 GL and L4 Vulkan** (the test runs per backend; raw frames are identical across backends for
-these scenes).
+(`[128,0,0,128]` raw → `[255,0,0,128]` PNG). **Passes on CPU, Mesa GL, Mesa Vulkan, L4 GL and
+L4 Vulkan**: the test runs per backend, each PNG checked against that backend's own raw frame, and
+the spot values (solid fills, no antialiasing) are the same on every backend.
 
 ## AlphaType decision
 
@@ -125,8 +125,8 @@ canonical commit that changes code (`experiments/phase4a3/history/verify.log`).
 | CPU | `scripts/check.sh`: fmt clean, clippy `-D warnings` clean, dom-host 16 tests, `npm test` (smoke, JS, WAAPI, fonts, render-into, examples, hardening) all passed; 39/39 frames identical to 4A.1 (= 4A.2) via `render()` and `renderInto()` |
 | Mesa GL | `scripts/check-gpu.sh`: render-into, hardening passed; 39/39 identical |
 | Mesa Vulkan | same; 39/39 identical |
-| L4 GL | render-into, workers (1/2/4), hardening passed; 39/39 identical to the 4A.1 GPU build (`render()` and `renderInto()`); correctness vs CPU (Phase 4A subset, 720p/1080p) L4_CORR_GL |
-| L4 Vulkan | same; L4_REG_VK; correctness L4_CORR_VK |
+| L4 GL | render-into, workers (1/2/4), hardening passed; 39/39 identical to the 4A.1 GPU build (`render()` and `renderInto()`); correctness vs CPU (Phase 4A subset, 720p/1080p) identical (classes and metrics) to the 4A.2 L4 run: minor / edge-AA only, no major |
+| L4 Vulkan | render-into, workers, hardening passed; 39/39 identical; correctness identical to 4A.2 |
 | Phase 3 | contract suite 30/30 identical on Boa and V8 against the canonical build; lifecycle/cycles/long/simultaneous/workers/exit modes all pass. Scene replay (`contract/scenes.mjs`): Boa determinism passes; its V8 half needs the research Deno adapter rebuilt with the renamed page global (`__htmlRenderer`), which the canonical tree does not build (experiments are outside the workspace) — passed on the research tree with the 4A.3 code (`evidence/regression-scratch.txt`) |
 | Phase 4A | GPU vs CPU correctness subset on L4 (above) and on Mesa (bundle check) |
 | Phase 4A.2 | frame API contract (`render-into.mjs`), examples, workers: CPU, Mesa, L4 |
@@ -140,13 +140,28 @@ canonical commit that changes code (`experiments/phase4a3/history/verify.log`).
 1080p/4K timing on the L4 (scene A output-dominated, scene E paint-heavy; median ms; baseline =
 4A.1 build, whose bytes and timings matched 4A.2 on the L4 in Phase 4A.2):
 
-L4_TIMING
+| backend | scene | res | render() baseline | render() 4A.3 | into baseline (`_renderInto`) | `renderInto` 4A.3 |
+|---|---|---|---|---|---|---|
+| cpu | A | 1080p | 5.86 | 5.86 | 2.15 | 2.14 |
+| cpu | A | 4K | 25.32 | 24.88 | 11.4 | 11.13 |
+| cpu | E | 1080p | 187.94 | 187.48 | 185.39 | 184.44 |
+| cpu | E | 4K | 410.48 | 412.7 | 403.33 | 403.72 |
+| gpu-gl | A | 1080p | 6.03 | 5.97 | 2.23 | 2.21 |
+| gpu-gl | A | 4K | 22.88 | 22.49 | 7.49 | 7.47 |
+| gpu-gl | E | 1080p | 32.35 | 32.25 | 29.31 | 28.13 |
+| gpu-gl | E | 4K | 64.54 | 64.54 | 48.93 | 48.79 |
+| gpu-vulkan | A | 1080p | 5.5 | 5.42 | 1.82 | 1.85 |
+| gpu-vulkan | A | 4K | 22.91 | 22.66 | 9.17 | 9.2 |
+| gpu-vulkan | E | 1080p | 24.33 | 24.65 | 21.23 | 21.33 |
+| gpu-vulkan | E | 4K | 76.3 | 76.42 | 61.66 | 61.43 |
+
+No regression: every 4A.3 number is within run-to-run noise of the baseline, and `renderInto` keeps its 4A.1/4A.2 advantage (CPU 4K output 2.2× faster than `render()`, GL 4K 3.0×, Vulkan 4K 2.5×). Raw data: `experiments/phase4a3/evidence/l4/timing-l4.json`.
 
 ## Git normalization
 
 **Scratch archive ref.** The research repository `itzhkhere/videogen` is unchanged: branch
 `claude/serene-ritchie-o55j58` keeps every research commit, and tag
-`archive/research-scratch-20261006` marks its state at the end of Phase 4A.3 (ARCHIVE_SHA).
+`archive/research-scratch-20261006` marks its state at the end of Phase 4A.3 (SHA in `docs/GIT-HISTORY.md`).
 
 **Chosen canonical baseline.** `951dc13` (v0.5.0, the engine before the research phases), laid
 out with the engine at the root. Each later research step that changed the engine became one or
@@ -155,7 +170,27 @@ commits.
 
 **Clean commit list** (`main`, oldest first; sources per commit in `docs/GIT-HISTORY.md`):
 
-COMMIT_LIST
+1. `cb1ad7c` build: import the v0.5.0 engine
+2. `1dbc75e` docs(experiments): phase 2 runtime research and the phase 3 handoff
+3. `d6ec43b` refactor(dom): introduce the shared engine-neutral DOM host
+4. `2780cb2` feat(experiments): experimental Deno/V8 runtime adapter and shared contract suite
+5. `8be1f2c` feat(gpu): experimental headless GPU backends (Ganesh GL/Vulkan, Graphite)
+6. `9bf9e44` fix(gpu): deterministic Ganesh output across document reloads
+7. `a84fd2d` docs(experiments): phase 4A GPU backend research and results
+8. `3a8a34f` perf(output): hand render() frames to Node without a copy
+9. `f0de9cb` feat(gpu): experimental pipelined GPU readback; types for the output experiments
+10. `593182c` docs(experiments): phase 4A.1 output-path research
+11. `2d47861` feat(api): add renderInto() and frameByteLength
+12. `de0ce23` test(frame-api): renderInto contract, workers and documented examples
+13. `7b85faf` docs(frame-api): document render(), renderInto() and the pixel format
+14. `8c480ee` docs(gpu): SAFETY comments on the pipelined GL readback
+15. `47d7ade` docs(experiments): phase 4A.2 frame API research
+16. `b53479a` fix(render): malformed input is a JS error, never a panic
+17. `8300701` fix(png): encode transparent output with straight alpha
+18. `e39c901` style: rustfmt configuration, cargo fmt, clippy clean
+19. `e184ea2` docs: project status, contracts, trust model, third-party notices, local checks
+20. `4065915` chore(release): 0.6.0-rc.1
+21. (the commit that adds this report) docs(experiments): phase 4A.3 hardening and repository normalization
 
 Every commit: author and committer `Harikrishnan <hkupim@gmail.com>`, dated like its research
 source, Claude co-author trailer. Every commit that changes code was built from a clean checkout
@@ -186,12 +221,12 @@ contract suite), `phase4a` (GPU backends), `phase4a1` (output path), `phase4a2` 
 audit), `phase4a3` (AlphaType, L4 scripts, history tooling): code, scripts and JSON/log evidence,
 not part of any build. Phase reports in `docs/phases/`.
 
-Canonical repository size: 1 023 files, ~8.5 MB of Git objects.
+Canonical repository size at 0.6.0-rc.1: 1 018 files, 8.4 MiB of Git objects.
 
 ## GitHub status
 
-**Canonical repository created and updated:** `itzhkhere/harender` (private), branch `main` at
-CANON_HEAD. Remotes (no credentials stored in either repository):
+**Canonical repository created and updated:** `itzhkhere/harender` (private), branch `main` (head: the commit that adds this report; see
+`git-log-graph.txt` in the review bundle). Remotes (no credentials stored in either repository):
 
 ```
 harender (canonical)   origin  https://github.com/itzhkhere/harender (fetch/push)

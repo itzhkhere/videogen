@@ -349,7 +349,7 @@
      ]
     ]
    ],
-   "message": "docs(experiments): phase 4A.3 hardening and repository normalization\n\nThe AlphaType experiment (Opaque and Premul give identical bytes on CPU, Ganesh GL and\nVulkan), regression and L4 evidence, the tooling that rebuilt this history from the research\nrepository (build_history.py, plan.json, overlays) with its verification log, docs/GIT-HISTORY.md\nand the phase 4A.3 report."
+   "message": "docs(experiments): phase 4A.3 hardening and repository normalization\n\nThe AlphaType experiment (Opaque and Premul give identical bytes on CPU, Ganesh GL and\nVulkan), regression and L4 evidence, the tooling that rebuilt this history from the research\nrepository (build_history.py, plan.json, overlays) with its verification log, docs/GIT-HISTORY.md\nand the phase 4A.3 report. PROJECT_IDENTITY: the version is now 0.6.0-rc.1."
   }
  ]
 }
