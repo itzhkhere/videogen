@@ -1,0 +1,438 @@
+<title>canvas-html Phase 4A Results</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a single reading column with a sticky contents rail on wide screens; tables scroll in their own boxes. */
+:root {
+  --bg: #f6f7f9;
+  --surface: #ffffff;
+  --fg: #1b2230;
+  --muted: #5a6476;
+  --rule: #dde1e8;
+  --accent: #2c55c9;
+  --accent-soft: #e6ecfb;
+  --pass: #1f7a4d;
+  --pass-soft: #e3f3ea;
+  --fail: #b3362f;
+  --fail-soft: #fbe7e5;
+  --warn: #8a5a00;
+  --warn-soft: #fbf0d9;
+  --code-bg: #eef1f6;
+  --font-display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #11151c; --surface: #171c25; --fg: #e3e7ee; --muted: #9aa4b5; --rule: #2a3140;
+    --accent: #8aa8ff; --accent-soft: #1d2740; --pass: #6fd3a0; --pass-soft: #14291f;
+    --fail: #ff8f86; --fail-soft: #33191a; --warn: #f0c46b; --warn-soft: #2e2512; --code-bg: #1f2531;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #11151c; --surface: #171c25; --fg: #e3e7ee; --muted: #9aa4b5; --rule: #2a3140;
+  --accent: #8aa8ff; --accent-soft: #1d2740; --pass: #6fd3a0; --pass-soft: #14291f;
+  --fail: #ff8f86; --fail-soft: #33191a; --warn: #f0c46b; --warn-soft: #2e2512; --code-bg: #1f2531;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.6;
+  padding-inline: 16px; padding-block: 0 64px;
+}
+.wrap { max-width: 1160px; margin: 0 auto; display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 48px; }
+@media (max-width: 900px) { .wrap { grid-template-columns: minmax(0, 1fr); gap: 0; } nav.toc { display: none; } }
+nav.toc { position: sticky; top: env(safe-area-inset-top, 0px); align-self: start; padding-block: 40px 24px; max-height: 100vh; overflow-y: auto; }
+nav.toc p { font-family: var(--font-display); text-transform: uppercase; letter-spacing: .08em; font-size: 12px; color: var(--muted); margin: 0 0 8px; }
+nav.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+nav.toc a { color: var(--muted); text-decoration: none; font-size: 14px; display: block; padding: 3px 8px; border-left: 2px solid transparent; }
+nav.toc a:hover, nav.toc a:focus-visible { color: var(--accent); border-left-color: var(--accent); outline: none; }
+main { min-width: 0; padding-block: 40px 0; }
+header.top { display: grid; gap: 12px; padding-bottom: 28px; border-bottom: 1px solid var(--rule); }
+.eyebrow { font-family: var(--font-display); text-transform: uppercase; letter-spacing: .1em; font-size: 13px; color: var(--accent); margin: 0; }
+h1 { font-family: var(--font-display); font-weight: 700; font-size: clamp(30px, 5vw, 44px); line-height: 1.1; margin: 0; text-wrap: balance; }
+.meta { color: var(--muted); font-size: 14px; margin: 0; }
+.verdict { display: flex; flex-wrap: wrap; gap: 20px; align-items: center; background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; padding: 20px 24px; margin-top: 8px; }
+.stamp { font-family: var(--font-display); font-weight: 700; font-size: 34px; letter-spacing: .04em; color: var(--pass); border: 3px solid var(--pass); border-radius: 8px; padding: 2px 16px; line-height: 1.2; }
+.verdict p { margin: 0; flex: 1 1 320px; min-width: 0; }
+section { padding-block: 36px 4px; border-bottom: 1px solid var(--rule); }
+section:last-of-type { border-bottom: 0; }
+h2 { font-family: var(--font-display); font-weight: 600; font-size: 26px; margin: 0 0 14px; text-wrap: balance; }
+h3 { font-family: var(--font-display); font-weight: 600; font-size: 19px; margin: 26px 0 8px; }
+p, li { max-width: 72ch; }
+p { margin: 0 0 14px; }
+ul, ol { padding-left: 22px; margin: 0 0 14px; }
+li { margin-bottom: 6px; }
+code { font-family: var(--font-mono); font-size: .86em; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+pre { font-family: var(--font-mono); font-size: 13.5px; background: var(--code-bg); padding: 14px 16px; border-radius: 8px; overflow-x: auto; line-height: 1.5; }
+pre code { background: none; padding: 0; }
+a { color: var(--accent); }
+.plain { background: var(--accent-soft); border-radius: 10px; padding: 20px 24px; margin-bottom: 18px; }
+.plain h3 { margin-top: 0; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin: 18px 0 22px; }
+.stat { background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; padding: 14px 16px; display: grid; gap: 2px; }
+.stat b { font-family: var(--font-display); font-size: 28px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.stat span { color: var(--muted); font-size: 13.5px; line-height: 1.4; }
+.table { overflow-x: auto; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); margin: 8px 0 18px; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--rule); }
+th { font-family: var(--font-display); font-weight: 600; font-size: 13px; letter-spacing: .03em; text-transform: uppercase; color: var(--muted); background: var(--bg); white-space: nowrap; }
+tr:last-child td { border-bottom: 0; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+td.hash { font-family: var(--font-mono); font-size: 12.5px; word-break: break-all; min-width: 260px; }
+.chip { display: inline-block; font-family: var(--font-display); font-weight: 600; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; border-radius: 999px; padding: 1px 9px; white-space: nowrap; }
+.chip.pass { color: var(--pass); background: var(--pass-soft); }
+.chip.fail { color: var(--fail); background: var(--fail-soft); }
+.chip.diag, .chip.na { color: var(--warn); background: var(--warn-soft); }
+.zero { color: var(--pass); font-weight: 600; }
+.note { color: var(--muted); font-size: 14px; }
+.qa { display: grid; gap: 14px; }
+.qa blockquote { margin: 0; padding: 0 0 0 14px; border-left: 3px solid var(--accent); font-style: italic; color: var(--muted); max-width: 72ch; }
+.checks li::marker { content: "✓  "; color: var(--pass); }
+pre.mermaid { background: var(--surface); border: 1px solid var(--rule); }
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; } }
+html { scroll-behavior: smooth; }
+
+:root { --s-gl: #2c55c9; --s-vk: #1f8a70; --s-gr: #b0632b; --p-paint: #2c55c9; --p-submit: #6f8fe6; --p-wait: #b0632b; --p-read: #c23d6f; --p-buf: #8c95a5; --grid: #dde1e8; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --s-gl: #8aa8ff; --s-vk: #5fd0ae; --s-gr: #f0a066; --p-paint: #8aa8ff; --p-submit: #4f6fc4; --p-wait: #f0a066; --p-read: #ff7aa8; --p-buf: #6b7486; --grid: #2a3140; } }
+:root[data-theme="dark"] { --s-gl: #8aa8ff; --s-vk: #5fd0ae; --s-gr: #f0a066; --p-paint: #8aa8ff; --p-submit: #4f6fc4; --p-wait: #f0a066; --p-read: #ff7aa8; --p-buf: #6b7486; --grid: #2a3140; }
+.chart { width: 100%; height: auto; display: block; background: var(--surface); border: 1px solid var(--rule); border-radius: 8px; margin: 8px 0 6px; }
+.chart .grid { stroke: var(--grid); stroke-width: 1; }
+.chart .one { stroke: var(--fg); stroke-width: 1; stroke-dasharray: 3 3; }
+.chart .tick { fill: var(--muted); font: 11px var(--font-body); }
+.chart .lab { fill: var(--fg); font: 12px var(--font-body); }
+.chart .val { fill: var(--fg); font: 600 11px var(--font-body); font-variant-numeric: tabular-nums; }
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13.5px; color: var(--muted); margin: 0 0 18px; }
+.legend i { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
+.up { color: var(--pass); font-weight: 600; }
+.down { color: var(--fail); font-weight: 600; }
+td .note { white-space: nowrap; }
+</style>
+
+
+<div class="wrap">
+<nav class="toc" aria-label="Contents">
+  <p>Contents</p>
+  <ol>
+    <li><a href="#plain">In plain words</a></li>
+    <li><a href="#summary">Executive summary</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#backends">Backends tested</a></li>
+    <li><a href="#correctness">Correctness</a></li>
+    <li><a href="#performance">Performance</a></li>
+    <li><a href="#animated">Animated workload</a></li>
+    <li><a href="#readback">Readback</a></li>
+    <li><a href="#reuse">Reuse, renderers, workers</a></li>
+    <li><a href="#memory">Memory and fonts</a></li>
+    <li><a href="#determinism">Determinism</a></li>
+    <li><a href="#failures">Failures and fallback</a></li>
+    <li><a href="#build">Build and distribution</a></li>
+    <li><a href="#blockers">Remaining blockers</a></li>
+    <li><a href="#recommendation">Recommendation</a></li>
+    <li><a href="#checklist">Acceptance checklist</a></li>
+  </ol>
+</nav>
+
+<main>
+<header class="top">
+  <p class="eyebrow">canvas-html · Phase 4A · GPU-backed Skia</p>
+  <h1>Phase 4A Results</h1>
+  <p class="meta">Prepared 2026-10-06 · measured on Tesla T4 (driver 580.82.07) · Intel(R) Xeon(R) CPU @ 2.00GHz ×8 · Ubuntu 24.04.4 LTS · Node v24.19.0 · Skia m153 via rust-skia 0.153.3 · validated first on Mesa llvmpipe/lavapipe · branch <code>claude/serene-ritchie-o55j58</code> in itzhkhere/videogen</p>
+  <div class="verdict">
+    <span class="stamp">GO</span>
+    <p>Adopt a GPU-backed Skia path (Skia <strong>Ganesh</strong>) as an <strong>experimental, opt-in</strong> renderer backend. CPU Skia stays the default and the fallback; the default build is unchanged, pixel for pixel.</p>
+  </div>
+</header>
+
+<section id="plain">
+  <h2>In plain words</h2>
+  <div class="plain">
+    <h3>The question</h3>
+    <p>canvas-html draws every frame with Skia on the CPU. Phase 4A asked whether the same drawing commands can go to the GPU instead, by changing only the surface Skia draws into, and whether that makes realistic frames faster once the pixels are copied back for output.</p>
+    <h3>The answer</h3>
+    <p>Yes. Nothing above Skia changed: DOM, styles, layout, scripts and Blitz's paint code are the same. On a Tesla T4 the GPU draws heavy frames 3 to 22 times faster and looks the same as the CPU output. Copying pixels back is cheap. The bigger costs left are canvas-html's own copy into a Node Buffer and PNG encoding, which both backends pay.</p>
+  </div>
+  <div class="stats">
+    <div class="stat"><b>22×</b><span>image-heavy scene, 1080p and 4K (Ganesh)</span></div>
+    <div class="stat"><b>3.6–8.6×</b><span>large text, gradients, filters, SVG paths at 1080p (Ganesh Vulkan)</span></div>
+    <div class="stat"><b>2–3×</b><span>animated CSS sequences per renderer, 1080p</span></div>
+    <div class="stat"><b>1.9 ms</b><span>GPU→CPU readback per 1080p frame (Ganesh GL)</span></div>
+    <div class="stat"><b>0</b><span>changes above the Skia surface; CPU pixels bit-identical</span></div>
+  </div>
+</section>
+
+<section id="summary">
+  <h2>Executive summary</h2>
+  <div class="qa"><blockquote>Does GPU-backed Skia materially improve canvas-html rendering for realistic workloads?</blockquote>
+  <p><strong>Yes for paint-heavy frames, no for trivial ones, and end-to-end gains are capped by the output path rather than the GPU.</strong></p></div>
+  <ul>
+    <li>Paint-heavy frames: images 22×, gradients 8.6×, large text 7.5×, filters 6.2×, paths 3.6×, 1000 transformed layers 2.5× at 1080p (Ganesh Vulkan). A simple text page gains nothing.</li>
+    <li>Animated sequences at 1080p: the effects scene drops from 35.2 to 11.5 ms per frame, CSS motion from 22.9 to 11.7 ms. The GSAP scene is cheap to paint and stays at 8.4 ms.</li>
+    <li>Readback is small (about 2 ms at 1080p, 7–9 ms at 4K on Ganesh). The Node Buffer copy (4 ms, 20 ms at 4K) and PNG encoding (30–700 ms) cost more. With PNG output the effects sequence improves only from 141 to 120 ms per frame.</li>
+    <li>On 8 vCPUs, CPU workers reach 72 fps on the effects scene against 82 fps for the best GPU configuration. The GPU wins per renderer and on heavy frames; for moderate scenes the machine-level gap is small.</li>
+    <li>Ganesh carries forward. Graphite is fastest on paths and gradients but 3.5× slower on text, uses about twice the GPU memory, is not bit-stable frame to frame, and needs a different Skia binary.</li>
+  </ul>
+</section>
+
+<section id="architecture">
+  <h2>Implemented architecture</h2>
+  <pre class="mermaid">flowchart TD
+  H["HtmlRenderer: DOM, Stylo, Taffy, Parley, Boa / Deno (unchanged)"] --> P["blitz_paint::paint_scene (unchanged)"]
+  P --> S["SkiaScenePainter: AnyRender to SkCanvas (unchanged; Graphite uploads images)"]
+  S --> C["CPU raster surface over the output Vec (default)"]
+  S --> G["Ganesh render target: GL through an EGL device, or Vulkan"]
+  S --> R["Graphite render target through a Recorder (Vulkan)"]
+  G --> B["submit, wait, read back into the same Vec"]
+  R --> B
+  C --> O["Node Buffer / PNG (unchanged)"]
+  B --> O</pre>
+  <ul>
+    <li><strong>Headless:</strong> GL uses an EGL device and a surfaceless context; Vulkan uses no surface extensions. No window, X11 or Wayland.</li>
+    <li><strong>Opt-in per renderer:</strong> <code>experimentalBackend: "gpu-gl" | "gpu-vulkan" | "gpu-graphite"</code>. A GPU that cannot start throws; nothing falls back silently. <code>_renderTimed()</code> names the backend of every frame.</li>
+    <li><strong>Ownership:</strong> one GPU device per renderer by default, or one per thread with <code>experimentalGpuShare: "thread"</code>. The surface is dropped before Skia's context, and the context before the device.</li>
+    <li><strong>Two adapter-level fixes</strong> came out of the tests: Graphite drops ordinary images unless they are uploaded first, and Ganesh now frees cached GPU path data when a page is loaded, which makes reloads bit-exact.</li>
+  </ul>
+</section>
+
+<section id="backends">
+  <h2>Backends tested</h2>
+  <div class="table"><table><thead><tr><th>backend</th><th>Skia binary</th><th>T4 device</th><th>status</th></tr></thead><tbody>
+  <tr><td>Ganesh GL</td><td><code>ganesh-gl-jpegd-jpege-pdf</code> (the production binary)</td><td>EGL device, GL 3.3 core, NVIDIA 580.82.07</td><td><span class="chip pass">carried forward</span></td></tr>
+  <tr><td>Ganesh Vulkan</td><td><code>ganesh-gl-jpegd-jpege-pdf-vulkan</code></td><td>Tesla T4, Vulkan 1.4.312</td><td><span class="chip pass">carried forward</span></td></tr>
+  <tr><td>Graphite Vulkan</td><td><code>graphite-jpegd-jpege-pdf-vulkan</code> (no Ganesh, no GL)</td><td>Tesla T4, Vulkan 1.4.312</td><td><span class="chip diag">evaluated</span></td></tr>
+  </tbody></table></div>
+  <p class="note">Not available in the pinned build: Metal and Direct3D (not Linux), Dawn (rust-skia does not build it), Graphite on GL (Graphite has no GL backend), and any binary with both Ganesh and Graphite.</p>
+</section>
+
+<section id="correctness">
+  <h2>Correctness</h2>
+  <p>Every scene was rendered on CPU and on each GPU backend with fixed fonts, local images, seeded content and a frozen clock. Severity grades the share of pixels that differ by more than 32 levels; <em>edge-aa</em> means those pixels sit on edges. The cause comes from removing one kind of drawing at a time (text, images, gradients, shadows, filters, opacity) and seeing which removal makes the difference go away.</p>
+  <div class="table"><table><thead><tr><th>scene</th><th>1080p Ganesh GL</th><th>1080p Ganesh Vulkan</th><th>1080p Graphite</th><th>4K Ganesh GL</th><th>cause</th></tr></thead><tbody>
+<tr><td>A · Simple typography</td><td><span class="chip pass">minor</span> <span class="note">0.5 % · max 64 · &gt;32: 0.004 %</span></td><td><span class="chip pass">minor</span> <span class="note">0.5 % · max 64 · &gt;32: 0.004 %</span></td><td><span class="chip pass">minor</span> <span class="note">0.5 % · max 64 · &gt;32: 0.004 %</span></td><td><span class="chip pass">minor</span> <span class="note">0.3 % · max 230 · &gt;32: 0.046 %</span></td><td>text rasterization difference</td></tr>
+<tr><td>B · Large typography</td><td><span class="chip diag">edge-aa</span> <span class="note">72.3 % · max 169 · &gt;32: 0.766 %</span></td><td><span class="chip diag">edge-aa</span> <span class="note">72.5 % · max 169 · &gt;32: 0.761 %</span></td><td><span class="chip diag">edge-aa</span> <span class="note">71.9 % · max 168 · &gt;32: 0.760 %</span></td><td><span class="chip diag">edge-aa</span> <span class="note">70.9 % · max 216 · &gt;32: 1.022 %</span></td><td>text rasterization difference</td></tr>
+<tr><td>C · Image-heavy</td><td><span class="chip pass">minor</span> <span class="note">83.7 % · max 54 · &gt;32: 0.001 %</span></td><td><span class="chip pass">minor</span> <span class="note">84.4 % · max 55 · &gt;32: 0.001 %</span></td><td><span class="chip pass">minor</span> <span class="note">84.1 % · max 65 · &gt;32: 0.008 %</span></td><td><span class="chip pass">minor</span> <span class="note">83.6 % · max 42 · &gt;32: 0.000 %</span></td><td>image sampling difference</td></tr>
+<tr><td>D · Gradient-heavy</td><td><span class="chip pass">minor</span> <span class="note">87.2 % · max 68 · &gt;32: 0.002 %</span></td><td><span class="chip pass">minor</span> <span class="note">88.0 % · max 68 · &gt;32: 0.002 %</span></td><td><span class="chip pass">minor</span> <span class="note">88.0 % · max 76 · &gt;32: 0.018 %</span></td><td><span class="chip pass">minor</span> <span class="note">87.1 % · max 41 · &gt;32: 0.000 %</span></td><td>gradient interpolation difference</td></tr>
+<tr><td>E · Shadows, blur, filters</td><td><span class="chip pass">minor</span> <span class="note">84.6 % · max 82 · &gt;32: 0.007 %</span></td><td><span class="chip pass">minor</span> <span class="note">85.5 % · max 82 · &gt;32: 0.007 %</span></td><td><span class="chip pass">minor</span> <span class="note">84.2 % · max 78 · &gt;32: 0.011 %</span></td><td><span class="chip pass">minor</span> <span class="note">70.8 % · max 38 · &gt;32: 0.000 %</span></td><td>shadow/blur precision difference</td></tr>
+<tr><td>F · SVG paths</td><td><span class="chip diag">edge-aa</span> <span class="note">49.1 % · max 128 · &gt;32: 0.959 %</span></td><td><span class="chip diag">edge-aa</span> <span class="note">49.1 % · max 128 · &gt;32: 0.959 %</span></td><td><span class="chip diag">edge-aa</span> <span class="note">49.4 % · max 139 · &gt;32: 1.510 %</span></td><td><span class="chip diag">edge-aa</span> <span class="note">45.6 % · max 104 · &gt;32: 0.116 %</span></td><td>geometry antialiasing difference</td></tr>
+<tr><td>G100 · Transforms ×100</td><td><span class="chip pass">minor</span> <span class="note">12.5 % · max 70 · &gt;32: 0.014 %</span></td><td><span class="chip pass">minor</span> <span class="note">12.6 % · max 71 · &gt;32: 0.014 %</span></td><td><span class="chip pass">minor</span> <span class="note">12.1 % · max 76 · &gt;32: 0.029 %</span></td><td><span class="chip pass">minor</span> <span class="note">12.2 % · max 76 · &gt;32: 0.007 %</span></td><td>layer/opacity blending difference</td></tr>
+<tr><td>G500 · Transforms ×500</td><td><span class="chip pass">minor</span> <span class="note">44.8 % · max 90 · &gt;32: 0.038 %</span></td><td><span class="chip pass">minor</span> <span class="note">44.8 % · max 91 · &gt;32: 0.038 %</span></td><td><span class="chip pass">minor</span> <span class="note">44.7 % · max 76 · &gt;32: 0.091 %</span></td><td><span class="chip pass">minor</span> <span class="note">44.1 % · max 85 · &gt;32: 0.020 %</span></td><td>layer/opacity blending difference</td></tr>
+<tr><td>G1000 · Transforms ×1000</td><td><span class="chip pass">minor</span> <span class="note">66.4 % · max 81 · &gt;32: 0.050 %</span></td><td><span class="chip pass">minor</span> <span class="note">66.4 % · max 81 · &gt;32: 0.051 %</span></td><td><span class="chip diag">edge-aa</span> <span class="note">66.1 % · max 76 · &gt;32: 0.112 %</span></td><td><span class="chip pass">minor</span> <span class="note">65.6 % · max 91 · &gt;32: 0.025 %</span></td><td>layer/opacity blending difference</td></tr>
+  </tbody></table></div>
+  <ul>
+    <li>No semantic mismatches. Differences are antialiasing coverage, image sampling and blending precision; most differing pixels are 1–3 levels apart.</li>
+    <li>Large deltas sit on edges: big glyphs drawn as GPU paths (B), SVG paths (F), and a few corner pixels of the 168-px heading in A at 4K. Zoomed crops showed the two renderers draw the same shapes.</li>
+    <li>Ganesh GL and Ganesh Vulkan differ from each other by at most 3 levels (19 on blurred shadows).</li>
+    <li>Graphite first dropped every image (scene C was <em>major</em>). Skia's default image provider returns nothing by design; the scene painter now uploads each image once and caches it. After the fix C is <em>minor</em>.</li>
+  </ul>
+</section>
+
+<section id="performance">
+  <h2>Performance</h2>
+  <p>Median frame time with RGBA output on a warm renderer, CPU and GPU on the same VM. Bars show the speed-up over CPU; the dashed line is CPU speed.</p>
+  <div class="legend"><span><i style="background:var(--s-gl)"></i>Ganesh GL</span><span><i style="background:var(--s-vk)"></i>Ganesh Vulkan</span><span><i style="background:var(--s-gr)"></i>Graphite Vulkan</span></div>
+  <h3>1080p</h3>
+  <svg viewBox="0 0 720 334" role="img" aria-label="Speed-up versus CPU at 1080p, per scene and GPU backend" class="chart"><line x1="196" x2="196" y1="28" y2="308" class="grid"/><text x="196" y="324" class="tick" text-anchor="middle">0×</text><line x1="292" x2="292" y1="28" y2="308" class="grid"/><text x="292" y="324" class="tick" text-anchor="middle">5×</text><line x1="388" x2="388" y1="28" y2="308" class="grid"/><text x="388" y="324" class="tick" text-anchor="middle">10×</text><line x1="484" x2="484" y1="28" y2="308" class="grid"/><text x="484" y="324" class="tick" text-anchor="middle">15×</text><line x1="580" x2="580" y1="28" y2="308" class="grid"/><text x="580" y="324" class="tick" text-anchor="middle">20×</text><line x1="676" x2="676" y1="28" y2="308" class="grid"/><text x="676" y="324" class="tick" text-anchor="middle">25×</text><line x1="215.2" x2="215.2" y1="24" y2="308" class="one"/><text x="219.2" y="20" class="tick">1× = CPU</text><text x="186" y="48" class="lab" text-anchor="end">A · Simple typography</text><rect x="196" y="37" width="15.699462517680331" height="7" fill="var(--s-gl)"><title>Simple typography, gpu-gl: 0.8× (7.1 ms vs CPU 5.8 ms)</title></rect><rect x="196" y="45" width="18.249786254521553" height="7" fill="var(--s-vk)"><title>Simple typography, gpu-vulkan: 1.0× (6.1 ms vs CPU 5.8 ms)</title></rect><text x="218.24978625452155" y="52" class="val">1.0×</text><rect x="196" y="53" width="17.665955753620892" height="7" fill="var(--s-gr)"><title>Simple typography, gpu-graphite: 0.9× (6.3 ms vs CPU 5.8 ms)</title></rect><text x="186" y="78" class="lab" text-anchor="end">B · Large typography</text><rect x="196" y="67" width="133.9843935426128" height="7" fill="var(--s-gl)"><title>Large typography, gpu-gl: 7.0× (30.2 ms vs CPU 210.5 ms)</title></rect><rect x="196" y="75" width="144.84526787314098" height="7" fill="var(--s-vk)"><title>Large typography, gpu-vulkan: 7.5× (27.9 ms vs CPU 210.5 ms)</title></rect><text x="344.845267873141" y="82" class="val">7.5×</text><rect x="196" y="83" width="40.699491496410275" height="7" fill="var(--s-gr)"><title>Large typography, gpu-graphite: 2.1× (99.3 ms vs CPU 210.5 ms)</title></rect><text x="186" y="108" class="lab" text-anchor="end">C · Image-heavy</text><rect x="196" y="97" width="401.62367920628355" height="7" fill="var(--s-gl)"><title>Image-heavy, gpu-gl: 20.9× (12.1 ms vs CPU 253.0 ms)</title></rect><text x="601.6236792062836" y="104" class="val">20.9×</text><rect x="196" y="105" width="425.77249539836976" height="7" fill="var(--s-vk)"><title>Image-heavy, gpu-vulkan: 22.2× (11.4 ms vs CPU 253.0 ms)</title></rect><text x="625.7724953983698" y="112" class="val">22.2×</text><rect x="196" y="113" width="393.14004532211084" height="7" fill="var(--s-gr)"><title>Image-heavy, gpu-graphite: 20.5× (12.4 ms vs CPU 253.0 ms)</title></rect><text x="593.1400453221108" y="120" class="val">20.5×</text><text x="186" y="138" class="lab" text-anchor="end">D · Gradient-heavy</text><rect x="196" y="127" width="142.95633235326147" height="7" fill="var(--s-gl)"><title>Gradient-heavy, gpu-gl: 7.4× (27.5 ms vs CPU 205.1 ms)</title></rect><rect x="196" y="135" width="165.46800554598542" height="7" fill="var(--s-vk)"><title>Gradient-heavy, gpu-vulkan: 8.6× (23.8 ms vs CPU 205.1 ms)</title></rect><text x="365.4680055459854" y="142" class="val">8.6×</text><rect x="196" y="143" width="258.52067743205987" height="7" fill="var(--s-gr)"><title>Gradient-heavy, gpu-graphite: 13.5× (15.2 ms vs CPU 205.1 ms)</title></rect><text x="186" y="168" class="lab" text-anchor="end">E · Shadows, blur, filters</text><rect x="196" y="157" width="99.38691173749459" height="7" fill="var(--s-gl)"><title>Shadows, blur, filters, gpu-gl: 5.2× (32.4 ms vs CPU 167.8 ms)</title></rect><rect x="196" y="165" width="118.26061428938385" height="7" fill="var(--s-vk)"><title>Shadows, blur, filters, gpu-vulkan: 6.2× (27.3 ms vs CPU 167.8 ms)</title></rect><text x="318.26061428938385" y="172" class="val">6.2×</text><rect x="196" y="173" width="90.6837751139625" height="7" fill="var(--s-gr)"><title>Shadows, blur, filters, gpu-graphite: 4.7× (35.5 ms vs CPU 167.8 ms)</title></rect><text x="186" y="198" class="lab" text-anchor="end">F · SVG paths</text><rect x="196" y="187" width="71.40756051128636" height="7" fill="var(--s-gl)"><title>SVG paths, gpu-gl: 3.7× (88.2 ms vs CPU 328.2 ms)</title></rect><rect x="196" y="195" width="68.83656383815435" height="7" fill="var(--s-vk)"><title>SVG paths, gpu-vulkan: 3.6× (91.5 ms vs CPU 328.2 ms)</title></rect><text x="268.83656383815435" y="202" class="val">3.6×</text><rect x="196" y="203" width="209.42420737786642" height="7" fill="var(--s-gr)"><title>SVG paths, gpu-graphite: 10.9× (30.1 ms vs CPU 328.2 ms)</title></rect><text x="186" y="228" class="lab" text-anchor="end">G100 · Transforms ×100</text><rect x="196" y="217" width="30.78391959798995" height="7" fill="var(--s-gl)"><title>Transforms ×100, gpu-gl: 1.6× (12.7 ms vs CPU 20.4 ms)</title></rect><rect x="196" y="225" width="34.48838845883182" height="7" fill="var(--s-vk)"><title>Transforms ×100, gpu-vulkan: 1.8× (11.4 ms vs CPU 20.4 ms)</title></rect><text x="234.48838845883182" y="232" class="val">1.8×</text><rect x="196" y="233" width="36.045233060586554" height="7" fill="var(--s-gr)"><title>Transforms ×100, gpu-graphite: 1.9× (10.9 ms vs CPU 20.4 ms)</title></rect><text x="186" y="258" class="lab" text-anchor="end">G500 · Transforms ×500</text><rect x="196" y="247" width="35.19674142136549" height="7" fill="var(--s-gl)"><title>Transforms ×500, gpu-gl: 1.8× (42.2 ms vs CPU 77.4 ms)</title></rect><rect x="196" y="255" width="44.3631066801982" height="7" fill="var(--s-vk)"><title>Transforms ×500, gpu-vulkan: 2.3× (33.5 ms vs CPU 77.4 ms)</title></rect><text x="244.3631066801982" y="262" class="val">2.3×</text><rect x="196" y="263" width="45.566814851151236" height="7" fill="var(--s-gr)"><title>Transforms ×500, gpu-graphite: 2.4× (32.6 ms vs CPU 77.4 ms)</title></rect><text x="186" y="288" class="lab" text-anchor="end">G1000 · Transforms ×1000</text><rect x="196" y="277" width="38.26360478278406" height="7" fill="var(--s-gl)"><title>Transforms ×1000, gpu-gl: 2.0× (76.9 ms vs CPU 153.2 ms)</title></rect><rect x="196" y="285" width="48.37885801707546" height="7" fill="var(--s-vk)"><title>Transforms ×1000, gpu-vulkan: 2.5× (60.8 ms vs CPU 153.2 ms)</title></rect><text x="248.37885801707546" y="292" class="val">2.5×</text><rect x="196" y="293" width="50.37258105955499" height="7" fill="var(--s-gr)"><title>Transforms ×1000, gpu-graphite: 2.6× (58.4 ms vs CPU 153.2 ms)</title></rect></svg>
+  <div class="table"><table><thead><tr><th>scene</th><th class="num">CPU</th><th class="num">Ganesh GL</th><th class="num">Ganesh Vulkan</th><th class="num">Graphite Vulkan</th></tr></thead><tbody><tr><td>A · Simple typography</td><td class="num">5.8</td><td class="num">7.1 <span class="down">×0.8</span></td><td class="num">6.1 <span class="down">×1.0</span></td><td class="num">6.3 <span class="down">×0.9</span></td></tr>
+<tr><td>B · Large typography</td><td class="num">210.5</td><td class="num">30.2 <span class="up">×7.0</span></td><td class="num">27.9 <span class="up">×7.5</span></td><td class="num">99.3 <span class="up">×2.1</span></td></tr>
+<tr><td>C · Image-heavy</td><td class="num">253.0</td><td class="num">12.1 <span class="up">×20.9</span></td><td class="num">11.4 <span class="up">×22.2</span></td><td class="num">12.4 <span class="up">×20.5</span></td></tr>
+<tr><td>D · Gradient-heavy</td><td class="num">205.1</td><td class="num">27.5 <span class="up">×7.4</span></td><td class="num">23.8 <span class="up">×8.6</span></td><td class="num">15.2 <span class="up">×13.5</span></td></tr>
+<tr><td>E · Shadows, blur, filters</td><td class="num">167.8</td><td class="num">32.4 <span class="up">×5.2</span></td><td class="num">27.3 <span class="up">×6.2</span></td><td class="num">35.5 <span class="up">×4.7</span></td></tr>
+<tr><td>F · SVG paths</td><td class="num">328.2</td><td class="num">88.2 <span class="up">×3.7</span></td><td class="num">91.5 <span class="up">×3.6</span></td><td class="num">30.1 <span class="up">×10.9</span></td></tr>
+<tr><td>G100 · Transforms ×100</td><td class="num">20.4</td><td class="num">12.7 <span class="up">×1.6</span></td><td class="num">11.4 <span class="up">×1.8</span></td><td class="num">10.9 <span class="up">×1.9</span></td></tr>
+<tr><td>G500 · Transforms ×500</td><td class="num">77.4</td><td class="num">42.2 <span class="up">×1.8</span></td><td class="num">33.5 <span class="up">×2.3</span></td><td class="num">32.6 <span class="up">×2.4</span></td></tr>
+<tr><td>G1000 · Transforms ×1000</td><td class="num">153.2</td><td class="num">76.9 <span class="up">×2.0</span></td><td class="num">60.8 <span class="up">×2.5</span></td><td class="num">58.4 <span class="up">×2.6</span></td></tr></tbody></table></div>
+  <h3>4K</h3>
+  <svg viewBox="0 0 720 334" role="img" aria-label="Speed-up versus CPU at 4K, per scene and GPU backend" class="chart"><line x1="196" x2="196" y1="28" y2="308" class="grid"/><text x="196" y="324" class="tick" text-anchor="middle">0×</text><line x1="292" x2="292" y1="28" y2="308" class="grid"/><text x="292" y="324" class="tick" text-anchor="middle">5×</text><line x1="388" x2="388" y1="28" y2="308" class="grid"/><text x="388" y="324" class="tick" text-anchor="middle">10×</text><line x1="484" x2="484" y1="28" y2="308" class="grid"/><text x="484" y="324" class="tick" text-anchor="middle">15×</text><line x1="580" x2="580" y1="28" y2="308" class="grid"/><text x="580" y="324" class="tick" text-anchor="middle">20×</text><line x1="676" x2="676" y1="28" y2="308" class="grid"/><text x="676" y="324" class="tick" text-anchor="middle">25×</text><line x1="215.2" x2="215.2" y1="24" y2="308" class="one"/><text x="219.2" y="20" class="tick">1× = CPU</text><text x="186" y="48" class="lab" text-anchor="end">A · Simple typography</text><rect x="196" y="37" width="20.831989277337215" height="7" fill="var(--s-gl)"><title>Simple typography, gpu-gl: 1.1× (26.9 ms vs CPU 29.1 ms)</title></rect><rect x="196" y="45" width="19.317327809425166" height="7" fill="var(--s-vk)"><title>Simple typography, gpu-vulkan: 1.0× (29.0 ms vs CPU 29.1 ms)</title></rect><text x="219.31732780942517" y="52" class="val">1.0×</text><rect x="196" y="53" width="13.612125045614903" height="7" fill="var(--s-gr)"><title>Simple typography, gpu-graphite: 0.7× (41.1 ms vs CPU 29.1 ms)</title></rect><text x="186" y="78" class="lab" text-anchor="end">B · Large typography</text><rect x="196" y="67" width="71.65836008017504" height="7" fill="var(--s-gl)"><title>Large typography, gpu-gl: 3.7× (152.7 ms vs CPU 569.8 ms)</title></rect><rect x="196" y="75" width="71.37271214859373" height="7" fill="var(--s-vk)"><title>Large typography, gpu-vulkan: 3.7× (153.3 ms vs CPU 569.8 ms)</title></rect><text x="271.37271214859373" y="82" class="val">3.7×</text><rect x="196" y="83" width="66.41005760907177" height="7" fill="var(--s-gr)"><title>Large typography, gpu-graphite: 3.5× (164.7 ms vs CPU 569.8 ms)</title></rect><text x="186" y="108" class="lab" text-anchor="end">C · Image-heavy</text><rect x="196" y="97" width="431.68495383964864" height="7" fill="var(--s-gl)"><title>Image-heavy, gpu-gl: 22.5× (42.6 ms vs CPU 957.1 ms)</title></rect><text x="631.6849538396486" y="104" class="val">22.5×</text><rect x="196" y="105" width="433.7124569270711" height="7" fill="var(--s-vk)"><title>Image-heavy, gpu-vulkan: 22.6× (42.4 ms vs CPU 957.1 ms)</title></rect><text x="633.7124569270711" y="112" class="val">22.6×</text><rect x="196" y="113" width="351.20397523125143" height="7" fill="var(--s-gr)"><title>Image-heavy, gpu-graphite: 18.3× (52.3 ms vs CPU 957.1 ms)</title></rect><text x="551.2039752312514" y="120" class="val">18.3×</text><text x="186" y="138" class="lab" text-anchor="end">D · Gradient-heavy</text><rect x="196" y="127" width="151.70207370796174" height="7" fill="var(--s-gl)"><title>Gradient-heavy, gpu-gl: 7.9× (83.8 ms vs CPU 661.8 ms)</title></rect><rect x="196" y="135" width="121.47506643978357" height="7" fill="var(--s-vk)"><title>Gradient-heavy, gpu-vulkan: 6.3× (104.6 ms vs CPU 661.8 ms)</title></rect><text x="321.4750664397836" y="142" class="val">6.3×</text><rect x="196" y="143" width="182.07770278983793" height="7" fill="var(--s-gr)"><title>Gradient-heavy, gpu-graphite: 9.5× (69.8 ms vs CPU 661.8 ms)</title></rect><text x="186" y="168" class="lab" text-anchor="end">E · Shadows, blur, filters</text><rect x="196" y="157" width="103.8137740563763" height="7" fill="var(--s-gl)"><title>Shadows, blur, filters, gpu-gl: 5.4× (68.4 ms vs CPU 370.0 ms)</title></rect><rect x="196" y="165" width="82.05366073387927" height="7" fill="var(--s-vk)"><title>Shadows, blur, filters, gpu-vulkan: 4.3× (86.6 ms vs CPU 370.0 ms)</title></rect><text x="282.05366073387927" y="172" class="val">4.3×</text><rect x="196" y="173" width="99.24269050778793" height="7" fill="var(--s-gr)"><title>Shadows, blur, filters, gpu-graphite: 5.2× (71.6 ms vs CPU 370.0 ms)</title></rect><text x="186" y="198" class="lab" text-anchor="end">F · SVG paths</text><rect x="196" y="187" width="61.28135778169542" height="7" fill="var(--s-gl)"><title>SVG paths, gpu-gl: 3.2× (340.9 ms vs CPU 1088.1 ms)</title></rect><rect x="196" y="195" width="38.40352943771646" height="7" fill="var(--s-vk)"><title>SVG paths, gpu-vulkan: 2.0× (544.0 ms vs CPU 1088.1 ms)</title></rect><text x="238.40352943771646" y="202" class="val">2.0×</text><rect x="196" y="203" width="190.27265225825846" height="7" fill="var(--s-gr)"><title>SVG paths, gpu-graphite: 9.9× (109.8 ms vs CPU 1088.1 ms)</title></rect><text x="186" y="228" class="lab" text-anchor="end">G100 · Transforms ×100</text><rect x="196" y="217" width="32.32262477408591" height="7" fill="var(--s-gl)"><title>Transforms ×100, gpu-gl: 1.7× (36.0 ms vs CPU 60.5 ms)</title></rect><rect x="196" y="225" width="31.461831172697515" height="7" fill="var(--s-vk)"><title>Transforms ×100, gpu-vulkan: 1.6× (36.9 ms vs CPU 60.5 ms)</title></rect><text x="231.46183117269752" y="232" class="val">1.6×</text><rect x="196" y="233" width="33.656143601621295" height="7" fill="var(--s-gr)"><title>Transforms ×100, gpu-graphite: 1.8× (34.5 ms vs CPU 60.5 ms)</title></rect><text x="186" y="258" class="lab" text-anchor="end">G500 · Transforms ×500</text><rect x="196" y="247" width="50.85785277098552" height="7" fill="var(--s-gl)"><title>Transforms ×500, gpu-gl: 2.6× (65.8 ms vs CPU 174.4 ms)</title></rect><rect x="196" y="255" width="55.16421923133947" height="7" fill="var(--s-vk)"><title>Transforms ×500, gpu-vulkan: 2.9× (60.7 ms vs CPU 174.4 ms)</title></rect><text x="255.16421923133947" y="262" class="val">2.9×</text><rect x="196" y="263" width="49.66898945401147" height="7" fill="var(--s-gr)"><title>Transforms ×500, gpu-graphite: 2.6× (67.4 ms vs CPU 174.4 ms)</title></rect><text x="186" y="288" class="lab" text-anchor="end">G1000 · Transforms ×1000</text><rect x="196" y="277" width="62.28790822058079" height="7" fill="var(--s-gl)"><title>Transforms ×1000, gpu-gl: 3.2× (100.6 ms vs CPU 326.3 ms)</title></rect><rect x="196" y="285" width="68.53284622031651" height="7" fill="var(--s-vk)"><title>Transforms ×1000, gpu-vulkan: 3.6× (91.4 ms vs CPU 326.3 ms)</title></rect><text x="268.5328462203165" y="292" class="val">3.6×</text><rect x="196" y="293" width="58.54821238342646" height="7" fill="var(--s-gr)"><title>Transforms ×1000, gpu-graphite: 3.0× (107.0 ms vs CPU 326.3 ms)</title></rect></svg>
+  <div class="table"><table><thead><tr><th>scene</th><th class="num">CPU</th><th class="num">Ganesh GL</th><th class="num">Ganesh Vulkan</th><th class="num">Graphite Vulkan</th></tr></thead><tbody><tr><td>A · Simple typography</td><td class="num">29.1</td><td class="num">26.9 <span class="note">×1.1</span></td><td class="num">29.0 <span class="note">×1.0</span></td><td class="num">41.1 <span class="down">×0.7</span></td></tr>
+<tr><td>B · Large typography</td><td class="num">569.8</td><td class="num">152.7 <span class="up">×3.7</span></td><td class="num">153.3 <span class="up">×3.7</span></td><td class="num">164.7 <span class="up">×3.5</span></td></tr>
+<tr><td>C · Image-heavy</td><td class="num">957.1</td><td class="num">42.6 <span class="up">×22.5</span></td><td class="num">42.4 <span class="up">×22.6</span></td><td class="num">52.3 <span class="up">×18.3</span></td></tr>
+<tr><td>D · Gradient-heavy</td><td class="num">661.8</td><td class="num">83.8 <span class="up">×7.9</span></td><td class="num">104.6 <span class="up">×6.3</span></td><td class="num">69.8 <span class="up">×9.5</span></td></tr>
+<tr><td>E · Shadows, blur, filters</td><td class="num">370.0</td><td class="num">68.4 <span class="up">×5.4</span></td><td class="num">86.6 <span class="up">×4.3</span></td><td class="num">71.6 <span class="up">×5.2</span></td></tr>
+<tr><td>F · SVG paths</td><td class="num">1088.1</td><td class="num">340.9 <span class="up">×3.2</span></td><td class="num">544.0 <span class="up">×2.0</span></td><td class="num">109.8 <span class="up">×9.9</span></td></tr>
+<tr><td>G100 · Transforms ×100</td><td class="num">60.5</td><td class="num">36.0 <span class="up">×1.7</span></td><td class="num">36.9 <span class="up">×1.6</span></td><td class="num">34.5 <span class="up">×1.8</span></td></tr>
+<tr><td>G500 · Transforms ×500</td><td class="num">174.4</td><td class="num">65.8 <span class="up">×2.6</span></td><td class="num">60.7 <span class="up">×2.9</span></td><td class="num">67.4 <span class="up">×2.6</span></td></tr>
+<tr><td>G1000 · Transforms ×1000</td><td class="num">326.3</td><td class="num">100.6 <span class="up">×3.2</span></td><td class="num">91.4 <span class="up">×3.6</span></td><td class="num">107.0 <span class="up">×3.0</span></td></tr></tbody></table></div>
+  <h3>720p</h3>
+  <div class="table"><table><thead><tr><th>scene</th><th class="num">CPU</th><th class="num">Ganesh GL</th><th class="num">Ganesh Vulkan</th><th class="num">Graphite Vulkan</th></tr></thead><tbody><tr><td>A · Simple typography</td><td class="num">2.6</td><td class="num">3.1 <span class="down">×0.8</span></td><td class="num">2.9 <span class="down">×0.9</span></td><td class="num">3.1 <span class="down">×0.8</span></td></tr>
+<tr><td>B · Large typography</td><td class="num">127.9</td><td class="num">28.1 <span class="up">×4.6</span></td><td class="num">26.3 <span class="up">×4.9</span></td><td class="num">79.7 <span class="up">×1.6</span></td></tr>
+<tr><td>C · Image-heavy</td><td class="num">116.6</td><td class="num">6.8 <span class="up">×17.2</span></td><td class="num">6.1 <span class="up">×19.0</span></td><td class="num">7.1 <span class="up">×16.4</span></td></tr>
+<tr><td>D · Gradient-heavy</td><td class="num">83.0</td><td class="num">15.9 <span class="up">×5.2</span></td><td class="num">12.8 <span class="up">×6.5</span></td><td class="num">9.6 <span class="up">×8.6</span></td></tr>
+<tr><td>E · Shadows, blur, filters</td><td class="num">98.5</td><td class="num">22.3 <span class="up">×4.4</span></td><td class="num">18.0 <span class="up">×5.5</span></td><td class="num">33.2 <span class="up">×3.0</span></td></tr>
+<tr><td>F · SVG paths</td><td class="num">173.0</td><td class="num">42.7 <span class="up">×4.1</span></td><td class="num">35.8 <span class="up">×4.8</span></td><td class="num">14.1 <span class="up">×12.3</span></td></tr>
+<tr><td>G100 · Transforms ×100</td><td class="num">12.0</td><td class="num">8.9 <span class="note">×1.3</span></td><td class="num">7.6 <span class="up">×1.6</span></td><td class="num">6.8 <span class="up">×1.7</span></td></tr>
+<tr><td>G500 · Transforms ×500</td><td class="num">53.7</td><td class="num">35.2 <span class="up">×1.5</span></td><td class="num">27.8 <span class="up">×1.9</span></td><td class="num">27.5 <span class="up">×2.0</span></td></tr>
+<tr><td>G1000 · Transforms ×1000</td><td class="num">100.0</td><td class="num">76.2 <span class="note">×1.3</span></td><td class="num">61.6 <span class="up">×1.6</span></td><td class="num">49.7 <span class="up">×2.0</span></td></tr></tbody></table></div>
+  <p class="note">Method: fresh renderer per scene and backend, 5 warm-up frames, then 20 / 15 / 10 frames at 720p / 1080p / 4K; variation (CV) mostly 1–7 %. Resolutions are the same 1280×720 page at device pixel ratio 1, 1.5 and 3. The CPU numbers repeated in the Graphite run match the first run.</p>
+  <h3>Where the frame goes</h3>
+  <p>Scene E (shadows, blur, filters) and scene F (SVG paths) at 1080p. Style, layout and Blitz's command generation stay under 1 ms here on every backend; the GPU removes rasterization. What remains on Ganesh is Skia's CPU-side work (recording and flush). Graphite records much faster and waits longer on the GPU.</p>
+  <p class="note"><strong>Scene E</strong> (shadows, blur, filters), 1080p, median ms</p>
+  <svg viewBox="0 0 720 164" role="img" aria-label="Where a 1080p frame of scene E spends its time" class="chart"><text x="120" y="21" class="lab" text-anchor="end">CPU</text><rect x="130" y="10" width="487.11647304140604" height="16" fill="var(--p-paint)"><title>CPU · paint / raster: 163.53 ms</title></rect><rect x="617.116473041406" y="10" width="12.493297587131337" height="16" fill="var(--p-buf)"><title>CPU · Node Buffer copy: 4.19 ms</title></rect><text x="636" y="22" class="val">167.8 ms</text><text x="120" y="47" class="lab" text-anchor="end">Ganesh GL</text><rect x="130" y="36" width="52.204349121239204" height="16" fill="var(--p-paint)"><title>Ganesh GL · paint / raster: 17.52 ms</title></rect><rect x="182.2043491212392" y="36" width="23.78016085790884" height="16" fill="var(--p-submit)"><title>Ganesh GL · submit: 7.98 ms</title></rect><rect x="205.98450997914804" y="36" width="1.0306821566875044" height="16" fill="var(--p-wait)"><title>Ganesh GL · GPU wait: 0.35 ms</title></rect><rect x="207.01519213583555" y="36" width="5.743223115877299" height="16" fill="var(--p-read)"><title>Ganesh GL · readback: 1.93 ms</title></rect><rect x="212.75841525171285" y="36" width="13.333333333333314" height="16" fill="var(--p-buf)"><title>Ganesh GL · Node Buffer copy: 4.48 ms</title></rect><text x="232.59219541257076" y="48" class="val">32.4 ms</text><text x="120" y="73" class="lab" text-anchor="end">Ganesh Vulkan</text><rect x="130" y="62" width="40.4855525767054" height="16" fill="var(--p-paint)"><title>Ganesh Vulkan · paint / raster: 13.59 ms</title></rect><rect x="170.4855525767054" y="62" width="11.507298182901394" height="16" fill="var(--p-submit)"><title>Ganesh Vulkan · submit: 3.86 ms</title></rect><rect x="181.9928507596068" y="62" width="10.506404527852254" height="16" fill="var(--p-wait)"><title>Ganesh Vulkan · GPU wait: 3.53 ms</title></rect><rect x="192.49925528745905" y="62" width="5.4274649985105725" height="16" fill="var(--p-read)"><title>Ganesh Vulkan · readback: 1.82 ms</title></rect><rect x="197.92672028596962" y="62" width="12.683943997616922" height="16" fill="var(--p-buf)"><title>Ganesh Vulkan · Node Buffer copy: 4.26 ms</title></rect><text x="217.17664581471553" y="74" class="val">27.3 ms</text><text x="120" y="99" class="lab" text-anchor="end">Graphite Vulkan</text><rect x="130" y="88" width="27.226690497467985" height="16" fill="var(--p-paint)"><title>Graphite Vulkan · paint / raster: 9.14 ms</title></rect><rect x="157.22669049746798" y="88" width="17.66458147155197" height="16" fill="var(--p-submit)"><title>Graphite Vulkan · submit: 5.93 ms</title></rect><rect x="174.89127196901995" y="88" width="39.737861185582375" height="16" fill="var(--p-wait)"><title>Graphite Vulkan · GPU wait: 13.34 ms</title></rect><rect x="214.62913315460233" y="88" width="5.79088471849866" height="16" fill="var(--p-read)"><title>Graphite Vulkan · readback: 1.94 ms</title></rect><rect x="220.420017873101" y="88" width="13.050342567768837" height="16" fill="var(--p-buf)"><title>Graphite Vulkan · Node Buffer copy: 4.38 ms</title></rect><text x="241.86237712243076" y="100" class="val">35.5 ms</text><rect x="130" y="125" width="10" height="10" fill="var(--p-paint)"/><text x="144" y="134" class="tick">paint / raster</text><rect x="244.39999999999998" y="125" width="10" height="10" fill="var(--p-submit)"/><text x="258.4" y="134" class="tick">submit</text><rect x="306" y="125" width="10" height="10" fill="var(--p-wait)"/><text x="320" y="134" class="tick">GPU wait</text><rect x="380.8" y="125" width="10" height="10" fill="var(--p-read)"/><text x="394.8" y="134" class="tick">readback</text><rect x="455.6" y="125" width="10" height="10" fill="var(--p-buf)"/><text x="469.6" y="134" class="tick">Node Buffer copy</text></svg>
+  <p class="note"><strong>Scene F</strong> (SVG paths), 1080p, median ms</p>
+  <svg viewBox="0 0 720 164" role="img" aria-label="Where a 1080p frame of scene F spends its time" class="chart"><text x="120" y="21" class="lab" text-anchor="end">CPU</text><rect x="130" y="10" width="493.27406179636637" height="16" fill="var(--p-paint)"><title>CPU · paint / raster: 323.79 ms</title></rect><rect x="623.2740617963664" y="10" width="6.488283309009148" height="16" fill="var(--p-buf)"><title>CPU · Node Buffer copy: 4.26 ms</title></rect><text x="636" y="22" class="val">328.2 ms</text><text x="120" y="47" class="lab" text-anchor="end">Ganesh GL</text><rect x="130" y="36" width="92.64579975442328" height="16" fill="var(--p-paint)"><title>Ganesh GL · paint / raster: 60.81 ms</title></rect><rect x="222.64579975442328" y="36" width="27.83913810491549" height="16" fill="var(--p-submit)"><title>Ganesh GL · submit: 18.27 ms</title></rect><rect x="250.48493785933877" y="36" width="4.695207597644156" height="16" fill="var(--p-wait)"><title>Ganesh GL · GPU wait: 3.08 ms</title></rect><rect x="255.18014545698293" y="36" width="2.835101018564501" height="16" fill="var(--p-read)"><title>Ganesh GL · readback: 1.86 ms</title></rect><rect x="258.0152464755474" y="36" width="6.846289079757639" height="16" fill="var(--p-buf)"><title>Ganesh GL · Node Buffer copy: 4.49 ms</title></rect><text x="270.4395457744655" y="48" class="val">88.2 ms</text><text x="120" y="73" class="lab" text-anchor="end">Ganesh Vulkan</text><rect x="130" y="62" width="78.72318384434215" height="16" fill="var(--p-paint)"><title>Ganesh Vulkan · paint / raster: 51.67 ms</title></rect><rect x="208.72318384434215" y="62" width="25.544854314502743" height="16" fill="var(--p-submit)"><title>Ganesh Vulkan · submit: 16.77 ms</title></rect><rect x="234.2680381588449" y="62" width="20.831365571118198" height="16" fill="var(--p-wait)"><title>Ganesh Vulkan · GPU wait: 13.67 ms</title></rect><rect x="255.0994037299631" y="62" width="8.423037899861953" height="16" fill="var(--p-read)"><title>Ganesh Vulkan · readback: 5.53 ms</title></rect><rect x="263.52244162982504" y="62" width="6.285667277053847" height="16" fill="var(--p-buf)"><title>Ganesh Vulkan · Node Buffer copy: 4.13 ms</title></rect><text x="275.4607671378124" y="74" class="val">91.5 ms</text><text x="120" y="99" class="lab" text-anchor="end">Graphite Vulkan</text><rect x="130" y="88" width="7.339880014746797" height="16" fill="var(--p-paint)"><title>Graphite Vulkan · paint / raster: 4.82 ms</title></rect><rect x="137.3398800147468" y="88" width="7.109842264180827" height="16" fill="var(--p-submit)"><title>Graphite Vulkan · submit: 4.67 ms</title></rect><rect x="144.44972227892762" y="88" width="20.453555225817865" height="16" fill="var(--p-wait)"><title>Graphite Vulkan · GPU wait: 13.43 ms</title></rect><rect x="164.9032775047455" y="88" width="3.2433799400987766" height="16" fill="var(--p-read)"><title>Graphite Vulkan · readback: 2.13 ms</title></rect><rect x="168.14665744484427" y="88" width="6.823437647582153" height="16" fill="var(--p-buf)"><title>Graphite Vulkan · Node Buffer copy: 4.48 ms</title></rect><text x="181.83997294390429" y="100" class="val">30.1 ms</text><rect x="130" y="125" width="10" height="10" fill="var(--p-paint)"/><text x="144" y="134" class="tick">paint / raster</text><rect x="244.39999999999998" y="125" width="10" height="10" fill="var(--p-submit)"/><text x="258.4" y="134" class="tick">submit</text><rect x="306" y="125" width="10" height="10" fill="var(--p-wait)"/><text x="320" y="134" class="tick">GPU wait</text><rect x="380.8" y="125" width="10" height="10" fill="var(--p-read)"/><text x="394.8" y="134" class="tick">readback</text><rect x="455.6" y="125" width="10" height="10" fill="var(--p-buf)"/><text x="469.6" y="134" class="tick">Node Buffer copy</text></svg>
+  <p class="note">First frames include shader compilation: scene E takes 97 ms (GL), 144 ms (Vulkan) and 136 ms (Graphite) on its first frame against 27–36 ms warm.</p>
+</section>
+
+<section id="animated">
+  <h2>Animated workload</h2>
+  <p>1080p, 30 fps, through the page's <code>seek(ms)</code> contract. A frame is the seek (JavaScript and animation update) plus the render. Sampled frames match CPU (<em>minor</em>) on every backend.</p>
+  <div class="table"><table><thead><tr><th>scene</th><th class="num">frames</th><th>backend</th><th class="num">avg ms</th><th class="num">median</th><th class="num">p95</th><th class="num">total</th><th class="num">no-readback median</th><th class="num">PNG encode median</th></tr></thead><tbody>
+<tr><td>effects</td><td class="num">120</td><td>CPU</td><td class="num">35.3</td><td class="num">35.2</td><td class="num">39.6</td><td class="num">6.75 s</td><td class="num">29.4</td><td class="num">110.4</td></tr>
+<tr><td>effects</td><td class="num">120</td><td>Ganesh GL</td><td class="num">13.3</td><td class="num">12.9</td><td class="num">17.3</td><td class="num">4.13 s</td><td class="num">7.0</td><td class="num">108.3</td></tr>
+<tr><td>effects</td><td class="num">120</td><td>Ganesh Vulkan</td><td class="num">12.8</td><td class="num">11.5</td><td class="num">17.9</td><td class="num">4.02 s</td><td class="num">6.3</td><td class="num">110.7</td></tr>
+<tr><td>effects</td><td class="num">120</td><td>Graphite</td><td class="num">13.4</td><td class="num">11.9</td><td class="num">19.8</td><td class="num">4.09 s</td><td class="num">5.3</td><td class="num">108.3</td></tr>
+<tr><td>effects</td><td class="num">300</td><td>CPU</td><td class="num">34.7</td><td class="num">34.1</td><td class="num">38.6</td><td class="num">16.69 s</td><td class="num"></td><td class="num"></td></tr>
+<tr><td>effects</td><td class="num">300</td><td>Ganesh GL</td><td class="num">14.5</td><td class="num">14.9</td><td class="num">19.1</td><td class="num">10.61 s</td><td class="num"></td><td class="num"></td></tr>
+<tr><td>effects</td><td class="num">300</td><td>Ganesh Vulkan</td><td class="num">14.4</td><td class="num">14.9</td><td class="num">19.1</td><td class="num">10.59 s</td><td class="num"></td><td class="num"></td></tr>
+<tr><td>effects</td><td class="num">300</td><td>Graphite</td><td class="num">16.8</td><td class="num">18.1</td><td class="num">22.5</td><td class="num">11.38 s</td><td class="num"></td><td class="num"></td></tr>
+<tr><td>css</td><td class="num">120</td><td>CPU</td><td class="num">22.4</td><td class="num">22.9</td><td class="num">27.1</td><td class="num">5.18 s</td><td class="num">17.8</td><td class="num">67.4</td></tr>
+<tr><td>css</td><td class="num">120</td><td>Ganesh GL</td><td class="num">12.2</td><td class="num">11.7</td><td class="num">15.4</td><td class="num">3.99 s</td><td class="num">5.7</td><td class="num">68.7</td></tr>
+<tr><td>css</td><td class="num">120</td><td>Ganesh Vulkan</td><td class="num">12.6</td><td class="num">12.0</td><td class="num">16.7</td><td class="num">4.07 s</td><td class="num">5.9</td><td class="num">67.5</td></tr>
+<tr><td>css</td><td class="num">120</td><td>Graphite</td><td class="num">15.0</td><td class="num">13.1</td><td class="num">22.3</td><td class="num">4.34 s</td><td class="num">7.1</td><td class="num">68.0</td></tr>
+<tr><td>css</td><td class="num">300</td><td>CPU</td><td class="num">24.6</td><td class="num">24.9</td><td class="num">28.7</td><td class="num">13.64 s</td><td class="num"></td><td class="num"></td></tr>
+<tr><td>css</td><td class="num">300</td><td>Ganesh GL</td><td class="num">13.6</td><td class="num">13.6</td><td class="num">17.0</td><td class="num">10.35 s</td><td class="num"></td><td class="num"></td></tr>
+<tr><td>css</td><td class="num">300</td><td>Ganesh Vulkan</td><td class="num">14.2</td><td class="num">14.3</td><td class="num">18.0</td><td class="num">10.51 s</td><td class="num"></td><td class="num"></td></tr>
+<tr><td>css</td><td class="num">300</td><td>Graphite</td><td class="num">18.0</td><td class="num">19.6</td><td class="num">23.7</td><td class="num">11.65 s</td><td class="num"></td><td class="num"></td></tr>
+<tr><td>gsap</td><td class="num">120</td><td>CPU</td><td class="num">8.8</td><td class="num">8.3</td><td class="num">12.8</td><td class="num">3.60 s</td><td class="num">3.4</td><td class="num">32.2</td></tr>
+<tr><td>gsap</td><td class="num">120</td><td>Ganesh GL</td><td class="num">9.2</td><td class="num">8.7</td><td class="num">13.2</td><td class="num">3.63 s</td><td class="num">1.7</td><td class="num">32.4</td></tr>
+<tr><td>gsap</td><td class="num">120</td><td>Ganesh Vulkan</td><td class="num">8.9</td><td class="num">8.4</td><td class="num">12.3</td><td class="num">3.58 s</td><td class="num">1.7</td><td class="num">32.2</td></tr>
+<tr><td>gsap</td><td class="num">120</td><td>Graphite</td><td class="num">9.4</td><td class="num">8.7</td><td class="num">12.8</td><td class="num">3.66 s</td><td class="num">3.0</td><td class="num">31.4</td></tr>
+<tr><td>gsap</td><td class="num">300</td><td>CPU</td><td class="num">7.8</td><td class="num">7.3</td><td class="num">10.6</td><td class="num">8.57 s</td><td class="num"></td><td class="num"></td></tr>
+<tr><td>gsap</td><td class="num">300</td><td>Ganesh GL</td><td class="num">9.3</td><td class="num">9.3</td><td class="num">11.8</td><td class="num">9.04 s</td><td class="num"></td><td class="num"></td></tr>
+<tr><td>gsap</td><td class="num">300</td><td>Ganesh Vulkan</td><td class="num">10.0</td><td class="num">10.2</td><td class="num">12.2</td><td class="num">9.28 s</td><td class="num"></td><td class="num"></td></tr>
+<tr><td>gsap</td><td class="num">300</td><td>Graphite</td><td class="num">11.2</td><td class="num">11.9</td><td class="num">14.0</td><td class="num">9.61 s</td><td class="num"></td><td class="num"></td></tr>
+  </tbody></table></div>
+  <p>GPU frames are 2–3× faster where painting matters (effects, CSS motion) and equal where it does not (GSAP: painting takes about 2 ms; the frame is JavaScript plus output). PNG encoding (32–110 ms per frame) dominates every backend, so the GPU pays off with raw RGBA output to an encoder.</p>
+</section>
+
+<section id="readback">
+  <h2>Readback</h2>
+  <div class="qa"><blockquote>Is GPU→CPU readback the dominant bottleneck?</blockquote><p><strong>No.</strong></p></div>
+  <div class="table"><table><thead><tr><th>per frame</th><th class="num">720p</th><th class="num">1080p</th><th class="num">4K</th></tr></thead><tbody>
+    <tr><td>Ganesh GL readback</td><td class="num">0.8–1.0 ms</td><td class="num">1.9 ms</td><td class="num">6.5–7.4 ms</td></tr>
+    <tr><td>Ganesh Vulkan readback</td><td class="num">0.8–0.9 ms</td><td class="num">1.7–2.1 ms</td><td class="num">8.7–23 ms</td></tr>
+    <tr><td>Graphite readback</td><td class="num">0.9–1.1 ms</td><td class="num">1.7–2.2 ms</td><td class="num">18–19 ms</td></tr>
+    <tr><td>Node Buffer copy (every backend)</td><td class="num">1.7–2.1 ms</td><td class="num">4.0–4.5 ms</td><td class="num">19–21 ms</td></tr>
+    <tr><td>PNG encode (every backend)</td><td class="num">14–330 ms</td><td class="num">28–700 ms</td><td class="num">104–2700 ms</td></tr>
+  </tbody></table></div>
+  <ul>
+    <li>4K GL reads 33 MB in about 7 ms (4.8 GB/s). Vulkan's synchronous readback copies to a transfer buffer and then submits and waits again, so it varies with the frame.</li>
+    <li>For trivial scenes, readback plus the Buffer copy is the whole GPU frame, and the GPU is no faster than the CPU.</li>
+    <li>The cheapest win is on canvas-html's side: the Node Buffer is created by copying the pixel Vec. Reading back straight into the Buffer, or handing the Vec over, removes 4–20 ms per frame on both backends.</li>
+    <li>Both Skia engines also have asynchronous readback. Reading frame N back while frame N+1 paints would hide most of what is left, at the cost of one frame of latency (not built).</li>
+  </ul>
+</section>
+
+<section id="reuse">
+  <h2>Reuse, renderers, workers</h2>
+  <h3>Reuse</h3>
+  <p>Keep devices. A Vulkan or Graphite device takes 150–200 ms to create and 40–70 ms to close; a GL device about 7 ms once the EGL display exists. A new device also recompiles shaders. Creating a surface on an existing device takes 4–5 ms, so a renderer per document is fine on a shared device.</p>
+  <h3>Several renderers on one thread</h3>
+  <p>Throughput stays flat from 1 to 8 renderers. Sharing one device cuts GPU memory and setup: Ganesh Vulkan with 8 renderers uses 231 MiB of GPU memory on a shared device against 1254 MiB with one device each, and closes in 104 ms instead of 612 ms. Every configuration exited cleanly.</p>
+  <h3>Worker threads</h3>
+  <div class="table"><table><thead><tr><th>backend</th><th class="num">1 worker</th><th class="num">2</th><th class="num">4</th><th class="num">8</th></tr></thead><tbody>
+  <tr><td>cpu</td><td class="num">17.7 fps</td><td class="num">33.8 fps</td><td class="num">60.3 fps</td><td class="num">71.6 fps</td></tr><tr><td>gpu-gl</td><td class="num">27.6 fps</td><td class="num">51.9 fps</td><td class="num">81.6 fps</td><td class="num">68.9 fps</td></tr><tr><td>gpu-vulkan</td><td class="num">26.7 fps</td><td class="num">45.5 fps</td><td class="num">61.9 fps</td><td class="num">56.9 fps</td></tr><tr><td>gpu-graphite</td><td class="num">26.6 fps</td><td class="num">43.7 fps</td><td class="num">63.3 fps</td><td class="num">55.5 fps</td></tr>
+  </tbody></table></div>
+  <p>Workers cannot share a GPU device: Skia's GPU contexts and GL contexts belong to one thread. Each worker owns its device. Device creation slows down when many workers start at once (Vulkan 282 to 774 ms), so start workers once and keep them. GPU throughput peaks at 4 workers on this 8-vCPU machine. Every frame matched the single-worker run, and terminating workers mid-render left the process healthy.</p>
+</section>
+
+<section id="memory">
+  <h2>Memory and fonts</h2>
+  <ul>
+    <li>Per renderer with its own device: about 110 MiB of GPU memory on Ganesh Vulkan (an 8 MiB surface plus textures, glyph atlases and pipelines) and about 250 MiB on Graphite. The driver adds 95–140 MiB of host memory once per process.</li>
+    <li>No growth: 300 animated frames on one renderer and 30 create-render-close cycles stayed flat on every backend.</li>
+    <li>After close, memory does not return to the starting point on any backend, the CPU included. This is allocator and driver retention plus the Phase 3 findings (Stylo's per-thread caches, Skia's typeface cache). It does not grow per cycle.</li>
+    <li>GPU mode does not worsen font retention: memory is flat after warm-up on every backend, and glyph atlases go away with the GPU context. The typeface duplication from Phase 3 stays a separate CPU-side cleanup task.</li>
+  </ul>
+</section>
+
+<section id="determinism">
+  <h2>Determinism</h2>
+  <div class="table"><table><thead><tr><th>backend</th><th>5 fresh renderers</th><th>3 fresh processes</th><th>same page ×20</th><th>reloaded ×15</th></tr></thead><tbody>
+  <tr><td>CPU</td><td><span class="chip pass">identical</span></td><td><span class="chip pass">identical</span></td><td><span class="chip pass">identical</span></td><td><span class="chip pass">identical</span></td></tr>
+  <tr><td>Ganesh GL</td><td><span class="chip pass">identical</span></td><td><span class="chip pass">identical</span></td><td><span class="chip pass">identical</span></td><td><span class="chip pass">identical</span> after fix</td></tr>
+  <tr><td>Ganesh Vulkan</td><td><span class="chip pass">identical</span></td><td><span class="chip pass">identical</span></td><td><span class="chip pass">identical</span></td><td><span class="chip pass">identical</span> after fix</td></tr>
+  <tr><td>Graphite</td><td><span class="chip pass">identical</span></td><td><span class="chip pass">identical</span></td><td><span class="chip diag">varies ≤2 levels</span></td><td><span class="chip diag">varies ≤2 levels</span></td></tr>
+  </tbody></table></div>
+  <p>The first T4 run found a tiny drift when one Ganesh renderer reloaded a page with very large text. Skia's source showed the cause: glyphs above about 254 device pixels are drawn as GPU paths, and the context caches path geometry and reuses it within a tolerance. Disabling Skia's path renderers did not help; freeing the context's cached resources did. A Ganesh renderer now does that on every <code>load()</code>, and the re-run on the T4 is bit-exact. Renderers that share a device share those caches, so bit-exact output across documents needs one device per renderer or a cache flush between documents.</p>
+  <p class="note">The GSAP test scene replays differently on its first pass on every backend, including the unchanged production build. That is GSAP's seek behavior, not the GPU. Cross-GPU determinism is not claimed.</p>
+</section>
+
+<section id="failures">
+  <h2>Failures and fallback</h2>
+  <p>Each probe ran in its own process. Every process exited cleanly and could render afterwards.</p>
+  <ul>
+    <li><strong>No GPU or a broken driver:</strong> the constructor throws "GPU initialization failed (…)"; a CPU renderer still works.</li>
+    <li><strong>Surface too large:</strong> throws "GPU surface … could not be created"; the next GPU renderer works.</li>
+    <li><strong>Device lost</strong> (Ganesh): renders throw "GPU context is lost", including on renderers sharing the device; <code>close()</code> works; a new renderer gets a fresh device and the same pixels. Graphite cannot simulate device loss.</li>
+    <li><strong>Out of GPU memory</strong> (64 surfaces of 8192²): Vulkan reports "GPU out of memory" at #59 and recovers; Graphite fails surface creation at #59; GL never fails because the driver pages to system memory.</li>
+    <li><strong>No <code>close()</code>:</strong> garbage collection and process exit with live GPU renderers are clean.</li>
+  </ul>
+  <p>Policy: GPU is opt-in, failures throw an error that names the backend, and the caller decides whether to use CPU instead.</p>
+</section>
+
+<section id="build">
+  <h2>Build and distribution</h2>
+  <div class="table"><table><thead><tr><th>build</th><th class="num">binary</th><th>Skia binary</th></tr></thead><tbody>
+    <tr><td>production, before</td><td class="num">40.57 MB</td><td><code>ganesh-gl-jpegd-jpege-pdf</code></td></tr>
+    <tr><td>production, after (default)</td><td class="num">40.68 MB</td><td>same</td></tr>
+    <tr><td><code>experimental-gpu</code> (Ganesh GL)</td><td class="num">43.37 MB</td><td>same</td></tr>
+    <tr><td><code>experimental-gpu-vulkan</code></td><td class="num">44.09 MB</td><td><code>…-vulkan</code></td></tr>
+    <tr><td><code>experimental-graphite</code></td><td class="num">42.39 MB</td><td><code>graphite-…-vulkan</code></td></tr>
+  </tbody></table></div>
+  <ul>
+    <li>No new crates and no new link-time libraries. <code>libEGL.so.1</code> and <code>libvulkan.so.1</code> are loaded only when a GPU backend is requested.</li>
+    <li>On NVIDIA the driver also needs a glvnd EGL vendor file and a Vulkan ICD manifest. The Colab image had the driver libraries but neither file. Containers need the graphics driver capability, not just compute.</li>
+    <li>CI can run the whole suite on Mesa without a GPU, which is how this phase was validated before any GPU time. Performance numbers need a GPU runner.</li>
+  </ul>
+</section>
+
+<section id="blockers">
+  <h2>Remaining blockers</h2>
+  <div class="table"><table><thead><tr><th>blocker</th><th>severity</th><th>effort</th><th>arch. risk</th></tr></thead><tbody>
+    <tr><td>Output path: Buffer copy and PNG encoding dominate end-to-end time</td><td><span class="chip fail">high</span></td><td>low to medium</td><td>low</td></tr>
+    <tr><td>Deployment: drivers, EGL/Vulkan manifests, container capabilities; no GPU in CI</td><td><span class="chip fail">high</span></td><td>medium</td><td>low</td></tr>
+    <tr><td>Cold start: device creation and shader compilation (70–260 ms)</td><td><span class="chip diag">medium</span></td><td>low to medium</td><td>low</td></tr>
+    <tr><td>GPU worker scaling stops at 4 workers on 8 vCPUs</td><td><span class="chip diag">medium</span></td><td>medium</td><td>low</td></tr>
+    <tr><td>Shared devices allow tiny cross-document drift on large text</td><td><span class="chip pass">low</span></td><td>low</td><td>low</td></tr>
+    <tr><td>GL out-of-memory is invisible (driver pages)</td><td><span class="chip pass">low</span></td><td>low</td><td>low</td></tr>
+    <tr><td>Graphite: separate binary, image provider not bound, drift, no cache stats</td><td><span class="chip pass">low now</span></td><td>high</td><td>medium</td></tr>
+    <tr><td>Phase 3 typeface duplication (not GPU-related)</td><td><span class="chip pass">low</span></td><td>medium</td><td>low</td></tr>
+  </tbody></table></div>
+</section>
+
+<section id="recommendation">
+  <h2>Recommendation</h2>
+  <div class="qa">
+    <blockquote>Should canvas-html keep a GPU-backed Skia renderer path?</blockquote>
+    <p><strong>Yes</strong>, as an experimental, opt-in backend.</p>
+    <blockquote>Should CPU Skia remain the default and fallback?</blockquote>
+    <p><strong>Yes.</strong> It is deterministic across machines, needs no drivers, scales across CPU workers and wins on trivial pages.</p>
+    <blockquote>Which Skia GPU architecture goes into the next experiment?</blockquote>
+    <p><strong>Ganesh</strong>: Vulkan as the primary path, GL through EGL as the cheap-to-create alternative. Graphite stays on watch until rust-skia ships a combined binary and binds its image provider and cache controls.</p>
+    <blockquote>Is the project ready for Phase 4B (a user-facing WebGPU architecture)?</blockquote>
+    <p><strong>Yes</strong>, with two prerequisites: a raw-RGBA, copy-free output path, and a deployment story for GPU drivers.</p>
+    <blockquote>Dawn or wgpu first?</blockquote>
+    <p><strong>More evidence is needed.</strong> rust-skia has no Dawn backend, so Skia on Dawn would mean building Skia from source. canvas-html now creates its own Vulkan device and hands it to Skia, which is exactly the hook needed to share that device with wgpu. Phase 4B should test texture sharing both ways, starting with wgpu and Skia on one Vulkan device.</p>
+  </div>
+</section>
+
+<section id="checklist">
+  <h2>Acceptance checklist</h2>
+  <ul class="checks">
+    <li>Existing paint semantics work on a GPU-backed Skia surface</li>
+    <li>No JavaScript, DOM or layout architecture changes</li>
+    <li>Production CPU tests green; CPU pixels bit-identical before and after</li>
+    <li>GPU output visually equivalent to CPU, with the cause of each difference identified</li>
+    <li>GPU paint materially faster on paint-heavy workloads (3–22×)</li>
+    <li>Readback measured and understood (not the bottleneck)</li>
+    <li>Ownership stable and deterministic across repeated renders and reloads</li>
+    <li>Multi-renderer and worker behavior measured</li>
+    <li>No unbounded resource growth</li>
+    <li>Build and distribution implications documented</li>
+  </ul>
+  <p class="note">Full report: <code>canvas-html/PHASE4A_RESULTS.md</code>. Raw data, images and scripts: <code>canvas-html/experiments/phase4a/</code>. GPU time used: about 1.4 Colab compute units.</p>
+</section>
+</main>
+</div>
