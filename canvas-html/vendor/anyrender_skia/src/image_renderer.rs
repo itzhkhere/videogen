@@ -80,15 +80,26 @@ impl ImageRenderer for SkiaImageRenderer {
     }
 
     fn render<F: FnOnce(&mut Self::ScenePainter<'_>)>(&mut self, draw_fn: F, buffer: &mut [u8]) {
+        self.try_render(draw_fn, buffer).unwrap()
+    }
+}
+
+impl SkiaImageRenderer {
+    /// Like `ImageRenderer::render`, but a buffer that does not fit the image (shorter than
+    /// `width * height * 4` bytes) is an error instead of a panic, and nothing is drawn.
+    pub fn try_render<F: FnOnce(&mut SkiaScenePainter<'_>)>(&mut self, draw_fn: F, buffer: &mut [u8]) -> Result<(), String> {
         debug_timer!(timer, feature = "log_frame_times");
 
-        let mut surface = surfaces::wrap_pixels(
+        let needed = self.image_info.compute_min_byte_size();
+        let len = buffer.len();
+        let Some(mut surface) = surfaces::wrap_pixels(
             &self.image_info,
             &mut buffer[..],
             None,
             Some(&self.surface_props),
-        )
-        .unwrap();
+        ) else {
+            return Err(format!("cannot draw a {}x{} image into {len} bytes (needs {needed})", self.image_info.width(), self.image_info.height()));
+        };
 
         // Clear surface with transparent background to allow transparency in rendered images
         surface.canvas().clear(Color::TRANSPARENT);
@@ -105,5 +116,6 @@ impl ImageRenderer for SkiaImageRenderer {
         timer.record_time("cache next gen");
 
         timer.print_times("skia_raster: ");
+        Ok(())
     }
 }

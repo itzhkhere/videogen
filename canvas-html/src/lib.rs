@@ -6,6 +6,7 @@
 use std::sync::{Arc, Mutex};
 
 mod frames;
+mod target;
 
 use anyrender::{ImageRenderer, PaintScene as _};
 use anyrender_skia::SkiaImageRenderer;
@@ -61,7 +62,7 @@ impl NetProvider for LocalNet {
         };
         match data {
             Some(bytes) => handler.bytes(url.to_string(), Bytes::from(bytes)),
-            None => self.errors.lock().unwrap().push(format!("could not load {url}")),
+            None => self.errors.lock().unwrap_or_else(|e| e.into_inner()).push(format!("could not load {url}")),
         }
     }
 }
@@ -192,16 +193,12 @@ pub struct HtmlRenderer {
     /// The script clock's origin (virtual or real Instant).
     script_start: Option<Instant>,
     renderer: Painter,
-    /// Scratch frame for paths that keep the pixels (PNG, no-readback timing). RGBA frames are
-    /// not kept: each is handed to Node and the next frame gets a new allocation.
+    /// Scratch frame for paths that keep the pixels (PNG, diagnostics). RGBA frames from
+    /// render() are not kept: each is handed to Node and the next frame gets a new allocation.
+    /// Never exposed to JS.
     buffer: Vec<u8>,
-    /// Bytes of one RGBA frame (pixelWidth × pixelHeight × 4).
+    /// Bytes of one RGBA frame (pixelWidth × pixelHeight × 4, checked at construction).
     frame_bytes: usize,
-    /// Experimental Design B: frames returned by Buffer finalizers, reused (Phase 4A.1).
-    pool: Option<Arc<frames::FramePool>>,
-    /// How render() hands an RGBA frame to Node: transfer the frame (default) or clone it (the
-    /// Phase 4A path). Experiments only: `CANVAS_HTML_OUTPUT=clone`.
-    clone_output: bool,
     errors: Arc<Mutex<Vec<String>>>,
     js_errors: Vec<String>,
     epoch_ms: Option<f64>,
@@ -290,7 +287,7 @@ impl HtmlRenderer {
         if self.doc.is_none() {
             self.doc = Some(self.build_document()?);
         }
-        Ok(self.doc.as_mut().unwrap())
+        self.doc.as_mut().ok_or_else(|| Error::from_reason("no document loaded"))
     }
 
     /// With a real clock, run the timers that are due by now.
@@ -362,7 +359,7 @@ impl HtmlRenderer {
         let ph = (self.height as f64 * self.dpr).round() as u32;
         let bg = self.background;
         let dpr = self.dpr;
-        let doc = self.doc.as_mut().expect("document");
+        let doc = self.doc.as_mut().ok_or_else(|| Error::from_reason("no document loaded"))?;
         let draw = |scene: &mut anyrender_skia::SkiaScenePainter<'_>| {
             scene.fill(Fill::NonZero, Default::default(), bg, Default::default(), &Rect::new(0.0, 0.0, pw as f64, ph as f64));
             doc.with_base(|b| paint_scene(scene, b, dpr, pw, ph, 0, 0));
@@ -372,9 +369,10 @@ impl HtmlRenderer {
             Painter::Cpu(renderer) => {
                 let start = Instant::now();
                 match out {
-                    Some(o) => renderer.render(draw, o),
-                    None => renderer.render(draw, &mut self.buffer[..]),
+                    Some(o) => renderer.try_render(draw, o),
+                    None => renderer.try_render(draw, &mut self.buffer[..]),
                 }
+                .map_err(Error::from_reason)?;
                 Ok(PaintTimings { record_ns: start.elapsed().as_nanos(), ..Default::default() })
             }
             #[cfg(feature = "experimental-gpu")]
@@ -555,10 +553,9 @@ pub struct TimedRenderOptions {
     /// Also time Blitz's paint-command generation alone (an extra pass into a no-op painter),
     /// reported as `paintPrep`. Default false.
     pub measure_paint_prep: Option<bool>,
-    /// RGBA output: "transfer" (default; what render() does), "clone" (Phase 4A) or "pool".
+    /// RGBA output: "transfer" (default; what render() does) or "clone" (the Phase 4A path,
+    /// kept for diagnostics and A/B benchmarks only).
     pub output: Option<String>,
-    /// Design B: frames the pool keeps for reuse (default 3).
-    pub pool_size: Option<u32>,
 }
 
 
@@ -570,8 +567,8 @@ impl HtmlRenderer {
             return Err(Error::from_reason("width and height must be > 0"));
         }
         let dpr = options.device_pixel_ratio.unwrap_or(1.0);
-        if !(dpr > 0.0) {
-            return Err(Error::from_reason("devicePixelRatio must be > 0"));
+        if !(dpr > 0.0 && dpr.is_finite()) {
+            return Err(Error::from_reason(format!("devicePixelRatio must be a finite number > 0, got {dpr}")));
         }
         let pw = (options.width as f64 * dpr).round() as u32;
         let ph = (options.height as f64 * dpr).round() as u32;
@@ -612,8 +609,6 @@ impl HtmlRenderer {
             renderer: Painter::new(options.experimental_backend.as_deref(), options.experimental_gpu_share.as_deref(), pw, ph)?,
             buffer: Vec::new(),
             frame_bytes,
-            pool: None,
-            clone_output: std::env::var("CANVAS_HTML_OUTPUT").is_ok_and(|v| v == "clone"),
             errors: Arc::new(Mutex::new(Vec::new())),
             js_errors: Vec::new(),
             epoch_ms: match options.epoch_ms {
@@ -645,7 +640,7 @@ impl HtmlRenderer {
         }
         self.html = Some(html);
         self.base_url = base_url;
-        self.errors.lock().unwrap().clear();
+        self.errors.lock().unwrap_or_else(|e| e.into_inner()).clear();
         self.js_errors.clear();
         self.doc = Some(self.build_document()?);
         // GPU (Ganesh): cached path data (triangulations reused within a tolerance) would make a
@@ -660,7 +655,7 @@ impl HtmlRenderer {
     /// Draws the document as it is now. Like a browser's rendering step, it first updates running
     /// Web Animations and runs requestAnimationFrame callbacks, then styles, lays out and paints.
     /// Returns RGBA pixels (`pixelWidth` x `pixelHeight`, 4 bytes each, row by row) or a PNG.
-    #[napi]
+    #[napi(catch_unwind)]
     pub fn render<'env>(&mut self, env: &'env Env, options: Option<RenderOptions>) -> Result<BufferSlice<'env>> {
         let png = match options.and_then(|o| o.format).as_deref() {
             None | Some("rgba") => false,
@@ -674,11 +669,6 @@ impl HtmlRenderer {
             return Err(e);
         }
         if !png {
-            if self.clone_output {
-                let copy = frame.clone();
-                self.buffer = frame;
-                return BufferSlice::from_data(env, copy);
-            }
             // The frame Vec becomes the Buffer's memory (napi external buffer, no copy; Node counts
             // it in `external`) and is freed by its finalizer; the renderer keeps no reference.
             return BufferSlice::from_data(env, frame);
@@ -738,11 +728,11 @@ impl HtmlRenderer {
     pub fn boxes(&mut self) -> Result<Vec<ElementBox>> {
         self.resolve()?;
         let mut out = Vec::new();
-        self.doc.as_mut().unwrap().with_base(|doc| {
+        self.doc.as_mut().ok_or_else(|| Error::from_reason("no document loaded"))?.with_base(|doc| {
             let root = doc.root_element();
             let mut stack = vec![(root.id, 0.0f64, 0.0f64)];
             while let Some((id, px, py)) = stack.pop() {
-                let node = doc.get_node(id).unwrap();
+                let Some(node) = doc.get_node(id) else { continue };
                 let l = node.final_layout();
                 let (x, y) = (px + l.location.x as f64, py + l.location.y as f64);
                 if let Some(el) = node.element_data() {
@@ -772,10 +762,10 @@ impl HtmlRenderer {
     pub fn missing_glyphs(&mut self) -> Result<Vec<MissingGlyphs>> {
         self.resolve()?;
         let mut out = Vec::new();
-        self.doc.as_mut().unwrap().with_base(|doc| {
+        self.doc.as_mut().ok_or_else(|| Error::from_reason("no document loaded"))?.with_base(|doc| {
             let mut stack = vec![doc.root_element().id];
             while let Some(id) = stack.pop() {
-                let node = doc.get_node(id).unwrap();
+                let Some(node) = doc.get_node(id) else { continue };
                 if let Some(el) = node.element_data() {
                     if let Some(text_layout) = el.inline_layout_data.as_ref() {
                         // A character is drawn when it belongs to a shaped cluster whose glyphs are
@@ -841,7 +831,7 @@ impl HtmlRenderer {
     /// Resources (images, fonts, stylesheets) that could not be loaded so far.
     #[napi(getter)]
     pub fn load_errors(&self) -> Vec<String> {
-        self.errors.lock().unwrap().clone()
+        self.errors.lock().unwrap_or_else(|e| e.into_inner()).clone()
     }
 
     /// Frame JS and style/layout, timed, plus Blitz's command generation alone when asked.
@@ -861,7 +851,7 @@ impl HtmlRenderer {
             let pw = (self.width as f64 * self.dpr).round() as u32;
             let ph = (self.height as f64 * self.dpr).round() as u32;
             let dpr = self.dpr;
-            let doc = self.doc.as_mut().expect("document");
+            let doc = self.doc.as_mut().ok_or_else(|| Error::from_reason("no document loaded"))?;
             let start = Instant::now();
             doc.with_base(|b| paint_scene(&mut anyrender::NullScenePainter, b, dpr, pw, ph, 0, 0));
             t.insert("paintPrep".into(), start.elapsed().as_nanos() as f64);
@@ -891,20 +881,20 @@ impl HtmlRenderer {
     /// Experimental (Phase 4A, 4A.1): render like `render()` and report the time of every step.
     /// The backend that drew the frame is named in the result; nothing falls back silently.
     /// `output` picks how an RGBA frame leaves the renderer: "transfer" (default, what render()
-    /// does: the frame Vec becomes the Buffer), "clone" (the Phase 4A path: copy the renderer's
-    /// frame into a new Buffer) or "pool" (Design B: reuse frames returned by finalizers).
+    /// does: the frame Vec becomes the Buffer) or "clone" (diagnostics only: the Phase 4A path,
+    /// which copies the renderer's frame into a new Buffer).
     #[napi(js_name = "_renderTimed")]
     pub fn render_timed<'env>(&mut self, env: &'env Env, options: Option<TimedRenderOptions>) -> Result<Object<'env>> {
         let total = Instant::now();
-        let o = options.unwrap_or(TimedRenderOptions { format: None, readback: None, measure_paint_prep: None, output: None, pool_size: None });
+        let o = options.unwrap_or(TimedRenderOptions { format: None, readback: None, measure_paint_prep: None, output: None });
         let format = o.format.unwrap_or_else(|| "rgba".into());
         let output = o.output.unwrap_or_else(|| "transfer".into());
         let readback = o.readback.unwrap_or(true) || format != "none";
         if !matches!(format.as_str(), "rgba" | "png" | "none") {
             return Err(Error::from_reason(format!("format must be \"rgba\", \"png\" or \"none\", got {format:?}")));
         }
-        if !matches!(output.as_str(), "transfer" | "transfer-huge" | "clone" | "pool") {
-            return Err(Error::from_reason(format!("output must be one of transfer, transfer-huge, clone, pool; got {output:?}")));
+        if !matches!(output.as_str(), "transfer" | "clone") {
+            return Err(Error::from_reason(format!("output must be \"transfer\" or \"clone\", got {output:?}")));
         }
         let mut t: HashMap<String, f64> = HashMap::new();
         self.prepare_timed(&mut t, o.measure_paint_prep.unwrap_or(false))?;
@@ -955,46 +945,13 @@ impl HtmlRenderer {
                 t.insert("buffer".into(), start.elapsed().as_nanos() as f64);
                 Some(b)
             }
-            (_, "transfer" | "transfer-huge") => {
+            _ => {
                 let start = Instant::now();
-                let mut frame = if output == "transfer-huge" {
-                    frames::alloc_frame_huge(self.frame_bytes).map_err(Error::from_reason)?
-                } else {
-                    self.next_frame()?
-                };
+                let mut frame = self.next_frame()?;
                 t.insert("alloc".into(), start.elapsed().as_nanos() as f64);
                 self.paint_timed(&mut t, Some(&mut frame))?;
                 let start = Instant::now();
                 let b = BufferSlice::from_data(env, frame)?;
-                t.insert("buffer".into(), start.elapsed().as_nanos() as f64);
-                Some(b)
-            }
-            _ => {
-                let size = o.pool_size.unwrap_or(3).clamp(1, 64) as usize;
-                let pool = match &self.pool {
-                    Some(p) if p.max_free() == size && p.len() == self.frame_bytes => p.clone(),
-                    _ => {
-                        let p = frames::FramePool::new(self.frame_bytes, size);
-                        self.pool = Some(p.clone());
-                        p
-                    }
-                };
-                let start = Instant::now();
-                let mut frame = pool.take().map_err(Error::from_reason)?;
-                t.insert("alloc".into(), start.elapsed().as_nanos() as f64);
-                if let Err(e) = self.paint_timed(&mut t, Some(&mut frame)) {
-                    pool.give_back(frame);
-                    return Err(e);
-                }
-                let start = Instant::now();
-                let ptr = frame.as_mut_ptr();
-                let len = frame.len();
-                // SAFETY: `ptr`/`len` describe `frame`'s heap block, which moves into the finalize
-                // hint unchanged (moving a Vec does not move its heap memory) and is only freed or
-                // reused after V8 finalizes this Buffer. The renderer keeps no reference to it.
-                let b = unsafe {
-                    BufferSlice::from_external(env, ptr, len, (pool, frame), |_, (pool, frame): (Arc<frames::FramePool>, Vec<u8>)| pool.give_back(frame))?
-                };
                 t.insert("buffer".into(), start.elapsed().as_nanos() as f64);
                 Some(b)
             }
@@ -1003,23 +960,47 @@ impl HtmlRenderer {
         self.timed_result(env, t, pixels)
     }
 
-    /// Experimental (Phase 4A.1, Design C): render into a caller-owned Buffer of exactly
-    /// pixelWidth × pixelHeight × 4 bytes. No allocation and no copy in canvas-html: the CPU
-    /// rasterizes, or the GPU reads back, straight into it. The caller decides when to reuse it;
-    /// while this call runs the Buffer must not be shared with another thread. Returns the
-    /// timings.
-    #[napi(js_name = "_renderInto")]
-    pub fn render_into<'env>(&mut self, env: &'env Env, mut target: BufferSlice<'env>) -> Result<Object<'env>> {
+    /// Bytes of one RGBA frame: `pixelWidth × pixelHeight × 4`, the exact size `renderInto`
+    /// needs. Fixed for the renderer's life (size and devicePixelRatio cannot change).
+    #[napi(getter)]
+    pub fn frame_byte_length(&self) -> f64 {
+        self.frame_bytes as f64
+    }
+
+    /// Draws the document as it is now into `target`, a caller-owned `Buffer`, `Uint8Array` or
+    /// `Uint8ClampedArray` of exactly `frameByteLength` bytes over an ordinary `ArrayBuffer`.
+    /// Same frame step as `render()` (Web Animations, requestAnimationFrame callbacks, style,
+    /// layout, paint) and the same bytes as `render()` would return. Synchronous: when it
+    /// returns, `target` holds the whole frame; canvas-html allocates and copies nothing and keeps
+    /// no reference to `target`. A rejected target throws before anything runs (no frame step,
+    /// no write).
+    #[napi(catch_unwind)]
+    pub fn render_into(&mut self, env: &Env, target: Unknown<'_>) -> Result<()> {
+        let mut target = self.checked_target(env, &target, "target")?;
+        self.prepare_frame()?;
+        // SAFETY: inside the native call that validated `target`; this is the only slice of it.
+        self.paint_into(Some(unsafe { target.bytes() }))?;
+        Ok(())
+    }
+
+    /// Diagnostics/benchmarks (Phase 4A.1/4A.2): `renderInto` that also returns the time of
+    /// every step, like `_renderTimed`. Private; not part of the supported API.
+    #[napi(js_name = "_renderIntoTimed")]
+    pub fn render_into_timed<'env>(&mut self, env: &'env Env, target: Unknown<'_>) -> Result<Object<'env>> {
         let total = Instant::now();
-        self.check_open()?;
-        if target.len() != self.frame_bytes {
-            return Err(Error::from_reason(format!("target Buffer is {} bytes, the frame needs {}", target.len(), self.frame_bytes)));
-        }
+        let mut target = self.checked_target(env, &target, "target")?;
         let mut t: HashMap<String, f64> = HashMap::new();
         self.prepare_timed(&mut t, false)?;
-        self.paint_timed(&mut t, Some(&mut target[..]))?;
+        // SAFETY: inside the native call that validated `target`; this is the only slice of it.
+        self.paint_timed(&mut t, Some(unsafe { target.bytes() }))?;
         t.insert("total".into(), total.elapsed().as_nanos() as f64);
         self.timed_result(env, t, None)
+    }
+
+    /// An open renderer and a valid one-frame target (see `target.rs`), checked in that order.
+    fn checked_target(&self, env: &Env, value: &Unknown<'_>, what: &str) -> Result<target::ByteTarget> {
+        self.check_open()?;
+        target::ByteTarget::from_js(env, value, self.frame_bytes, what)
     }
 
     /// Moves the page to `t` ms: the page's own `seek(t)` (page contract) or the frozen clock.
@@ -1047,7 +1028,7 @@ impl HtmlRenderer {
         let ph = (self.height as f64 * self.dpr).round() as u32;
         let bg = self.background;
         let dpr = self.dpr;
-        let doc = self.doc.as_mut().expect("document");
+        let doc = self.doc.as_mut().ok_or_else(|| Error::from_reason("no document loaded"))?;
         let draw = |scene: &mut anyrender_skia::SkiaScenePainter<'_>| {
             scene.fill(Fill::NonZero, Default::default(), bg, Default::default(), &Rect::new(0.0, 0.0, pw as f64, ph as f64));
             doc.with_base(|b| paint_scene(scene, b, dpr, pw, ph, 0, 0));
@@ -1118,11 +1099,12 @@ impl HtmlRenderer {
     /// Experimental (Phase 4A.1): complete the oldest frame in flight into `target` (exactly one
     /// frame of bytes). Returns its index and timings (gpuWait, readback, latency).
     #[napi(js_name = "_pipelineComplete")]
-    pub fn pipeline_complete<'env>(&mut self, env: &'env Env, mut target: BufferSlice<'env>) -> Result<Object<'env>> {
-        self.check_open()?;
+    pub fn pipeline_complete<'env>(&mut self, env: &'env Env, target: Unknown<'_>) -> Result<Object<'env>> {
+        let mut target = self.checked_target(env, &target, "target")?;
         #[cfg(feature = "experimental-gpu")]
         {
-            let c = self.gpu_renderer()?.pipeline_complete(&mut target[..]).map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
+            // SAFETY: inside the native call that validated `target`; the only slice of it.
+            let c = self.gpu_renderer()?.pipeline_complete(unsafe { target.bytes() }).map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
             let mut o = Object::new(env)?;
             o.set("index", c.index as f64)?;
             let t: HashMap<String, f64> = [("gpuWait", c.wait_ns), ("readback", c.readback_ns), ("latency", c.latency_ns)].into_iter().map(|(k, v)| (k.to_string(), v as f64)).collect();
@@ -1154,7 +1136,7 @@ impl HtmlRenderer {
     /// `mode`: "sync" (render, wait, read back; any backend), "deferred" or "pbo" (GPU pipeline
     /// with up to `depth` frames in flight). Returns per-frame timings.
     #[napi(js_name = "_renderFramesExperimental")]
-    pub fn render_frames_experimental<'env>(&mut self, env: &'env Env, times: Vec<f64>, mut targets: Vec<BufferSlice<'env>>, options: Option<FramesOptions>) -> Result<Object<'env>> {
+    pub fn render_frames_experimental<'env>(&mut self, env: &'env Env, times: Vec<f64>, targets: Vec<Unknown<'_>>, options: Option<FramesOptions>) -> Result<Object<'env>> {
         self.check_open()?;
         let o = options.unwrap_or(FramesOptions { mode: None, depth: None, seek: None });
         let mode = o.mode.unwrap_or_else(|| "sync".into());
@@ -1168,9 +1150,13 @@ impl HtmlRenderer {
         if targets.is_empty() {
             return Err(Error::from_reason("targets must hold at least one frame Buffer"));
         }
-        if let Some(bad) = targets.iter().find(|b| b.len() != self.frame_bytes) {
-            return Err(Error::from_reason(format!("every target must be {} bytes, one is {}", self.frame_bytes, bad.len())));
-        }
+        // Validated like renderInto's target. The same view may appear twice, so a slice of a
+        // target is only ever made for one write and dropped before the next one.
+        let mut targets = targets
+            .iter()
+            .enumerate()
+            .map(|(i, t)| target::ByteTarget::from_js(env, t, self.frame_bytes, &format!("targets[{i}]")))
+            .collect::<Result<Vec<_>>>()?;
         let k = targets.len();
         let mut series: HashMap<String, Vec<f64>> = HashMap::new();
         let mut push = |k: &str, v: f64| series.entry(k.to_string()).or_default().push(v);
@@ -1184,7 +1170,8 @@ impl HtmlRenderer {
                     let start = Instant::now();
                     self.prepare_frame()?;
                     push("prepare", start.elapsed().as_nanos() as f64);
-                    let p = self.paint_into(Some(&mut targets[i % k][..]))?;
+                    // SAFETY: validated in this call; the slice lives for this one write only.
+                    let p = self.paint_into(Some(unsafe { targets[i % k].bytes() }))?;
                     push("paint", p.record_ns as f64);
                     push("gpuSubmit", p.submit_ns as f64);
                     push("gpuWait", p.wait_ns as f64);
@@ -1205,7 +1192,8 @@ impl HtmlRenderer {
                         self.prepare_frame()?;
                         push("prepare", start.elapsed().as_nanos() as f64);
                         if self.gpu_renderer()?.pipeline_in_flight() >= depth {
-                            let c = self.gpu_renderer()?.pipeline_complete(&mut targets[next_out % k][..]).map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
+                            // SAFETY: validated in this call; the slice lives for this one write only.
+                            let c = self.gpu_renderer()?.pipeline_complete(unsafe { targets[next_out % k].bytes() }).map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
                             next_out += 1;
                             push("gpuWait", c.wait_ns as f64);
                             push("readback", c.readback_ns as f64);
@@ -1216,7 +1204,8 @@ impl HtmlRenderer {
                         push("gpuSubmit", p.submit_ns as f64);
                     }
                     while self.gpu_renderer()?.pipeline_in_flight() > 0 {
-                        let c = self.gpu_renderer()?.pipeline_complete(&mut targets[next_out % k][..]).map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
+                        // SAFETY: validated in this call; the slice lives for this one write only.
+                        let c = self.gpu_renderer()?.pipeline_complete(unsafe { targets[next_out % k].bytes() }).map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
                         next_out += 1;
                         push("gpuWait", c.wait_ns as f64);
                         push("readback", c.readback_ns as f64);
@@ -1256,20 +1245,6 @@ impl HtmlRenderer {
         }
         #[cfg(not(all(target_os = "linux", target_env = "gnu")))]
         serde_json::Value::Null
-    }
-
-    /// Experimental (Phase 4A.1): Design B pool counters, or null without a pool.
-    #[napi(js_name = "_poolStats")]
-    pub fn pool_stats(&self) -> serde_json::Value {
-        use std::sync::atomic::Ordering::Relaxed;
-        match &self.pool {
-            None => serde_json::Value::Null,
-            Some(p) => serde_json::json!({
-                "frameBytes": p.len(), "maxFree": p.max_free(), "free": p.free_count(),
-                "allocated": p.allocated.load(Relaxed), "reused": p.reused.load(Relaxed),
-                "returned": p.returned.load(Relaxed), "discarded": p.discarded.load(Relaxed),
-            }),
-        }
     }
 
     /// Experimental: the backend, the GPU device description and Skia's GPU resource cache.
@@ -1343,8 +1318,6 @@ impl HtmlRenderer {
         self.html = None;
         self.fonts.clear();
         self.buffer = Vec::new();
-        // Outstanding pooled Buffers keep the pool alive through their finalizers.
-        self.pool = None;
         // Frames in flight are discarded after the GPU finished them (Phase 4A.1 pipeline).
         self.pipeline_stop();
         self.renderer = Painter::Closed;

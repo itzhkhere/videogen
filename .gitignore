@@ -1,5 +1,6 @@
 # Built artifacts
 target/
+target-gpu/
 *.node
 node_modules/
 # Blitz is cloned next to canvas-html by canvas-html/scripts/setup-blitz.sh
