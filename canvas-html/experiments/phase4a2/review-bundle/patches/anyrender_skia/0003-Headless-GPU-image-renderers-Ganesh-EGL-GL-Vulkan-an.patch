@@ -1,0 +1,900 @@
+From 4648be34631b4aabf52e88db28cbc882065923d1 Mon Sep 17 00:00:00 2001
+From: local <l@l>
+Date: Tue, 6 Oct 2026 11:13:56 +0000
+Subject: [PATCH] Headless GPU image renderers: Ganesh (EGL/GL, Vulkan) and
+ Graphite (Vulkan)
+
+Offscreen renderers that paint the same SkiaScenePainter commands into a GPU
+render target and read the pixels back, for servers without a window or
+display: SkiaGpuImageRenderer (Ganesh; OpenGL through an EGL device and a
+surfaceless context, or Vulkan without surface extensions) and
+SkiaGraphiteImageRenderer (Graphite on Vulkan). Both report per-frame
+record/submit/wait/readback times and may share one device per thread.
+
+skia-safe's "gl" becomes the default feature "ganesh-gl" (the window
+renderer needs it), so that a Graphite-only Skia binary can be used:
+rust-skia publishes no binary with both Ganesh and Graphite. Graphite drops
+draws of raster images, and rust-skia does not bind Recorder image
+providers, so the scene painter uploads images with the recorder first.
+
+Also: purge_font_cache() for retention measurements.
+---
+ Cargo.toml                     |  13 +-
+ src/gpu_common.rs              | 146 +++++++++++++
+ src/gpu_image_renderer.rs      | 369 +++++++++++++++++++++++++++++++++
+ src/graphite_image_renderer.rs | 160 ++++++++++++++
+ src/image_renderer.rs          |   4 +
+ src/lib.rs                     |  27 ++-
+ src/scene.rs                   |  19 +-
+ src/window_renderer.rs         |   2 +
+ 8 files changed, 736 insertions(+), 4 deletions(-)
+ create mode 100644 src/gpu_common.rs
+ create mode 100644 src/gpu_image_renderer.rs
+ create mode 100644 src/graphite_image_renderer.rs
+
+diff --git a/Cargo.toml b/Cargo.toml
+index fe50715..0e437d6 100644
+--- a/Cargo.toml
++++ b/Cargo.toml
+@@ -36,6 +36,17 @@ log_frame_times = [
+ pixels_window_renderer = ["dep:pixels_window_renderer"]
+ softbuffer_window_renderer = ["dep:softbuffer_window_renderer"]
+ vulkan = ["skia-safe/vulkan"]
++# canvas-html: Skia's "gl" (Ganesh + OpenGL) was unconditional; it is a default feature so that a
++# Graphite-only build (`headless-graphite`, no Ganesh/GL binary) is possible. The window renderer
++# needs it (or Metal).
++default = ["ganesh-gl"]
++ganesh-gl = ["skia-safe/gl"]
++# canvas-html: offscreen GPU rendering with Ganesh (SkiaGpuImageRenderer): OpenGL via EGL, plus
++# Vulkan with `vulkan`. Off by default.
++headless-gpu = ["ganesh-gl"]
++# canvas-html: offscreen GPU rendering with Graphite on Vulkan (SkiaGraphiteImageRenderer). Needs
++# default-features = false (rust-skia ships no Ganesh+Graphite binary).
++headless-graphite = ["vulkan", "skia-safe/graphite"]
+ 
+ [lib]
+ name = "anyrender_skia"
+@@ -126,7 +137,7 @@ features = [
+ 
+ [target.'cfg(not(any(target_os = "macos", target_os = "ios")))'.dependencies.skia-safe]
+ version = "0.153.3"
+-features = ["gl"]
++features = []
+ 
+ [target.'cfg(target_os = "ios")'.dependencies.objc2-ui-kit]
+ version = "0.3.2"
+diff --git a/src/gpu_common.rs b/src/gpu_common.rs
+new file mode 100644
+index 0000000..de8a9aa
+--- /dev/null
++++ b/src/gpu_common.rs
+@@ -0,0 +1,146 @@
++//! Shared by the headless GPU renderers (Ganesh: `gpu_image_renderer`, Graphite:
++//! `graphite_image_renderer`): the error type and a headless Vulkan device.
++
++#[derive(Debug, Clone)]
++pub struct GpuError(pub String);
++
++impl std::fmt::Display for GpuError {
++    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
++        write!(f, "{}", self.0)
++    }
++}
++
++impl std::error::Error for GpuError {}
++
++pub(crate) fn err(context: &str, e: impl std::fmt::Display) -> GpuError {
++    GpuError(format!("{context}: {e}"))
++}
++
++/// Where one GPU frame spends its time (nanoseconds, measured on the calling thread).
++#[derive(Debug, Clone, Copy, Default)]
++pub struct GpuFrameTimings {
++    /// Painting into the canvas: AnyRender commands recorded into Skia's GPU op lists.
++    pub record_ns: u128,
++    /// `flush` + `submit`: Skia turns its ops into API commands and hands them to the driver.
++    pub submit_ns: u128,
++    /// Waiting for the GPU to finish the frame (`submit(SyncCpu::Yes)` after the flush).
++    pub wait_ns: u128,
++    /// GPU → CPU copy of the pixels (0 when not read back).
++    pub readback_ns: u128,
++}
++
++#[cfg(feature = "vulkan")]
++pub(crate) use vk::VkDevice;
++
++#[cfg(feature = "vulkan")]
++mod vk {
++    use super::{GpuError, err};
++    use ash::vk::{self as avk, Handle};
++    use skia_safe::gpu::vk::{BackendContext, GetProcOf, Version};
++    use std::ffi::CStr;
++
++    /// A Vulkan instance and logical device with one graphics queue; no surface extensions.
++    /// `CANVAS_HTML_GPU_DEVICE` (index) selects a device; otherwise a non-CPU device is preferred.
++    pub(crate) struct VkDevice {
++        entry: ash::Entry,
++        instance: ash::Instance,
++        physical: avk::PhysicalDevice,
++        device: ash::Device,
++        queue: avk::Queue,
++        queue_family: u32,
++        pub(crate) description: String,
++    }
++
++    impl VkDevice {
++        /// `instance_api`: `None` requests the highest version the loader supports.
++        pub(crate) fn new(instance_api: Option<u32>, label: &str) -> Result<Self, GpuError> {
++            let entry = unsafe { ash::Entry::load() }.map_err(|e| err("Vulkan loader not found", e))?;
++            let api = instance_api.unwrap_or_else(|| {
++                unsafe { entry.try_enumerate_instance_version() }.ok().flatten().unwrap_or(avk::API_VERSION_1_1)
++            });
++            let app = avk::ApplicationInfo::default().application_name(c"canvas-html").api_version(api);
++            let instance = unsafe { entry.create_instance(&avk::InstanceCreateInfo::default().application_info(&app), None) }
++                .map_err(|e| err("vkCreateInstance failed", e))?;
++            let devices = unsafe { instance.enumerate_physical_devices() }.map_err(|e| err("no Vulkan devices", e))?;
++            let candidates: Vec<(avk::PhysicalDevice, u32, avk::PhysicalDeviceProperties)> = devices
++                .into_iter()
++                .filter_map(|pd| {
++                    let props = unsafe { instance.get_physical_device_properties(pd) };
++                    let q = unsafe { instance.get_physical_device_queue_family_properties(pd) }
++                        .iter()
++                        .position(|q| q.queue_flags.contains(avk::QueueFlags::GRAPHICS))?;
++                    Some((pd, q as u32, props))
++                })
++                .collect();
++            if candidates.is_empty() {
++                unsafe { instance.destroy_instance(None) };
++                return Err(GpuError("no Vulkan device with a graphics queue".into()));
++            }
++            let pick = match std::env::var("CANVAS_HTML_GPU_DEVICE").ok().and_then(|s| s.parse::<usize>().ok()) {
++                Some(i) if i < candidates.len() => i,
++                Some(i) => {
++                    unsafe { instance.destroy_instance(None) };
++                    return Err(GpuError(format!("Vulkan device {i} does not exist")));
++                }
++                None => candidates.iter().position(|c| c.2.device_type != avk::PhysicalDeviceType::CPU).unwrap_or(0),
++            };
++            let (physical, queue_family, props) = candidates[pick];
++            let priorities = [1.0f32];
++            let queue_info = [avk::DeviceQueueCreateInfo::default().queue_family_index(queue_family).queue_priorities(&priorities)];
++            let device = match unsafe { instance.create_device(physical, &avk::DeviceCreateInfo::default().queue_create_infos(&queue_info), None) } {
++                Ok(d) => d,
++                Err(e) => {
++                    unsafe { instance.destroy_instance(None) };
++                    return Err(err("vkCreateDevice failed", e));
++                }
++            };
++            let queue = unsafe { device.get_device_queue(queue_family, 0) };
++            let name = unsafe { CStr::from_ptr(props.device_name.as_ptr()) }.to_string_lossy().into_owned();
++            let description = format!(
++                "{label}: {name} ({:?}), driver {:#x}, API {}.{}.{}",
++                props.device_type,
++                props.driver_version,
++                avk::api_version_major(props.api_version),
++                avk::api_version_minor(props.api_version),
++                avk::api_version_patch(props.api_version)
++            );
++            Ok(VkDevice { entry, instance, physical, device, queue, queue_family, description })
++        }
++
++        /// Calls `f` with a Skia backend context for this device. Skia resolves the Vulkan
++        /// functions it needs while creating its context, so the loader closure (which borrows
++        /// the entry and the instance) only lives for this call.
++        pub(crate) fn with_backend<R>(&self, max_api: Option<Version>, f: impl FnOnce(&BackendContext) -> R) -> R {
++            let get_proc = |gpo: GetProcOf| unsafe {
++                match gpo {
++                    GetProcOf::Instance(i, name) => self.entry.get_instance_proc_addr(avk::Instance::from_raw(i as _), name),
++                    GetProcOf::Device(d, name) => (self.instance.fp_v1_0().get_device_proc_addr)(avk::Device::from_raw(d as _), name),
++                }
++                .map(|f| f as _)
++                .unwrap_or(std::ptr::null())
++            };
++            let backend = unsafe {
++                BackendContext::new_builder(
++                    self.instance.handle().as_raw() as _,
++                    self.physical.as_raw() as _,
++                    self.device.handle().as_raw() as _,
++                    (self.queue.as_raw() as _, self.queue_family as usize),
++                    &get_proc,
++                    max_api,
++                )
++                .build()
++            };
++            f(&backend)
++        }
++    }
++
++    impl Drop for VkDevice {
++        fn drop(&mut self) {
++            unsafe {
++                let _ = self.device.device_wait_idle();
++                self.device.destroy_device(None);
++                self.instance.destroy_instance(None);
++            }
++        }
++    }
++}
+diff --git a/src/gpu_image_renderer.rs b/src/gpu_image_renderer.rs
+new file mode 100644
+index 0000000..0e5c14d
+--- /dev/null
++++ b/src/gpu_image_renderer.rs
+@@ -0,0 +1,369 @@
++//! Headless (offscreen) GPU rendering with Skia Ganesh, for servers: no window, no display
++//! server. The scene is painted with the same [`SkiaScenePainter`] as the CPU
++//! [`SkiaImageRenderer`](crate::SkiaImageRenderer); only the surface behind the canvas differs.
++//!
++//! - OpenGL: an EGL device (`EGL_EXT_platform_device`) and a surfaceless context. Works with
++//!   NVIDIA's EGL and with Mesa (llvmpipe for testing without a GPU).
++//! - Vulkan (feature `vulkan`): an instance and device without surface extensions.
++//!
++//! A [`GpuDevice`] owns the API objects and Skia's `DirectContext`. It is not `Send`: Skia's
++//! context is single-threaded, and a GL context is current on one thread. Several renderers on
++//! one thread may share a device (`Rc`); each thread needs its own.
++use std::cell::RefCell;
++use std::ffi::CString;
++use std::rc::Rc;
++use std::time::Instant;
++
++use skia_safe::gpu::{self, DirectContext, SurfaceOrigin, SyncCpu};
++use skia_safe::{AlphaType, Color, ColorType, ImageInfo, Surface, SurfaceProps, graphics};
++
++use crate::{SkiaScenePainter, scene::SkiaSceneCache};
++
++#[derive(Debug, Clone, Copy, PartialEq, Eq)]
++pub enum GpuApi {
++    Gl,
++    #[cfg(feature = "vulkan")]
++    Vulkan,
++}
++
++impl GpuApi {
++    pub fn parse(name: &str) -> Result<Self, GpuError> {
++        match name {
++            "gl" | "gpu-gl" => Ok(GpuApi::Gl),
++            #[cfg(feature = "vulkan")]
++            "vulkan" | "gpu-vulkan" => Ok(GpuApi::Vulkan),
++            other => Err(GpuError(format!("unsupported GPU backend {other:?} in this build"))),
++        }
++    }
++
++    pub fn name(self) -> &'static str {
++        match self {
++            GpuApi::Gl => "ganesh-gl",
++            #[cfg(feature = "vulkan")]
++            GpuApi::Vulkan => "ganesh-vulkan",
++        }
++    }
++}
++
++use crate::gpu_common::{GpuError, GpuFrameTimings, err};
++
++enum Api {
++    Gl(GlDevice),
++    #[cfg(feature = "vulkan")]
++    Vulkan(#[allow(dead_code)] crate::gpu_common::VkDevice), // held for its Drop
++}
++
++/// The GPU, its API objects and Skia's context. Drop order: Skia's context first, then the API.
++pub struct GpuDevice {
++    context: std::mem::ManuallyDrop<RefCell<DirectContext>>,
++    api: std::mem::ManuallyDrop<Api>,
++    kind: GpuApi,
++    description: String,
++}
++
++/// Cumulative and per-frame GPU statistics.
++#[derive(Debug, Clone, Copy, Default)]
++pub struct GpuResourceUsage {
++    pub resource_count: usize,
++    pub resource_bytes: usize,
++    pub purgeable_bytes: usize,
++    pub budget_bytes: usize,
++}
++
++impl GpuDevice {
++    /// Create a headless device. `CANVAS_HTML_GPU_DEVICE` (index) selects a device when there
++    /// are several; otherwise a hardware device is preferred over a software one.
++    pub fn new(kind: GpuApi) -> Result<Rc<Self>, GpuError> {
++        let (api, mut context, description) = match kind {
++            GpuApi::Gl => {
++                let (gl, context, description) = GlDevice::new()?;
++                (Api::Gl(gl), context, description)
++            }
++            #[cfg(feature = "vulkan")]
++            GpuApi::Vulkan => {
++                let vk = crate::gpu_common::VkDevice::new(Some(ash::vk::API_VERSION_1_1), "ganesh-vulkan")?;
++                let context = vk
++                    .with_backend(Some(skia_safe::gpu::vk::Version::new(1, 1, 0)), |backend| {
++                        gpu::direct_contexts::make_vulkan(backend, &gpu::ContextOptions::default())
++                    })
++                    .ok_or_else(|| GpuError("Skia Vulkan context creation failed".into()))?;
++                let description = vk.description.clone();
++                (Api::Vulkan(vk), context, description)
++            }
++        };
++        // 256 MiB for textures, glyph atlases and render targets (Skia's default is 256 MiB too)
++        context.set_resource_cache_limit(256 << 20);
++        Ok(Rc::new(Self {
++            context: std::mem::ManuallyDrop::new(RefCell::new(context)),
++            api: std::mem::ManuallyDrop::new(api),
++            kind,
++            description,
++        }))
++    }
++
++    pub fn kind(&self) -> GpuApi {
++        self.kind
++    }
++
++    /// API, device name and driver, for logs and reports.
++    pub fn description(&self) -> &str {
++        &self.description
++    }
++
++    fn make_current(&self) -> Result<(), GpuError> {
++        match &*self.api {
++            Api::Gl(gl) => gl.make_current(),
++            #[cfg(feature = "vulkan")]
++            Api::Vulkan(_) => Ok(()),
++        }
++    }
++
++    pub fn resource_usage(&self) -> GpuResourceUsage {
++        let ctx = self.context.borrow();
++        let usage = ctx.resource_cache_usage();
++        GpuResourceUsage {
++            resource_count: usage.resource_count,
++            resource_bytes: usage.resource_bytes,
++            purgeable_bytes: ctx.resource_cache_purgeable_bytes(),
++            budget_bytes: ctx.resource_cache_limit(),
++        }
++    }
++
++    /// Free every purgeable GPU resource (textures, atlases) now.
++    pub fn free_resources(&self) {
++        let _ = self.make_current();
++        self.context.borrow_mut().free_gpu_resources();
++    }
++
++    /// Simulate a lost device (testing): Skia stops issuing commands; later renders fail.
++    pub fn abandon_for_testing(&self) {
++        let _ = self.make_current();
++        self.context.borrow_mut().abandon();
++    }
++
++    pub fn is_abandoned(&self) -> bool {
++        self.context.borrow_mut().abandoned()
++    }
++}
++
++impl Drop for GpuDevice {
++    fn drop(&mut self) {
++        let _ = self.make_current();
++        // Skia's context must go before the device/context it uses.
++        unsafe {
++            {
++                let ctx = self.context.get_mut();
++                if !ctx.abandoned() {
++                    ctx.flush_submit_and_sync_cpu();
++                }
++            }
++            std::mem::ManuallyDrop::drop(&mut self.context);
++            std::mem::ManuallyDrop::drop(&mut self.api);
++        }
++    }
++}
++
++// ------------------------------------------------------------------------------------- OpenGL
++
++struct GlDevice {
++    context: glutin::api::egl::context::PossiblyCurrentContext,
++    // keeps the EGL display alive for the context
++    _display: glutin::api::egl::display::Display,
++}
++
++impl GlDevice {
++    fn new() -> Result<(Self, DirectContext, String), GpuError> {
++        use glutin::api::egl::{device::Device, display::Display};
++        use glutin::config::{ConfigSurfaceTypes, ConfigTemplateBuilder};
++        use glutin::context::ContextAttributesBuilder;
++        use glutin::prelude::*;
++
++        let devices: Vec<Device> = Device::query_devices()
++            .map_err(|e| err("EGL device enumeration failed (no EGL_EXT_device_enumeration?)", e))?
++            .collect();
++        if devices.is_empty() {
++            return Err(GpuError("no EGL device found".into()));
++        }
++        let software = |d: &Device| d.extensions().contains("EGL_MESA_device_software");
++        let device = match std::env::var("CANVAS_HTML_GPU_DEVICE").ok().and_then(|s| s.parse::<usize>().ok()) {
++            Some(i) => devices.get(i).ok_or_else(|| GpuError(format!("EGL device {i} does not exist ({} found)", devices.len())))?,
++            None => devices.iter().find(|d| !software(d)).unwrap_or(&devices[0]),
++        };
++        let device_desc = format!(
++            "{} {}{}",
++            device.vendor().unwrap_or("?"),
++            device.name().unwrap_or("?"),
++            if software(device) { " (software)" } else { "" }
++        );
++        let display = unsafe { Display::with_device(device, None) }.map_err(|e| err("EGL display on device failed", e))?;
++        let template = ConfigTemplateBuilder::new()
++            .with_surface_type(ConfigSurfaceTypes::empty())
++            .with_alpha_size(8)
++            .build();
++        let config = unsafe { display.find_configs(template) }
++            .map_err(|e| err("EGL config query failed", e))?
++            .next()
++            .ok_or_else(|| GpuError("no EGL config without surfaces".into()))?;
++        let attrs = ContextAttributesBuilder::new().build(None);
++        let context = unsafe { display.create_context(&config, &attrs) }
++            .map_err(|e| err("EGL context creation failed", e))?
++            .make_current_surfaceless()
++            .map_err(|e| err("EGL surfaceless make-current failed", e))?;
++
++        let interface = skia_safe::gpu::gl::Interface::new_load_with(|name| {
++            if name == "eglGetCurrentDisplay" {
++                return std::ptr::null();
++            }
++            display.get_proc_address(CString::new(name).unwrap().as_c_str())
++        })
++        .ok_or_else(|| GpuError("Skia could not load the GL interface".into()))?;
++        let ctx = gpu::direct_contexts::make_gl(interface, None).ok_or_else(|| GpuError("Skia GL context creation failed".into()))?;
++
++        let gl_strings = {
++            type GetString = unsafe extern "C" fn(u32) -> *const std::ffi::c_char;
++            let f = display.get_proc_address(c"glGetString");
++            if f.is_null() {
++                String::new()
++            } else {
++                let get: GetString = unsafe { std::mem::transmute(f) };
++                let s = |id: u32| unsafe {
++                    let p = get(id);
++                    if p.is_null() { String::from("?") } else { std::ffi::CStr::from_ptr(p).to_string_lossy().into_owned() }
++                };
++                // GL_RENDERER, GL_VERSION
++                format!("; GL_RENDERER {}; GL_VERSION {}", s(0x1F01), s(0x1F02))
++            }
++        };
++        let description = format!("ganesh-gl via EGL device: {device_desc}{gl_strings}");
++        Ok((GlDevice { context, _display: display }, ctx, description))
++    }
++
++    fn make_current(&self) -> Result<(), GpuError> {
++        use glutin::prelude::*;
++        if self.context.is_current() {
++            return Ok(());
++        }
++        self.context.make_current_surfaceless().map_err(|e| err("EGL make-current failed", e))
++    }
++}
++
++// ---------------------------------------------------------------------------------- renderer
++
++/// An offscreen GPU render target that paints AnyRender scenes with Skia Ganesh.
++/// The surface, the scene cache and the device are reused across frames.
++///
++/// Field order is drop order: the surface holds a reference to Skia's context, so it must go
++/// before the device (the last device reference destroys the context and then the API objects).
++pub struct SkiaGpuImageRenderer {
++    surface: Surface,
++    scene_cache: SkiaSceneCache,
++    image_info: ImageInfo,
++    device: Rc<GpuDevice>,
++}
++
++impl Drop for SkiaGpuImageRenderer {
++    fn drop(&mut self) {
++        // The surface frees GL objects as it drops: they must go to this renderer's context.
++        let _ = self.device.make_current();
++    }
++}
++
++impl SkiaGpuImageRenderer {
++    pub fn new(device: Rc<GpuDevice>, width: u32, height: u32) -> Result<Self, GpuError> {
++        // Same process-wide Skia limits as the CPU renderer
++        graphics::set_font_cache_count_limit(100);
++        graphics::set_typeface_cache_count_limit(100);
++        graphics::set_resource_cache_total_bytes_limit(10485760);
++        let image_info = ImageInfo::new((width as i32, height as i32), ColorType::RGBA8888, AlphaType::Opaque, None);
++        let surface = Self::make_surface(&device, &image_info)?;
++        Ok(Self { device, surface, image_info, scene_cache: SkiaSceneCache::default() })
++    }
++
++    fn make_surface(device: &GpuDevice, image_info: &ImageInfo) -> Result<Surface, GpuError> {
++        device.make_current()?;
++        let mut ctx = device.context.borrow_mut();
++        if ctx.abandoned() {
++            return Err(GpuError("GPU context is lost (abandoned)".into()));
++        }
++        gpu::surfaces::render_target(
++            &mut ctx,
++            gpu::Budgeted::Yes,
++            image_info,
++            None,
++            SurfaceOrigin::TopLeft,
++            Some(&SurfaceProps::default()),
++            false,
++            None,
++        )
++        .ok_or_else(|| GpuError(format!("GPU surface {}x{} could not be created", image_info.width(), image_info.height())))
++    }
++
++    pub fn device(&self) -> &Rc<GpuDevice> {
++        &self.device
++    }
++
++    pub fn width(&self) -> u32 {
++        self.image_info.width() as u32
++    }
++
++    pub fn height(&self) -> u32 {
++        self.image_info.height() as u32
++    }
++
++    /// Paint a frame on the GPU and wait for it. With `out`, read the RGBA pixels back into it
++    /// (the same layout as the CPU renderer's output). Without, the frame stays on the GPU.
++    pub fn render_timed<F: FnOnce(&mut SkiaScenePainter<'_>)>(
++        &mut self,
++        draw_fn: F,
++        out: Option<&mut Vec<u8>>,
++    ) -> Result<GpuFrameTimings, GpuError> {
++        self.device.make_current()?;
++        if self.device.context.borrow_mut().abandoned() {
++            return Err(GpuError("GPU context is lost (abandoned)".into()));
++        }
++        let mut t = GpuFrameTimings::default();
++
++        let start = Instant::now();
++        self.surface.canvas().clear(Color::TRANSPARENT);
++        draw_fn(&mut SkiaScenePainter {
++            inner: self.surface.canvas(),
++            cache: &mut self.scene_cache,
++            #[cfg(feature = "headless-graphite")]
++            graphite_recorder: None,
++        });
++        self.scene_cache.next_gen();
++        t.record_ns = start.elapsed().as_nanos();
++
++        let start = Instant::now();
++        {
++            let mut ctx = self.device.context.borrow_mut();
++            ctx.flush_surface(&mut self.surface);
++            if !ctx.submit(SyncCpu::No) {
++                return Err(GpuError("GPU submit failed".into()));
++            }
++        }
++        t.submit_ns = start.elapsed().as_nanos();
++
++        let start = Instant::now();
++        {
++            let mut ctx = self.device.context.borrow_mut();
++            ctx.submit(SyncCpu::Yes);
++            if ctx.oomed() {
++                return Err(GpuError("GPU out of memory".into()));
++            }
++        }
++        t.wait_ns = start.elapsed().as_nanos();
++
++        if let Some(out) = out {
++            let start = Instant::now();
++            let row_bytes = self.image_info.min_row_bytes();
++            out.resize(self.image_info.compute_min_byte_size(), 0);
++            if !self.surface.read_pixels(&self.image_info, &mut out[..], row_bytes, (0, 0)) {
++                return Err(GpuError("GPU readback failed".into()));
++            }
++            t.readback_ns = start.elapsed().as_nanos();
++        }
++        Ok(t)
++    }
++}
++
+diff --git a/src/graphite_image_renderer.rs b/src/graphite_image_renderer.rs
+new file mode 100644
+index 0000000..b3a3807
+--- /dev/null
++++ b/src/graphite_image_renderer.rs
+@@ -0,0 +1,160 @@
++//! Headless (offscreen) GPU rendering with Skia Graphite on Vulkan. Same scene painter as the
++//! CPU and Ganesh renderers; only the surface behind the canvas differs.
++//!
++//! Graphite separates recording from execution: each renderer owns a `Recorder` (its surface
++//! records into it), and the device's `Context` executes the snapped `Recording`s. Several
++//! renderers on one thread may share a device (one `Context`, one `Recorder` each).
++//!
++//! Built only with the `headless-graphite` feature, which needs Skia's Graphite+Vulkan binary
++//! (no Ganesh, no GL): the pinned rust-skia publishes no binary with both engines.
++use std::cell::RefCell;
++use std::mem::ManuallyDrop;
++use std::rc::Rc;
++use std::time::Instant;
++
++use skia_safe::gpu::graphite::{self, InsertRecordingInfo, InsertStatus, Recorder, vk as gvk};
++use skia_safe::gpu::Mipmapped;
++use skia_safe::{AlphaType, Color, ColorType, ImageInfo, Surface, SurfaceProps, graphics};
++
++use crate::gpu_common::{GpuError, GpuFrameTimings, VkDevice};
++use crate::{SkiaScenePainter, scene::SkiaSceneCache};
++
++/// A Vulkan device and Graphite's `Context`. Drop order: the context first, then Vulkan.
++pub struct GraphiteDevice {
++    context: ManuallyDrop<RefCell<graphite::Context>>,
++    vk: ManuallyDrop<VkDevice>,
++}
++
++impl GraphiteDevice {
++    pub fn new() -> Result<Rc<Self>, GpuError> {
++        // Graphite needs Vulkan 1.3 entry points: request the loader's highest instance version.
++        let vk = VkDevice::new(None, "graphite-vulkan")?;
++        let context = vk
++            .with_backend(None, |backend| gvk::context_factory::make_vulkan(backend, None))
++            .ok_or_else(|| GpuError("Skia Graphite Vulkan context creation failed".into()))?;
++        Ok(Rc::new(Self { context: ManuallyDrop::new(RefCell::new(context)), vk: ManuallyDrop::new(vk) }))
++    }
++
++    pub fn name(&self) -> &'static str {
++        "graphite-vulkan"
++    }
++
++    pub fn description(&self) -> &str {
++        &self.vk.description
++    }
++
++    pub fn is_device_lost(&self) -> bool {
++        self.context.borrow().is_device_lost()
++    }
++}
++
++impl Drop for GraphiteDevice {
++    fn drop(&mut self) {
++        unsafe {
++            {
++                let ctx = self.context.get_mut();
++                if !ctx.is_device_lost() {
++                    ctx.submit_and_wait();
++                }
++            }
++            ManuallyDrop::drop(&mut self.context);
++            ManuallyDrop::drop(&mut self.vk);
++        }
++    }
++}
++
++/// An offscreen Graphite render target. Field order is drop order: the surface and the
++/// recorder go before the device (whose `Context` they were made from).
++pub struct SkiaGraphiteImageRenderer {
++    surface: Surface,
++    recorder: Recorder,
++    scene_cache: SkiaSceneCache,
++    image_info: ImageInfo,
++    device: Rc<GraphiteDevice>,
++}
++
++impl SkiaGraphiteImageRenderer {
++    pub fn new(device: Rc<GraphiteDevice>, width: u32, height: u32) -> Result<Self, GpuError> {
++        // Same process-wide Skia limits as the CPU renderer
++        graphics::set_font_cache_count_limit(100);
++        graphics::set_typeface_cache_count_limit(100);
++        graphics::set_resource_cache_total_bytes_limit(10485760);
++        if device.is_device_lost() {
++            return Err(GpuError("GPU device is lost".into()));
++        }
++        let mut recorder = device
++            .context
++            .borrow_mut()
++            .make_recorder(None)
++            .ok_or_else(|| GpuError("Graphite recorder creation failed".into()))?;
++        let image_info = ImageInfo::new((width as i32, height as i32), ColorType::RGBA8888, AlphaType::Opaque, None);
++        let surface = graphite::surfaces::render_target(&mut recorder, &image_info, Mipmapped::No, Some(&SurfaceProps::default()), Some("canvas-html"))
++            .ok_or_else(|| GpuError(format!("GPU surface {width}x{height} could not be created")))?;
++        Ok(Self { surface, recorder, scene_cache: SkiaSceneCache::default(), image_info, device })
++    }
++
++    pub fn device(&self) -> &Rc<GraphiteDevice> {
++        &self.device
++    }
++
++    /// Paint a frame, submit it and wait for it; with `out`, read the RGBA pixels back.
++    /// Timings: `record_ns` = painting into the recorder; `submit_ns` = snap + insert + submit;
++    /// `wait_ns` = waiting for the GPU; `readback_ns` = GPU → CPU copy.
++    pub fn render_timed<F: FnOnce(&mut SkiaScenePainter<'_>)>(
++        &mut self,
++        draw_fn: F,
++        out: Option<&mut Vec<u8>>,
++    ) -> Result<GpuFrameTimings, GpuError> {
++        if self.device.is_device_lost() {
++            return Err(GpuError("GPU device is lost".into()));
++        }
++        let mut t = GpuFrameTimings::default();
++
++        let start = Instant::now();
++        self.surface.canvas().clear(Color::TRANSPARENT);
++        draw_fn(&mut SkiaScenePainter {
++            inner: self.surface.canvas(),
++            cache: &mut self.scene_cache,
++            graphite_recorder: Some(&mut self.recorder),
++        });
++        self.scene_cache.next_gen();
++        t.record_ns = start.elapsed().as_nanos();
++
++        let start = Instant::now();
++        let mut recording = self.recorder.snap().ok_or_else(|| GpuError("Graphite snap failed".into()))?;
++        {
++            let mut ctx = self.device.context.borrow_mut();
++            let status = ctx.insert_recording(&InsertRecordingInfo::new(&mut recording));
++            if status != InsertStatus::Success {
++                return Err(GpuError(format!("Graphite insertRecording failed: {status:?}")));
++            }
++            if !ctx.submit(None) {
++                return Err(GpuError("GPU submit failed".into()));
++            }
++        }
++        t.submit_ns = start.elapsed().as_nanos();
++
++        let start = Instant::now();
++        {
++            let mut ctx = self.device.context.borrow_mut();
++            ctx.submit_and_wait();
++            if ctx.is_device_lost() {
++                return Err(GpuError("GPU device is lost".into()));
++            }
++        }
++        t.wait_ns = start.elapsed().as_nanos();
++        drop(recording);
++
++        if let Some(out) = out {
++            let start = Instant::now();
++            let row_bytes = self.image_info.min_row_bytes();
++            out.resize(self.image_info.compute_min_byte_size(), 0);
++            let ok = self.device.context.borrow_mut().read_pixels(&mut self.surface, &self.image_info, &mut out[..], row_bytes, (0, 0));
++            if !ok {
++                return Err(GpuError("GPU readback failed".into()));
++            }
++            t.readback_ns = start.elapsed().as_nanos();
++        }
++        Ok(t)
++    }
++}
+diff --git a/src/image_renderer.rs b/src/image_renderer.rs
+index ef06a64..5d5edf2 100644
+--- a/src/image_renderer.rs
++++ b/src/image_renderer.rs
+@@ -68,6 +68,8 @@ impl ImageRenderer for SkiaImageRenderer {
+         draw_fn(&mut SkiaScenePainter {
+             inner: surface.canvas(),
+             cache: &mut self.scene_cache,
++            #[cfg(feature = "headless-graphite")]
++            graphite_recorder: None,
+         });
+         timer.record_time("render");
+ 
+@@ -94,6 +96,8 @@ impl ImageRenderer for SkiaImageRenderer {
+         draw_fn(&mut SkiaScenePainter {
+             inner: surface.canvas(),
+             cache: &mut self.scene_cache,
++            #[cfg(feature = "headless-graphite")]
++            graphite_recorder: None,
+         });
+         timer.record_time("render");
+ 
+diff --git a/src/lib.rs b/src/lib.rs
+index a52bd7e..d77c370 100644
+--- a/src/lib.rs
++++ b/src/lib.rs
+@@ -1,16 +1,39 @@
+ mod image_renderer;
+ mod scene;
++#[cfg(any(target_os = "macos", target_os = "ios", feature = "ganesh-gl"))]
+ mod window_renderer;
+ 
+ // Backends
+ mod cache;
+ #[cfg(any(target_os = "macos", target_os = "ios"))]
+ mod metal;
+-#[cfg(not(any(target_os = "macos", target_os = "ios")))]
++#[cfg(all(feature = "ganesh-gl", not(any(target_os = "macos", target_os = "ios"))))]
+ mod opengl;
+-#[cfg(feature = "vulkan")]
++#[cfg(all(feature = "vulkan", feature = "ganesh-gl"))]
+ mod vulkan;
+ 
+ pub use image_renderer::SkiaImageRenderer;
++
++// canvas-html: headless GPU renderers (Phase 4A experiment)
++#[cfg(all(any(feature = "headless-gpu", feature = "headless-graphite"), not(any(target_os = "macos", target_os = "ios"))))]
++mod gpu_common;
++#[cfg(all(any(feature = "headless-gpu", feature = "headless-graphite"), not(any(target_os = "macos", target_os = "ios"))))]
++pub use gpu_common::{GpuError, GpuFrameTimings};
++#[cfg(all(feature = "headless-gpu", not(any(target_os = "macos", target_os = "ios"))))]
++mod gpu_image_renderer;
++#[cfg(all(feature = "headless-gpu", not(any(target_os = "macos", target_os = "ios"))))]
++pub use gpu_image_renderer::{GpuApi, GpuDevice, GpuResourceUsage, SkiaGpuImageRenderer};
++#[cfg(all(feature = "headless-graphite", not(any(target_os = "macos", target_os = "ios"))))]
++mod graphite_image_renderer;
++#[cfg(all(feature = "headless-graphite", not(any(target_os = "macos", target_os = "ios"))))]
++pub use graphite_image_renderer::{GraphiteDevice, SkiaGraphiteImageRenderer};
+ pub use scene::{SkiaSceneCache, SkiaScenePainter};
++#[cfg(any(target_os = "macos", target_os = "ios", feature = "ganesh-gl"))]
+ pub use window_renderer::*;
++
++/// Purges Skia's process-wide glyph cache; returns its size in bytes before and after.
++pub fn purge_font_cache() -> (usize, usize) {
++    let before = skia_safe::graphics::font_cache_used();
++    skia_safe::graphics::purge_font_cache();
++    (before, skia_safe::graphics::font_cache_used())
++}
+diff --git a/src/scene.rs b/src/scene.rs
+index 745ee95..42af82b 100644
+--- a/src/scene.rs
++++ b/src/scene.rs
+@@ -76,6 +76,10 @@ impl Default for SkiaSceneCache {
+ pub struct SkiaScenePainter<'a> {
+     pub(crate) inner: &'a Canvas,
+     pub(crate) cache: &'a mut SkiaSceneCache,
++    /// canvas-html (Graphite): the recorder behind `inner`. Graphite drops draws of raster
++    /// images, so images are uploaded with it first (once: the image shader cache keeps them).
++    #[cfg(feature = "headless-graphite")]
++    pub(crate) graphite_recorder: Option<&'a mut skia_safe::gpu::graphite::Recorder>,
+ }
+ 
+ impl SkiaScenePainter<'_> {
+@@ -83,6 +87,8 @@ impl SkiaScenePainter<'_> {
+         SkiaScenePainter {
+             inner: canvas,
+             cache,
++            #[cfg(feature = "headless-graphite")]
++            graphite_recorder: None,
+         }
+     }
+ 
+@@ -154,7 +160,16 @@ impl SkiaScenePainter<'_> {
+                     return;
+                 }
+ 
+-                let image_shader = sk_peniko::shader_from_image_brush(image_brush, brush_transform);
++                #[cfg(feature = "headless-graphite")]
++                let image_shader = {
++                    let recorder = self.graphite_recorder.as_deref_mut();
++                    sk_peniko::shader_from_image_brush(image_brush, brush_transform, |image| match recorder {
++                        Some(r) => skia_safe::gpu::graphite::images::texture_from_image(r, &image).unwrap_or(image),
++                        None => image,
++                    })
++                };
++                #[cfg(not(feature = "headless-graphite"))]
++                let image_shader = sk_peniko::shader_from_image_brush(image_brush, brush_transform, |image| image);
+ 
+                 if let Some(shader) = &image_shader {
+                     self.cache.image_shader.insert(
+@@ -978,6 +993,7 @@ mod sk_peniko {
+     pub(super) fn shader_from_image_brush(
+         image_brush: ImageBrush<&ImageData>,
+         brush_transform: Option<kurbo::Affine>,
++        prepare: impl FnOnce(skia_safe::Image) -> skia_safe::Image,
+     ) -> Option<SkShader> {
+         let image_data = image_brush.image;
+ 
+@@ -1000,6 +1016,7 @@ mod sk_peniko {
+         let image =
+             skia_safe::images::raster_from_data(&image_info, pixels, image_info.min_row_bytes())
+                 .unwrap();
++        let image = prepare(image);
+ 
+         let sampling = match image_brush.sampler.quality {
+             peniko::ImageQuality::Low => {
+diff --git a/src/window_renderer.rs b/src/window_renderer.rs
+index 82431d7..016ad3c 100644
+--- a/src/window_renderer.rs
++++ b/src/window_renderer.rs
+@@ -181,6 +181,8 @@ impl WindowRenderer for SkiaWindowRenderer {
+         draw_fn(&mut SkiaScenePainter {
+             inner: surface.canvas(),
+             cache: &mut state.scene_cache,
++            #[cfg(feature = "headless-graphite")]
++            graphite_recorder: None,
+         });
+         timer.record_time("cmd");
+ 
+-- 
+2.43.0
+

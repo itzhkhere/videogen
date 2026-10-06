@@ -1,0 +1,20 @@
+base e185c33 (e185c33 Phase 4A.1 results: CONDITIONAL GO (reduced-copy render(), experimental renderInto; async readback not adopted yet))
+head a938f6b Phase 4A.2: SAFETY comments on the pipelined GL readback blocks (patch 0007)
+
+ canvas-html/README.md                              |  65 +++++++
+ canvas-html/index.d.ts                             |  58 +++---
+ canvas-html/package.json                           |   2 +-
+ canvas-html/src/frames.rs                          |  88 +--------
+ canvas-html/src/lib.rs                             | 197 +++++++++------------
+ canvas-html/src/target.rs                          | 119 +++++++++++++
+ canvas-html/test/render-into-examples.mjs          |  67 +++++++
+ canvas-html/test/render-into-workers.mjs           |  99 +++++++++++
+ canvas-html/test/render-into.mjs                   | 186 +++++++++++++++++++
+ canvas-html/test/types/render-into.test-d.ts       |  55 ++++++
+ canvas-html/test/types/tsconfig.json               |   4 +
+ canvas-html/upstream-patches/UPSTREAM.md           |   2 +
+ ...enderer-try_render-an-error-instead-of-a-.patch |  59 ++++++
+ ...L-readback-SAFETY-comments-on-the-raw-GL-.patch |  73 ++++++++
+ .../anyrender_skia/src/gpu_image_renderer.rs       |  16 ++
+ .../vendor/anyrender_skia/src/image_renderer.rs    |  18 +-
+ 16 files changed, 887 insertions(+), 221 deletions(-)

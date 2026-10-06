@@ -1,0 +1,1565 @@
+diff --git a/.gitignore b/.gitignore
+index 4bf8d0a..88486e7 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,5 +1,6 @@
+ # Built artifacts
+ target/
++target-gpu/
+ *.node
+ node_modules/
+ # Blitz is cloned next to canvas-html by canvas-html/scripts/setup-blitz.sh
+diff --git a/canvas-html/README.md b/canvas-html/README.md
+index 3b1c7bf..e498c34 100644
+--- a/canvas-html/README.md
++++ b/canvas-html/README.md
+@@ -15,6 +15,9 @@ r.call('seek', 1500)              // run a function of the page (see "Making vid
+ const rgba = r.render()           // RGBA pixels, 4 bytes per pixel, row by row
+ const png = r.render({ format: 'png' })
+ 
++const frame = Buffer.alloc(r.frameByteLength)
++r.renderInto(frame)               // same pixels into memory you own and reuse (see "Frames")
++
+ r.eval('document.title')          // run code in the page; the result comes back through JSON
+ r.boxes()                         // layout boxes of elements with an id
+ r.missingGlyphs()                 // text that no available font can draw
+@@ -55,6 +58,68 @@ for (let i = 0; i < 180; i++) {
+ 
+ A page that plays on its own (GSAP without `paused`, a rAF loop) also works: step it with `advanceClock(1000 / fps)` and `render()`, in order. Seeking is better for video, because any frame costs the same and workers can share the work.
+ 
++## Frames: render() and renderInto()
++
++| | `render()` | `renderInto(target)` |
++|---|---|---|
++| For | occasional frames, convenience | sequences, workers, encoders |
++| Memory | a new Buffer per frame, owned by the Buffer | yours: a `Buffer`, `Uint8Array` or `Uint8ClampedArray` of exactly `frameByteLength` bytes, reused |
++| Cost | allocation and first-touch of a new frame each time; freed when Node finalizes the Buffer (on event-loop turns, so a synchronous loop keeps every frame until it yields) | no allocation and no copy in canvas-html; flat memory |
++| Returns | the Buffer | nothing; `target` holds the frame |
++
++Both run the same frame step (Web Animations, `requestAnimationFrame` callbacks, style, layout, paint) and produce the same bytes. `renderInto` is synchronous: when it returns, the frame is complete, and the renderer keeps no reference to `target` and never writes it again. In Phase 4A.1 measurements it made 4K raw output 3–4× faster and animated sequences 1.2–2.3× faster than `render()`.
++
++**A sequence into one buffer.** Finish with the bytes before the next call overwrites them:
++
++```js
++const frame = Buffer.alloc(r.frameByteLength)
++for (let i = 0; i < 300; i++) {
++  r.call('seek', (i * 1000) / 30)   // or r.advanceClock(1000 / 30) for a page that plays itself
++  r.renderInto(frame)
++  consume(frame)                    // must be done with the bytes before the next renderInto(frame)
++}
++```
++
++**Asynchronous consumers.** `stream.write(buf)` does not copy, so a buffer is busy until its write completes. Use a few buffers in turn and reuse one only after its write callback:
++
++```js
++const ring = Array.from({ length: 3 }, () => ({ buf: Buffer.alloc(r.frameByteLength), done: Promise.resolve() }))
++for (let i = 0; i < 300; i++) {
++  const slot = ring[i % ring.length]
++  await slot.done                                   // this buffer's previous frame was written
++  r.call('seek', (i * 1000) / 30)
++  r.renderInto(slot.buf)
++  slot.done = new Promise((ok, fail) => ffmpeg.stdin.write(slot.buf, (e) => (e ? fail(e) : ok())))
++}
++```
++
++**Workers, without copying.** Render into a transferable `ArrayBuffer` and move it to the parent:
++
++```js
++// in the worker
++const ab = new ArrayBuffer(r.frameByteLength)
++r.renderInto(new Uint8Array(ab))
++parentPort.postMessage(ab, [ab])   // moves the memory: no copy; `ab` is now detached here
++```
++
++The transfer moves the memory: the parent owns it, and the worker's `ab` (and every view of it) is detached, so the next frame needs another buffer. Either allocate one, or have the parent send buffers back (`worker.postMessage(ab, [ab])`) and reuse those (`test/render-into-workers.mjs` does that: about two buffers per worker for any number of frames). Passing a detached view to `renderInto` throws. Do not try to transfer a `render()` Buffer: its memory is owned by native code, so Node rejects the transfer (`DataCloneError`), and `postMessage(buf)` without a transfer list copies it.
++
++**Accepted and rejected targets.** Only `Buffer`, `Uint8Array` and `Uint8ClampedArray` (at any offset into an ordinary or resizable `ArrayBuffer`) of exactly `frameByteLength` bytes. A rejected call throws before anything runs (no frame step, nothing written):
++
++| target | error |
++|---|---|
++| wrong byte length (also 0, and a shrunk resizable buffer) | `RangeError`, `code: 'ERR_OUT_OF_RANGE'` |
++| other typed arrays (`Float32Array`, `Uint32Array`, …), `DataView`, `ArrayBuffer`, arrays, anything else | `TypeError`, `code: 'ERR_INVALID_ARG_TYPE'` |
++| a view over a `SharedArrayBuffer` | `TypeError`, `code: 'ERR_INVALID_ARG_TYPE'`: not supported (see below) |
++| a view whose `ArrayBuffer` was transferred (detached) | `TypeError`, `code: 'ERR_INVALID_ARG_VALUE'` |
++| any target after `close()` | `Error: renderer is closed` |
++
++`SharedArrayBuffer` targets are rejected on purpose: native code writes the frame without synchronization, and another thread could read or write the same memory during the call. They may be supported later with an explicit hand-off protocol.
++
++**Pixel format** (both APIs, every backend): 4 bytes per pixel in the order R, G, B, A; rows from top to bottom; no padding between rows (stride `pixelWidth × 4`); 8-bit sRGB values as CSS gives them, blended in sRGB like browsers; **alpha premultiplied**. With an opaque `background` (the default `#ffffff`) every alpha byte is 255. With a transparent or translucent `background`, alpha is the real coverage and colours are premultiplied: 50 % red over a transparent background is `[128, 0, 0, 128]`.
++
++**Electron and V8's memory sandbox.** Where native memory cannot back a Buffer (Electron builds with the V8 sandbox), `render()` still works, but napi-rs copies the frame once. `renderInto` writes into memory you allocated in JS, so it does not depend on that.
++
+ ## Scope
+ 
+ canvas-html is an engine: **the page as it is now → the right pixels**, as fast as one renderer can make them. Everything about video belongs to the application that uses it (for us, a separate video pipeline):
+diff --git a/canvas-html/index.d.ts b/canvas-html/index.d.ts
+index 15bdb3a..84106c6 100644
+--- a/canvas-html/index.d.ts
++++ b/canvas-html/index.d.ts
+@@ -47,15 +47,14 @@ export interface TimedRenderOptions {
+   /** Also time Blitz paint-command generation alone (an extra pass), as `paintPrep`. */
+   measurePaintPrep?: boolean
+   /**
+-   * Experimental (Phase 4A.1): how RGBA pixels reach Node. "transfer" (default; what render()
+-   * does): the frame is handed to the Buffer, no copy. "clone": painted into a reused scratch
+-   * frame, then copied (Phase 4A). "pool": like "transfer", but the Buffer's finalizer returns the
+-   * frame to a small pool for reuse (Design B).
++   * Diagnostics: how RGBA pixels reach Node. "transfer" (default; what render() does): the
++   * frame is handed to the Buffer, no copy. "clone": painted into a reused scratch frame, then
++   * copied (the Phase 4A path, for A/B measurements only).
+    */
+-  output?: 'transfer' | 'clone' | 'pool'
+-  /** "pool" output: frames the pool keeps for reuse. Default 3. */
+-  poolSize?: number
++  output?: 'transfer' | 'clone'
+ }
++/** A caller-owned frame target for renderInto: a Buffer, Uint8Array or Uint8ClampedArray. */
++export type FrameTarget = Buffer | Uint8Array | Uint8ClampedArray
+ /** Experimental (Phase 4A): a frame and where its time went. */
+ export interface TimedRender {
+   /** The backend that drew the frame: "cpu-raster", "ganesh-gl", "ganesh-vulkan" or "graphite-vulkan". */
+@@ -116,6 +115,11 @@ export declare class HtmlRenderer {
+    * native memory is freed when Node finalizes the Buffer, which happens on event-loop turns:
+    * a synchronous loop of renders keeps every frame until it yields. The Buffer can be sent to a
+    * worker by copy (postMessage(buf)) but not transferred (Node rejects external memory).
++   * For sequences, workers and encoders, use renderInto() with buffers you reuse.
++   *
++   * RGBA bytes: R, G, B, A per pixel, rows top to bottom, no padding (stride pixelWidth × 4),
++   * sRGB values, alpha premultiplied. With an opaque `background` (the default) every alpha
++   * byte is 255.
+    */
+   render(options?: { format?: 'rgba' }): Buffer
+   render(options: { format: 'png' }): Buffer
+@@ -141,6 +145,29 @@ export declare class HtmlRenderer {
+   readonly loadErrors: string[]
+   readonly pixelWidth: number
+   readonly pixelHeight: number
++  /**
++   * Bytes of one RGBA frame: pixelWidth × pixelHeight × 4. The exact size renderInto() needs.
++   * Fixed for the renderer's life.
++   */
++  readonly frameByteLength: number
++  /**
++   * Draw the document as it is now into `target`, a Buffer, Uint8Array or Uint8ClampedArray you
++   * own, of exactly frameByteLength bytes. The same frame step and the same bytes as render(),
++   * without any allocation or copy in canvas-html.
++   *
++   * Synchronous: when it returns, `target` holds the complete frame. The renderer keeps no
++   * reference to `target` and never touches it after returning, so you may read, reuse or
++   * transfer it at once (e.g. postMessage(target.buffer, [target.buffer]) when the view covers
++   * its whole ArrayBuffer). The next renderInto(target) overwrites it.
++   *
++   * Throws, before running anything (no frame step, no write):
++   * - Error "renderer is closed" after close();
++   * - TypeError ERR_INVALID_ARG_TYPE for any other type (other typed arrays, DataView,
++   *   ArrayBuffer, arrays) and for views over a SharedArrayBuffer (not supported);
++   * - TypeError ERR_INVALID_ARG_VALUE for a view whose ArrayBuffer was transferred (detached);
++   * - RangeError ERR_OUT_OF_RANGE when its byte length is not frameByteLength.
++   */
++  renderInto(target: FrameTarget): void
+   /** Release the document and script runtime now. Idempotent; later calls throw "renderer is closed". */
+   close(): void
+   /**
+@@ -150,32 +177,23 @@ export declare class HtmlRenderer {
+   _dropNodeForTesting(selector: string): boolean
+   /** Experimental (Phase 4A): render like render() and report the time of every step. */
+   _renderTimed(options?: TimedRenderOptions): TimedRender
+-  /**
+-   * Experimental (Phase 4A.1, Design C): render into a caller-owned byte view of exactly
+-   * pixelWidth × pixelHeight × 4 bytes (Buffer, Uint8Array, or a view of an ArrayBuffer or
+-   * SharedArrayBuffer; any other typed array of that byte length is written as raw bytes).
+-   * Nothing is allocated or copied in canvas-html. The view is overwritten;
+-   * the caller decides when to reuse it, and must not let another thread touch it during the
+-   * call. Returns the timings (nanoseconds).
+-   */
+-  _renderInto(target: Uint8Array): { backend: string; timingsNs: Record<string, number> }
++  /** Diagnostics: renderInto() that also returns the time of every step (nanoseconds). */
++  _renderIntoTimed(target: FrameTarget): { backend: string; timingsNs: Record<string, number> }
+   /**
+    * Experimental (Phase 4A.1): render a sequence. For every time (ms), move the page there, render
+    * it and write its pixels into targets[i % targets.length] (each exactly one frame), in order.
+    * With a pipelined mode, a target is reused only after the frame written to it `targets.length`
+    * frames earlier; consume them after the call returns.
+    */
+-  _renderFramesExperimental(times: number[], targets: Uint8Array[], options?: FramesOptions): FramesResult
++  _renderFramesExperimental(times: number[], targets: FrameTarget[], options?: FramesOptions): FramesResult
+   /** Experimental (Phase 4A.1, GPU builds): start a readback pipeline of up to `depth` (1–8) frames in flight. */
+   _pipelineStart(mode: 'deferred' | 'pbo', depth: number): void
+   /** Experimental (Phase 4A.1): render the document as it is now into the pipeline without waiting. Throws when full. */
+   _pipelineSubmit(): { index: number; timingsNs: Record<string, number> }
+   /** Experimental (Phase 4A.1): finish the oldest frame in flight into `target` (exactly one frame of bytes). */
+-  _pipelineComplete(target: Uint8Array): { index: number; timingsNs: Record<string, number> }
++  _pipelineComplete(target: FrameTarget): { index: number; timingsNs: Record<string, number> }
+   /** Experimental (Phase 4A.1): wait for the GPU, discard frames in flight, free the pipeline. Returns the number discarded. close() does this too. */
+   _pipelineStop(): number
+-  /** Experimental (Phase 4A.1): pool counters of the "pool" output, or null. */
+-  _poolStats(): { frameBytes: number; maxFree: number; free: number; allocated: number; reused: number; returned: number; discarded: number } | null
+   /** Experimental (Phase 4A.1): the C heap (glibc mallinfo2), or null on other platforms. */
+   _nativeHeap(): { inUseBytes: number; mmapBytes: number; arenaBytes: number; freeBytes: number } | null
+   /** Experimental: backend, GPU device and Skia GPU resource cache usage. */
+diff --git a/canvas-html/package.json b/canvas-html/package.json
+index 218f596..27ccb32 100644
+--- a/canvas-html/package.json
++++ b/canvas-html/package.json
+@@ -15,7 +15,7 @@
+   },
+   "scripts": {
+     "build": "cargo build --release && cp target/release/libcanvas_html.so canvas-html.linux-x64-gnu.node",
+-    "test": "node test/smoke.mjs && node test/smoke-js.mjs && node test/smoke-waapi.mjs && node test/smoke-fonts.mjs",
++    "test": "node test/smoke.mjs && node test/smoke-js.mjs && node test/smoke-waapi.mjs && node test/smoke-fonts.mjs && node --expose-gc test/render-into.mjs && node test/render-into-examples.mjs",
+     "compare": "node test/compare.mjs"
+   },
+   "devDependencies": {
+diff --git a/canvas-html/src/frames.rs b/canvas-html/src/frames.rs
+index 3e4dd23..89a68b0 100644
+--- a/canvas-html/src/frames.rs
++++ b/canvas-html/src/frames.rs
+@@ -1,9 +1,6 @@
+-//! Output frame memory (Phase 4A.1): the size of a frame, fallible allocation, and the
+-//! experimental bounded pool. A rendered RGBA frame leaves the renderer by ownership: the `Vec`
+-//! is handed to Node as an external Buffer and freed by that Buffer's finalizer; the renderer
+-//! never touches it again.
+-use std::sync::atomic::{AtomicU64, Ordering};
+-use std::sync::{Arc, Mutex};
++//! Output frame memory: the size of a frame and fallible allocation. A frame from `render()`
++//! leaves the renderer by ownership: the `Vec` is handed to Node as an external Buffer and freed
++//! by that Buffer's finalizer; the renderer never touches it again.
+ 
+ /// Largest frame side, in device pixels (as large as any GPU texture; a 32767² RGBA frame is
+ /// 4 GiB).
+@@ -40,82 +37,3 @@ pub(crate) fn alloc_frame(len: usize) -> Result<Vec<u8>, String> {
+         Ok(Vec::from_raw_parts(ptr, len, len))
+     }
+ }
+-
+-/// Like `alloc_frame`, then asks Linux to back the frame with transparent huge pages
+-/// (`MADV_HUGEPAGE` on its 2 MiB-aligned interior) before anything touches it, so Skia's first
+-/// writes fault in 2 MiB pages instead of 4 KiB pages. Advice only: if the kernel declines, the
+-/// frame is an ordinary one. Linux only; elsewhere the same as `alloc_frame`.
+-pub(crate) fn alloc_frame_huge(len: usize) -> Result<Vec<u8>, String> {
+-    let v = alloc_frame(len)?;
+-    #[cfg(target_os = "linux")]
+-    {
+-        const HUGE: usize = 2 << 20;
+-        let start = (v.as_ptr() as usize).div_ceil(HUGE) * HUGE;
+-        let end = (v.as_ptr() as usize + v.len()) / HUGE * HUGE;
+-        if end > start {
+-            // SAFETY: the range lies inside `v`'s allocation; MADV_HUGEPAGE only changes how the
+-            // kernel backs these pages, never their contents or validity.
+-            unsafe { libc::madvise(start as *mut libc::c_void, end - start, libc::MADV_HUGEPAGE) };
+-        }
+-    }
+-    Ok(v)
+-}
+-
+-/// Design B: frames whose Node Buffer was finalized come back here and are reused. Shared by
+-/// `Arc` with every outstanding Buffer's finalizer, so it may outlive the renderer.
+-pub(crate) struct FramePool {
+-    len: usize,
+-    max_free: usize,
+-    free: Mutex<Vec<Vec<u8>>>,
+-    pub(crate) allocated: AtomicU64,
+-    pub(crate) reused: AtomicU64,
+-    pub(crate) returned: AtomicU64,
+-    pub(crate) discarded: AtomicU64,
+-}
+-
+-impl FramePool {
+-    pub(crate) fn new(len: usize, max_free: usize) -> Arc<Self> {
+-        Arc::new(Self {
+-            len,
+-            max_free,
+-            free: Mutex::new(Vec::new()),
+-            allocated: AtomicU64::new(0),
+-            reused: AtomicU64::new(0),
+-            returned: AtomicU64::new(0),
+-            discarded: AtomicU64::new(0),
+-        })
+-    }
+-
+-    pub(crate) fn len(&self) -> usize {
+-        self.len
+-    }
+-
+-    pub(crate) fn max_free(&self) -> usize {
+-        self.max_free
+-    }
+-
+-    pub(crate) fn free_count(&self) -> usize {
+-        self.free.lock().unwrap_or_else(|e| e.into_inner()).len()
+-    }
+-
+-    /// A free frame, or a new one when every pooled frame is still owned by JS.
+-    pub(crate) fn take(&self) -> Result<Vec<u8>, String> {
+-        if let Some(v) = self.free.lock().unwrap_or_else(|e| e.into_inner()).pop() {
+-            self.reused.fetch_add(1, Ordering::Relaxed);
+-            return Ok(v);
+-        }
+-        self.allocated.fetch_add(1, Ordering::Relaxed);
+-        alloc_frame(self.len)
+-    }
+-
+-    /// Called from a Buffer finalizer: keep the frame if there is room, else free it.
+-    pub(crate) fn give_back(&self, v: Vec<u8>) {
+-        let mut free = self.free.lock().unwrap_or_else(|e| e.into_inner());
+-        if v.len() == self.len && free.len() < self.max_free {
+-            free.push(v);
+-            self.returned.fetch_add(1, Ordering::Relaxed);
+-        } else {
+-            self.discarded.fetch_add(1, Ordering::Relaxed);
+-        }
+-    }
+-}
+diff --git a/canvas-html/src/lib.rs b/canvas-html/src/lib.rs
+index 610f46d..bd4a6da 100644
+--- a/canvas-html/src/lib.rs
++++ b/canvas-html/src/lib.rs
+@@ -6,6 +6,7 @@
+ use std::sync::{Arc, Mutex};
+ 
+ mod frames;
++mod target;
+ 
+ use anyrender::{ImageRenderer, PaintScene as _};
+ use anyrender_skia::SkiaImageRenderer;
+@@ -61,7 +62,7 @@ impl NetProvider for LocalNet {
+         };
+         match data {
+             Some(bytes) => handler.bytes(url.to_string(), Bytes::from(bytes)),
+-            None => self.errors.lock().unwrap().push(format!("could not load {url}")),
++            None => self.errors.lock().unwrap_or_else(|e| e.into_inner()).push(format!("could not load {url}")),
+         }
+     }
+ }
+@@ -192,16 +193,12 @@ pub struct HtmlRenderer {
+     /// The script clock's origin (virtual or real Instant).
+     script_start: Option<Instant>,
+     renderer: Painter,
+-    /// Scratch frame for paths that keep the pixels (PNG, no-readback timing). RGBA frames are
+-    /// not kept: each is handed to Node and the next frame gets a new allocation.
++    /// Scratch frame for paths that keep the pixels (PNG, diagnostics). RGBA frames from
++    /// render() are not kept: each is handed to Node and the next frame gets a new allocation.
++    /// Never exposed to JS.
+     buffer: Vec<u8>,
+-    /// Bytes of one RGBA frame (pixelWidth × pixelHeight × 4).
++    /// Bytes of one RGBA frame (pixelWidth × pixelHeight × 4, checked at construction).
+     frame_bytes: usize,
+-    /// Experimental Design B: frames returned by Buffer finalizers, reused (Phase 4A.1).
+-    pool: Option<Arc<frames::FramePool>>,
+-    /// How render() hands an RGBA frame to Node: transfer the frame (default) or clone it (the
+-    /// Phase 4A path). Experiments only: `CANVAS_HTML_OUTPUT=clone`.
+-    clone_output: bool,
+     errors: Arc<Mutex<Vec<String>>>,
+     js_errors: Vec<String>,
+     epoch_ms: Option<f64>,
+@@ -290,7 +287,7 @@ impl HtmlRenderer {
+         if self.doc.is_none() {
+             self.doc = Some(self.build_document()?);
+         }
+-        Ok(self.doc.as_mut().unwrap())
++        self.doc.as_mut().ok_or_else(|| Error::from_reason("no document loaded"))
+     }
+ 
+     /// With a real clock, run the timers that are due by now.
+@@ -362,7 +359,7 @@ impl HtmlRenderer {
+         let ph = (self.height as f64 * self.dpr).round() as u32;
+         let bg = self.background;
+         let dpr = self.dpr;
+-        let doc = self.doc.as_mut().expect("document");
++        let doc = self.doc.as_mut().ok_or_else(|| Error::from_reason("no document loaded"))?;
+         let draw = |scene: &mut anyrender_skia::SkiaScenePainter<'_>| {
+             scene.fill(Fill::NonZero, Default::default(), bg, Default::default(), &Rect::new(0.0, 0.0, pw as f64, ph as f64));
+             doc.with_base(|b| paint_scene(scene, b, dpr, pw, ph, 0, 0));
+@@ -372,9 +369,10 @@ impl HtmlRenderer {
+             Painter::Cpu(renderer) => {
+                 let start = Instant::now();
+                 match out {
+-                    Some(o) => renderer.render(draw, o),
+-                    None => renderer.render(draw, &mut self.buffer[..]),
++                    Some(o) => renderer.try_render(draw, o),
++                    None => renderer.try_render(draw, &mut self.buffer[..]),
+                 }
++                .map_err(Error::from_reason)?;
+                 Ok(PaintTimings { record_ns: start.elapsed().as_nanos(), ..Default::default() })
+             }
+             #[cfg(feature = "experimental-gpu")]
+@@ -555,10 +553,9 @@ pub struct TimedRenderOptions {
+     /// Also time Blitz's paint-command generation alone (an extra pass into a no-op painter),
+     /// reported as `paintPrep`. Default false.
+     pub measure_paint_prep: Option<bool>,
+-    /// RGBA output: "transfer" (default; what render() does), "clone" (Phase 4A) or "pool".
++    /// RGBA output: "transfer" (default; what render() does) or "clone" (the Phase 4A path,
++    /// kept for diagnostics and A/B benchmarks only).
+     pub output: Option<String>,
+-    /// Design B: frames the pool keeps for reuse (default 3).
+-    pub pool_size: Option<u32>,
+ }
+ 
+ 
+@@ -570,8 +567,8 @@ impl HtmlRenderer {
+             return Err(Error::from_reason("width and height must be > 0"));
+         }
+         let dpr = options.device_pixel_ratio.unwrap_or(1.0);
+-        if !(dpr > 0.0) {
+-            return Err(Error::from_reason("devicePixelRatio must be > 0"));
++        if !(dpr > 0.0 && dpr.is_finite()) {
++            return Err(Error::from_reason(format!("devicePixelRatio must be a finite number > 0, got {dpr}")));
+         }
+         let pw = (options.width as f64 * dpr).round() as u32;
+         let ph = (options.height as f64 * dpr).round() as u32;
+@@ -612,8 +609,6 @@ impl HtmlRenderer {
+             renderer: Painter::new(options.experimental_backend.as_deref(), options.experimental_gpu_share.as_deref(), pw, ph)?,
+             buffer: Vec::new(),
+             frame_bytes,
+-            pool: None,
+-            clone_output: std::env::var("CANVAS_HTML_OUTPUT").is_ok_and(|v| v == "clone"),
+             errors: Arc::new(Mutex::new(Vec::new())),
+             js_errors: Vec::new(),
+             epoch_ms: match options.epoch_ms {
+@@ -645,7 +640,7 @@ impl HtmlRenderer {
+         }
+         self.html = Some(html);
+         self.base_url = base_url;
+-        self.errors.lock().unwrap().clear();
++        self.errors.lock().unwrap_or_else(|e| e.into_inner()).clear();
+         self.js_errors.clear();
+         self.doc = Some(self.build_document()?);
+         // GPU (Ganesh): cached path data (triangulations reused within a tolerance) would make a
+@@ -660,7 +655,7 @@ impl HtmlRenderer {
+     /// Draws the document as it is now. Like a browser's rendering step, it first updates running
+     /// Web Animations and runs requestAnimationFrame callbacks, then styles, lays out and paints.
+     /// Returns RGBA pixels (`pixelWidth` x `pixelHeight`, 4 bytes each, row by row) or a PNG.
+-    #[napi]
++    #[napi(catch_unwind)]
+     pub fn render<'env>(&mut self, env: &'env Env, options: Option<RenderOptions>) -> Result<BufferSlice<'env>> {
+         let png = match options.and_then(|o| o.format).as_deref() {
+             None | Some("rgba") => false,
+@@ -674,11 +669,6 @@ impl HtmlRenderer {
+             return Err(e);
+         }
+         if !png {
+-            if self.clone_output {
+-                let copy = frame.clone();
+-                self.buffer = frame;
+-                return BufferSlice::from_data(env, copy);
+-            }
+             // The frame Vec becomes the Buffer's memory (napi external buffer, no copy; Node counts
+             // it in `external`) and is freed by its finalizer; the renderer keeps no reference.
+             return BufferSlice::from_data(env, frame);
+@@ -738,11 +728,11 @@ impl HtmlRenderer {
+     pub fn boxes(&mut self) -> Result<Vec<ElementBox>> {
+         self.resolve()?;
+         let mut out = Vec::new();
+-        self.doc.as_mut().unwrap().with_base(|doc| {
++        self.doc.as_mut().ok_or_else(|| Error::from_reason("no document loaded"))?.with_base(|doc| {
+             let root = doc.root_element();
+             let mut stack = vec![(root.id, 0.0f64, 0.0f64)];
+             while let Some((id, px, py)) = stack.pop() {
+-                let node = doc.get_node(id).unwrap();
++                let Some(node) = doc.get_node(id) else { continue };
+                 let l = node.final_layout();
+                 let (x, y) = (px + l.location.x as f64, py + l.location.y as f64);
+                 if let Some(el) = node.element_data() {
+@@ -772,10 +762,10 @@ impl HtmlRenderer {
+     pub fn missing_glyphs(&mut self) -> Result<Vec<MissingGlyphs>> {
+         self.resolve()?;
+         let mut out = Vec::new();
+-        self.doc.as_mut().unwrap().with_base(|doc| {
++        self.doc.as_mut().ok_or_else(|| Error::from_reason("no document loaded"))?.with_base(|doc| {
+             let mut stack = vec![doc.root_element().id];
+             while let Some(id) = stack.pop() {
+-                let node = doc.get_node(id).unwrap();
++                let Some(node) = doc.get_node(id) else { continue };
+                 if let Some(el) = node.element_data() {
+                     if let Some(text_layout) = el.inline_layout_data.as_ref() {
+                         // A character is drawn when it belongs to a shaped cluster whose glyphs are
+@@ -841,7 +831,7 @@ impl HtmlRenderer {
+     /// Resources (images, fonts, stylesheets) that could not be loaded so far.
+     #[napi(getter)]
+     pub fn load_errors(&self) -> Vec<String> {
+-        self.errors.lock().unwrap().clone()
++        self.errors.lock().unwrap_or_else(|e| e.into_inner()).clone()
+     }
+ 
+     /// Frame JS and style/layout, timed, plus Blitz's command generation alone when asked.
+@@ -861,7 +851,7 @@ impl HtmlRenderer {
+             let pw = (self.width as f64 * self.dpr).round() as u32;
+             let ph = (self.height as f64 * self.dpr).round() as u32;
+             let dpr = self.dpr;
+-            let doc = self.doc.as_mut().expect("document");
++            let doc = self.doc.as_mut().ok_or_else(|| Error::from_reason("no document loaded"))?;
+             let start = Instant::now();
+             doc.with_base(|b| paint_scene(&mut anyrender::NullScenePainter, b, dpr, pw, ph, 0, 0));
+             t.insert("paintPrep".into(), start.elapsed().as_nanos() as f64);
+@@ -891,20 +881,20 @@ impl HtmlRenderer {
+     /// Experimental (Phase 4A, 4A.1): render like `render()` and report the time of every step.
+     /// The backend that drew the frame is named in the result; nothing falls back silently.
+     /// `output` picks how an RGBA frame leaves the renderer: "transfer" (default, what render()
+-    /// does: the frame Vec becomes the Buffer), "clone" (the Phase 4A path: copy the renderer's
+-    /// frame into a new Buffer) or "pool" (Design B: reuse frames returned by finalizers).
++    /// does: the frame Vec becomes the Buffer) or "clone" (diagnostics only: the Phase 4A path,
++    /// which copies the renderer's frame into a new Buffer).
+     #[napi(js_name = "_renderTimed")]
+     pub fn render_timed<'env>(&mut self, env: &'env Env, options: Option<TimedRenderOptions>) -> Result<Object<'env>> {
+         let total = Instant::now();
+-        let o = options.unwrap_or(TimedRenderOptions { format: None, readback: None, measure_paint_prep: None, output: None, pool_size: None });
++        let o = options.unwrap_or(TimedRenderOptions { format: None, readback: None, measure_paint_prep: None, output: None });
+         let format = o.format.unwrap_or_else(|| "rgba".into());
+         let output = o.output.unwrap_or_else(|| "transfer".into());
+         let readback = o.readback.unwrap_or(true) || format != "none";
+         if !matches!(format.as_str(), "rgba" | "png" | "none") {
+             return Err(Error::from_reason(format!("format must be \"rgba\", \"png\" or \"none\", got {format:?}")));
+         }
+-        if !matches!(output.as_str(), "transfer" | "transfer-huge" | "clone" | "pool") {
+-            return Err(Error::from_reason(format!("output must be one of transfer, transfer-huge, clone, pool; got {output:?}")));
++        if !matches!(output.as_str(), "transfer" | "clone") {
++            return Err(Error::from_reason(format!("output must be \"transfer\" or \"clone\", got {output:?}")));
+         }
+         let mut t: HashMap<String, f64> = HashMap::new();
+         self.prepare_timed(&mut t, o.measure_paint_prep.unwrap_or(false))?;
+@@ -955,13 +945,9 @@ impl HtmlRenderer {
+                 t.insert("buffer".into(), start.elapsed().as_nanos() as f64);
+                 Some(b)
+             }
+-            (_, "transfer" | "transfer-huge") => {
++            _ => {
+                 let start = Instant::now();
+-                let mut frame = if output == "transfer-huge" {
+-                    frames::alloc_frame_huge(self.frame_bytes).map_err(Error::from_reason)?
+-                } else {
+-                    self.next_frame()?
+-                };
++                let mut frame = self.next_frame()?;
+                 t.insert("alloc".into(), start.elapsed().as_nanos() as f64);
+                 self.paint_timed(&mut t, Some(&mut frame))?;
+                 let start = Instant::now();
+@@ -969,59 +955,54 @@ impl HtmlRenderer {
+                 t.insert("buffer".into(), start.elapsed().as_nanos() as f64);
+                 Some(b)
+             }
+-            _ => {
+-                let size = o.pool_size.unwrap_or(3).clamp(1, 64) as usize;
+-                let pool = match &self.pool {
+-                    Some(p) if p.max_free() == size && p.len() == self.frame_bytes => p.clone(),
+-                    _ => {
+-                        let p = frames::FramePool::new(self.frame_bytes, size);
+-                        self.pool = Some(p.clone());
+-                        p
+-                    }
+-                };
+-                let start = Instant::now();
+-                let mut frame = pool.take().map_err(Error::from_reason)?;
+-                t.insert("alloc".into(), start.elapsed().as_nanos() as f64);
+-                if let Err(e) = self.paint_timed(&mut t, Some(&mut frame)) {
+-                    pool.give_back(frame);
+-                    return Err(e);
+-                }
+-                let start = Instant::now();
+-                let ptr = frame.as_mut_ptr();
+-                let len = frame.len();
+-                // SAFETY: `ptr`/`len` describe `frame`'s heap block, which moves into the finalize
+-                // hint unchanged (moving a Vec does not move its heap memory) and is only freed or
+-                // reused after V8 finalizes this Buffer. The renderer keeps no reference to it.
+-                let b = unsafe {
+-                    BufferSlice::from_external(env, ptr, len, (pool, frame), |_, (pool, frame): (Arc<frames::FramePool>, Vec<u8>)| pool.give_back(frame))?
+-                };
+-                t.insert("buffer".into(), start.elapsed().as_nanos() as f64);
+-                Some(b)
+-            }
+         };
+         t.insert("total".into(), total.elapsed().as_nanos() as f64);
+         self.timed_result(env, t, pixels)
+     }
+ 
+-    /// Experimental (Phase 4A.1, Design C): render into a caller-owned Buffer of exactly
+-    /// pixelWidth × pixelHeight × 4 bytes. No allocation and no copy in canvas-html: the CPU
+-    /// rasterizes, or the GPU reads back, straight into it. The caller decides when to reuse it;
+-    /// while this call runs the Buffer must not be shared with another thread. Returns the
+-    /// timings.
+-    #[napi(js_name = "_renderInto")]
+-    pub fn render_into<'env>(&mut self, env: &'env Env, mut target: BufferSlice<'env>) -> Result<Object<'env>> {
++    /// Bytes of one RGBA frame: `pixelWidth × pixelHeight × 4`, the exact size `renderInto`
++    /// needs. Fixed for the renderer's life (size and devicePixelRatio cannot change).
++    #[napi(getter)]
++    pub fn frame_byte_length(&self) -> f64 {
++        self.frame_bytes as f64
++    }
++
++    /// Draws the document as it is now into `target`, a caller-owned `Buffer`, `Uint8Array` or
++    /// `Uint8ClampedArray` of exactly `frameByteLength` bytes over an ordinary `ArrayBuffer`.
++    /// Same frame step as `render()` (Web Animations, requestAnimationFrame callbacks, style,
++    /// layout, paint) and the same bytes as `render()` would return. Synchronous: when it
++    /// returns, `target` holds the whole frame; canvas-html allocates and copies nothing and keeps
++    /// no reference to `target`. A rejected target throws before anything runs (no frame step,
++    /// no write).
++    #[napi(catch_unwind)]
++    pub fn render_into(&mut self, env: &Env, target: Unknown<'_>) -> Result<()> {
++        let mut target = self.checked_target(env, &target, "target")?;
++        self.prepare_frame()?;
++        // SAFETY: inside the native call that validated `target`; this is the only slice of it.
++        self.paint_into(Some(unsafe { target.bytes() }))?;
++        Ok(())
++    }
++
++    /// Diagnostics/benchmarks (Phase 4A.1/4A.2): `renderInto` that also returns the time of
++    /// every step, like `_renderTimed`. Private; not part of the supported API.
++    #[napi(js_name = "_renderIntoTimed")]
++    pub fn render_into_timed<'env>(&mut self, env: &'env Env, target: Unknown<'_>) -> Result<Object<'env>> {
+         let total = Instant::now();
+-        self.check_open()?;
+-        if target.len() != self.frame_bytes {
+-            return Err(Error::from_reason(format!("target Buffer is {} bytes, the frame needs {}", target.len(), self.frame_bytes)));
+-        }
++        let mut target = self.checked_target(env, &target, "target")?;
+         let mut t: HashMap<String, f64> = HashMap::new();
+         self.prepare_timed(&mut t, false)?;
+-        self.paint_timed(&mut t, Some(&mut target[..]))?;
++        // SAFETY: inside the native call that validated `target`; this is the only slice of it.
++        self.paint_timed(&mut t, Some(unsafe { target.bytes() }))?;
+         t.insert("total".into(), total.elapsed().as_nanos() as f64);
+         self.timed_result(env, t, None)
+     }
+ 
++    /// An open renderer and a valid one-frame target (see `target.rs`), checked in that order.
++    fn checked_target(&self, env: &Env, value: &Unknown<'_>, what: &str) -> Result<target::ByteTarget> {
++        self.check_open()?;
++        target::ByteTarget::from_js(env, value, self.frame_bytes, what)
++    }
++
+     /// Moves the page to `t` ms: the page's own `seek(t)` (page contract) or the frozen clock.
+     fn seek_to(&mut self, t: f64, page: bool) -> Result<()> {
+         if !t.is_finite() || t < 0.0 {
+@@ -1047,7 +1028,7 @@ impl HtmlRenderer {
+         let ph = (self.height as f64 * self.dpr).round() as u32;
+         let bg = self.background;
+         let dpr = self.dpr;
+-        let doc = self.doc.as_mut().expect("document");
++        let doc = self.doc.as_mut().ok_or_else(|| Error::from_reason("no document loaded"))?;
+         let draw = |scene: &mut anyrender_skia::SkiaScenePainter<'_>| {
+             scene.fill(Fill::NonZero, Default::default(), bg, Default::default(), &Rect::new(0.0, 0.0, pw as f64, ph as f64));
+             doc.with_base(|b| paint_scene(scene, b, dpr, pw, ph, 0, 0));
+@@ -1118,11 +1099,12 @@ impl HtmlRenderer {
+     /// Experimental (Phase 4A.1): complete the oldest frame in flight into `target` (exactly one
+     /// frame of bytes). Returns its index and timings (gpuWait, readback, latency).
+     #[napi(js_name = "_pipelineComplete")]
+-    pub fn pipeline_complete<'env>(&mut self, env: &'env Env, mut target: BufferSlice<'env>) -> Result<Object<'env>> {
+-        self.check_open()?;
++    pub fn pipeline_complete<'env>(&mut self, env: &'env Env, target: Unknown<'_>) -> Result<Object<'env>> {
++        let mut target = self.checked_target(env, &target, "target")?;
+         #[cfg(feature = "experimental-gpu")]
+         {
+-            let c = self.gpu_renderer()?.pipeline_complete(&mut target[..]).map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
++            // SAFETY: inside the native call that validated `target`; the only slice of it.
++            let c = self.gpu_renderer()?.pipeline_complete(unsafe { target.bytes() }).map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
+             let mut o = Object::new(env)?;
+             o.set("index", c.index as f64)?;
+             let t: HashMap<String, f64> = [("gpuWait", c.wait_ns), ("readback", c.readback_ns), ("latency", c.latency_ns)].into_iter().map(|(k, v)| (k.to_string(), v as f64)).collect();
+@@ -1154,7 +1136,7 @@ impl HtmlRenderer {
+     /// `mode`: "sync" (render, wait, read back; any backend), "deferred" or "pbo" (GPU pipeline
+     /// with up to `depth` frames in flight). Returns per-frame timings.
+     #[napi(js_name = "_renderFramesExperimental")]
+-    pub fn render_frames_experimental<'env>(&mut self, env: &'env Env, times: Vec<f64>, mut targets: Vec<BufferSlice<'env>>, options: Option<FramesOptions>) -> Result<Object<'env>> {
++    pub fn render_frames_experimental<'env>(&mut self, env: &'env Env, times: Vec<f64>, targets: Vec<Unknown<'_>>, options: Option<FramesOptions>) -> Result<Object<'env>> {
+         self.check_open()?;
+         let o = options.unwrap_or(FramesOptions { mode: None, depth: None, seek: None });
+         let mode = o.mode.unwrap_or_else(|| "sync".into());
+@@ -1168,9 +1150,13 @@ impl HtmlRenderer {
+         if targets.is_empty() {
+             return Err(Error::from_reason("targets must hold at least one frame Buffer"));
+         }
+-        if let Some(bad) = targets.iter().find(|b| b.len() != self.frame_bytes) {
+-            return Err(Error::from_reason(format!("every target must be {} bytes, one is {}", self.frame_bytes, bad.len())));
+-        }
++        // Validated like renderInto's target. The same view may appear twice, so a slice of a
++        // target is only ever made for one write and dropped before the next one.
++        let mut targets = targets
++            .iter()
++            .enumerate()
++            .map(|(i, t)| target::ByteTarget::from_js(env, t, self.frame_bytes, &format!("targets[{i}]")))
++            .collect::<Result<Vec<_>>>()?;
+         let k = targets.len();
+         let mut series: HashMap<String, Vec<f64>> = HashMap::new();
+         let mut push = |k: &str, v: f64| series.entry(k.to_string()).or_default().push(v);
+@@ -1184,7 +1170,8 @@ impl HtmlRenderer {
+                     let start = Instant::now();
+                     self.prepare_frame()?;
+                     push("prepare", start.elapsed().as_nanos() as f64);
+-                    let p = self.paint_into(Some(&mut targets[i % k][..]))?;
++                    // SAFETY: validated in this call; the slice lives for this one write only.
++                    let p = self.paint_into(Some(unsafe { targets[i % k].bytes() }))?;
+                     push("paint", p.record_ns as f64);
+                     push("gpuSubmit", p.submit_ns as f64);
+                     push("gpuWait", p.wait_ns as f64);
+@@ -1205,7 +1192,8 @@ impl HtmlRenderer {
+                         self.prepare_frame()?;
+                         push("prepare", start.elapsed().as_nanos() as f64);
+                         if self.gpu_renderer()?.pipeline_in_flight() >= depth {
+-                            let c = self.gpu_renderer()?.pipeline_complete(&mut targets[next_out % k][..]).map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
++                            // SAFETY: validated in this call; the slice lives for this one write only.
++                            let c = self.gpu_renderer()?.pipeline_complete(unsafe { targets[next_out % k].bytes() }).map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
+                             next_out += 1;
+                             push("gpuWait", c.wait_ns as f64);
+                             push("readback", c.readback_ns as f64);
+@@ -1216,7 +1204,8 @@ impl HtmlRenderer {
+                         push("gpuSubmit", p.submit_ns as f64);
+                     }
+                     while self.gpu_renderer()?.pipeline_in_flight() > 0 {
+-                        let c = self.gpu_renderer()?.pipeline_complete(&mut targets[next_out % k][..]).map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
++                        // SAFETY: validated in this call; the slice lives for this one write only.
++                        let c = self.gpu_renderer()?.pipeline_complete(unsafe { targets[next_out % k].bytes() }).map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
+                         next_out += 1;
+                         push("gpuWait", c.wait_ns as f64);
+                         push("readback", c.readback_ns as f64);
+@@ -1258,20 +1247,6 @@ impl HtmlRenderer {
+         serde_json::Value::Null
+     }
+ 
+-    /// Experimental (Phase 4A.1): Design B pool counters, or null without a pool.
+-    #[napi(js_name = "_poolStats")]
+-    pub fn pool_stats(&self) -> serde_json::Value {
+-        use std::sync::atomic::Ordering::Relaxed;
+-        match &self.pool {
+-            None => serde_json::Value::Null,
+-            Some(p) => serde_json::json!({
+-                "frameBytes": p.len(), "maxFree": p.max_free(), "free": p.free_count(),
+-                "allocated": p.allocated.load(Relaxed), "reused": p.reused.load(Relaxed),
+-                "returned": p.returned.load(Relaxed), "discarded": p.discarded.load(Relaxed),
+-            }),
+-        }
+-    }
+-
+     /// Experimental: the backend, the GPU device description and Skia's GPU resource cache.
+     #[napi(js_name = "_backendInfo")]
+     pub fn backend_info(&self) -> serde_json::Value {
+@@ -1343,8 +1318,6 @@ impl HtmlRenderer {
+         self.html = None;
+         self.fonts.clear();
+         self.buffer = Vec::new();
+-        // Outstanding pooled Buffers keep the pool alive through their finalizers.
+-        self.pool = None;
+         // Frames in flight are discarded after the GPU finished them (Phase 4A.1 pipeline).
+         self.pipeline_stop();
+         self.renderer = Painter::Closed;
+diff --git a/canvas-html/src/target.rs b/canvas-html/src/target.rs
+new file mode 100644
+index 0000000..2f2c91c
+--- /dev/null
++++ b/canvas-html/src/target.rs
+@@ -0,0 +1,119 @@
++//! Caller-owned output targets for `renderInto` (Phase 4A.2).
++//!
++//! A target is a JS `Buffer`, `Uint8Array` or `Uint8ClampedArray` over an ordinary (non-shared)
++//! `ArrayBuffer`, of exactly one frame of bytes. The kind of the view is read with N-API directly
++//! (`napi_get_typedarray_info`), not through napi-rs's buffer conversion, which accepts any
++//! `ArrayBufferView` whose byte length fits. Everything else is rejected with a JS error before a
++//! single byte is written.
++//!
++//! Aliasing model: the renderer turns a target into a `&mut [u8]` for the duration of one
++//! synchronous native call. That is sound only if nothing else can read or write those bytes
++//! while the slice lives:
++//! - JS on this thread cannot run: the call is synchronous and canvas-html runs no Node JS
++//!   (page scripts run in the renderer's own Boa engine, which cannot reach Node objects).
++//! - JS on other threads cannot reach an ordinary `ArrayBuffer`: it belongs to one isolate. It
++//!   can only move to another thread by transfer, which detaches it here first, and transfer
++//!   needs JS to run on this thread.
++//! - A `SharedArrayBuffer` breaks that: another worker may access the same bytes at any time, so
++//!   an exclusive `&mut [u8]` over it would be a data race. Shared targets are therefore rejected.
++//! - V8 never moves or frees an `ArrayBuffer`'s backing store while the buffer is reachable, and
++//!   the target is a live argument of the current call, so the pointer stays valid until return.
++//! - The renderer never hands out memory it still uses (`render()` gives its frame away), so a
++//!   target cannot alias renderer-owned memory.
++use napi::bindgen_prelude::{Env, Error, JsValue, Result, Status, Unknown};
++use napi::sys;
++
++/// A validated target: the view's bytes, valid for the current native call only.
++pub(crate) struct ByteTarget {
++    ptr: *mut u8,
++    len: usize,
++}
++
++impl ByteTarget {
++    /// Validates `value` as a target of exactly `frame_bytes` bytes.
++    pub(crate) fn from_js(env: &Env, value: &Unknown<'_>, frame_bytes: usize, what: &str) -> Result<Self> {
++        let raw_env = env.raw();
++        let raw = value.raw();
++        let mut is_typedarray = false;
++        // SAFETY: `raw_env` and `raw` are the env and an argument of the current call.
++        check(unsafe { sys::napi_is_typedarray(raw_env, raw, &mut is_typedarray) })?;
++        if !is_typedarray {
++            return Err(type_error(env, &format!("{what} must be a Buffer, Uint8Array or Uint8ClampedArray")));
++        }
++        let mut kind: sys::napi_typedarray_type = 0;
++        let mut length = 0usize;
++        let mut data: *mut std::ffi::c_void = std::ptr::null_mut();
++        let mut arraybuffer: sys::napi_value = std::ptr::null_mut();
++        let mut byte_offset = 0usize;
++        // SAFETY: `raw` is a typed array (checked above); every out-pointer is a valid local.
++        check(unsafe {
++            sys::napi_get_typedarray_info(raw_env, raw, &mut kind, &mut length, &mut data, &mut arraybuffer, &mut byte_offset)
++        })?;
++        if kind != sys::TypedarrayType::uint8_array && kind != sys::TypedarrayType::uint8_clamped_array {
++            return Err(type_error(env, &format!("{what} must be a Buffer, Uint8Array or Uint8ClampedArray, got another typed array")));
++        }
++        // `napi_is_arraybuffer` is V8's `IsArrayBuffer()`, which is false for a SharedArrayBuffer.
++        let mut is_plain = false;
++        // SAFETY: `arraybuffer` was just returned by napi_get_typedarray_info for this call.
++        check(unsafe { sys::napi_is_arraybuffer(raw_env, arraybuffer, &mut is_plain) })?;
++        if !is_plain {
++            return Err(type_error(env, &format!("{what} must not be backed by a SharedArrayBuffer (not supported: renderInto writes without synchronization)")));
++        }
++        let mut detached = false;
++        // SAFETY: as above; `arraybuffer` is an ArrayBuffer (checked).
++        check(unsafe { sys::napi_is_detached_arraybuffer(raw_env, arraybuffer, &mut detached) })?;
++        if detached {
++            return Err(type_error_code(env, &format!("{what} is detached (its ArrayBuffer was transferred)"), "ERR_INVALID_ARG_VALUE"));
++        }
++        // For Uint8Array and Uint8ClampedArray, elements are bytes: `length` is the byte length.
++        if length != frame_bytes {
++            return Err(range_error(env, &format!("{what} is {length} bytes; the frame needs exactly {frame_bytes} (frameByteLength)")));
++        }
++        if data.is_null() {
++            return Err(type_error_code(env, &format!("{what} has no memory"), "ERR_INVALID_ARG_VALUE"));
++        }
++        Ok(Self { ptr: data.cast(), len: length })
++    }
++
++    /// The target's bytes.
++    ///
++    /// # Safety
++    /// Call only during the native call that validated the target, and do not keep two slices
++    /// of targets that may alias (the same view passed twice) alive at once. The module docs
++    /// explain why nothing else can touch the bytes meanwhile.
++    pub(crate) unsafe fn bytes(&mut self) -> &mut [u8] {
++        // SAFETY: `ptr` points to `len` initialized bytes (the view's range, offset applied by
++        // N-API) of a non-shared, attached ArrayBuffer kept alive by the current call; the
++        // caller upholds exclusivity as documented above.
++        unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }
++    }
++}
++
++fn check(status: sys::napi_status) -> Result<()> {
++    if status == sys::Status::napi_ok {
++        Ok(())
++    } else {
++        Err(Error::new(Status::from(status), "N-API call failed while checking the target".to_string()))
++    }
++}
++
++/// Throws a JS TypeError (code ERR_INVALID_ARG_TYPE) and returns the error that tells napi-rs
++/// an exception is already pending.
++pub(crate) fn type_error(env: &Env, msg: &str) -> Error {
++    type_error_code(env, msg, "ERR_INVALID_ARG_TYPE")
++}
++
++fn type_error_code(env: &Env, msg: &str, code: &str) -> Error {
++    match env.throw_type_error(msg, Some(code)) {
++        Ok(()) => Error::from_status(Status::PendingException),
++        Err(_) => Error::new(Status::InvalidArg, msg.to_string()),
++    }
++}
++
++/// Throws a JS RangeError (code ERR_OUT_OF_RANGE), as `type_error`.
++pub(crate) fn range_error(env: &Env, msg: &str) -> Error {
++    match env.throw_range_error(msg, Some("ERR_OUT_OF_RANGE")) {
++        Ok(()) => Error::from_status(Status::PendingException),
++        Err(_) => Error::new(Status::InvalidArg, msg.to_string()),
++    }
++}
+diff --git a/canvas-html/test/render-into-examples.mjs b/canvas-html/test/render-into-examples.mjs
+new file mode 100644
+index 0000000..535367e
+--- /dev/null
++++ b/canvas-html/test/render-into-examples.mjs
+@@ -0,0 +1,67 @@
++// The README "Frames" examples, run as written against stand-ins: a synchronous consumer, and a
++// deliberately slow Writable in place of ffmpeg.stdin (it hashes each chunk only after a delay,
++// so a buffer overwritten before its write completed would hash wrong).
++// node test/render-into-examples.mjs
++import { createRequire } from 'node:module'
++import { createHash } from 'node:crypto'
++import { Writable } from 'node:stream'
++import fs from 'node:fs'
++import path from 'node:path'
++import assert from 'node:assert/strict'
++import { fileURLToPath, pathToFileURL } from 'node:url'
++const { HtmlRenderer } = createRequire(import.meta.url)('../index.js')
++const scene = path.join(path.dirname(fileURLToPath(import.meta.url)), 'scenes', 'effects.html')
++const sha = (b) => createHash('sha256').update(b).digest('hex')
++const N = 40
++const make = () => { const r = new HtmlRenderer({ width: 320, height: 180, scripts: true }); r.load(fs.readFileSync(scene, 'utf8'), pathToFileURL(scene).href); return r }
++
++const ref = make()
++const want = []
++for (let i = 0; i < N; i++) { ref.call('seek', (i * 1000) / 30); want.push(sha(ref.render())) }
++ref.close()
++
++// 1. A sequence into one buffer, consumed synchronously.
++{
++  const r = make(), got = []
++  const consume = (b) => got.push(sha(b))
++  const frame = Buffer.alloc(r.frameByteLength)
++  for (let i = 0; i < N; i++) {
++    r.call('seek', (i * 1000) / 30)
++    r.renderInto(frame)
++    consume(frame)
++  }
++  assert.deepEqual(got, want); r.close()
++}
++
++// 2. Ring of three buffers for an asynchronous consumer (README code, slow stream).
++const slowSink = (got) => new Writable({
++  highWaterMark: 1,
++  write(chunk, _enc, cb) { setTimeout(() => { got.push(sha(chunk)); cb() }, 3) },
++})
++{
++  const r = make(), got = []
++  const ffmpeg = { stdin: slowSink(got) }
++  const ring = Array.from({ length: 3 }, () => ({ buf: Buffer.alloc(r.frameByteLength), done: Promise.resolve() }))
++  for (let i = 0; i < N; i++) {
++    const slot = ring[i % ring.length]
++    await slot.done
++    r.call('seek', (i * 1000) / 30)
++    r.renderInto(slot.buf)
++    slot.done = new Promise((ok, fail) => ffmpeg.stdin.write(slot.buf, (e) => (e ? fail(e) : ok())))
++  }
++  await Promise.all(ring.map((s) => s.done))
++  assert.deepEqual(got, want, 'ring: every frame reached the stream intact'); r.close()
++}
++
++// 3. The hazard the ring avoids: one buffer reused without waiting corrupts queued writes.
++{
++  const r = make(), got = []
++  const out = slowSink(got)
++  const frame = Buffer.alloc(r.frameByteLength)
++  for (let i = 0; i < N; i++) { r.call('seek', (i * 1000) / 30); r.renderInto(frame); out.write(frame) }
++  await new Promise((ok) => out.end(ok))
++  assert.notDeepEqual(got, want, 'reusing one buffer for queued async writes is wrong (as documented)')
++  r.close()
++}
++
++console.log('render-into-examples: all passed')
+diff --git a/canvas-html/test/render-into-workers.mjs b/canvas-html/test/render-into-workers.mjs
+new file mode 100644
+index 0000000..0bebd5c
+--- /dev/null
++++ b/canvas-html/test/render-into-workers.mjs
+@@ -0,0 +1,99 @@
++// renderInto in worker threads: 1, 2 and 4 workers render contiguous blocks of an animated scene
++// (page seek(t) per frame) and must match a single-thread render() reference frame by frame.
++//   transfer:   each frame is rendered into a transferable ArrayBuffer and moved to the parent
++//               (postMessage(ab, [ab]): zero-copy). The parent hashes it and moves it back, so
++//               the worker recycles returned buffers instead of allocating one per frame. After
++//               each transfer the worker's view is detached; renderInto(view) must then throw.
++//   in-process: each worker renders into its own Buffer and Uint8Array (alternating) and sends
++//               only the hash.
++// Checks: 0 missing, 0 mismatched frames, every worker exits with 0, use-after-transfer rejected.
++// node test/render-into-workers.mjs     (CANVAS_HTML_NODE / CANVAS_HTML_BACKEND as in render-into.mjs)
++import { Worker, isMainThread, parentPort, workerData } from 'node:worker_threads'
++import { createRequire } from 'node:module'
++import { createHash } from 'node:crypto'
++import fs from 'node:fs'
++import path from 'node:path'
++import assert from 'node:assert/strict'
++import { fileURLToPath, pathToFileURL } from 'node:url'
++const require = createRequire(import.meta.url)
++const self = fileURLToPath(import.meta.url)
++const scene = path.join(path.dirname(self), 'scenes', 'effects.html')
++const FRAMES = 24, FPS = 30, W = 640, H = 360
++const sha = (b) => createHash('sha256').update(b).digest('hex')
++const backend = process.env.CANVAS_HTML_BACKEND
++
++function make() {
++  const { HtmlRenderer } = require(process.env.CANVAS_HTML_NODE ?? '../index.js')
++  const r = new HtmlRenderer({ width: W, height: H, scripts: true, ...(backend ? { experimentalBackend: backend } : {}) })
++  r.load(fs.readFileSync(scene, 'utf8'), pathToFileURL(scene).href)
++  return r
++}
++const seek = (r, i) => r.eval(`seek(${(i * 1000) / FPS})`)
++
++if (!isMainThread) {
++  const { mode, from, to } = workerData
++  const r = make()
++  const n = r.frameByteLength
++  const returned = []
++  let allocated = 0, useAfterTransfer = 0, pending = 0
++  parentPort.on('message', (m) => { returned.push(m.ab); pending-- })
++  const u8 = new Uint8Array(n), buf = Buffer.alloc(n)
++  for (let i = from; i < to; i++) {
++    seek(r, i)
++    if (mode === 'transfer') {
++      // Use a buffer the parent gave back, or a new one; wait if too many are out.
++      while (!returned.length && pending >= 2) await new Promise((res) => setImmediate(res))
++      const ab = returned.pop() ?? (allocated++, new ArrayBuffer(n))
++      const view = new Uint8Array(ab)
++      r.renderInto(view)
++      parentPort.postMessage({ i, ab }, [ab])
++      pending++
++      try { r.renderInto(view) } catch (e) { if (e.code === 'ERR_INVALID_ARG_VALUE' && view.byteLength === 0) useAfterTransfer++ }
++    } else {
++      const t = i % 2 ? buf : u8
++      r.renderInto(t)
++      parentPort.postMessage({ i, hash: sha(t) })
++    }
++  }
++  while (pending > 0) await new Promise((res) => setImmediate(res))
++  r.close()
++  parentPort.postMessage({ done: true, allocated, useAfterTransfer })
++  parentPort.close()
++} else {
++  const ref = make()
++  const reference = []
++  for (let i = 0; i < FRAMES; i++) { seek(ref, i); reference.push(sha(ref.render())) }
++  ref.close()
++  for (const mode of ['transfer', 'in-process']) for (const k of [1, 2, 4]) {
++    const hashes = new Array(FRAMES).fill(null)
++    const size = Math.ceil(FRAMES / k)
++    let allocated = 0, useAfterTransfer = 0, received = 0
++    const t0 = performance.now()
++    const exits = await Promise.all(Array.from({ length: k }, (_, j) => new Promise((resolve, reject) => {
++      const from = j * size, to = Math.min(FRAMES, (j + 1) * size)
++      const w = new Worker(self, { workerData: { mode, from, to } })
++      w.on('message', (m) => {
++        if (m.done) { allocated += m.allocated; useAfterTransfer += m.useAfterTransfer; return }
++        received++
++        if (m.ab) {
++          hashes[m.i] = sha(new Uint8Array(m.ab))
++          w.postMessage({ ab: m.ab }, [m.ab]) // give it back for reuse
++        } else hashes[m.i] = m.hash
++      })
++      w.once('error', reject)
++      w.once('exit', resolve)
++    })))
++    const ms = performance.now() - t0
++    const missing = hashes.filter((h) => h === null).length
++    const mismatched = hashes.filter((h, i) => h !== null && h !== reference[i]).length
++    console.log(`${mode.padEnd(10)} ${k} worker(s): ${received} frames, ${missing} missing, ${mismatched} mismatched, exits ${exits.join(',')}` +
++      (mode === 'transfer' ? `, ${allocated} buffers allocated for ${FRAMES} frames, use-after-transfer rejected ${useAfterTransfer}/${FRAMES}` : '') + `, ${(FRAMES / (ms / 1000)).toFixed(1)} fps`)
++    assert.equal(missing, 0); assert.equal(mismatched, 0)
++    assert.ok(exits.every((c) => c === 0), 'clean worker exit')
++    if (mode === 'transfer') {
++      assert.equal(useAfterTransfer, FRAMES, 'a transferred (detached) view is rejected')
++      assert.ok(allocated <= 3 * k, 'returned buffers are reused')
++    }
++  }
++  console.log(`render-into-workers${backend ? ` (${backend})` : ''}: all passed`)
++}
+diff --git a/canvas-html/test/render-into.mjs b/canvas-html/test/render-into.mjs
+new file mode 100644
+index 0000000..a82d73f
+--- /dev/null
++++ b/canvas-html/test/render-into.mjs
+@@ -0,0 +1,186 @@
++// renderInto(target) and frameByteLength: the public frame API contract.
++//   accepted targets, rejected targets (type, SharedArrayBuffer, length, detached, closed) with
++//   their error classes and codes, no side effects when rejected, same bytes as render(),
++//   caller ownership and lifetimes, close/repeat behaviour, constructor size limits.
++// node test/render-into.mjs        (CANVAS_HTML_NODE=<addon> CANVAS_HTML_BACKEND=gpu-gl|gpu-vulkan
++//                                   runs it on a GPU build)
++import { createRequire } from 'node:module'
++import assert from 'node:assert/strict'
++const require = createRequire(import.meta.url)
++const { HtmlRenderer } = require(process.env.CANVAS_HTML_NODE ?? '../index.js')
++const backend = process.env.CANVAS_HTML_BACKEND
++const make = (o = {}) => new HtmlRenderer({ width: 64, height: 40, systemFonts: false, scripts: true, ...(backend ? { experimentalBackend: backend } : {}), ...o })
++const turn = () => new Promise((r) => setImmediate(r))
++const settle = async () => { for (let i = 0; i < 5; i++) { globalThis.gc?.(); await turn() } }
++
++// A page whose rAF callbacks count frames and move a box, so frame steps are observable.
++const PAGE = `<body style="margin:0;background:#0b1220">
++<div id="b" style="position:absolute;left:0;top:0;width:10px;height:10px;background:#f97316"></div>
++<script>
++  globalThis.frames = 0
++  const b = document.getElementById('b')
++  function tick() { frames++; b.style.left = (frames * 4) + 'px'; requestAnimationFrame(tick) }
++  requestAnimationFrame(tick)
++</script>`
++const frames = (r) => r.eval('frames')
++const throwsLike = (f, cls, code, re) => assert.throws(f, (e) => e instanceof cls && e.code === code && re.test(e.message), `${cls.name} ${code} ${re}`)
++
++// frameByteLength: pixelWidth × pixelHeight × 4, also with DPR rounding; constant after close.
++{
++  const r = make({ width: 101, height: 33, devicePixelRatio: 1.5 })
++  assert.equal(r.pixelWidth, 152); assert.equal(r.pixelHeight, 50)
++  assert.equal(r.frameByteLength, 152 * 50 * 4)
++  r.close()
++  assert.equal(r.frameByteLength, 152 * 50 * 4)
++}
++
++// Accepted: Buffer, Uint8Array, Uint8ClampedArray (any offset into an ordinary or resizable
++// ArrayBuffer). Same bytes as render() of the same state. Returns undefined.
++{
++  const r = make(); r.load(PAGE)
++  const n = r.frameByteLength
++  const ref = make(); ref.load(PAGE)
++  const buf = Buffer.alloc(n), u8 = new Uint8Array(n), u8c = new Uint8ClampedArray(n)
++  const ab = new ArrayBuffer(n + 32), off = new Uint8Array(ab, 16, n)
++  new Uint8Array(ab).fill(7)
++  const rab = new ArrayBuffer(n, { maxByteLength: 2 * n }), resizable = new Uint8Array(rab)
++  for (const target of [buf, u8, u8c, off, resizable]) {
++    assert.equal(r.renderInto(target), undefined)
++    assert.ok(Buffer.from(target.buffer, target.byteOffset, n).equals(ref.render()), `${target.constructor.name}: same bytes as render()`)
++  }
++  const whole = new Uint8Array(ab)
++  assert.ok(whole.subarray(0, 16).every((x) => x === 7) && whole.subarray(16 + n).every((x) => x === 7), 'bytes outside the view untouched')
++  r.close(); ref.close()
++}
++
++// Rejected targets: the right error, and the call has no side effects (no frame step, no write).
++{
++  const r = make(); r.load(PAGE)
++  const n = r.frameByteLength
++  r.renderInto(Buffer.alloc(n))
++  const before = frames(r)
++  const sentinel = Buffer.alloc(n + 1, 0xab)
++  const bad = [
++    [() => r.renderInto(Buffer.alloc(n - 1)), RangeError, 'ERR_OUT_OF_RANGE', /is \d+ bytes; the frame needs exactly/],
++    [() => r.renderInto(sentinel), RangeError, 'ERR_OUT_OF_RANGE', /exactly/],
++    [() => r.renderInto(new Uint8Array(0)), RangeError, 'ERR_OUT_OF_RANGE', /is 0 bytes/],
++    [() => r.renderInto(new Float32Array(n / 4)), TypeError, 'ERR_INVALID_ARG_TYPE', /another typed array/],
++    [() => r.renderInto(new Uint32Array(n / 4)), TypeError, 'ERR_INVALID_ARG_TYPE', /another typed array/],
++    [() => r.renderInto(new Int16Array(n / 2)), TypeError, 'ERR_INVALID_ARG_TYPE', /another typed array/],
++    [() => r.renderInto(new Int8Array(n)), TypeError, 'ERR_INVALID_ARG_TYPE', /another typed array/],
++    [() => r.renderInto(new BigUint64Array(n / 8)), TypeError, 'ERR_INVALID_ARG_TYPE', /another typed array/],
++    [() => r.renderInto(new DataView(new ArrayBuffer(n))), TypeError, 'ERR_INVALID_ARG_TYPE', /must be a Buffer/],
++    [() => r.renderInto(new ArrayBuffer(n)), TypeError, 'ERR_INVALID_ARG_TYPE', /must be a Buffer/],
++    [() => r.renderInto(new Uint8Array(new SharedArrayBuffer(n))), TypeError, 'ERR_INVALID_ARG_TYPE', /SharedArrayBuffer/],
++    [() => r.renderInto(Buffer.from(new SharedArrayBuffer(n))), TypeError, 'ERR_INVALID_ARG_TYPE', /SharedArrayBuffer/],
++    [() => r.renderInto(new Uint8Array(new SharedArrayBuffer(n, { maxByteLength: 2 * n }))), TypeError, 'ERR_INVALID_ARG_TYPE', /SharedArrayBuffer/],
++    [() => r.renderInto(Array(n).fill(0)), TypeError, 'ERR_INVALID_ARG_TYPE', /must be a Buffer/],
++    [() => r.renderInto({ length: n, byteLength: n }), TypeError, 'ERR_INVALID_ARG_TYPE', /must be a Buffer/],
++    [() => r.renderInto('x'.repeat(n)), TypeError, 'ERR_INVALID_ARG_TYPE', /must be a Buffer/],
++    [() => r.renderInto(42), TypeError, 'ERR_INVALID_ARG_TYPE', /must be a Buffer/],
++    [() => r.renderInto(null), TypeError, 'ERR_INVALID_ARG_TYPE', /must be a Buffer/],
++    [() => r.renderInto(), TypeError, 'ERR_INVALID_ARG_TYPE', /must be a Buffer/],
++    [() => { const ab = new ArrayBuffer(n), v = new Uint8Array(ab); structuredClone(ab, { transfer: [ab] }); r.renderInto(v) }, TypeError, 'ERR_INVALID_ARG_VALUE', /detached/],
++    [() => { const ab = new ArrayBuffer(n), v = new Uint8Array(ab); ab.transfer(); r.renderInto(v) }, TypeError, 'ERR_INVALID_ARG_VALUE', /detached/],
++  ]
++  for (const [f, cls, code, re] of bad) throwsLike(f, cls, code, re)
++  assert.equal(frames(r), before, 'rejected calls ran no frame step')
++  assert.ok(sentinel.every((x) => x === 0xab), 'a rejected target is not written')
++  // A shrunk resizable buffer: the view now tracks fewer bytes → rejected, not overrun.
++  const rab = new ArrayBuffer(n, { maxByteLength: 2 * n }), v = new Uint8Array(rab)
++  rab.resize(n - 4)
++  throwsLike(() => r.renderInto(v), RangeError, 'ERR_OUT_OF_RANGE', /exactly/)
++  r.close()
++}
++
++// renderInto runs the same frame step as render(): one rAF tick per call.
++{
++  const a = make(); a.load(PAGE)
++  const b = make(); b.load(PAGE)
++  const t = Buffer.alloc(a.frameByteLength)
++  for (let i = 0; i < 5; i++) {
++    a.renderInto(t)
++    assert.ok(t.equals(b.render()), `frame ${i}: renderInto and render() agree`)
++  }
++  assert.equal(frames(a), frames(b))
++  a.close(); b.close()
++}
++
++// Caller ownership: the renderer keeps no reference. A target is complete when the call returns,
++// unchanged by later renders into other targets, readable after close() and after the renderer
++// is garbage-collected; the renderer can close right after renderInto.
++{
++  let r = make(); r.load(PAGE)
++  const n = r.frameByteLength
++  const t1 = Buffer.alloc(n), t2 = Buffer.alloc(n)
++  r.renderInto(t1)
++  const copy1 = Buffer.from(t1)
++  r.renderInto(t2)
++  for (let i = 0; i < 5; i++) r.render()
++  assert.ok(t1.equals(copy1), 'later renders do not touch an earlier target')
++  assert.ok(!t1.equals(t2), 'the page moved between frames')
++  r.renderInto(t2)
++  r.close()
++  const copy2 = Buffer.from(t2)
++  r = null
++  await settle()
++  assert.ok(t2.equals(copy2) && t1.equals(copy1), 'targets outlive close() and the renderer')
++}
++
++// render() keeps its contract: an owning Buffer per call, unchanged by later renders, valid after
++// close() and the renderer being collected.
++{
++  let r = make(); r.load(PAGE)
++  const f1 = r.render(), c1 = Buffer.from(f1)
++  for (let i = 0; i < 5; i++) r.render()
++  r.renderInto(Buffer.alloc(r.frameByteLength))
++  assert.ok(f1.equals(c1))
++  assert.equal(f1.length, r.frameByteLength)
++  r.close(); r = null
++  await settle()
++  assert.ok(f1.equals(c1), 'render() Buffer outlives the renderer')
++}
++
++// Closed renderer, repeated close, repeated renderInto.
++{
++  const r = make(); r.load(PAGE)
++  const t = Buffer.alloc(r.frameByteLength)
++  for (let i = 0; i < 50; i++) r.renderInto(t)
++  r.close(); r.close()
++  assert.throws(() => r.renderInto(t), /renderer is closed/)
++  assert.throws(() => r.renderInto(42), /renderer is closed/, 'closed is reported before the target is checked')
++  assert.throws(() => r.render(), /renderer is closed/)
++}
++
++// Before load(): both APIs throw the same error and nothing is written.
++{
++  const r = make()
++  const t = Buffer.alloc(r.frameByteLength, 0xcd)
++  assert.throws(() => r.renderInto(t), /call load\(html\) first/)
++  assert.throws(() => r.render(), /call load\(html\) first/)
++  assert.ok(t.every((x) => x === 0xcd))
++  r.close()
++}
++
++// Sizes that cannot be a frame fail at construction with an Error, never a panic or abort.
++for (const [o, re] of [
++  [{ width: 100000, height: 100000 }, /out of range/],
++  [{ width: 4000, height: 4000, devicePixelRatio: 10 }, /out of range/],
++  [{ width: 100, height: 100, devicePixelRatio: Infinity }, /devicePixelRatio/],
++  [{ width: 100, height: 100, devicePixelRatio: NaN }, /devicePixelRatio/],
++  [{ width: 100, height: 100, devicePixelRatio: 0 }, /devicePixelRatio/],
++  [{ width: 100, height: 100, devicePixelRatio: -1 }, /devicePixelRatio/],
++  [{ width: 0, height: 10 }, /width and height/],
++  [{ width: 1, height: 1, devicePixelRatio: 1e-9 }, /out of range/],
++]) assert.throws(() => make(o), re, JSON.stringify(o))
++// The largest side: CPU renders it; a GPU may refuse a surface above its texture limit, with an
++// Error (Mesa llvmpipe: 16384).
++try {
++  const r = make({ width: 32767, height: 1 })
++  assert.equal(r.frameByteLength, 32767 * 4)
++  r.close()
++} catch (e) {
++  assert.ok(backend && /GPU surface .* could not be created/.test(e.message), e.message)
++}
++
++console.log(`render-into${backend ? ` (${backend})` : ''}: all passed`)
+diff --git a/canvas-html/test/types/render-into.test-d.ts b/canvas-html/test/types/render-into.test-d.ts
+new file mode 100644
+index 0000000..e517f2e
+--- /dev/null
++++ b/canvas-html/test/types/render-into.test-d.ts
+@@ -0,0 +1,55 @@
++// Type-level tests for the public frame API. Checked with:
++//   npx -p typescript@5 -p @types/node@24 tsc -p test/types
++// Every `@ts-expect-error` line must be an error (tsc fails if one is not).
++import { HtmlRenderer, type FrameTarget } from '../../index'
++
++const r = new HtmlRenderer({ width: 1280, height: 720 })
++const n: number = r.frameByteLength
++
++// Accepted targets
++r.renderInto(Buffer.alloc(n))
++const sabView = new Uint8Array(new SharedArrayBuffer(n)) // type-correct; rejected at run time (see API_CONTRACT.md)
++r.renderInto(new Uint8Array(n))
++r.renderInto(new Uint8ClampedArray(n))
++r.renderInto(new Uint8Array(new ArrayBuffer(n + 16), 16, n))
++const t: FrameTarget = Buffer.allocUnsafe(n)
++r.renderInto(t)
++
++// renderInto returns nothing
++const ret: void = r.renderInto(t)
++// @ts-expect-error - no return value to use
++const notBuffer: Buffer = r.renderInto(t)
++
++// render() still returns an owning Buffer
++const frame: Buffer = r.render()
++const png: Buffer = r.render({ format: 'png' })
++
++// frameByteLength is read-only
++// @ts-expect-error - read-only
++r.frameByteLength = 4
++
++// Rejected targets
++// @ts-expect-error - not a byte array
++r.renderInto(new Float32Array(n / 4))
++// @ts-expect-error - not a byte array
++r.renderInto(new Uint32Array(n / 4))
++// @ts-expect-error - not a byte array
++r.renderInto(new Int16Array(n / 2))
++// @ts-expect-error - DataView is not accepted
++r.renderInto(new DataView(new ArrayBuffer(n)))
++// @ts-expect-error - a bare ArrayBuffer is not a view
++r.renderInto(new ArrayBuffer(n))
++// @ts-expect-error - plain arrays are not accepted
++r.renderInto(new Array<number>(n).fill(0))
++// @ts-expect-error - a target is required
++r.renderInto()
++// @ts-expect-error - strings are not accepted
++r.renderInto('frame')
++
++// Private APIs are not part of the supported surface: renamed experimental methods are gone.
++// @ts-expect-error - the Phase 4A.1 name was removed
++r._renderInto(t)
++// @ts-expect-error - the frame pool was removed
++r._poolStats()
++
++void [ret, notBuffer, frame, png, sabView]
+diff --git a/canvas-html/test/types/tsconfig.json b/canvas-html/test/types/tsconfig.json
+new file mode 100644
+index 0000000..acd6c50
+--- /dev/null
++++ b/canvas-html/test/types/tsconfig.json
+@@ -0,0 +1,4 @@
++{
++  "compilerOptions": { "strict": true, "noEmit": true, "module": "nodenext", "moduleResolution": "nodenext", "target": "es2022", "types": ["node"], "skipLibCheck": false },
++  "files": ["render-into.test-d.ts"]
++}
+diff --git a/canvas-html/upstream-patches/UPSTREAM.md b/canvas-html/upstream-patches/UPSTREAM.md
+index 025a2e0..0931a51 100644
+--- a/canvas-html/upstream-patches/UPSTREAM.md
++++ b/canvas-html/upstream-patches/UPSTREAM.md
+@@ -39,6 +39,8 @@ Known limits worth mentioning in the PRs:
+ | 0003 headless GPU renderers (Phase 4A, experimental) | Offscreen GPU image renderers next to the CPU one: Ganesh (OpenGL via an EGL device and a surfaceless context; Vulkan without surface extensions) and Graphite (Vulkan), with per-frame record/submit/wait/readback timings. skia-safe `gl` becomes the default feature `ganesh-gl` so a Graphite-only Skia binary can be linked (rust-skia ships none with both engines). Graphite drops raster images and rust-skia does not bind Recorder image providers, so the scene painter uploads images through the recorder. Off by default; the window renderer and the default feature set are unchanged. |
+ | 0004 Ganesh context options from an environment variable (Phase 4A, experiments only) | `CANVAS_HTML_GANESH_OPTIONS` turns off Ganesh path renderers and caches without a rebuild. Used to find the cause of frame drift after a reload. **Not for upstream as is**: an upstream version would take `ContextOptions` from the caller. |
+ | 0005 render into the caller's buffer; pipelined readback (Phase 4A.1, experimental) | `render_timed()` writes into a slice the caller owns (length checked) instead of resizing a `Vec`, so pixels go straight into embedder memory. Adds a prototype readback pipeline to `SkiaGpuImageRenderer`: a ring of surfaces read back later (GL or Vulkan), or `glReadPixels` into pixel-pack buffers with fences (GL). rust-skia does not bind Ganesh's async readback, so the GL path uses the `gl` crate on the renderer's context and resets Skia's GL state after. |
++| 0006 `try_render` (Phase 4A.2) | `ImageRenderer::render` unwrapped `surfaces::wrap_pixels`, so a buffer shorter than `width × height × 4` panicked. `SkiaImageRenderer::try_render` returns an error and draws nothing; `render` keeps its signature and calls it. |
++| 0007 SAFETY comments (Phase 4A.2) | Comments only: the invariants of the raw GL blocks in the pipelined pixel-pack-buffer readback (0005). |
+ 
+ ## servo/stylo (base: 0.22.0)
+ 
+diff --git a/canvas-html/upstream-patches/anyrender_skia/0006-CPU-image-renderer-try_render-an-error-instead-of-a-.patch b/canvas-html/upstream-patches/anyrender_skia/0006-CPU-image-renderer-try_render-an-error-instead-of-a-.patch
+new file mode 100644
+index 0000000..0f13d97
+--- /dev/null
++++ b/canvas-html/upstream-patches/anyrender_skia/0006-CPU-image-renderer-try_render-an-error-instead-of-a-.patch
+@@ -0,0 +1,59 @@
++From 73a7f901c5e006d19ac6f745c44f56025548ece7 Mon Sep 17 00:00:00 2001
++From: local <l@l>
++Date: Tue, 6 Oct 2026 16:05:39 +0000
++Subject: [PATCH] CPU image renderer: try_render, an error instead of a panic
++ for a buffer that does not fit
++
++ImageRenderer::render unwrapped surfaces::wrap_pixels, so a buffer shorter than
++width * height * 4 bytes panicked. try_render returns an error instead and draws
++nothing; render keeps its signature and calls it. Embedders that render into
++caller-provided memory (canvas-html's renderInto) can surface the error rather
++than abort the process.
++---
++ src/image_renderer.rs | 18 +++++++++++++++---
++ 1 file changed, 15 insertions(+), 3 deletions(-)
++
++diff --git a/src/image_renderer.rs b/src/image_renderer.rs
++index 5d5edf2..2fc6b63 100644
++--- a/src/image_renderer.rs
+++++ b/src/image_renderer.rs
++@@ -80,15 +80,26 @@ impl ImageRenderer for SkiaImageRenderer {
++     }
++ 
++     fn render<F: FnOnce(&mut Self::ScenePainter<'_>)>(&mut self, draw_fn: F, buffer: &mut [u8]) {
+++        self.try_render(draw_fn, buffer).unwrap()
+++    }
+++}
+++
+++impl SkiaImageRenderer {
+++    /// Like `ImageRenderer::render`, but a buffer that does not fit the image (shorter than
+++    /// `width * height * 4` bytes) is an error instead of a panic, and nothing is drawn.
+++    pub fn try_render<F: FnOnce(&mut SkiaScenePainter<'_>)>(&mut self, draw_fn: F, buffer: &mut [u8]) -> Result<(), String> {
++         debug_timer!(timer, feature = "log_frame_times");
++ 
++-        let mut surface = surfaces::wrap_pixels(
+++        let needed = self.image_info.compute_min_byte_size();
+++        let len = buffer.len();
+++        let Some(mut surface) = surfaces::wrap_pixels(
++             &self.image_info,
++             &mut buffer[..],
++             None,
++             Some(&self.surface_props),
++-        )
++-        .unwrap();
+++        ) else {
+++            return Err(format!("cannot draw a {}x{} image into {len} bytes (needs {needed})", self.image_info.width(), self.image_info.height()));
+++        };
++ 
++         // Clear surface with transparent background to allow transparency in rendered images
++         surface.canvas().clear(Color::TRANSPARENT);
++@@ -105,5 +116,6 @@ impl ImageRenderer for SkiaImageRenderer {
++         timer.record_time("cache next gen");
++ 
++         timer.print_times("skia_raster: ");
+++        Ok(())
++     }
++ }
++-- 
++2.43.0
++
+diff --git a/canvas-html/upstream-patches/anyrender_skia/0007-Pipelined-GL-readback-SAFETY-comments-on-the-raw-GL-.patch b/canvas-html/upstream-patches/anyrender_skia/0007-Pipelined-GL-readback-SAFETY-comments-on-the-raw-GL-.patch
+new file mode 100644
+index 0000000..68cd599
+--- /dev/null
++++ b/canvas-html/upstream-patches/anyrender_skia/0007-Pipelined-GL-readback-SAFETY-comments-on-the-raw-GL-.patch
+@@ -0,0 +1,73 @@
++From abaff970b74ffd1bee7a62651158199033c08915 Mon Sep 17 00:00:00 2001
++From: local <l@l>
++Date: Tue, 6 Oct 2026 16:06:54 +0000
++Subject: [PATCH] Pipelined GL readback: SAFETY comments on the raw GL blocks
++
++Comments only: the invariants of the pixel-pack-buffer readback (buffer names,
++fences, ReadPixels into a bound PBO, the mapped copy into the caller's slice).
++---
++ src/gpu_image_renderer.rs | 16 ++++++++++++++++
++ 1 file changed, 16 insertions(+)
++
++diff --git a/src/gpu_image_renderer.rs b/src/gpu_image_renderer.rs
++index 5c90f0c..b167dae 100644
++--- a/src/gpu_image_renderer.rs
+++++ b/src/gpu_image_renderer.rs
++@@ -429,10 +429,14 @@ impl Drop for GpuPipeline {
++         // GL objects; the renderer made its context current before dropping fields.
++         for f in self.inflight.drain(..) {
++             if let Some(fence) = f.fence {
+++                // SAFETY: a fence this pipeline created and has not deleted (completion takes the
+++                // frame out of `inflight` before deleting its fence); the context is current.
++                 unsafe { gl::DeleteSync(fence) };
++             }
++         }
++         if !self.pbos.is_empty() {
+++            // SAFETY: `pbos` holds `len` buffer names generated by this pipeline on the current
+++            // context; deleting them once, here, ends their lifetime.
++             unsafe { gl::DeleteBuffers(self.pbos.len() as i32, self.pbos.as_ptr()) };
++         }
++     }
++@@ -477,6 +481,8 @@ impl SkiaGpuImageRenderer {
++                     return Err(GpuError("pipeline mode \"pbo\" needs the GL backend".into()));
++                 }
++                 p.pbos = vec![0; depth];
+++                // SAFETY: GenBuffers writes exactly `depth` names into `pbos` (len `depth`); each
+++                // buffer is then sized to one frame. The renderer's GL context is current.
++                 unsafe {
++                     gl::GenBuffers(depth as i32, p.pbos.as_mut_ptr());
++                     for &b in &p.pbos {
++@@ -545,6 +551,9 @@ impl SkiaGpuImageRenderer {
++                     .ok_or_else(|| GpuError("surface has no GL framebuffer".into()))?
++                     .fboid;
++                 let (w, h) = (self.image_info.width(), self.image_info.height());
+++                // SAFETY: raw GL on the renderer's current context. With a PIXEL_PACK buffer bound,
+++                // ReadPixels' pointer argument is an offset (0) into that buffer, which holds one
+++                // `w * h * 4` frame, so no client memory is written. Skia's GL state is reset after.
++                 unsafe {
++                     gl::BindFramebuffer(gl::READ_FRAMEBUFFER, fbo);
++                     gl::BindBuffer(gl::PIXEL_PACK_BUFFER, p.pbos[slot]);
++@@ -603,6 +612,8 @@ impl SkiaGpuImageRenderer {
++             PipelineMode::GlPbo => {
++                 let fence = f.fence.expect("GlPbo frames carry a fence");
++                 let start = Instant::now();
+++                // SAFETY: `fence` was created by this pipeline for this frame and is deleted once,
+++                // here (the frame has left `inflight`); the context is current.
++                 let status = unsafe { gl::ClientWaitSync(fence, gl::SYNC_FLUSH_COMMANDS_BIT, 10_000_000_000) };
++                 unsafe { gl::DeleteSync(fence) };
++                 c.wait_ns = start.elapsed().as_nanos();
++@@ -613,6 +624,11 @@ impl SkiaGpuImageRenderer {
++                     return Err(GpuError(format!("waiting for the GL readback failed (status {status:#x})")));
++                 }
++                 let start = Instant::now();
+++                // SAFETY: the fence signalled, so the GPU finished writing this PBO. MapBufferRange
+++                // maps `out.len()` bytes (the PBO's size: one frame, checked above against
+++                // `out`) for reading; the copy reads that many bytes from the mapping and writes
+++                // that many into `out`, an exclusive slice of the same length, and the regions
+++                // cannot overlap (GL mapping vs. caller memory). The mapping ends at UnmapBuffer.
++                 let ok = unsafe {
++                     gl::BindBuffer(gl::PIXEL_PACK_BUFFER, p.pbos[f.slot]);
++                     let src = gl::MapBufferRange(gl::PIXEL_PACK_BUFFER, 0, out.len() as isize, gl::MAP_READ_BIT);
++-- 
++2.43.0
++
+diff --git a/canvas-html/vendor/anyrender_skia/src/gpu_image_renderer.rs b/canvas-html/vendor/anyrender_skia/src/gpu_image_renderer.rs
+index 5c90f0c..b167dae 100644
+--- a/canvas-html/vendor/anyrender_skia/src/gpu_image_renderer.rs
++++ b/canvas-html/vendor/anyrender_skia/src/gpu_image_renderer.rs
+@@ -429,10 +429,14 @@ impl Drop for GpuPipeline {
+         // GL objects; the renderer made its context current before dropping fields.
+         for f in self.inflight.drain(..) {
+             if let Some(fence) = f.fence {
++                // SAFETY: a fence this pipeline created and has not deleted (completion takes the
++                // frame out of `inflight` before deleting its fence); the context is current.
+                 unsafe { gl::DeleteSync(fence) };
+             }
+         }
+         if !self.pbos.is_empty() {
++            // SAFETY: `pbos` holds `len` buffer names generated by this pipeline on the current
++            // context; deleting them once, here, ends their lifetime.
+             unsafe { gl::DeleteBuffers(self.pbos.len() as i32, self.pbos.as_ptr()) };
+         }
+     }
+@@ -477,6 +481,8 @@ impl SkiaGpuImageRenderer {
+                     return Err(GpuError("pipeline mode \"pbo\" needs the GL backend".into()));
+                 }
+                 p.pbos = vec![0; depth];
++                // SAFETY: GenBuffers writes exactly `depth` names into `pbos` (len `depth`); each
++                // buffer is then sized to one frame. The renderer's GL context is current.
+                 unsafe {
+                     gl::GenBuffers(depth as i32, p.pbos.as_mut_ptr());
+                     for &b in &p.pbos {
+@@ -545,6 +551,9 @@ impl SkiaGpuImageRenderer {
+                     .ok_or_else(|| GpuError("surface has no GL framebuffer".into()))?
+                     .fboid;
+                 let (w, h) = (self.image_info.width(), self.image_info.height());
++                // SAFETY: raw GL on the renderer's current context. With a PIXEL_PACK buffer bound,
++                // ReadPixels' pointer argument is an offset (0) into that buffer, which holds one
++                // `w * h * 4` frame, so no client memory is written. Skia's GL state is reset after.
+                 unsafe {
+                     gl::BindFramebuffer(gl::READ_FRAMEBUFFER, fbo);
+                     gl::BindBuffer(gl::PIXEL_PACK_BUFFER, p.pbos[slot]);
+@@ -603,6 +612,8 @@ impl SkiaGpuImageRenderer {
+             PipelineMode::GlPbo => {
+                 let fence = f.fence.expect("GlPbo frames carry a fence");
+                 let start = Instant::now();
++                // SAFETY: `fence` was created by this pipeline for this frame and is deleted once,
++                // here (the frame has left `inflight`); the context is current.
+                 let status = unsafe { gl::ClientWaitSync(fence, gl::SYNC_FLUSH_COMMANDS_BIT, 10_000_000_000) };
+                 unsafe { gl::DeleteSync(fence) };
+                 c.wait_ns = start.elapsed().as_nanos();
+@@ -613,6 +624,11 @@ impl SkiaGpuImageRenderer {
+                     return Err(GpuError(format!("waiting for the GL readback failed (status {status:#x})")));
+                 }
+                 let start = Instant::now();
++                // SAFETY: the fence signalled, so the GPU finished writing this PBO. MapBufferRange
++                // maps `out.len()` bytes (the PBO's size: one frame, checked above against
++                // `out`) for reading; the copy reads that many bytes from the mapping and writes
++                // that many into `out`, an exclusive slice of the same length, and the regions
++                // cannot overlap (GL mapping vs. caller memory). The mapping ends at UnmapBuffer.
+                 let ok = unsafe {
+                     gl::BindBuffer(gl::PIXEL_PACK_BUFFER, p.pbos[f.slot]);
+                     let src = gl::MapBufferRange(gl::PIXEL_PACK_BUFFER, 0, out.len() as isize, gl::MAP_READ_BIT);
+diff --git a/canvas-html/vendor/anyrender_skia/src/image_renderer.rs b/canvas-html/vendor/anyrender_skia/src/image_renderer.rs
+index 5d5edf2..2fc6b63 100644
+--- a/canvas-html/vendor/anyrender_skia/src/image_renderer.rs
++++ b/canvas-html/vendor/anyrender_skia/src/image_renderer.rs
+@@ -80,15 +80,26 @@ impl ImageRenderer for SkiaImageRenderer {
+     }
+ 
+     fn render<F: FnOnce(&mut Self::ScenePainter<'_>)>(&mut self, draw_fn: F, buffer: &mut [u8]) {
++        self.try_render(draw_fn, buffer).unwrap()
++    }
++}
++
++impl SkiaImageRenderer {
++    /// Like `ImageRenderer::render`, but a buffer that does not fit the image (shorter than
++    /// `width * height * 4` bytes) is an error instead of a panic, and nothing is drawn.
++    pub fn try_render<F: FnOnce(&mut SkiaScenePainter<'_>)>(&mut self, draw_fn: F, buffer: &mut [u8]) -> Result<(), String> {
+         debug_timer!(timer, feature = "log_frame_times");
+ 
+-        let mut surface = surfaces::wrap_pixels(
++        let needed = self.image_info.compute_min_byte_size();
++        let len = buffer.len();
++        let Some(mut surface) = surfaces::wrap_pixels(
+             &self.image_info,
+             &mut buffer[..],
+             None,
+             Some(&self.surface_props),
+-        )
+-        .unwrap();
++        ) else {
++            return Err(format!("cannot draw a {}x{} image into {len} bytes (needs {needed})", self.image_info.width(), self.image_info.height()));
++        };
+ 
+         // Clear surface with transparent background to allow transparency in rendered images
+         surface.canvas().clear(Color::TRANSPARENT);
+@@ -105,5 +116,6 @@ impl ImageRenderer for SkiaImageRenderer {
+         timer.record_time("cache next gen");
+ 
+         timer.print_times("skia_raster: ");
++        Ok(())
+     }
+ }

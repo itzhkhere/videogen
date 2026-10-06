@@ -1,0 +1,170 @@
+[
+ {
+  "backend": "cpu",
+  "case": "white bg, red",
+  "background": "#ffffff",
+  "content": "#ff0000",
+  "contentPx": [
+   255,
+   0,
+   0,
+   255
+  ],
+  "backgroundPx": [
+   255,
+   255,
+   255,
+   255
+  ],
+  "bottomLeftPx": [
+   0,
+   0,
+   255,
+   255
+  ],
+  "renderIntoEqualsRender": true,
+  "bytes": 3200,
+  "pixelWidth": 40,
+  "pixelHeight": 20
+ },
+ {
+  "backend": "cpu",
+  "case": "white bg, 50% red",
+  "background": "#ffffff",
+  "content": "rgba(255,0,0,0.5)",
+  "contentPx": [
+   255,
+   127,
+   127,
+   255
+  ],
+  "backgroundPx": [
+   255,
+   255,
+   255,
+   255
+  ],
+  "bottomLeftPx": [
+   0,
+   0,
+   255,
+   255
+  ],
+  "renderIntoEqualsRender": true,
+  "bytes": 3200,
+  "pixelWidth": 40,
+  "pixelHeight": 20
+ },
+ {
+  "backend": "cpu",
+  "case": "transparent bg, red",
+  "background": "#00000000",
+  "content": "#ff0000",
+  "contentPx": [
+   255,
+   0,
+   0,
+   255
+  ],
+  "backgroundPx": [
+   0,
+   0,
+   0,
+   0
+  ],
+  "bottomLeftPx": [
+   0,
+   0,
+   255,
+   255
+  ],
+  "renderIntoEqualsRender": true,
+  "bytes": 3200,
+  "pixelWidth": 40,
+  "pixelHeight": 20
+ },
+ {
+  "backend": "cpu",
+  "case": "transparent bg, 50% red",
+  "background": "#00000000",
+  "content": "rgba(255,0,0,0.5)",
+  "contentPx": [
+   128,
+   0,
+   0,
+   128
+  ],
+  "backgroundPx": [
+   0,
+   0,
+   0,
+   0
+  ],
+  "bottomLeftPx": [
+   0,
+   0,
+   255,
+   255
+  ],
+  "renderIntoEqualsRender": true,
+  "bytes": 3200,
+  "pixelWidth": 40,
+  "pixelHeight": 20
+ },
+ {
+  "backend": "cpu",
+  "case": "50% green bg, red",
+  "background": "#00ff0080",
+  "content": "#ff0000",
+  "contentPx": [
+   255,
+   0,
+   0,
+   255
+  ],
+  "backgroundPx": [
+   0,
+   128,
+   0,
+   128
+  ],
+  "bottomLeftPx": [
+   0,
+   0,
+   255,
+   255
+  ],
+  "renderIntoEqualsRender": true,
+  "bytes": 3200,
+  "pixelWidth": 40,
+  "pixelHeight": 20
+ },
+ {
+  "backend": "cpu",
+  "case": "50% green bg, 50% red",
+  "background": "#00ff0080",
+  "content": "rgba(255,0,0,0.5)",
+  "contentPx": [
+   128,
+   64,
+   0,
+   192
+  ],
+  "backgroundPx": [
+   0,
+   128,
+   0,
+   128
+  ],
+  "bottomLeftPx": [
+   0,
+   0,
+   255,
+   255
+  ],
+  "renderIntoEqualsRender": true,
+  "bytes": 3200,
+  "pixelWidth": 40,
+  "pixelHeight": 20
+ }
+]

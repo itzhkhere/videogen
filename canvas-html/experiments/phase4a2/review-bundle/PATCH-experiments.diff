@@ -1,0 +1,568 @@
+diff --git a/canvas-html/experiments/phase4a2/.gitignore b/canvas-html/experiments/phase4a2/.gitignore
+new file mode 100644
+index 0000000..2398992
+--- /dev/null
++++ b/canvas-html/experiments/phase4a2/.gitignore
+@@ -0,0 +1,2 @@
++build/
++colab/bundle.tgz
+diff --git a/canvas-html/experiments/phase4a2/catch-unwind-bench.mjs b/canvas-html/experiments/phase4a2/catch-unwind-bench.mjs
+new file mode 100644
+index 0000000..57ecc6d
+--- /dev/null
++++ b/canvas-html/experiments/phase4a2/catch-unwind-bench.mjs
+@@ -0,0 +1,18 @@
++// A/B of napi-rs `catch_unwind` on render()/renderInto(): per-call time on tiny and 720p frames,
++// and that the ordinary error path keeps its class and code. node catch-unwind-bench.mjs <addon.node> <w> <h> <calls>
++import { createRequire } from 'node:module'
++const require = createRequire(import.meta.url)
++const { HtmlRenderer } = require(process.argv[2])
++const [w, h, n] = [+process.argv[3], +process.argv[4], +process.argv[5]]
++const r = new HtmlRenderer({ width: w, height: h, systemFonts: false })
++r.load('<body style="margin:0;background:#123"><div style="width:10px;height:10px;background:#f00"></div>')
++const buf = Buffer.alloc(r.frameByteLength)
++const med = (a) => a.sort((x, y) => x - y)[a.length >> 1]
++const into = [], rend = []
++for (let rep = 0; rep < 7; rep++) {
++  let t = performance.now(); for (let i = 0; i < n; i++) r.renderInto(buf); into.push((performance.now() - t) * 1000 / n)
++  t = performance.now(); for (let i = 0; i < n; i++) r.render(); rend.push((performance.now() - t) * 1000 / n)
++  await new Promise((res) => setImmediate(res))
++}
++let bad = null; try { r.renderInto(Buffer.alloc(3)) } catch (e) { bad = `${e.constructor.name} ${e.code}` }
++console.log(JSON.stringify({ addon: process.argv[2].split('/').pop(), size: `${w}x${h}`, renderIntoUs: +med(into).toFixed(2), renderUs: +med(rend).toFixed(2), errorPath: bad }))
+diff --git a/canvas-html/experiments/phase4a2/colab/make-bundle.sh b/canvas-html/experiments/phase4a2/colab/make-bundle.sh
+new file mode 100755
+index 0000000..cdbfbf8
+--- /dev/null
++++ b/canvas-html/experiments/phase4a2/colab/make-bundle.sh
+@@ -0,0 +1,12 @@
++#!/bin/bash
++# Packs what the Colab VM needs for the Phase 4A.2 hardware pass (paths relative to canvas-html/):
++# the 4A.2 production and GPU addons, the 4A.1 baselines, the 4A.2 and 4A scripts, tests, scenes.
++set -e
++cd "$(dirname "$0")/../../.."
++out=${1:-experiments/phase4a2/colab/bundle.tgz}
++tar -czf "$out" canvas-html.linux-x64-gnu.node index.js package.json \
++  experiments/phase4a2/*.mjs experiments/phase4a2/colab/vm-*.sh \
++  experiments/phase4a2/build/gpu.node experiments/phase4a2/build/phase4a1-cpu.node experiments/phase4a1/build/gpu.node \
++  experiments/phase4a/lib experiments/phase4a/correctness.mjs \
++  test/render-into.mjs test/render-into-workers.mjs test/assets test/scenes node_modules/pngjs
++ls -l "$out"
+diff --git a/canvas-html/experiments/phase4a2/colab/run-blocking.py b/canvas-html/experiments/phase4a2/colab/run-blocking.py
+new file mode 100644
+index 0000000..5ab2a5c
+--- /dev/null
++++ b/canvas-html/experiments/phase4a2/colab/run-blocking.py
+@@ -0,0 +1,17 @@
++# Executed in the Colab kernel by `colab exec`: keeps the kernel busy (so the session stays
++# alive) while a shell script runs; streams its log. Env: SCRIPT (path on the VM), LOG.
++import os, subprocess, sys, time
++script, log = os.environ["SCRIPT"], os.environ.get("LOG", "/content/run.log")
++with open(log, "w") as f:
++    p = subprocess.Popen(["bash", script], stdout=f, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, start_new_session=True)
++pos = 0
++while True:
++    done = p.poll() is not None
++    with open(log) as f:
++        f.seek(pos); chunk = f.read(); pos = f.tell()
++    if chunk:
++        sys.stdout.write(chunk); sys.stdout.flush()
++    if done:
++        break
++    time.sleep(10)
++print(f"EXIT {p.returncode}", flush=True)
+diff --git a/canvas-html/experiments/phase4a2/colab/vm-run.sh b/canvas-html/experiments/phase4a2/colab/vm-run.sh
+new file mode 100755
+index 0000000..620e489
+--- /dev/null
++++ b/canvas-html/experiments/phase4a2/colab/vm-run.sh
+@@ -0,0 +1,20 @@
++#!/bin/bash
++# Phase 4A.2 hardware regression on a Colab GPU (short; final run on an L4, TAG=l4): output regression 4A.1 → 4A.2 (render and
++# renderInto) on Ganesh GL and Vulkan, Phase 4A's GPU correctness subset with the 4A.2 GPU build,
++# the small render()/renderInto() sanity matrix, and the renderInto tests on the GPU backends.
++cd /content/canvas-html/experiments/phase4a2
++export PATH=/content/node24/bin:$PATH
++TAG=${TAG:-l4}
++mkdir -p evidence/$TAG
++nvidia-smi --query-gpu=name,driver_version,clocks.max.sm,temperature.gpu --format=csv | tee evidence/$TAG/nvidia-smi.txt
++for b in gpu-gl gpu-vulkan; do node output-regression.mjs ../phase4a1/build/gpu.node build/gpu.node $b $TAG; echo "REGRESSION_$b=$?"; done
++cd ../phase4a && CANVAS_HTML_NODE=../phase4a2/build/gpu.node PHASE4A_TAG=colab-$TAG-4a2 PHASE4A_RES=720p,1080p node correctness.mjs > ../phase4a2/evidence/$TAG/correctness-4a.log 2>&1; echo "CORRECTNESS_EXIT=$?"
++cp results/colab-$TAG-4a2/correctness.json ../phase4a2/evidence/$TAG/correctness-4a.json; cd ../phase4a2
++PHASE4A2_BACKENDS=cpu,gpu-gl,gpu-vulkan node sanity-bench.mjs $TAG; echo "BENCH_EXIT=$?"
++for b in gpu-gl gpu-vulkan; do
++  CANVAS_HTML_NODE=$PWD/build/gpu.node CANVAS_HTML_BACKEND=$b node --expose-gc ../../test/render-into.mjs; echo "RENDER_INTO_$b=$?"
++  CANVAS_HTML_NODE=$PWD/build/gpu.node CANVAS_HTML_BACKEND=$b node ../../test/render-into-workers.mjs; echo "WORKERS_$b=$?"
++done > evidence/$TAG/tests.log 2>&1; cat evidence/$TAG/tests.log | grep -E 'passed|=|Error'
++mv evidence/output-regression-*-$TAG.json evidence/sanity-bench-$TAG.json evidence/$TAG/ 2>/dev/null
++tar -czf /content/results-4a2-$TAG.tgz evidence/$TAG && ls -l /content/results-4a2-$TAG.tgz
++echo ALL_DONE
+diff --git a/canvas-html/experiments/phase4a2/colab/vm-setup.sh b/canvas-html/experiments/phase4a2/colab/vm-setup.sh
+new file mode 100755
+index 0000000..57df1d4
+--- /dev/null
++++ b/canvas-html/experiments/phase4a2/colab/vm-setup.sh
+@@ -0,0 +1,33 @@
++#!/bin/bash
++# Prepares a Colab GPU VM for the Phase 4A suite (run as root in /content).
++# Headless NVIDIA: EGL via libglvnd + libEGL_nvidia, Vulkan via the loader + NVIDIA ICD.
++set -u
++cd /content
++echo "== system"; . /etc/os-release; echo "$PRETTY_NAME"; ldd --version | head -1; nproc; free -g | head -2
++echo "== nvidia-smi"; nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv
++NV=$(dirname "$(ldconfig -p | grep -m1 'libnvidia-ml.so.1' | awk '{print $NF}')" 2>/dev/null)
++for d in /usr/lib64-nvidia /usr/lib/x86_64-linux-gnu; do [ -e "$d/libEGL_nvidia.so.0" ] && NV=$d; done
++echo "NVIDIA libs: $NV"; ls "$NV" | grep -E "EGL_nvidia|GLX_nvidia|nvidia-glcore|nvidia-eglcore|nvidia-glsi" || true
++echo "== packages"
++DEBIAN_FRONTEND=noninteractive apt-get -qq update >/dev/null 2>&1
++DEBIAN_FRONTEND=noninteractive apt-get -qq install -y libegl1 libvulkan1 vulkan-tools libfontconfig1 >/dev/null 2>&1; echo "apt exit $?"
++# EGL vendor (libglvnd) and Vulkan ICD manifests for the NVIDIA driver, if the image lacks them
++mkdir -p /usr/share/glvnd/egl_vendor.d /usr/share/vulkan/icd.d
++ls /usr/share/glvnd/egl_vendor.d/ /etc/glvnd/egl_vendor.d/ 2>/dev/null
++if ! grep -rqs EGL_nvidia /usr/share/glvnd/egl_vendor.d /etc/glvnd/egl_vendor.d; then
++  printf '{"file_format_version":"1.0.0","ICD":{"library_path":"%s/libEGL_nvidia.so.0"}}\n' "$NV" > /usr/share/glvnd/egl_vendor.d/10_nvidia.json
++  echo "wrote EGL vendor manifest"
++fi
++if ! grep -rqs GLX_nvidia /usr/share/vulkan/icd.d /etc/vulkan/icd.d; then
++  printf '{"file_format_version":"1.0.0","ICD":{"library_path":"%s/libGLX_nvidia.so.0","api_version":"1.3.0"}}\n' "$NV" > /usr/share/vulkan/icd.d/nvidia_icd.json
++  echo "wrote Vulkan ICD manifest"
++fi
++echo "$NV" > /etc/ld.so.conf.d/zz-nvidia.conf; ldconfig
++echo "== vulkaninfo"; vulkaninfo --summary 2>&1 | grep -E "deviceName|driverName|driverInfo|apiVersion|ERROR" | head
++echo "== node"
++if [ ! -x /content/node24/bin/node ]; then
++  curl -fsSL https://nodejs.org/dist/v24.19.0/node-v24.19.0-linux-x64.tar.xz -o /tmp/node.tar.xz && mkdir -p /content/node24 && tar -xJf /tmp/node.tar.xz -C /content/node24 --strip-components=1
++fi
++/content/node24/bin/node --version
++echo "== bundle"
++mkdir -p /content/canvas-html && tar -xzf /content/bundle.tgz -C /content/canvas-html && ls /content/canvas-html
+diff --git a/canvas-html/experiments/phase4a2/graphify/reach.py b/canvas-html/experiments/phase4a2/graphify/reach.py
+new file mode 100644
+index 0000000..802b458
+--- /dev/null
++++ b/canvas-html/experiments/phase4a2/graphify/reach.py
+@@ -0,0 +1,126 @@
++#!/usr/bin/env python3
++"""Which `unsafe` code can the frame-output entry points reach? (Phase 4A.2 safety audit)
++
++Input: a Graphify graph.json of the staged sources (stage-and-extract.sh) and the staged source
++tree. Graphify (0.9.77, AST mode) gives the function/method inventory with file and line, plus
++`calls` edges. Its Rust extraction misses path-qualified calls (`Type::f(..)`) and some method
++calls inside `unsafe { .. }`, which would under-report reachability, the wrong direction for a
++safety audit. So this script adds edges of its own:
++
++  1. every function/method node gets a body span by brace matching from its line;
++  2. in each body, every `Type::f(`, `.f(` and bare `f(` call is resolved by NAME to all
++     functions of that name in the staged sources (a deliberate over-approximation: a call
++     `.render_timed(` reaches every `render_timed` of every type);
++  3. Graphify's own `calls` edges are kept.
++
++`unsafe` sites (`unsafe {`, `unsafe fn`, `unsafe impl`, outside comments) are mapped to their
++enclosing function. The result is "may reach" (sound up to dynamic dispatch through closures
++and trait objects, which the audit checks by hand), not "does reach".
++
++usage: reach.py GRAPH.json SRC_ROOT [--json OUT]
++"""
++import collections, json, re, sys
++from pathlib import Path
++
++graph = json.load(open(sys.argv[1]))
++root = Path(sys.argv[2])
++out_json = sys.argv[sys.argv.index('--json') + 1] if '--json' in sys.argv else None
++
++ENTRY = {
++    'renderInto (public)': 'canvas_html_lib_htmlrenderer_render_into',
++    'render (public)': 'canvas_html_lib_htmlrenderer_render',
++    'frameByteLength (public)': 'canvas_html_lib_htmlrenderer_frame_byte_length',
++    'close (public)': 'canvas_html_lib_htmlrenderer_close',
++    'constructor (public)': 'canvas_html_lib_htmlrenderer_new',
++    '_renderIntoTimed (private)': 'canvas_html_lib_htmlrenderer_render_into_timed',
++    '_renderTimed (private)': 'canvas_html_lib_htmlrenderer_render_timed',
++    '_renderFramesExperimental (private)': 'canvas_html_lib_htmlrenderer_render_frames_experimental',
++    '_pipelineComplete (private)': 'canvas_html_lib_htmlrenderer_pipeline_complete',
++    'Buffer finalizer (napi-rs drop_buffer)': 'napi_bindgen_runtime_mod_drop_buffer',
++}
++
++fns = [n for n in graph['nodes'] if n['label'].endswith('()') and n.get('source_file') and n.get('source_location', '').startswith('L')]
++by_name = collections.defaultdict(list)
++for n in fns:
++    by_name[n['label'].strip('.').rstrip('()')].append(n['id'])
++src = {f: (root / f).read_text().split('\n') for f in {n['source_file'] for n in fns}}
++
++def strip_comment(line):
++    i = line.find('//')
++    return line if i < 0 else line[:i]
++
++def span(n):
++    lines, start = src[n['source_file']], int(n['source_location'][1:]) - 1
++    depth, seen = 0, False
++    for i in range(start, len(lines)):
++        code = re.sub(r'"(\\.|[^"\\])*"', '""', strip_comment(lines[i]))
++        if not seen and ';' in code and '{' not in code:
++            return (start, i)  # declaration without a body (trait method)
++        for ch in code:
++            if ch == '{': depth += 1; seen = True
++            elif ch == '}': depth -= 1
++        if seen and depth <= 0:
++            return (start, i)
++    return (start, len(lines) - 1)
++
++spans = {n['id']: span(n) for n in fns}
++node = {n['id']: n for n in fns}
++CALL = re.compile(r'(?:\b[A-Za-z_]\w*::)?\.?\b([a-z_]\w*)\s*(?:::<[^>]*>)?\s*\(')
++KEYWORDS = {'if', 'while', 'for', 'match', 'return', 'loop', 'fn', 'Some', 'Ok', 'Err', 'unsafe', 'move', 'as', 'in'}
++
++edges = collections.defaultdict(set)
++for nid, (a, b) in spans.items():
++    f = node[nid]['source_file']
++    body = '\n'.join(strip_comment(l) for l in src[f][a + 1:b + 1])  # skip the signature line
++    for m in CALL.finditer(body):
++        name = m.group(1)
++        if name in KEYWORDS: continue
++        for t in by_name.get(name, []):
++            if t != nid: edges[nid].add(t)
++for e in graph['edges']:
++    if e['relation'] == 'calls' and e['source'] in node and e['target'] in node:
++        edges[e['source']].add(e['target'])
++
++UNSAFE = re.compile(r'\bunsafe\s*(\{|fn\b|impl\b)')
++sites = []
++for f, lines in src.items():
++    for i, l in enumerate(lines):
++        code = strip_comment(l)
++        if UNSAFE.search(code):
++            owner = [nid for nid, (a, b) in spans.items() if node[nid]['source_file'] == f and a <= i <= b]
++            owner = min(owner, key=lambda x: spans[x][1] - spans[x][0]) if owner else None
++            sites.append({'file': f, 'line': i + 1, 'code': l.strip()[:110], 'fn': owner})
++
++def reach(start):
++    seen, q, parent = {start}, collections.deque([start]), {start: None}
++    while q:
++        x = q.popleft()
++        for y in edges[x]:
++            if y not in seen: seen.add(y); parent[y] = x; q.append(y)
++    return seen, parent
++
++def chain(parent, t):
++    out = []
++    while t is not None: out.append(node[t]['label']); t = parent[t]
++    return ' ← '.join(out)
++
++result = []
++for s in sites:
++    s['reachedFrom'] = {}
++for label, eid in ENTRY.items():
++    if eid not in node: print('missing entry', eid, file=sys.stderr); continue
++    seen, parent = reach(eid)
++    for s in sites:
++        if s['fn'] in seen:
++            s['reachedFrom'][label] = chain(parent, s['fn'])
++
++print(f'{len(fns)} functions, {sum(len(v) for v in edges.values())} call edges (Graphify + name-based), {len(sites)} unsafe sites\n')
++for s in sorted(sites, key=lambda s: (-len(s['reachedFrom']), s['file'], s['line'])):
++    fn = node[s['fn']]['label'] if s['fn'] else '?'
++    print(f"{s['file']}:{s['line']}  in {fn}  — {s['code']}")
++    if not s['reachedFrom']:
++        print('    not reachable from the frame-output entry points')
++    for k, v in s['reachedFrom'].items():
++        print(f'    may be reached from {k}: {v}')
++if out_json:
++    json.dump(sites, open(out_json, 'w'), indent=1)
+diff --git a/canvas-html/experiments/phase4a2/graphify/stage-and-extract.sh b/canvas-html/experiments/phase4a2/graphify/stage-and-extract.sh
+new file mode 100755
+index 0000000..b3658e2
+--- /dev/null
++++ b/canvas-html/experiments/phase4a2/graphify/stage-and-extract.sh
+@@ -0,0 +1,20 @@
++#!/usr/bin/env bash
++# Phase 4A.2 safety audit: a Graphify graph of the frame-output code (canvas-html src/, the
++# vendored anyrender_skia and anyrender trait, napi-rs 3.14.1 Buffer/finalizer code, skia-safe
++# 0.153.3 surface wrapping), then reach.py: which unsafe sites the entry points may reach.
++# Needs graphify 0.9.77 (pip install graphifyy==0.9.77) and a cargo registry with the crates.
++set -euo pipefail
++here="$(cd "$(dirname "$0")" && pwd)"; ch="$here/../../.."; work="${1:-$(mktemp -d)}"
++reg=$(ls -d ~/.cargo/registry/src/*/ | head -1)
++mkdir -p "$work"/src/{canvas-html,anyrender_skia,anyrender,napi/bindgen_runtime/js_values,skia-safe/core}
++cp "$ch"/src/*.rs "$work/src/canvas-html/"
++cp "$ch"/vendor/anyrender_skia/src/{lib.rs,image_renderer.rs,gpu_image_renderer.rs,gpu_common.rs,graphite_image_renderer.rs,scene.rs} "$work/src/anyrender_skia/"
++cp "$ch/vendor/anyrender/src/lib.rs" "$work/src/anyrender/"
++cp "$reg/napi-3.14.1/src/bindgen_runtime/js_values/buffer.rs" "$work/src/napi/bindgen_runtime/js_values/"
++cp "$reg/napi-3.14.1/src/bindgen_runtime/mod.rs" "$work/src/napi/bindgen_runtime/"
++cp "$reg/napi-3.14.1/src/env.rs" "$work/src/napi/"
++cp "$reg/skia-safe-0.153.3/src/core/surface.rs" "$work/src/skia-safe/core/"
++graphify extract "$work/src" --code-only --no-cluster --out "$work/out"
++python3 "$here/reach.py" "$work/out/graphify-out/graph.json" "$work/src" --json "$here/reach.json" > "$here/reach.txt"
++cp "$work/out/graphify-out/graph.json" "$here/graph.json"
++echo "graph: $here/graph.json; reachability: $here/reach.txt"
+diff --git a/canvas-html/experiments/phase4a2/mmap-experiment.mjs b/canvas-html/experiments/phase4a2/mmap-experiment.mjs
+new file mode 100644
+index 0000000..23de2ee
+--- /dev/null
++++ b/canvas-html/experiments/phase4a2/mmap-experiment.mjs
+@@ -0,0 +1,57 @@
++// Time-boxed allocator experiment: render()'s heap frame ("transfer") vs a frame in its own
++// anonymous mapping ("mmap"), through _renderTimed. One process per (mode, case), --expose-gc.
++//   speed: 4K and 1080p, scene A-like page, 60 frames, tight loop and with an event-loop turn per
++//          frame (median ms per frame, wall time around the call)
++//   retain: 100 4K frames retained, then dropped + turns + gc: RSS before/while/after
++// node mmap-experiment.mjs   → evidence/mmap-experiment.json
++// Needs the build of commit 9fd0be7 (the "mmap" output was removed after the experiment).
++import fs from 'node:fs'
++import path from 'node:path'
++import { spawnSync } from 'node:child_process'
++import { createRequire } from 'node:module'
++import { fileURLToPath } from 'node:url'
++const here = path.dirname(fileURLToPath(import.meta.url))
++const addon = process.env.CANVAS_HTML_NODE ?? path.join(here, '../../canvas-html.linux-x64-gnu.node')
++const HTML = '<body style="margin:0;background:#1e293b"><h1 style="color:#fff;font:60px sans-serif">frame</h1>'
++const MiB = (b) => Math.round(b / 1048576)
++const turn = () => new Promise((r) => setImmediate(r))
++const med = (a) => [...a].sort((x, y) => x - y)[a.length >> 1]
++
++if (process.argv[2] === '--child') {
++  const [, , , mode, kind, dprArg, turnsArg] = process.argv
++  const { HtmlRenderer } = createRequire(import.meta.url)(addon)
++  const r = new HtmlRenderer({ width: 1280, height: 720, devicePixelRatio: +dprArg, systemFonts: false })
++  r.load(HTML)
++  const one = () => r._renderTimed({ output: mode }).pixels
++  for (let i = 0; i < 3; i++) one()
++  const settle = async () => { for (let i = 0; i < 10; i++) { globalThis.gc(); await turn() } }
++  await settle()
++  if (kind === 'speed') {
++    const per = []
++    for (let i = 0; i < 60; i++) {
++      const t = performance.now(); one(); per.push(performance.now() - t)
++      if (turnsArg === '1') await turn()
++    }
++    console.log(JSON.stringify({ mode, kind, dpr: +dprArg, turns: turnsArg === '1', medianMs: +med(per).toFixed(2), peakRssMiB: MiB(process.memoryUsage().rss) }))
++  } else {
++    const base = MiB(process.memoryUsage().rss)
++    let kept = Array.from({ length: 100 }, one)
++    const held = MiB(process.memoryUsage().rss)
++    kept = null
++    await settle()
++    console.log(JSON.stringify({ mode, kind, dpr: +dprArg, rssBaselineMiB: base, rssRetainedMiB: held, rssAfterDropMiB: MiB(process.memoryUsage().rss), nativeInUseAfterDropMiB: MiB(r._nativeHeap().inUseBytes) }))
++  }
++  r.close()
++  process.exit(0)
++}
++
++const rows = []
++const run = (...a) => {
++  const c = spawnSync(process.execPath, ['--expose-gc', fileURLToPath(import.meta.url), '--child', ...a], { encoding: 'utf8' })
++  const row = JSON.parse(c.stdout.trim().split('\n').pop())
++  rows.push(row); console.log(JSON.stringify(row))
++}
++for (let round = 0; round < 2; round++) for (const dpr of ['1.5', '3']) for (const turns of ['0', '1']) for (const mode of ['transfer', 'mmap']) run(mode, 'speed', dpr, turns)
++for (const mode of ['transfer', 'mmap']) run(mode, 'retain', '3', '0')
++fs.mkdirSync(path.join(here, 'evidence'), { recursive: true })
++fs.writeFileSync(path.join(here, 'evidence', `mmap-experiment${process.env.SUFFIX ?? ''}.json`), JSON.stringify(rows, null, 1))
+diff --git a/canvas-html/experiments/phase4a2/oom.mjs b/canvas-html/experiments/phase4a2/oom.mjs
+new file mode 100644
+index 0000000..87511da
+--- /dev/null
++++ b/canvas-html/experiments/phase4a2/oom.mjs
+@@ -0,0 +1,38 @@
++// Fallible allocation under memory pressure (Linux, run under an address-space limit).
++// render(): 4K frames are retained until one cannot be allocated → a JS Error, not an abort;
++// after releasing them, render() works again. renderInto(): allocates nothing per frame, so it
++// keeps working at the limit with one caller buffer.
++// node oom.mjs   (spawns itself under `ulimit -v`; PHASE4A2_AS_LIMIT_KIB, default 3 GiB)
++import { spawnSync } from 'node:child_process'
++import { createRequire } from 'node:module'
++import path from 'node:path'
++import { fileURLToPath } from 'node:url'
++const self = fileURLToPath(import.meta.url)
++const addon = process.env.CANVAS_HTML_NODE ?? path.join(path.dirname(self), '../../canvas-html.linux-x64-gnu.node')
++
++if (process.argv[2] === '--child') {
++  const { HtmlRenderer } = createRequire(import.meta.url)(addon)
++  const r = new HtmlRenderer({ width: 1280, height: 720, devicePixelRatio: 3, systemFonts: false })
++  r.load('<body style="background:#334155"><h1 style="color:#fff">oom</h1>')
++  const target = Buffer.alloc(r.frameByteLength)
++  const kept = []
++  let failure = null
++  for (let i = 0; i < 400 && !failure; i++) {
++    try { kept.push(r.render()) } catch (e) { failure = { at: i, name: e.constructor.name, message: e.message } }
++  }
++  let intoAtLimit
++  try { r.renderInto(target); intoAtLimit = 'ok' } catch (e) { intoAtLimit = e.message }
++  const n = kept.length
++  kept.length = 0
++  for (let i = 0; i < 10; i++) { globalThis.gc(); await new Promise((res) => setImmediate(res)) }
++  let afterRelease
++  try { afterRelease = r.render().length === r.frameByteLength ? 'ok' : 'wrong size' } catch (e) { afterRelease = e.message }
++  r.close()
++  console.log(JSON.stringify({ framesRetainedBeforeFailure: n, failure, renderIntoAtLimit: intoAtLimit, renderAfterRelease: afterRelease }))
++  process.exit(0)
++}
++const kib = Number(process.env.PHASE4A2_AS_LIMIT_KIB ?? 3 * 1024 * 1024)
++const c = spawnSync('sh', ['-c', `ulimit -v ${kib}; exec "${process.execPath}" --expose-gc "${self}" --child`], { encoding: 'utf8' })
++console.log(`address-space limit ${kib >> 10} MiB; exit ${c.status}${c.signal ? ' signal ' + c.signal : ''}`)
++console.log(c.stdout.trim() || c.stderr.slice(-800))
++process.exit(c.status === 0 ? 0 : 1)
+diff --git a/canvas-html/experiments/phase4a2/output-regression.mjs b/canvas-html/experiments/phase4a2/output-regression.mjs
+new file mode 100644
+index 0000000..f37ccbe
+--- /dev/null
++++ b/canvas-html/experiments/phase4a2/output-regression.mjs
+@@ -0,0 +1,57 @@
++// Output regression, Phase 4A.1 build → Phase 4A.2 build, on one backend: scenes A–G1000
++// (720p, 1080p; render() only, as in Phase 4A's cpu-unchanged.mjs) and test/scenes/* (page seek
++// 0, 500, 1500 ms). The 4A.2 build renders every frame twice, with render() and renderInto().
++// Every hash must be equal: before.render == after.render == after.renderInto.
++// node output-regression.mjs <before.node> <after.node> <cpu|gpu-gl|gpu-vulkan> [tag]
++//   → evidence/output-regression-<backend>[-tag].json
++import fs from 'node:fs'
++import path from 'node:path'
++import { createRequire } from 'node:module'
++import { createHash } from 'node:crypto'
++import { fileURLToPath, pathToFileURL } from 'node:url'
++import { spawnSync } from 'node:child_process'
++import { SCENES, RESOLUTIONS, prepareAssets, baseUrl, repo } from '../phase4a/lib/scenes.mjs'
++const here = path.dirname(fileURLToPath(import.meta.url))
++
++if (process.argv[2] === '--child') {
++  const [, , , addon, backend, into] = process.argv
++  const { HtmlRenderer } = createRequire(import.meta.url)(addon)
++  const opts = backend === 'cpu' ? {} : { experimentalBackend: backend }
++  const out = {}
++  const h = (b) => createHash('sha256').update(b).digest('hex').slice(0, 16)
++  const frame = (r) => {
++    if (into !== '1') return h(r.render())
++    const t = Buffer.alloc(r.frameByteLength)
++    r.renderInto(t)
++    return h(t)
++  }
++  for (const res of RESOLUTIONS.slice(0, 2)) for (const s of SCENES) {
++    const r = new HtmlRenderer({ width: 1280, height: 720, devicePixelRatio: res.dpr, systemFonts: false, ...opts })
++    r.load(s.html(), baseUrl); out[`${s.id}@${res.name}`] = frame(r); r.close()
++  }
++  const dir = path.join(repo, 'test', 'scenes')
++  for (const f of fs.readdirSync(dir).filter((f) => f.endsWith('.html')).sort()) {
++    const r = new HtmlRenderer({ width: 1280, height: 720, scripts: true, ...opts })
++    r.load(fs.readFileSync(path.join(dir, f), 'utf8'), pathToFileURL(path.join(dir, f)).href)
++    for (const t of [0, 500, 1500]) { r.eval(`window.seek(${t})`); out[`${f}@${t}`] = frame(r) }
++    r.close()
++  }
++  console.log(JSON.stringify(out))
++  process.exit(0)
++}
++
++const [before, after, backend = 'cpu', tag] = process.argv.slice(2)
++prepareAssets()
++const run = (addon, into) => {
++  const c = spawnSync(process.execPath, [fileURLToPath(import.meta.url), '--child', path.resolve(addon), backend, into], { encoding: 'utf8', maxBuffer: 1 << 26 })
++  if (c.status !== 0) { console.error(c.stderr.slice(-1500)); process.exit(2) }
++  return JSON.parse(c.stdout.trim().split('\n').pop())
++}
++const a = run(before, '0'), b = run(after, '0'), c = run(after, '1')
++const keys = Object.keys(a)
++const renderDiff = keys.filter((k) => a[k] !== b[k]), intoDiff = keys.filter((k) => b[k] !== c[k])
++console.log(`${backend}: ${keys.length} frames; 4A.1 render() vs 4A.2 render(): ${renderDiff.length} differ${renderDiff.length ? ' (' + renderDiff.join(', ') + ')' : ''}; 4A.2 render() vs renderInto(): ${intoDiff.length} differ${intoDiff.length ? ' (' + intoDiff.join(', ') + ')' : ''}`)
++fs.mkdirSync(path.join(here, 'evidence'), { recursive: true })
++fs.writeFileSync(path.join(here, 'evidence', `output-regression-${backend}${tag ? '-' + tag : ''}.json`),
++  JSON.stringify({ backend, before, after, frames: keys.length, renderDiffers: renderDiff, renderIntoDiffers: intoDiff, hashes: b }, null, 1) + '\n')
++if (renderDiff.length || intoDiff.length) process.exit(1)
+diff --git a/canvas-html/experiments/phase4a2/pixel-format.mjs b/canvas-html/experiments/phase4a2/pixel-format.mjs
+new file mode 100644
+index 0000000..388ff67
+--- /dev/null
++++ b/canvas-html/experiments/phase4a2/pixel-format.mjs
+@@ -0,0 +1,39 @@
++// What bytes does a frame contain? Renders small pages with known colours on each backend and
++// reads pixels back: channel order, row order, alpha byte with an opaque / transparent /
++// translucent `background`, and translucent page content over each.
++// node pixel-format.mjs [cpu,gpu-gl,gpu-vulkan]   (GPU: CANVAS_HTML_NODE=build/gpu.node)
++import { createRequire } from 'node:module'
++import path from 'node:path'
++import { fileURLToPath } from 'node:url'
++const require = createRequire(import.meta.url)
++const here = path.dirname(fileURLToPath(import.meta.url))
++const { HtmlRenderer } = require(process.env.CANVAS_HTML_NODE ?? path.join(here, '../../canvas-html.linux-x64-gnu.node'))
++const backends = (process.argv[2] ?? 'cpu').split(',')
++
++// 40×20 CSS px at dpr 1. Left half: page content; right half: nothing (background only).
++// Row 0..9 top band, row 10..19 bottom band, so row order is visible.
++const page = (content) => `<body style="margin:0"><div style="position:absolute;left:0;top:0;width:20px;height:10px;background:${content}"></div><div style="position:absolute;left:0;top:10px;width:20px;height:10px;background:#0000ff"></div>`
++const px = (buf, w, x, y) => Array.from(buf.subarray((y * w + x) * 4, (y * w + x) * 4 + 4))
++const cases = [
++  ['white bg, red', '#ffffff', '#ff0000'],
++  ['white bg, 50% red', '#ffffff', 'rgba(255,0,0,0.5)'],
++  ['transparent bg, red', '#00000000', '#ff0000'],
++  ['transparent bg, 50% red', '#00000000', 'rgba(255,0,0,0.5)'],
++  ['50% green bg, red', '#00ff0080', '#ff0000'],
++  ['50% green bg, 50% red', '#00ff0080', 'rgba(255,0,0,0.5)'],
++]
++const out = []
++for (const backend of backends) {
++  for (const [name, background, content] of cases) {
++    const r = new HtmlRenderer({ width: 40, height: 20, background, systemFonts: false, experimentalBackend: backend === 'cpu' ? undefined : backend })
++    r.load(page(content))
++    const w = r.pixelWidth
++    const a = r.render()
++    const b = Buffer.alloc(r.frameByteLength)
++    r.renderInto(b)
++    out.push({ backend, case: name, background, content, contentPx: px(a, w, 5, 5), backgroundPx: px(a, w, 35, 5), bottomLeftPx: px(a, w, 5, 15), renderIntoEqualsRender: a.equals(b), bytes: a.length, pixelWidth: w, pixelHeight: r.pixelHeight })
++    r.close()
++  }
++}
++for (const o of out) console.log(`${o.backend.padEnd(11)} ${o.case.padEnd(26)} content ${JSON.stringify(o.contentPx).padEnd(18)} background ${JSON.stringify(o.backgroundPx).padEnd(18)} row 15 ${JSON.stringify(o.bottomLeftPx)}  renderInto==render ${o.renderIntoEqualsRender}`)
++if (process.env.PIXEL_FORMAT_JSON) (await import('node:fs')).writeFileSync(process.env.PIXEL_FORMAT_JSON, JSON.stringify(out, null, 1))
+diff --git a/canvas-html/experiments/phase4a2/sanity-bench.mjs b/canvas-html/experiments/phase4a2/sanity-bench.mjs
+new file mode 100644
+index 0000000..fca345d
+--- /dev/null
++++ b/canvas-html/experiments/phase4a2/sanity-bench.mjs
+@@ -0,0 +1,51 @@
++// Performance sanity check (not a study): did productization keep the Phase 4A.1 gains?
++// Scene A (output-dominated) and scene E (paint-heavy), 1080p and 4K, per backend:
++//   4A.1 render()       Phase 4A.1 build, render()
++//   4A.1 _renderInto    Phase 4A.1 build, the experimental _renderInto
++//   4A.2 render()       this build, render()
++//   4A.2 renderInto     this build, the public renderInto
++// One process per row; 3 warm-up frames, then 15 (1080p) / 10 (4K) frames, tight loop; median
++// and p95 wall ms around the call, peak RSS.
++// PHASE4A2_BACKENDS=cpu,gpu-gl,gpu-vulkan node sanity-bench.mjs [tag]  → evidence/sanity-bench[-tag].json
++import fs from 'node:fs'
++import path from 'node:path'
++import { createRequire } from 'node:module'
++import { fileURLToPath } from 'node:url'
++import { spawnSync } from 'node:child_process'
++import { SCENES, prepareAssets, baseUrl } from '../phase4a/lib/scenes.mjs'
++const here = path.dirname(fileURLToPath(import.meta.url))
++const RES = { '1080p': [1.5, 15], '4K': [3, 10] }
++const q = (a, p) => { const s = [...a].sort((x, y) => x - y); return s[Math.min(s.length - 1, Math.floor(p * s.length))] }
++
++if (process.argv[2] === '--child') {
++  const [, , , addon, backend, sceneId, res, api] = process.argv
++  const { HtmlRenderer } = createRequire(import.meta.url)(addon)
++  const [dpr, n] = RES[res]
++  const r = new HtmlRenderer({ width: 1280, height: 720, devicePixelRatio: dpr, systemFonts: false, ...(backend === 'cpu' ? {} : { experimentalBackend: backend }) })
++  r.load(SCENES.find((s) => s.id === sceneId).html(), baseUrl)
++  const target = Buffer.alloc(r.pixelWidth * r.pixelHeight * 4)
++  const one = api === 'render' ? () => r.render() : api === '_renderInto' ? () => r._renderInto(target) : () => r.renderInto(target)
++  for (let i = 0; i < 3; i++) one()
++  const ms = []
++  let peak = 0
++  for (let i = 0; i < n; i++) { const t = performance.now(); one(); ms.push(performance.now() - t); peak = Math.max(peak, process.memoryUsage().rss) }
++  r.close()
++  console.log(JSON.stringify({ medianMs: +q(ms, 0.5).toFixed(2), p95Ms: +q(ms, 0.95).toFixed(2), peakRssMiB: Math.round(peak / 1048576) }))
++  process.exit(0)
++}
++
++prepareAssets()
++const backends = (process.env.PHASE4A2_BACKENDS ?? 'cpu').split(',')
++const newAddon = (b) => process.env.CANVAS_HTML_NODE ?? (b === 'cpu' ? path.join(here, '../../canvas-html.linux-x64-gnu.node') : path.join(here, 'build/gpu.node'))
++const oldAddon = (b) => process.env.PHASE4A1_NODE ?? (b === 'cpu' ? path.join(here, 'build/phase4a1-cpu.node') : path.join(here, '../phase4a1/build/gpu.node'))
++const ROWS = [['4A.1 render()', oldAddon, 'render'], ['4A.1 _renderInto', oldAddon, '_renderInto'], ['4A.2 render()', newAddon, 'render'], ['4A.2 renderInto', newAddon, 'renderInto']]
++const rows = []
++for (const backend of backends) for (const sceneId of ['A', 'E']) for (const res of Object.keys(RES)) for (const [label, addon, api] of ROWS) {
++  const c = spawnSync(process.execPath, [fileURLToPath(import.meta.url), '--child', addon(backend), backend, sceneId, res, api], { encoding: 'utf8' })
++  const row = { backend, scene: sceneId, res, path: label, ...(c.status === 0 ? JSON.parse(c.stdout.trim().split('\n').pop()) : { error: c.stderr.slice(-400) }) }
++  rows.push(row)
++  console.log(`${backend.padEnd(10)} ${sceneId} ${res.padEnd(5)} ${label.padEnd(17)} ${row.error ? 'ERROR ' + row.error : `median ${row.medianMs} ms  p95 ${row.p95Ms} ms  peak RSS ${row.peakRssMiB} MiB`}`)
++}
++fs.mkdirSync(path.join(here, 'evidence'), { recursive: true })
++fs.writeFileSync(path.join(here, 'evidence', `sanity-bench${process.argv[2] ? '-' + process.argv[2] : ''}.json`), JSON.stringify(rows, null, 1) + '\n')
++if (rows.some((r) => r.error)) process.exit(1)

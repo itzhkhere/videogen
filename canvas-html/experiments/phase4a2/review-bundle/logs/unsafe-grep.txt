@@ -1,0 +1,28 @@
+src/frames.rs:32:    unsafe {
+src/lib.rs:982:        self.paint_into(Some(unsafe { target.bytes() }))?;
+src/lib.rs:995:        self.paint_timed(&mut t, Some(unsafe { target.bytes() }))?;
+src/lib.rs:1107:            let c = self.gpu_renderer()?.pipeline_complete(unsafe { target.bytes() }).map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
+src/lib.rs:1174:                    let p = self.paint_into(Some(unsafe { targets[i % k].bytes() }))?;
+src/lib.rs:1196:                            let c = self.gpu_renderer()?.pipeline_complete(unsafe { targets[next_out % k].bytes() }).map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
+src/lib.rs:1208:                        let c = self.gpu_renderer()?.pipeline_complete(unsafe { targets[next_out % k].bytes() }).map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
+src/lib.rs:1243:            let m = unsafe { libc::mallinfo2() };
+src/target.rs:39:        check(unsafe { sys::napi_is_typedarray(raw_env, raw, &mut is_typedarray) })?;
+src/target.rs:49:        check(unsafe {
+src/target.rs:58:        check(unsafe { sys::napi_is_arraybuffer(raw_env, arraybuffer, &mut is_plain) })?;
+src/target.rs:64:        check(unsafe { sys::napi_is_detached_arraybuffer(raw_env, arraybuffer, &mut detached) })?;
+src/target.rs:84:    pub(crate) unsafe fn bytes(&mut self) -> &mut [u8] {
+src/target.rs:88:        unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }
+vendor/anyrender_skia/src/gpu_image_renderer.rs:170:        unsafe {
+vendor/anyrender_skia/src/gpu_image_renderer.rs:215:        let display = unsafe { Display::with_device(device, None) }.map_err(|e| err("EGL display on device failed", e))?;
+vendor/anyrender_skia/src/gpu_image_renderer.rs:220:        let config = unsafe { display.find_configs(template) }
+vendor/anyrender_skia/src/gpu_image_renderer.rs:225:        let context = unsafe { display.create_context(&config, &attrs) }
+vendor/anyrender_skia/src/gpu_image_renderer.rs:244:            type GetString = unsafe extern "C" fn(u32) -> *const std::ffi::c_char;
+vendor/anyrender_skia/src/gpu_image_renderer.rs:249:                let get: GetString = unsafe { std::mem::transmute(f) };
+vendor/anyrender_skia/src/gpu_image_renderer.rs:250:                let s = |id: u32| unsafe {
+vendor/anyrender_skia/src/gpu_image_renderer.rs:434:                unsafe { gl::DeleteSync(fence) };
+vendor/anyrender_skia/src/gpu_image_renderer.rs:440:            unsafe { gl::DeleteBuffers(self.pbos.len() as i32, self.pbos.as_ptr()) };
+vendor/anyrender_skia/src/gpu_image_renderer.rs:486:                unsafe {
+vendor/anyrender_skia/src/gpu_image_renderer.rs:557:                unsafe {
+vendor/anyrender_skia/src/gpu_image_renderer.rs:617:                let status = unsafe { gl::ClientWaitSync(fence, gl::SYNC_FLUSH_COMMANDS_BIT, 10_000_000_000) };
+vendor/anyrender_skia/src/gpu_image_renderer.rs:618:                unsafe { gl::DeleteSync(fence) };
+vendor/anyrender_skia/src/gpu_image_renderer.rs:632:                let ok = unsafe {

@@ -1,0 +1,51 @@
+v24.19.0
+13fc5d0
+== smoke
+smoke: all passed
+== smoke-js
+smoke-js: all passed
+== smoke-waapi
+smoke-waapi: all passed
+== smoke-fonts
+smoke-fonts: all passed
+== render-into
+render-into: all passed
+== render-into-examples
+render-into-examples: all passed
+== render-into-workers
+transfer   1 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0, 2 buffers allocated for 24 frames, use-after-transfer rejected 24/24, 79.0 fps
+transfer   2 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0,0, 4 buffers allocated for 24 frames, use-after-transfer rejected 24/24, 106.6 fps
+transfer   4 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0,0,0,0, 8 buffers allocated for 24 frames, use-after-transfer rejected 24/24, 111.4 fps
+in-process 1 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0, 68.4 fps
+in-process 2 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0,0, 108.2 fps
+in-process 4 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0,0,0,0, 137.0 fps
+render-into-workers: all passed
+== workers (CSS, GSAP, Motion)
+CSS motion, 30 fps       identical | 1 renderer 0.87 s, 2 workers 0.67 s (1.3x)
+GSAP, 30 fps             identical | 1 renderer 0.50 s, 2 workers 0.40 s (1.3x)
+Motion library, 24 fps   identical | 1 renderer 0.49 s, 2 workers 0.43 s (1.2x)
+== phase3 contract/run.mjs
+30/30 cases pass on both engines with identical results
+exit 0
+== phase3 contract/scenes.mjs
+determinism boa: 5 fresh replays identical=true, distinct frame hashes=5
+determinism deno: 5 fresh replays identical=true, distinct frame hashes=5
+determinism cross-engine: [{"t":0,"identical":true,"firstDifferingLayer":null},{"t":250,"identical":true,"firstDifferingLayer":null},{"t":500,"identical":true,"firstDifferingLayer":null},{"t":750,"identical":true,"firstDifferingLayer":null},{"t":1000,"identical":true,"firstDifferingLayer":null}]
+gsap paused boa: version 3.15.0, expected values=true, errors=0, console=null
+gsap paused deno: version 3.15.0, expected values=true, errors=0, console=[]
+gsap paused cross-engine: [{"t":0,"identical":true,"firstDifferingLayer":null},{"t":250,"identical":true,"firstDifferingLayer":null},{"t":500,"identical":true,"firstDifferingLayer":null},{"t":750,"identical":true,"firstDifferingLayer":null},{"t":1000,"identical":true,"firstDifferingLayer":null}]
+gsap auto boa: version 3.15.0, expected values=true, errors=0, console=null
+gsap auto deno: version 3.15.0, expected values=true, errors=0, console=[]
+gsap auto cross-engine: [{"t":0,"identical":true,"firstDifferingLayer":null},{"t":250,"identical":true,"firstDifferingLayer":null},{"t":500,"identical":true,"firstDifferingLayer":null},{"t":750,"identical":true,"firstDifferingLayer":null},{"t":1000,"identical":true,"firstDifferingLayer":null}]
+exit 0
+== phase3 tests/run.mjs
+{"mode":"contracts","status":0,"signal":null,"elapsedMs":598.408297}
+{"mode":"cycles","status":0,"signal":null,"elapsedMs":43337.171480000005}
+{"mode":"long","status":0,"signal":null,"elapsedMs":1360.9640280000021}
+{"mode":"simultaneous","status":0,"signal":null,"elapsedMs":949.0514249999978}
+{"mode":"workers","status":0,"signal":null,"elapsedMs":5676.092623000004}
+{"mode":"exit-alive","status":0,"signal":null,"elapsedMs":98.22140799999761}
+{"mode":"exit-closed","status":0,"signal":null,"elapsedMs":141.13352199999645}
+{"mode":"exit-multiple","status":0,"signal":null,"elapsedMs":241.17944200000056}
+{"mode":"exit-exception","status":0,"signal":null,"elapsedMs":98.95574199999828}
+exit 0

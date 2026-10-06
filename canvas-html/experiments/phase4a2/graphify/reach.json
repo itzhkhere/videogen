@@ -1,5 +1,18 @@
 [
  {
+  "file": "canvas-html/frames.rs",
+  "line": 32,
+  "code": "unsafe {",
+  "fn": "canvas_html_frames_alloc_frame",
+  "reachedFrom": {
+   "renderInto (public)": "alloc_frame() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": "alloc_frame() \u2190 .paint_into() \u2190 .render()",
+   "_renderIntoTimed (private)": "alloc_frame() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": "alloc_frame() \u2190 .next_frame() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": "alloc_frame() \u2190 .paint_into() \u2190 .render_frames_experimental()"
+  }
+ },
+ {
   "file": "napi/bindgen_runtime/js_values/buffer.rs",
   "line": 65,
   "code": "unsafe fn create_external_buffer(",
@@ -332,7 +345,7 @@
   "fn": "napi_bindgen_runtime_js_values_buffer_buffer_from",
   "reachedFrom": {
    "renderInto (public)": ".from() \u2190 .default() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".from() \u2190 .new() \u2190 .from_data() \u2190 .render()",
+   "render (public)": ".from() \u2190 .default() \u2190 .paint_into() \u2190 .render()",
    "close (public)": ".from() \u2190 .new() \u2190 .close()",
    "constructor (public)": ".from() \u2190 .new() \u2190 .new()",
    "_renderIntoTimed (private)": ".from() \u2190 .new() \u2190 .render_into_timed()",
@@ -349,7 +362,7 @@
   "fn": "napi_bindgen_runtime_js_values_buffer_buffer_as_ref",
   "reachedFrom": {
    "renderInto (public)": ".as_ref() \u2190 .build_document() \u2190 .doc_mut() \u2190 .prepare_frame() \u2190 .render_into()",
-   "render (public)": ".as_ref() \u2190 .from() \u2190 .new() \u2190 .from_data() \u2190 .render()",
+   "render (public)": ".as_ref() \u2190 .build_document() \u2190 .doc_mut() \u2190 .prepare_frame() \u2190 .render()",
    "close (public)": ".as_ref() \u2190 .drop() \u2190 .pipeline_stop() \u2190 .close()",
    "constructor (public)": ".as_ref() \u2190 .from() \u2190 .new() \u2190 .new()",
    "_renderIntoTimed (private)": ".as_ref() \u2190 .from() \u2190 .new() \u2190 .render_into_timed()",
@@ -371,7 +384,7 @@
    "constructor (public)": ".as_mut() \u2190 .unwrap() \u2190 .new() \u2190 .new()",
    "_renderIntoTimed (private)": ".as_mut() \u2190 .prepare_timed() \u2190 .render_into_timed()",
    "_renderTimed (private)": ".as_mut() \u2190 .prepare_timed() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".as_mut() \u2190 .pipeline_submit_inner() \u2190 .render_frames_experimental()",
+   "_renderFramesExperimental (private)": ".as_mut() \u2190 .prepare_frame() \u2190 .render_frames_experimental()",
    "_pipelineComplete (private)": ".as_mut() \u2190 .pipeline_complete() \u2190 .pipeline_complete()"
   }
  },
@@ -457,78 +470,6 @@
   "line": 694,
   "code": "unsafe { sys::napi_is_buffer(env, napi_val, &mut is_buffer) },",
   "fn": "napi_bindgen_runtime_js_values_buffer_buffer_validate",
-  "reachedFrom": {}
- },
- {
-  "file": "napi/bindgen_runtime/mod.rs",
-  "line": 68,
-  "code": "let data: Box<T> = unsafe { Box::from_raw(finalize_data.cast()) };",
-  "fn": "napi_bindgen_runtime_mod_raw_finalize_unchecked",
-  "reachedFrom": {}
- },
- {
-  "file": "napi/bindgen_runtime/mod.rs",
-  "line": 79,
-  "code": "let finalize_callbacks_rc = unsafe { Arc::from_raw(finalize_callbacks_ptr) };",
-  "fn": "napi_bindgen_runtime_mod_raw_finalize_unchecked",
-  "reachedFrom": {}
- },
- {
-  "file": "napi/bindgen_runtime/mod.rs",
-  "line": 91,
-  "code": "let finalize = unsafe { Box::from_raw(finalize_callbacks_rc.get()) };",
-  "fn": "napi_bindgen_runtime_mod_raw_finalize_unchecked",
-  "reachedFrom": {}
- },
- {
-  "file": "napi/bindgen_runtime/mod.rs",
-  "line": 93,
-  "code": "let delete_reference_status = unsafe { sys::napi_delete_reference(env, ref_val) };",
-  "fn": "napi_bindgen_runtime_mod_raw_finalize_unchecked",
-  "reachedFrom": {}
- },
- {
-  "file": "napi/bindgen_runtime/mod.rs",
-  "line": 103,
-  "code": "unsafe { e.throw_into(env) };",
-  "fn": "napi_bindgen_runtime_mod_raw_finalize_unchecked",
-  "reachedFrom": {}
- },
- {
-  "file": "napi/bindgen_runtime/mod.rs",
-  "line": 123,
-  "code": "unsafe {",
-  "fn": "napi_bindgen_runtime_mod_drop_buffer",
-  "reachedFrom": {
-   "Buffer finalizer (napi-rs drop_buffer)": "drop_buffer()"
-  }
- },
- {
-  "file": "napi/bindgen_runtime/mod.rs",
-  "line": 137,
-  "code": "let (len, cap): (usize, usize) = *unsafe { Box::from_raw(finalize_hint.cast()) };",
-  "fn": "napi_bindgen_runtime_mod_drop_buffer_slice",
-  "reachedFrom": {}
- },
- {
-  "file": "napi/bindgen_runtime/mod.rs",
-  "line": 148,
-  "code": "unsafe {",
-  "fn": "napi_bindgen_runtime_mod_drop_buffer_slice",
-  "reachedFrom": {}
- },
- {
-  "file": "napi/bindgen_runtime/mod.rs",
-  "line": 162,
-  "code": "pub unsafe fn create_object_with_properties(",
-  "fn": "napi_bindgen_runtime_mod_create_object_with_properties",
-  "reachedFrom": {}
- },
- {
-  "file": "napi/bindgen_runtime/mod.rs",
-  "line": 186,
-  "code": "pub unsafe fn create_object_with_properties(",
-  "fn": null,
   "reachedFrom": {}
  },
  {
@@ -1024,7 +965,7 @@
   "fn": "napi_env_env_unwrap",
   "reachedFrom": {
    "renderInto (public)": ".unwrap() \u2190 .new() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".unwrap() \u2190 .new() \u2190 .from_data() \u2190 .render()",
+   "render (public)": ".unwrap() \u2190 .new() \u2190 .paint_into() \u2190 .render()",
    "close (public)": ".unwrap() \u2190 .new() \u2190 .close()",
    "constructor (public)": ".unwrap() \u2190 .new() \u2190 .new()",
    "_renderIntoTimed (private)": ".unwrap() \u2190 .new() \u2190 .render_into_timed()",
@@ -1531,534 +1472,18 @@
   "reachedFrom": {}
  },
  {
-  "file": "canvas-html/frames.rs",
-  "line": 32,
-  "code": "unsafe {",
-  "fn": "canvas_html_frames_alloc_frame",
-  "reachedFrom": {
-   "renderInto (public)": "alloc_frame() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": "alloc_frame() \u2190 .next_frame() \u2190 .render()",
-   "_renderIntoTimed (private)": "alloc_frame() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
-   "_renderTimed (private)": "alloc_frame() \u2190 .next_frame() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": "alloc_frame() \u2190 .paint_into() \u2190 .render_frames_experimental()"
-  }
- },
- {
-  "file": "canvas-html/target.rs",
-  "line": 39,
-  "code": "check(unsafe { sys::napi_is_typedarray(raw_env, raw, &mut is_typedarray) })?;",
-  "fn": "canvas_html_target_bytetarget_from_js",
-  "reachedFrom": {
-   "renderInto (public)": ".from_js() \u2190 .checked_target() \u2190 .render_into()",
-   "_renderIntoTimed (private)": ".from_js() \u2190 .checked_target() \u2190 .render_into_timed()",
-   "_renderFramesExperimental (private)": ".from_js() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".from_js() \u2190 .checked_target() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "canvas-html/target.rs",
-  "line": 49,
-  "code": "check(unsafe {",
-  "fn": "canvas_html_target_bytetarget_from_js",
-  "reachedFrom": {
-   "renderInto (public)": ".from_js() \u2190 .checked_target() \u2190 .render_into()",
-   "_renderIntoTimed (private)": ".from_js() \u2190 .checked_target() \u2190 .render_into_timed()",
-   "_renderFramesExperimental (private)": ".from_js() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".from_js() \u2190 .checked_target() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "canvas-html/target.rs",
-  "line": 58,
-  "code": "check(unsafe { sys::napi_is_arraybuffer(raw_env, arraybuffer, &mut is_plain) })?;",
-  "fn": "canvas_html_target_bytetarget_from_js",
-  "reachedFrom": {
-   "renderInto (public)": ".from_js() \u2190 .checked_target() \u2190 .render_into()",
-   "_renderIntoTimed (private)": ".from_js() \u2190 .checked_target() \u2190 .render_into_timed()",
-   "_renderFramesExperimental (private)": ".from_js() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".from_js() \u2190 .checked_target() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "canvas-html/target.rs",
-  "line": 64,
-  "code": "check(unsafe { sys::napi_is_detached_arraybuffer(raw_env, arraybuffer, &mut detached) })?;",
-  "fn": "canvas_html_target_bytetarget_from_js",
-  "reachedFrom": {
-   "renderInto (public)": ".from_js() \u2190 .checked_target() \u2190 .render_into()",
-   "_renderIntoTimed (private)": ".from_js() \u2190 .checked_target() \u2190 .render_into_timed()",
-   "_renderFramesExperimental (private)": ".from_js() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".from_js() \u2190 .checked_target() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "canvas-html/target.rs",
-  "line": 84,
-  "code": "pub(crate) unsafe fn bytes(&mut self) -> &mut [u8] {",
-  "fn": "canvas_html_target_bytetarget_bytes",
-  "reachedFrom": {
-   "renderInto (public)": ".bytes() \u2190 .render_into()",
-   "render (public)": ".bytes() \u2190 .try_render() \u2190 .paint_into() \u2190 .render()",
-   "_renderIntoTimed (private)": ".bytes() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".bytes() \u2190 .try_render() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".bytes() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".bytes() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "canvas-html/target.rs",
-  "line": 88,
-  "code": "unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }",
-  "fn": "canvas_html_target_bytetarget_bytes",
-  "reachedFrom": {
-   "renderInto (public)": ".bytes() \u2190 .render_into()",
-   "render (public)": ".bytes() \u2190 .try_render() \u2190 .paint_into() \u2190 .render()",
-   "_renderIntoTimed (private)": ".bytes() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".bytes() \u2190 .try_render() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".bytes() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".bytes() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_common.rs",
-  "line": 57,
-  "code": "let entry = unsafe { ash::Entry::load() }.map_err(|e| err(\"Vulkan loader not found\", e))?;",
-  "fn": "anyrender_skia_gpu_common_vkdevice_new",
-  "reachedFrom": {
-   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
-   "close (public)": ".new() \u2190 .close()",
-   "constructor (public)": ".new() \u2190 .new()",
-   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".new() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_common.rs",
-  "line": 59,
-  "code": "unsafe { entry.try_enumerate_instance_version() }.ok().flatten().unwrap_or(avk::API_VERSION_1_1)",
-  "fn": "anyrender_skia_gpu_common_vkdevice_new",
-  "reachedFrom": {
-   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
-   "close (public)": ".new() \u2190 .close()",
-   "constructor (public)": ".new() \u2190 .new()",
-   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".new() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_common.rs",
-  "line": 62,
-  "code": "let instance = unsafe { entry.create_instance(&avk::InstanceCreateInfo::default().application_info(&app), None",
-  "fn": "anyrender_skia_gpu_common_vkdevice_new",
-  "reachedFrom": {
-   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
-   "close (public)": ".new() \u2190 .close()",
-   "constructor (public)": ".new() \u2190 .new()",
-   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".new() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_common.rs",
-  "line": 64,
-  "code": "let devices = unsafe { instance.enumerate_physical_devices() }.map_err(|e| err(\"no Vulkan devices\", e))?;",
-  "fn": "anyrender_skia_gpu_common_vkdevice_new",
-  "reachedFrom": {
-   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
-   "close (public)": ".new() \u2190 .close()",
-   "constructor (public)": ".new() \u2190 .new()",
-   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".new() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_common.rs",
-  "line": 68,
-  "code": "let props = unsafe { instance.get_physical_device_properties(pd) };",
-  "fn": "anyrender_skia_gpu_common_vkdevice_new",
-  "reachedFrom": {
-   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
-   "close (public)": ".new() \u2190 .close()",
-   "constructor (public)": ".new() \u2190 .new()",
-   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".new() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_common.rs",
-  "line": 69,
-  "code": "let q = unsafe { instance.get_physical_device_queue_family_properties(pd) }",
-  "fn": "anyrender_skia_gpu_common_vkdevice_new",
-  "reachedFrom": {
-   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
-   "close (public)": ".new() \u2190 .close()",
-   "constructor (public)": ".new() \u2190 .new()",
-   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".new() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_common.rs",
-  "line": 76,
-  "code": "unsafe { instance.destroy_instance(None) };",
-  "fn": "anyrender_skia_gpu_common_vkdevice_new",
-  "reachedFrom": {
-   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
-   "close (public)": ".new() \u2190 .close()",
-   "constructor (public)": ".new() \u2190 .new()",
-   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".new() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_common.rs",
-  "line": 82,
-  "code": "unsafe { instance.destroy_instance(None) };",
-  "fn": "anyrender_skia_gpu_common_vkdevice_new",
-  "reachedFrom": {
-   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
-   "close (public)": ".new() \u2190 .close()",
-   "constructor (public)": ".new() \u2190 .new()",
-   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".new() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_common.rs",
-  "line": 90,
-  "code": "let device = match unsafe { instance.create_device(physical, &avk::DeviceCreateInfo::default().queue_create_in",
-  "fn": "anyrender_skia_gpu_common_vkdevice_new",
-  "reachedFrom": {
-   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
-   "close (public)": ".new() \u2190 .close()",
-   "constructor (public)": ".new() \u2190 .new()",
-   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".new() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_common.rs",
-  "line": 93,
-  "code": "unsafe { instance.destroy_instance(None) };",
-  "fn": "anyrender_skia_gpu_common_vkdevice_new",
-  "reachedFrom": {
-   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
-   "close (public)": ".new() \u2190 .close()",
-   "constructor (public)": ".new() \u2190 .new()",
-   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".new() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_common.rs",
-  "line": 97,
-  "code": "let queue = unsafe { device.get_device_queue(queue_family, 0) };",
-  "fn": "anyrender_skia_gpu_common_vkdevice_new",
-  "reachedFrom": {
-   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
-   "close (public)": ".new() \u2190 .close()",
-   "constructor (public)": ".new() \u2190 .new()",
-   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".new() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_common.rs",
-  "line": 98,
-  "code": "let name = unsafe { CStr::from_ptr(props.device_name.as_ptr()) }.to_string_lossy().into_owned();",
-  "fn": "anyrender_skia_gpu_common_vkdevice_new",
-  "reachedFrom": {
-   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
-   "close (public)": ".new() \u2190 .close()",
-   "constructor (public)": ".new() \u2190 .new()",
-   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".new() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_common.rs",
-  "line": 114,
-  "code": "let get_proc = |gpo: GetProcOf| unsafe {",
-  "fn": "anyrender_skia_gpu_common_vkdevice_with_backend",
-  "reachedFrom": {
-   "renderInto (public)": ".with_backend() \u2190 .new() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".with_backend() \u2190 .new() \u2190 .from_data() \u2190 .render()",
-   "close (public)": ".with_backend() \u2190 .new() \u2190 .close()",
-   "constructor (public)": ".with_backend() \u2190 .new() \u2190 .new()",
-   "_renderIntoTimed (private)": ".with_backend() \u2190 .new() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".with_backend() \u2190 .new() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".with_backend() \u2190 .new() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".with_backend() \u2190 .new() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_common.rs",
-  "line": 122,
-  "code": "let backend = unsafe {",
-  "fn": "anyrender_skia_gpu_common_vkdevice_with_backend",
-  "reachedFrom": {
-   "renderInto (public)": ".with_backend() \u2190 .new() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".with_backend() \u2190 .new() \u2190 .from_data() \u2190 .render()",
-   "close (public)": ".with_backend() \u2190 .new() \u2190 .close()",
-   "constructor (public)": ".with_backend() \u2190 .new() \u2190 .new()",
-   "_renderIntoTimed (private)": ".with_backend() \u2190 .new() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".with_backend() \u2190 .new() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".with_backend() \u2190 .new() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".with_backend() \u2190 .new() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_common.rs",
-  "line": 139,
-  "code": "unsafe {",
-  "fn": "anyrender_skia_gpu_common_vkdevice_drop",
-  "reachedFrom": {
-   "renderInto (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
-   "close (public)": ".drop() \u2190 .pipeline_stop() \u2190 .close()",
-   "_renderIntoTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".drop() \u2190 .pipeline_stop() \u2190 .render_frames_experimental()",
-   "Buffer finalizer (napi-rs drop_buffer)": ".drop() \u2190 drop_buffer()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_image_renderer.rs",
-  "line": 170,
-  "code": "unsafe {",
-  "fn": "anyrender_skia_gpu_image_renderer_gpudevice_drop",
-  "reachedFrom": {
-   "renderInto (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
-   "close (public)": ".drop() \u2190 .pipeline_stop() \u2190 .close()",
-   "_renderIntoTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".drop() \u2190 .pipeline_stop() \u2190 .render_frames_experimental()",
-   "Buffer finalizer (napi-rs drop_buffer)": ".drop() \u2190 drop_buffer()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_image_renderer.rs",
-  "line": 215,
-  "code": "let display = unsafe { Display::with_device(device, None) }.map_err(|e| err(\"EGL display on device failed\", e)",
-  "fn": "anyrender_skia_gpu_image_renderer_gldevice_new",
-  "reachedFrom": {
-   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
-   "close (public)": ".new() \u2190 .close()",
-   "constructor (public)": ".new() \u2190 .new()",
-   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".new() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_image_renderer.rs",
-  "line": 220,
-  "code": "let config = unsafe { display.find_configs(template) }",
-  "fn": "anyrender_skia_gpu_image_renderer_gldevice_new",
-  "reachedFrom": {
-   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
-   "close (public)": ".new() \u2190 .close()",
-   "constructor (public)": ".new() \u2190 .new()",
-   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".new() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_image_renderer.rs",
-  "line": 225,
-  "code": "let context = unsafe { display.create_context(&config, &attrs) }",
-  "fn": "anyrender_skia_gpu_image_renderer_gldevice_new",
-  "reachedFrom": {
-   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
-   "close (public)": ".new() \u2190 .close()",
-   "constructor (public)": ".new() \u2190 .new()",
-   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".new() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_image_renderer.rs",
-  "line": 249,
-  "code": "let get: GetString = unsafe { std::mem::transmute(f) };",
-  "fn": "anyrender_skia_gpu_image_renderer_gldevice_new",
-  "reachedFrom": {
-   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
-   "close (public)": ".new() \u2190 .close()",
-   "constructor (public)": ".new() \u2190 .new()",
-   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".new() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_image_renderer.rs",
-  "line": 250,
-  "code": "let s = |id: u32| unsafe {",
-  "fn": "anyrender_skia_gpu_image_renderer_gldevice_new",
-  "reachedFrom": {
-   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
-   "close (public)": ".new() \u2190 .close()",
-   "constructor (public)": ".new() \u2190 .new()",
-   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".new() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_image_renderer.rs",
-  "line": 432,
-  "code": "unsafe { gl::DeleteSync(fence) };",
-  "fn": "anyrender_skia_gpu_image_renderer_gpupipeline_drop",
-  "reachedFrom": {
-   "renderInto (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
-   "close (public)": ".drop() \u2190 .pipeline_stop() \u2190 .close()",
-   "_renderIntoTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".drop() \u2190 .pipeline_stop() \u2190 .render_frames_experimental()",
-   "Buffer finalizer (napi-rs drop_buffer)": ".drop() \u2190 drop_buffer()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_image_renderer.rs",
-  "line": 436,
-  "code": "unsafe { gl::DeleteBuffers(self.pbos.len() as i32, self.pbos.as_ptr()) };",
-  "fn": "anyrender_skia_gpu_image_renderer_gpupipeline_drop",
-  "reachedFrom": {
-   "renderInto (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
-   "close (public)": ".drop() \u2190 .pipeline_stop() \u2190 .close()",
-   "_renderIntoTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".drop() \u2190 .pipeline_stop() \u2190 .render_frames_experimental()",
-   "Buffer finalizer (napi-rs drop_buffer)": ".drop() \u2190 drop_buffer()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_image_renderer.rs",
-  "line": 480,
-  "code": "unsafe {",
-  "fn": "anyrender_skia_gpu_image_renderer_skiagpuimagerenderer_pipeline_start",
-  "reachedFrom": {
-   "_renderFramesExperimental (private)": ".pipeline_start() \u2190 .render_frames_experimental()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_image_renderer.rs",
-  "line": 548,
-  "code": "unsafe {",
-  "fn": "anyrender_skia_gpu_image_renderer_skiagpuimagerenderer_pipeline_submit",
-  "reachedFrom": {
-   "_renderFramesExperimental (private)": ".pipeline_submit() \u2190 .pipeline_submit_inner() \u2190 .render_frames_experimental()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_image_renderer.rs",
-  "line": 606,
-  "code": "let status = unsafe { gl::ClientWaitSync(fence, gl::SYNC_FLUSH_COMMANDS_BIT, 10_000_000_000) };",
-  "fn": "anyrender_skia_gpu_image_renderer_skiagpuimagerenderer_pipeline_complete",
-  "reachedFrom": {
-   "_renderFramesExperimental (private)": ".pipeline_complete() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".pipeline_complete() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_image_renderer.rs",
-  "line": 607,
-  "code": "unsafe { gl::DeleteSync(fence) };",
-  "fn": "anyrender_skia_gpu_image_renderer_skiagpuimagerenderer_pipeline_complete",
-  "reachedFrom": {
-   "_renderFramesExperimental (private)": ".pipeline_complete() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".pipeline_complete() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/gpu_image_renderer.rs",
-  "line": 616,
-  "code": "let ok = unsafe {",
-  "fn": "anyrender_skia_gpu_image_renderer_skiagpuimagerenderer_pipeline_complete",
-  "reachedFrom": {
-   "_renderFramesExperimental (private)": ".pipeline_complete() \u2190 .render_frames_experimental()",
-   "_pipelineComplete (private)": ".pipeline_complete() \u2190 .pipeline_complete()"
-  }
- },
- {
-  "file": "anyrender_skia/graphite_image_renderer.rs",
-  "line": 53,
-  "code": "unsafe {",
-  "fn": "anyrender_skia_graphite_image_renderer_graphitedevice_drop",
-  "reachedFrom": {
-   "renderInto (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
-   "close (public)": ".drop() \u2190 .pipeline_stop() \u2190 .close()",
-   "_renderIntoTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
-   "_renderTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".drop() \u2190 .pipeline_stop() \u2190 .render_frames_experimental()",
-   "Buffer finalizer (napi-rs drop_buffer)": ".drop() \u2190 drop_buffer()"
-  }
- },
- {
   "file": "skia-safe/core/surface.rs",
   "line": 30,
   "code": "Surface::from_ptr(unsafe { sb::C_SkSurfaces_Null(size.width, size.height) })",
   "fn": "skia_safe_core_surface_null",
   "reachedFrom": {
    "renderInto (public)": "null() \u2190 .new() \u2190 .paint_into() \u2190 .render_into()",
-   "render (public)": "null() \u2190 .new() \u2190 .from_data() \u2190 .render()",
+   "render (public)": "null() \u2190 .new() \u2190 .paint_into() \u2190 .render()",
    "close (public)": "null() \u2190 .new() \u2190 .close()",
    "constructor (public)": "null() \u2190 .new() \u2190 .new()",
    "_renderIntoTimed (private)": "null() \u2190 .new() \u2190 .render_into_timed()",
    "_renderTimed (private)": "null() \u2190 .new() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": "null() \u2190 .new() \u2190 .render_frames_experimental()",
+   "_renderFramesExperimental (private)": "null() \u2190 .pipeline_start() \u2190 .render_frames_experimental()",
    "_pipelineComplete (private)": "null() \u2190 .new() \u2190 .pipeline_complete()"
   }
  },
@@ -2094,7 +1519,7 @@
    "constructor (public)": ".width() \u2190 .make_surface() \u2190 .new() \u2190 .new()",
    "_renderIntoTimed (private)": ".width() \u2190 .make_surface() \u2190 .new() \u2190 .render_into_timed()",
    "_renderTimed (private)": ".width() \u2190 .make_surface() \u2190 .new() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".width() \u2190 .pipeline_submit() \u2190 .pipeline_submit_inner() \u2190 .render_frames_experimental()",
+   "_renderFramesExperimental (private)": ".width() \u2190 .make_surface() \u2190 .new() \u2190 .render_frames_experimental()",
    "_pipelineComplete (private)": ".width() \u2190 .make_surface() \u2190 .new() \u2190 .pipeline_complete()"
   }
  },
@@ -2110,7 +1535,7 @@
    "constructor (public)": ".height() \u2190 .make_surface() \u2190 .new() \u2190 .new()",
    "_renderIntoTimed (private)": ".height() \u2190 .make_surface() \u2190 .new() \u2190 .render_into_timed()",
    "_renderTimed (private)": ".height() \u2190 .make_surface() \u2190 .new() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".height() \u2190 .pipeline_submit() \u2190 .pipeline_submit_inner() \u2190 .render_frames_experimental()",
+   "_renderFramesExperimental (private)": ".height() \u2190 .make_surface() \u2190 .new() \u2190 .render_frames_experimental()",
    "_pipelineComplete (private)": ".height() \u2190 .make_surface() \u2190 .new() \u2190 .pipeline_complete()"
   }
  },
@@ -2159,7 +1584,7 @@
    "render (public)": ".canvas() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
    "_renderIntoTimed (private)": ".canvas() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
    "_renderTimed (private)": ".canvas() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": ".canvas() \u2190 .pipeline_submit() \u2190 .pipeline_submit_inner() \u2190 .render_frames_experimental()"
+   "_renderFramesExperimental (private)": ".canvas() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_frames_experimental()"
   }
  },
  {
@@ -2268,6 +1693,21 @@
   "reachedFrom": {}
  },
  {
+  "file": "anyrender_skia/graphite_image_renderer.rs",
+  "line": 53,
+  "code": "unsafe {",
+  "fn": "anyrender_skia_graphite_image_renderer_graphitedevice_drop",
+  "reachedFrom": {
+   "renderInto (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".drop() \u2190 .pipeline_stop() \u2190 .close()",
+   "_renderIntoTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".drop() \u2190 .pipeline_stop() \u2190 .render_frames_experimental()",
+   "Buffer finalizer (napi-rs drop_buffer)": ".drop() \u2190 drop_buffer()"
+  }
+ },
+ {
   "file": "canvas-html/lib.rs",
   "line": 982,
   "code": "self.paint_into(Some(unsafe { target.bytes() }))?;",
@@ -2330,6 +1770,82 @@
   "reachedFrom": {}
  },
  {
+  "file": "canvas-html/target.rs",
+  "line": 39,
+  "code": "check(unsafe { sys::napi_is_typedarray(raw_env, raw, &mut is_typedarray) })?;",
+  "fn": "canvas_html_target_bytetarget_from_js",
+  "reachedFrom": {
+   "renderInto (public)": ".from_js() \u2190 .checked_target() \u2190 .render_into()",
+   "_renderIntoTimed (private)": ".from_js() \u2190 .checked_target() \u2190 .render_into_timed()",
+   "_renderFramesExperimental (private)": ".from_js() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".from_js() \u2190 .checked_target() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "canvas-html/target.rs",
+  "line": 49,
+  "code": "check(unsafe {",
+  "fn": "canvas_html_target_bytetarget_from_js",
+  "reachedFrom": {
+   "renderInto (public)": ".from_js() \u2190 .checked_target() \u2190 .render_into()",
+   "_renderIntoTimed (private)": ".from_js() \u2190 .checked_target() \u2190 .render_into_timed()",
+   "_renderFramesExperimental (private)": ".from_js() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".from_js() \u2190 .checked_target() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "canvas-html/target.rs",
+  "line": 58,
+  "code": "check(unsafe { sys::napi_is_arraybuffer(raw_env, arraybuffer, &mut is_plain) })?;",
+  "fn": "canvas_html_target_bytetarget_from_js",
+  "reachedFrom": {
+   "renderInto (public)": ".from_js() \u2190 .checked_target() \u2190 .render_into()",
+   "_renderIntoTimed (private)": ".from_js() \u2190 .checked_target() \u2190 .render_into_timed()",
+   "_renderFramesExperimental (private)": ".from_js() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".from_js() \u2190 .checked_target() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "canvas-html/target.rs",
+  "line": 64,
+  "code": "check(unsafe { sys::napi_is_detached_arraybuffer(raw_env, arraybuffer, &mut detached) })?;",
+  "fn": "canvas_html_target_bytetarget_from_js",
+  "reachedFrom": {
+   "renderInto (public)": ".from_js() \u2190 .checked_target() \u2190 .render_into()",
+   "_renderIntoTimed (private)": ".from_js() \u2190 .checked_target() \u2190 .render_into_timed()",
+   "_renderFramesExperimental (private)": ".from_js() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".from_js() \u2190 .checked_target() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "canvas-html/target.rs",
+  "line": 84,
+  "code": "pub(crate) unsafe fn bytes(&mut self) -> &mut [u8] {",
+  "fn": "canvas_html_target_bytetarget_bytes",
+  "reachedFrom": {
+   "renderInto (public)": ".bytes() \u2190 .render_into()",
+   "render (public)": ".bytes() \u2190 .try_render() \u2190 .paint_into() \u2190 .render()",
+   "_renderIntoTimed (private)": ".bytes() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".bytes() \u2190 .try_render() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".bytes() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".bytes() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "canvas-html/target.rs",
+  "line": 88,
+  "code": "unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }",
+  "fn": "canvas_html_target_bytetarget_bytes",
+  "reachedFrom": {
+   "renderInto (public)": ".bytes() \u2190 .render_into()",
+   "render (public)": ".bytes() \u2190 .try_render() \u2190 .paint_into() \u2190 .render()",
+   "_renderIntoTimed (private)": ".bytes() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".bytes() \u2190 .try_render() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".bytes() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".bytes() \u2190 .pipeline_complete()"
+  }
+ },
+ {
   "file": "anyrender_skia/scene.rs",
   "line": 1013,
   "code": "let pixels = unsafe {",
@@ -2339,7 +1855,491 @@
    "render (public)": "shader_from_image_brush() \u2190 .set_paint_brush() \u2190 .fill() \u2190 .paint_into() \u2190 .render()",
    "_renderIntoTimed (private)": "shader_from_image_brush() \u2190 .set_paint_brush() \u2190 .fill() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
    "_renderTimed (private)": "shader_from_image_brush() \u2190 .set_paint_brush() \u2190 .fill() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
-   "_renderFramesExperimental (private)": "shader_from_image_brush() \u2190 .set_paint_brush() \u2190 .fill() \u2190 .pipeline_submit_inner() \u2190 .render_frames_experimental()"
+   "_renderFramesExperimental (private)": "shader_from_image_brush() \u2190 .set_paint_brush() \u2190 .fill() \u2190 .paint_into() \u2190 .render_frames_experimental()"
+  }
+ },
+ {
+  "file": "napi/bindgen_runtime/mod.rs",
+  "line": 68,
+  "code": "let data: Box<T> = unsafe { Box::from_raw(finalize_data.cast()) };",
+  "fn": "napi_bindgen_runtime_mod_raw_finalize_unchecked",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/mod.rs",
+  "line": 79,
+  "code": "let finalize_callbacks_rc = unsafe { Arc::from_raw(finalize_callbacks_ptr) };",
+  "fn": "napi_bindgen_runtime_mod_raw_finalize_unchecked",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/mod.rs",
+  "line": 91,
+  "code": "let finalize = unsafe { Box::from_raw(finalize_callbacks_rc.get()) };",
+  "fn": "napi_bindgen_runtime_mod_raw_finalize_unchecked",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/mod.rs",
+  "line": 93,
+  "code": "let delete_reference_status = unsafe { sys::napi_delete_reference(env, ref_val) };",
+  "fn": "napi_bindgen_runtime_mod_raw_finalize_unchecked",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/mod.rs",
+  "line": 103,
+  "code": "unsafe { e.throw_into(env) };",
+  "fn": "napi_bindgen_runtime_mod_raw_finalize_unchecked",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/mod.rs",
+  "line": 123,
+  "code": "unsafe {",
+  "fn": "napi_bindgen_runtime_mod_drop_buffer",
+  "reachedFrom": {
+   "Buffer finalizer (napi-rs drop_buffer)": "drop_buffer()"
+  }
+ },
+ {
+  "file": "napi/bindgen_runtime/mod.rs",
+  "line": 137,
+  "code": "let (len, cap): (usize, usize) = *unsafe { Box::from_raw(finalize_hint.cast()) };",
+  "fn": "napi_bindgen_runtime_mod_drop_buffer_slice",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/mod.rs",
+  "line": 148,
+  "code": "unsafe {",
+  "fn": "napi_bindgen_runtime_mod_drop_buffer_slice",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/mod.rs",
+  "line": 162,
+  "code": "pub unsafe fn create_object_with_properties(",
+  "fn": "napi_bindgen_runtime_mod_create_object_with_properties",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/mod.rs",
+  "line": 186,
+  "code": "pub unsafe fn create_object_with_properties(",
+  "fn": null,
+  "reachedFrom": {}
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 170,
+  "code": "unsafe {",
+  "fn": "anyrender_skia_gpu_image_renderer_gpudevice_drop",
+  "reachedFrom": {
+   "renderInto (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".drop() \u2190 .pipeline_stop() \u2190 .close()",
+   "_renderIntoTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".drop() \u2190 .pipeline_stop() \u2190 .render_frames_experimental()",
+   "Buffer finalizer (napi-rs drop_buffer)": ".drop() \u2190 drop_buffer()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 215,
+  "code": "let display = unsafe { Display::with_device(device, None) }.map_err(|e| err(\"EGL display on device failed\", e)",
+  "fn": "anyrender_skia_gpu_image_renderer_gldevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 220,
+  "code": "let config = unsafe { display.find_configs(template) }",
+  "fn": "anyrender_skia_gpu_image_renderer_gldevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 225,
+  "code": "let context = unsafe { display.create_context(&config, &attrs) }",
+  "fn": "anyrender_skia_gpu_image_renderer_gldevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 249,
+  "code": "let get: GetString = unsafe { std::mem::transmute(f) };",
+  "fn": "anyrender_skia_gpu_image_renderer_gldevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 250,
+  "code": "let s = |id: u32| unsafe {",
+  "fn": "anyrender_skia_gpu_image_renderer_gldevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 434,
+  "code": "unsafe { gl::DeleteSync(fence) };",
+  "fn": "anyrender_skia_gpu_image_renderer_gpupipeline_drop",
+  "reachedFrom": {
+   "renderInto (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".drop() \u2190 .pipeline_stop() \u2190 .close()",
+   "_renderIntoTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".drop() \u2190 .pipeline_stop() \u2190 .render_frames_experimental()",
+   "Buffer finalizer (napi-rs drop_buffer)": ".drop() \u2190 drop_buffer()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 440,
+  "code": "unsafe { gl::DeleteBuffers(self.pbos.len() as i32, self.pbos.as_ptr()) };",
+  "fn": "anyrender_skia_gpu_image_renderer_gpupipeline_drop",
+  "reachedFrom": {
+   "renderInto (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".drop() \u2190 .pipeline_stop() \u2190 .close()",
+   "_renderIntoTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".drop() \u2190 .pipeline_stop() \u2190 .render_frames_experimental()",
+   "Buffer finalizer (napi-rs drop_buffer)": ".drop() \u2190 drop_buffer()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 486,
+  "code": "unsafe {",
+  "fn": "anyrender_skia_gpu_image_renderer_skiagpuimagerenderer_pipeline_start",
+  "reachedFrom": {
+   "_renderFramesExperimental (private)": ".pipeline_start() \u2190 .render_frames_experimental()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 557,
+  "code": "unsafe {",
+  "fn": "anyrender_skia_gpu_image_renderer_skiagpuimagerenderer_pipeline_submit",
+  "reachedFrom": {
+   "_renderFramesExperimental (private)": ".pipeline_submit() \u2190 .pipeline_submit_inner() \u2190 .render_frames_experimental()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 617,
+  "code": "let status = unsafe { gl::ClientWaitSync(fence, gl::SYNC_FLUSH_COMMANDS_BIT, 10_000_000_000) };",
+  "fn": "anyrender_skia_gpu_image_renderer_skiagpuimagerenderer_pipeline_complete",
+  "reachedFrom": {
+   "_renderFramesExperimental (private)": ".pipeline_complete() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".pipeline_complete() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 618,
+  "code": "unsafe { gl::DeleteSync(fence) };",
+  "fn": "anyrender_skia_gpu_image_renderer_skiagpuimagerenderer_pipeline_complete",
+  "reachedFrom": {
+   "_renderFramesExperimental (private)": ".pipeline_complete() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".pipeline_complete() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 632,
+  "code": "let ok = unsafe {",
+  "fn": "anyrender_skia_gpu_image_renderer_skiagpuimagerenderer_pipeline_complete",
+  "reachedFrom": {
+   "_renderFramesExperimental (private)": ".pipeline_complete() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".pipeline_complete() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 57,
+  "code": "let entry = unsafe { ash::Entry::load() }.map_err(|e| err(\"Vulkan loader not found\", e))?;",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 59,
+  "code": "unsafe { entry.try_enumerate_instance_version() }.ok().flatten().unwrap_or(avk::API_VERSION_1_1)",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 62,
+  "code": "let instance = unsafe { entry.create_instance(&avk::InstanceCreateInfo::default().application_info(&app), None",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 64,
+  "code": "let devices = unsafe { instance.enumerate_physical_devices() }.map_err(|e| err(\"no Vulkan devices\", e))?;",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 68,
+  "code": "let props = unsafe { instance.get_physical_device_properties(pd) };",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 69,
+  "code": "let q = unsafe { instance.get_physical_device_queue_family_properties(pd) }",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 76,
+  "code": "unsafe { instance.destroy_instance(None) };",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 82,
+  "code": "unsafe { instance.destroy_instance(None) };",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 90,
+  "code": "let device = match unsafe { instance.create_device(physical, &avk::DeviceCreateInfo::default().queue_create_in",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 93,
+  "code": "unsafe { instance.destroy_instance(None) };",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 97,
+  "code": "let queue = unsafe { device.get_device_queue(queue_family, 0) };",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 98,
+  "code": "let name = unsafe { CStr::from_ptr(props.device_name.as_ptr()) }.to_string_lossy().into_owned();",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 114,
+  "code": "let get_proc = |gpo: GetProcOf| unsafe {",
+  "fn": "anyrender_skia_gpu_common_vkdevice_with_backend",
+  "reachedFrom": {
+   "renderInto (public)": ".with_backend() \u2190 .new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".with_backend() \u2190 .new() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".with_backend() \u2190 .new() \u2190 .close()",
+   "constructor (public)": ".with_backend() \u2190 .new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".with_backend() \u2190 .new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".with_backend() \u2190 .new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".with_backend() \u2190 .new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".with_backend() \u2190 .new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 122,
+  "code": "let backend = unsafe {",
+  "fn": "anyrender_skia_gpu_common_vkdevice_with_backend",
+  "reachedFrom": {
+   "renderInto (public)": ".with_backend() \u2190 .new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".with_backend() \u2190 .new() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".with_backend() \u2190 .new() \u2190 .close()",
+   "constructor (public)": ".with_backend() \u2190 .new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".with_backend() \u2190 .new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".with_backend() \u2190 .new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".with_backend() \u2190 .new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".with_backend() \u2190 .new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 139,
+  "code": "unsafe {",
+  "fn": "anyrender_skia_gpu_common_vkdevice_drop",
+  "reachedFrom": {
+   "renderInto (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".drop() \u2190 .pipeline_stop() \u2190 .close()",
+   "_renderIntoTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".drop() \u2190 .pipeline_stop() \u2190 .render_frames_experimental()",
+   "Buffer finalizer (napi-rs drop_buffer)": ".drop() \u2190 drop_buffer()"
   }
  }
 ]
