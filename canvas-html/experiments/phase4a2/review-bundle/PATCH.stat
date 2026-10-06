@@ -1,5 +1,5 @@
 base e185c33 (e185c33 Phase 4A.1 results: CONDITIONAL GO (reduced-copy render(), experimental renderInto; async readback not adopted yet))
-head a938f6b Phase 4A.2: SAFETY comments on the pipelined GL readback blocks (patch 0007)
+head d5e17d8 Phase 4A.2: L4 hardware pass (39/39 identical on GL and Vulkan vs 4A.1; correctness subset; sanity bench; renderInto tests) and PHASE4A2_RESULTS.md (GO)
 
  canvas-html/README.md                              |  65 +++++++
  canvas-html/index.d.ts                             |  58 +++---

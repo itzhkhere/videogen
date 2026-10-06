@@ -1,0 +1,434 @@
+[
+ {
+  "backend": "cpu",
+  "scene": "A",
+  "res": "1080p",
+  "path": "4A.1 render()",
+  "medianMs": 5.71,
+  "p95Ms": 7.64,
+  "peakRssMiB": 217
+ },
+ {
+  "backend": "cpu",
+  "scene": "A",
+  "res": "1080p",
+  "path": "4A.1 _renderInto",
+  "medianMs": 2.02,
+  "p95Ms": 2.15,
+  "peakRssMiB": 82
+ },
+ {
+  "backend": "cpu",
+  "scene": "A",
+  "res": "1080p",
+  "path": "4A.2 render()",
+  "medianMs": 5.68,
+  "p95Ms": 7.41,
+  "peakRssMiB": 217
+ },
+ {
+  "backend": "cpu",
+  "scene": "A",
+  "res": "1080p",
+  "path": "4A.2 renderInto",
+  "medianMs": 2.04,
+  "p95Ms": 2.08,
+  "peakRssMiB": 82
+ },
+ {
+  "backend": "cpu",
+  "scene": "A",
+  "res": "4K",
+  "path": "4A.1 render()",
+  "medianMs": 24.58,
+  "p95Ms": 26.7,
+  "peakRssMiB": 486
+ },
+ {
+  "backend": "cpu",
+  "scene": "A",
+  "res": "4K",
+  "path": "4A.1 _renderInto",
+  "medianMs": 9.97,
+  "p95Ms": 10.4,
+  "peakRssMiB": 106
+ },
+ {
+  "backend": "cpu",
+  "scene": "A",
+  "res": "4K",
+  "path": "4A.2 render()",
+  "medianMs": 24.21,
+  "p95Ms": 25.44,
+  "peakRssMiB": 486
+ },
+ {
+  "backend": "cpu",
+  "scene": "A",
+  "res": "4K",
+  "path": "4A.2 renderInto",
+  "medianMs": 10.22,
+  "p95Ms": 10.46,
+  "peakRssMiB": 106
+ },
+ {
+  "backend": "cpu",
+  "scene": "E",
+  "res": "1080p",
+  "path": "4A.1 render()",
+  "medianMs": 183.13,
+  "p95Ms": 184.47,
+  "peakRssMiB": 218
+ },
+ {
+  "backend": "cpu",
+  "scene": "E",
+  "res": "1080p",
+  "path": "4A.1 _renderInto",
+  "medianMs": 180.58,
+  "p95Ms": 184.74,
+  "peakRssMiB": 83
+ },
+ {
+  "backend": "cpu",
+  "scene": "E",
+  "res": "1080p",
+  "path": "4A.2 render()",
+  "medianMs": 183.98,
+  "p95Ms": 185.57,
+  "peakRssMiB": 218
+ },
+ {
+  "backend": "cpu",
+  "scene": "E",
+  "res": "1080p",
+  "path": "4A.2 renderInto",
+  "medianMs": 182.23,
+  "p95Ms": 187.29,
+  "peakRssMiB": 83
+ },
+ {
+  "backend": "cpu",
+  "scene": "E",
+  "res": "4K",
+  "path": "4A.1 render()",
+  "medianMs": 395.76,
+  "p95Ms": 398.55,
+  "peakRssMiB": 493
+ },
+ {
+  "backend": "cpu",
+  "scene": "E",
+  "res": "4K",
+  "path": "4A.1 _renderInto",
+  "medianMs": 386.55,
+  "p95Ms": 394.85,
+  "peakRssMiB": 113
+ },
+ {
+  "backend": "cpu",
+  "scene": "E",
+  "res": "4K",
+  "path": "4A.2 render()",
+  "medianMs": 401.63,
+  "p95Ms": 447.5,
+  "peakRssMiB": 493
+ },
+ {
+  "backend": "cpu",
+  "scene": "E",
+  "res": "4K",
+  "path": "4A.2 renderInto",
+  "medianMs": 394.33,
+  "p95Ms": 396.89,
+  "peakRssMiB": 113
+ },
+ {
+  "backend": "gpu-gl",
+  "scene": "A",
+  "res": "1080p",
+  "path": "4A.1 render()",
+  "medianMs": 5.91,
+  "p95Ms": 10.75,
+  "peakRssMiB": 325
+ },
+ {
+  "backend": "gpu-gl",
+  "scene": "A",
+  "res": "1080p",
+  "path": "4A.1 _renderInto",
+  "medianMs": 2.19,
+  "p95Ms": 3.81,
+  "peakRssMiB": 190
+ },
+ {
+  "backend": "gpu-gl",
+  "scene": "A",
+  "res": "1080p",
+  "path": "4A.2 render()",
+  "medianMs": 5.91,
+  "p95Ms": 7.7,
+  "peakRssMiB": 325
+ },
+ {
+  "backend": "gpu-gl",
+  "scene": "A",
+  "res": "1080p",
+  "path": "4A.2 renderInto",
+  "medianMs": 2.18,
+  "p95Ms": 3.8,
+  "peakRssMiB": 190
+ },
+ {
+  "backend": "gpu-gl",
+  "scene": "A",
+  "res": "4K",
+  "path": "4A.1 render()",
+  "medianMs": 22.58,
+  "p95Ms": 24.06,
+  "peakRssMiB": 648
+ },
+ {
+  "backend": "gpu-gl",
+  "scene": "A",
+  "res": "4K",
+  "path": "4A.1 _renderInto",
+  "medianMs": 7.41,
+  "p95Ms": 7.47,
+  "peakRssMiB": 210
+ },
+ {
+  "backend": "gpu-gl",
+  "scene": "A",
+  "res": "4K",
+  "path": "4A.2 render()",
+  "medianMs": 22.94,
+  "p95Ms": 23.89,
+  "peakRssMiB": 590
+ },
+ {
+  "backend": "gpu-gl",
+  "scene": "A",
+  "res": "4K",
+  "path": "4A.2 renderInto",
+  "medianMs": 7.29,
+  "p95Ms": 7.38,
+  "peakRssMiB": 210
+ },
+ {
+  "backend": "gpu-gl",
+  "scene": "E",
+  "res": "1080p",
+  "path": "4A.1 render()",
+  "medianMs": 31.98,
+  "p95Ms": 35.82,
+  "peakRssMiB": 371
+ },
+ {
+  "backend": "gpu-gl",
+  "scene": "E",
+  "res": "1080p",
+  "path": "4A.1 _renderInto",
+  "medianMs": 27.15,
+  "p95Ms": 31.52,
+  "peakRssMiB": 236
+ },
+ {
+  "backend": "gpu-gl",
+  "scene": "E",
+  "res": "1080p",
+  "path": "4A.2 render()",
+  "medianMs": 31.42,
+  "p95Ms": 36.42,
+  "peakRssMiB": 371
+ },
+ {
+  "backend": "gpu-gl",
+  "scene": "E",
+  "res": "1080p",
+  "path": "4A.2 renderInto",
+  "medianMs": 27.12,
+  "p95Ms": 29.93,
+  "peakRssMiB": 236
+ },
+ {
+  "backend": "gpu-gl",
+  "scene": "E",
+  "res": "4K",
+  "path": "4A.1 render()",
+  "medianMs": 63.29,
+  "p95Ms": 67.15,
+  "peakRssMiB": 727
+ },
+ {
+  "backend": "gpu-gl",
+  "scene": "E",
+  "res": "4K",
+  "path": "4A.1 _renderInto",
+  "medianMs": 47.17,
+  "p95Ms": 52.84,
+  "peakRssMiB": 289
+ },
+ {
+  "backend": "gpu-gl",
+  "scene": "E",
+  "res": "4K",
+  "path": "4A.2 render()",
+  "medianMs": 64.89,
+  "p95Ms": 65.4,
+  "peakRssMiB": 674
+ },
+ {
+  "backend": "gpu-gl",
+  "scene": "E",
+  "res": "4K",
+  "path": "4A.2 renderInto",
+  "medianMs": 46.69,
+  "p95Ms": 50.61,
+  "peakRssMiB": 289
+ },
+ {
+  "backend": "gpu-vulkan",
+  "scene": "A",
+  "res": "1080p",
+  "path": "4A.1 render()",
+  "medianMs": 5.26,
+  "p95Ms": 6.99,
+  "peakRssMiB": 377
+ },
+ {
+  "backend": "gpu-vulkan",
+  "scene": "A",
+  "res": "1080p",
+  "path": "4A.1 _renderInto",
+  "medianMs": 1.74,
+  "p95Ms": 1.97,
+  "peakRssMiB": 242
+ },
+ {
+  "backend": "gpu-vulkan",
+  "scene": "A",
+  "res": "1080p",
+  "path": "4A.2 render()",
+  "medianMs": 5.38,
+  "p95Ms": 7.12,
+  "peakRssMiB": 377
+ },
+ {
+  "backend": "gpu-vulkan",
+  "scene": "A",
+  "res": "1080p",
+  "path": "4A.2 renderInto",
+  "medianMs": 1.84,
+  "p95Ms": 2.13,
+  "peakRssMiB": 241
+ },
+ {
+  "backend": "gpu-vulkan",
+  "scene": "A",
+  "res": "4K",
+  "path": "4A.1 render()",
+  "medianMs": 22.91,
+  "p95Ms": 23.99,
+  "peakRssMiB": 682
+ },
+ {
+  "backend": "gpu-vulkan",
+  "scene": "A",
+  "res": "4K",
+  "path": "4A.1 _renderInto",
+  "medianMs": 8.95,
+  "p95Ms": 9,
+  "peakRssMiB": 289
+ },
+ {
+  "backend": "gpu-vulkan",
+  "scene": "A",
+  "res": "4K",
+  "path": "4A.2 render()",
+  "medianMs": 22.74,
+  "p95Ms": 24.29,
+  "peakRssMiB": 669
+ },
+ {
+  "backend": "gpu-vulkan",
+  "scene": "A",
+  "res": "4K",
+  "path": "4A.2 renderInto",
+  "medianMs": 9.06,
+  "p95Ms": 9.13,
+  "peakRssMiB": 289
+ },
+ {
+  "backend": "gpu-vulkan",
+  "scene": "E",
+  "res": "1080p",
+  "path": "4A.1 render()",
+  "medianMs": 23.67,
+  "p95Ms": 26.34,
+  "peakRssMiB": 406
+ },
+ {
+  "backend": "gpu-vulkan",
+  "scene": "E",
+  "res": "1080p",
+  "path": "4A.1 _renderInto",
+  "medianMs": 20.81,
+  "p95Ms": 22.09,
+  "peakRssMiB": 271
+ },
+ {
+  "backend": "gpu-vulkan",
+  "scene": "E",
+  "res": "1080p",
+  "path": "4A.2 render()",
+  "medianMs": 23.6,
+  "p95Ms": 25.21,
+  "peakRssMiB": 406
+ },
+ {
+  "backend": "gpu-vulkan",
+  "scene": "E",
+  "res": "1080p",
+  "path": "4A.2 renderInto",
+  "medianMs": 20.22,
+  "p95Ms": 21.05,
+  "peakRssMiB": 271
+ },
+ {
+  "backend": "gpu-vulkan",
+  "scene": "E",
+  "res": "4K",
+  "path": "4A.1 render()",
+  "medianMs": 74.82,
+  "p95Ms": 75.94,
+  "peakRssMiB": 734
+ },
+ {
+  "backend": "gpu-vulkan",
+  "scene": "E",
+  "res": "4K",
+  "path": "4A.1 _renderInto",
+  "medianMs": 60.5,
+  "p95Ms": 61.13,
+  "peakRssMiB": 342
+ },
+ {
+  "backend": "gpu-vulkan",
+  "scene": "E",
+  "res": "4K",
+  "path": "4A.2 render()",
+  "medianMs": 74.57,
+  "p95Ms": 75.43,
+  "peakRssMiB": 722
+ },
+ {
+  "backend": "gpu-vulkan",
+  "scene": "E",
+  "res": "4K",
+  "path": "4A.2 renderInto",
+  "medianMs": 60.45,
+  "p95Ms": 61.09,
+  "peakRssMiB": 342
+ }
+]
