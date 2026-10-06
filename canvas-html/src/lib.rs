@@ -199,6 +199,9 @@ pub struct HtmlRenderer {
     frame_bytes: usize,
     /// Experimental Design B: frames returned by Buffer finalizers, reused (Phase 4A.1).
     pool: Option<Arc<frames::FramePool>>,
+    /// How render() hands an RGBA frame to Node: transfer the frame (default) or clone it (the
+    /// Phase 4A path). Experiments only: `CANVAS_HTML_OUTPUT=clone`.
+    clone_output: bool,
     errors: Arc<Mutex<Vec<String>>>,
     js_errors: Vec<String>,
     epoch_ms: Option<f64>,
@@ -600,6 +603,7 @@ impl HtmlRenderer {
             buffer: Vec::new(),
             frame_bytes,
             pool: None,
+            clone_output: std::env::var("CANVAS_HTML_OUTPUT").is_ok_and(|v| v == "clone"),
             errors: Arc::new(Mutex::new(Vec::new())),
             js_errors: Vec::new(),
             epoch_ms: match options.epoch_ms {
@@ -647,7 +651,7 @@ impl HtmlRenderer {
     /// Web Animations and runs requestAnimationFrame callbacks, then styles, lays out and paints.
     /// Returns RGBA pixels (`pixelWidth` x `pixelHeight`, 4 bytes each, row by row) or a PNG.
     #[napi]
-    pub fn render(&mut self, options: Option<RenderOptions>) -> Result<Buffer> {
+    pub fn render<'env>(&mut self, env: &'env Env, options: Option<RenderOptions>) -> Result<BufferSlice<'env>> {
         let png = match options.and_then(|o| o.format).as_deref() {
             None | Some("rgba") => false,
             Some("png") => true,
@@ -655,17 +659,25 @@ impl HtmlRenderer {
         };
         self.prepare_frame()?;
         let mut frame = self.next_frame()?;
-        self.paint_into(Some(&mut frame))?;
+        if let Err(e) = self.paint_into(Some(&mut frame)) {
+            self.buffer = frame;
+            return Err(e);
+        }
         if !png {
-            // The frame Vec becomes the Buffer's memory (napi external buffer, no copy) and is
-            // freed by its finalizer. The renderer keeps no reference to it.
-            return Ok(Buffer::from(frame));
+            if self.clone_output {
+                let copy = frame.clone();
+                self.buffer = frame;
+                return BufferSlice::from_data(env, copy);
+            }
+            // The frame Vec becomes the Buffer's memory (napi external buffer, no copy; Node counts
+            // it in `external`) and is freed by its finalizer; the renderer keeps no reference.
+            return BufferSlice::from_data(env, frame);
         }
         let pw = (self.width as f64 * self.dpr).round() as u32;
         let ph = (self.height as f64 * self.dpr).round() as u32;
         let out = encode_png(&frame, pw, ph)?;
         self.buffer = frame;
-        Ok(Buffer::from(out))
+        BufferSlice::from_data(env, out)
     }
 
     /// Moves the frozen clock forward by `ms`: Date, performance.now, CSS animations that are not
@@ -882,7 +894,7 @@ impl HtmlRenderer {
             return Err(Error::from_reason(format!("format must be \"rgba\", \"png\" or \"none\", got {format:?}")));
         }
         if !matches!(output.as_str(), "transfer" | "transfer-huge" | "clone" | "pool") {
-            return Err(Error::from_reason(format!("output must be \"transfer\", \"transfer-huge\", \"clone\" or \"pool\", got {output:?}")));
+            return Err(Error::from_reason(format!("output must be one of transfer, transfer-huge, clone, pool; got {output:?}")));
         }
         let mut t: HashMap<String, f64> = HashMap::new();
         self.prepare_timed(&mut t, o.measure_paint_prep.unwrap_or(false))?;
@@ -998,6 +1010,21 @@ impl HtmlRenderer {
         self.paint_timed(&mut t, Some(&mut target[..]))?;
         t.insert("total".into(), total.elapsed().as_nanos() as f64);
         self.timed_result(env, t, None)
+    }
+
+    /// Experimental (Phase 4A.1): the C heap as glibc sees it (`mallinfo2`): bytes in use from
+    /// the arenas and from mmap. Frames live here until their Buffer's finalizer frees them.
+    /// Null where mallinfo2 is unavailable.
+    #[napi(js_name = "_nativeHeap")]
+    pub fn native_heap(&self) -> serde_json::Value {
+        #[cfg(all(target_os = "linux", target_env = "gnu"))]
+        {
+            // SAFETY: mallinfo2 takes no arguments and only reads allocator statistics.
+            let m = unsafe { libc::mallinfo2() };
+            serde_json::json!({ "inUseBytes": m.uordblks + m.hblkhd, "mmapBytes": m.hblkhd, "arenaBytes": m.arena, "freeBytes": m.fordblks })
+        }
+        #[cfg(not(all(target_os = "linux", target_env = "gnu")))]
+        serde_json::Value::Null
     }
 
     /// Experimental (Phase 4A.1): Design B pool counters, or null without a pool.
