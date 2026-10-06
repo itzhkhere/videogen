@@ -1,0 +1,12 @@
+[11:41:28] cpu        -        1 create 8.419 ms, 5.633 fps (frame median 177.306), rss 61.3→165.4→156.6 MiB, gpu {"processMiB":null,"deviceUsedMiB":0}, close 1.027 ms, exit 0
+[11:41:32] cpu        -        2 create 19.53 ms, 5.584 fps (frame median 178.291), rss 61.3→255.5→237.4 MiB, gpu {"processMiB":null,"deviceUsedMiB":0}, close 2.144 ms, exit 0
+[11:41:40] cpu        -        4 create 31.213 ms, 5.648 fps (frame median 176.625), rss 61.5→435.6→399.4 MiB, gpu {"processMiB":null,"deviceUsedMiB":0}, close 4.382 ms, exit 0
+[11:41:54] cpu        -        8 create 63.831 ms, 5.592 fps (frame median 177.451), rss 61.2→795.4→722.9 MiB, gpu {"processMiB":null,"deviceUsedMiB":0}, close 8.455 ms, exit 0
+[11:41:55] gpu-graphite renderer 1 create 272.689 ms, 26.027 fps (frame median 37.194), rss 61.4→336.4→222.7 MiB, gpu {"processMiB":174,"deviceUsedMiB":184}, close 71.704 ms, exit 0
+[11:41:57] gpu-graphite renderer 2 create 326.395 ms, 26.795 fps (frame median 37.134), rss 61.5→454.4→313.5 MiB, gpu {"processMiB":342,"deviceUsedMiB":351}, close 126.181 ms, exit 0
+[11:42:00] gpu-graphite renderer 4 create 583.726 ms, 28.622 fps (frame median 34.665), rss 61.5→690→495 MiB, gpu {"processMiB":681,"deviceUsedMiB":691}, close 206.171 ms, exit 0
+[11:42:06] gpu-graphite renderer 8 create 943.04 ms, 26.592 fps (frame median 37.632), rss 61.4→1160.2→860.7 MiB, gpu {"processMiB":1359,"deviceUsedMiB":1370}, close 438.092 ms, exit 0
+[11:42:07] gpu-graphite thread   1 create 247.392 ms, 25.325 fps (frame median 38.589), rss 61.3→336.1→222.4 MiB, gpu {"processMiB":174,"deviceUsedMiB":184}, close 87.316 ms, exit 0
+[11:42:08] gpu-graphite thread   2 create 261.92 ms, 25.868 fps (frame median 38.491), rss 61.5→427.9→306.2 MiB, gpu {"processMiB":250,"deviceUsedMiB":259}, close 93.618 ms, exit 0
+[11:42:11] gpu-graphite thread   4 create 250.715 ms, 27.172 fps (frame median 36.216), rss 61.4→611→473.6 MiB, gpu {"processMiB":401,"deviceUsedMiB":410}, close 109.034 ms, exit 0
+[11:42:15] gpu-graphite thread   8 create 299.937 ms, 24.894 fps (frame median 39.719), rss 61.3→977.9→807.5 MiB, gpu {"processMiB":710,"deviceUsedMiB":720}, close 161.315 ms, exit 0

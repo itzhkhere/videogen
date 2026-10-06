@@ -1,0 +1,18 @@
+[11:21:12] css 120 cpu        median 22.866 ms, p95 27.121, total 5183.337 ms (23.151 fps) | no-readback median 17.755
+[11:21:26] css 120 gpu-gl     median 11.721 ms, p95 15.448, total 3990.764 ms (30.069 fps) | no-readback median 5.735 | vs cpu: minor,minor,minor
+[11:21:41] css 120 gpu-vulkan median 11.998 ms, p95 16.697, total 4068.761 ms (29.493 fps) | no-readback median 5.928 | vs cpu: minor,minor,minor
+[11:21:55] css 300 cpu        median 24.933 ms, p95 28.67, total 13640.961 ms (21.993 fps)
+[11:22:06] css 300 gpu-gl     median 13.635 ms, p95 16.967, total 10354.458 ms (28.973 fps) | vs cpu: minor,minor,minor
+[11:22:17] css 300 gpu-vulkan median 14.297 ms, p95 17.977, total 10506.812 ms (28.553 fps) | vs cpu: minor,minor,minor
+[11:22:25] gsap 120 cpu        median 8.345 ms, p95 12.805, total 3602.54 ms (33.31 fps) | no-readback median 3.391
+[11:22:34] gsap 120 gpu-gl     median 8.72 ms, p95 13.16, total 3631.586 ms (33.043 fps) | no-readback median 1.655 | vs cpu: minor,minor,minor
+[11:22:43] gsap 120 gpu-vulkan median 8.42 ms, p95 12.292, total 3577.275 ms (33.545 fps) | no-readback median 1.651 | vs cpu: minor,minor,minor
+[11:22:52] gsap 300 cpu        median 7.336 ms, p95 10.583, total 8571.209 ms (35.001 fps)
+[11:23:01] gsap 300 gpu-gl     median 9.293 ms, p95 11.785, total 9036.237 ms (33.2 fps) | vs cpu: minor,minor,minor
+[11:23:11] gsap 300 gpu-vulkan median 10.173 ms, p95 12.217, total 9275.874 ms (32.342 fps) | vs cpu: minor,minor,minor
+[11:23:39] effects 120 cpu        median 35.219 ms, p95 39.566, total 6747.322 ms (17.785 fps) | no-readback median 29.374
+[11:23:59] effects 120 gpu-gl     median 12.909 ms, p95 17.329, total 4129.633 ms (29.058 fps) | no-readback median 6.963 | vs cpu: minor,minor,minor
+[11:24:19] effects 120 gpu-vulkan median 11.463 ms, p95 17.921, total 4023.525 ms (29.825 fps) | no-readback median 6.336 | vs cpu: minor,minor,minor
+[11:24:36] effects 300 cpu        median 34.14 ms, p95 38.575, total 16687.245 ms (17.978 fps)
+[11:24:47] effects 300 gpu-gl     median 14.871 ms, p95 19.102, total 10608.854 ms (28.278 fps) | vs cpu: minor,minor,minor
+[11:24:58] effects 300 gpu-vulkan median 14.896 ms, p95 19.113, total 10585.831 ms (28.34 fps) | vs cpu: minor,minor,minor

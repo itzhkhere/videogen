@@ -1,0 +1,6 @@
+[11:30:13] cpu        per-renderer rss 64.3→91→91→91.2→91.8 | skia font cache 1.4 MiB | after close 91.8 → purge → 91.8
+[11:30:19] cpu        reused       rss 64.1→103.8→106.1→106.1→106.1 | skia font cache 1.4 MiB | after close 102.7 → purge → 102.7
+[11:30:26] gpu-gl     per-renderer rss 64.3→295.3→310.8→311.4→311.5 | skia font cache 1.4 MiB | after close 311.5 → purge → 306.6
+[11:30:30] gpu-gl     reused       rss 64.3→260.8→264.3→263.6→264.3 | skia font cache 1.4 MiB | after close 244.6 → purge → 244.6
+[11:30:47] gpu-vulkan per-renderer rss 64→172.8→173.1→173.1→173.2 | skia font cache 1.4 MiB | after close 173.2 → purge → 173.2
+[11:30:51] gpu-vulkan reused       rss 64.1→294.5→297.6→297.6→297.6 | skia font cache 1.4 MiB | after close 185.8 → purge → 185.8

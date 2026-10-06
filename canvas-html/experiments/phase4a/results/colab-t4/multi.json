@@ -1,0 +1,879 @@
+{
+  "dpr": 1.5,
+  "rounds": 8,
+  "scene": "E",
+  "rows": [
+    {
+      "backend": "cpu",
+      "renderers": 1,
+      "share": "-",
+      "rssBaselineMiB": 61.1,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "createAllMs": 8.976,
+      "frameMs": {
+        "n": 8,
+        "median": 169.41,
+        "mean": 170.14,
+        "p95": 174.064,
+        "min": 167.825,
+        "max": 174.064,
+        "cv": 0.013
+      },
+      "fps": 5.877,
+      "rssLoadedMiB": 166.1,
+      "gpuLoaded": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "backendInfo": {
+        "backend": "cpu-raster"
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 0.97,
+      "rssClosedMiB": 157.1,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "cpu",
+      "renderers": 2,
+      "share": "-",
+      "rssBaselineMiB": 61.5,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "createAllMs": 16.246,
+      "frameMs": {
+        "n": 16,
+        "median": 175.286,
+        "mean": 177.104,
+        "p95": 210.075,
+        "min": 169.241,
+        "max": 210.075,
+        "cv": 0.056
+      },
+      "fps": 5.646,
+      "rssLoadedMiB": 256.3,
+      "gpuLoaded": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "backendInfo": {
+        "backend": "cpu-raster"
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 2.129,
+      "rssClosedMiB": 238.3,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "cpu",
+      "renderers": 4,
+      "share": "-",
+      "rssBaselineMiB": 61.1,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "createAllMs": 30.849,
+      "frameMs": {
+        "n": 32,
+        "median": 170.966,
+        "mean": 172.05,
+        "p95": 178.581,
+        "min": 168.242,
+        "max": 179.88,
+        "cv": 0.018
+      },
+      "fps": 5.812,
+      "rssLoadedMiB": 436.1,
+      "gpuLoaded": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "backendInfo": {
+        "backend": "cpu-raster"
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 4.42,
+      "rssClosedMiB": 400,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "cpu",
+      "renderers": 8,
+      "share": "-",
+      "rssBaselineMiB": 61.5,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "createAllMs": 67.023,
+      "frameMs": {
+        "n": 64,
+        "median": 172.94,
+        "mean": 174.104,
+        "p95": 182.217,
+        "min": 167.888,
+        "max": 210.084,
+        "cv": 0.038
+      },
+      "fps": 5.744,
+      "rssLoadedMiB": 796.7,
+      "gpuLoaded": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "backendInfo": {
+        "backend": "cpu-raster"
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 7.827,
+      "rssClosedMiB": 724.1,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-gl",
+      "renderers": 1,
+      "share": "renderer",
+      "rssBaselineMiB": 61.5,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "createAllMs": 130.812,
+      "frameMs": {
+        "n": 8,
+        "median": 30.355,
+        "mean": 31.072,
+        "p95": 34.319,
+        "min": 29.956,
+        "max": 34.319,
+        "cv": 0.049
+      },
+      "fps": 32.175,
+      "rssLoadedMiB": 318.7,
+      "gpuLoaded": {
+        "processMiB": null,
+        "deviceUsedMiB": 160
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "ganesh-gl",
+        "device": "ganesh-gl via EGL device: NVIDIA Tesla T4; GL_RENDERER Tesla T4/PCIe/SSE2; GL_VERSION 3.3.0 NVIDIA 580.82.07",
+        "gpuBudgetBytes": 268435456,
+        "gpuPurgeableBytes": 87889485,
+        "gpuResourceBytes": 150536748,
+        "gpuResourceCount": 254,
+        "sharedDeviceRefs": 1
+      },
+      "gpuResourceBytes": 150536748,
+      "closeAllMs": 12.504,
+      "rssClosedMiB": 299.3,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 58
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-gl",
+      "renderers": 2,
+      "share": "renderer",
+      "rssBaselineMiB": 61.3,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "createAllMs": 133.317,
+      "frameMs": {
+        "n": 16,
+        "median": 32.189,
+        "mean": 32.459,
+        "p95": 35.236,
+        "min": 31.154,
+        "max": 35.236,
+        "cv": 0.031
+      },
+      "fps": 30.801,
+      "rssLoadedMiB": 439.2,
+      "gpuLoaded": {
+        "processMiB": null,
+        "deviceUsedMiB": 308
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "ganesh-gl",
+        "device": "ganesh-gl via EGL device: NVIDIA Tesla T4; GL_RENDERER Tesla T4/PCIe/SSE2; GL_VERSION 3.3.0 NVIDIA 580.82.07",
+        "gpuBudgetBytes": 268435456,
+        "gpuPurgeableBytes": 87889485,
+        "gpuResourceBytes": 150536748,
+        "gpuResourceCount": 254,
+        "sharedDeviceRefs": 1
+      },
+      "gpuResourceBytes": 301073496,
+      "closeAllMs": 27.496,
+      "rssClosedMiB": 392.8,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 66
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-gl",
+      "renderers": 4,
+      "share": "renderer",
+      "rssBaselineMiB": 61.4,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "createAllMs": 132.864,
+      "frameMs": {
+        "n": 32,
+        "median": 32.209,
+        "mean": 32.906,
+        "p95": 36.918,
+        "min": 30.384,
+        "max": 37.176,
+        "cv": 0.063
+      },
+      "fps": 30.384,
+      "rssLoadedMiB": 681.3,
+      "gpuLoaded": {
+        "processMiB": null,
+        "deviceUsedMiB": 604
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "ganesh-gl",
+        "device": "ganesh-gl via EGL device: NVIDIA Tesla T4; GL_RENDERER Tesla T4/PCIe/SSE2; GL_VERSION 3.3.0 NVIDIA 580.82.07",
+        "gpuBudgetBytes": 268435456,
+        "gpuPurgeableBytes": 87889485,
+        "gpuResourceBytes": 150536748,
+        "gpuResourceCount": 254,
+        "sharedDeviceRefs": 1
+      },
+      "gpuResourceBytes": 602146992,
+      "closeAllMs": 56.127,
+      "rssClosedMiB": 594,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 66
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-gl",
+      "renderers": 8,
+      "share": "renderer",
+      "rssBaselineMiB": 61.3,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "createAllMs": 167.775,
+      "frameMs": {
+        "n": 64,
+        "median": 33.407,
+        "mean": 34.085,
+        "p95": 37.821,
+        "min": 32.412,
+        "max": 43.275,
+        "cv": 0.055
+      },
+      "fps": 29.334,
+      "rssLoadedMiB": 1165.2,
+      "gpuLoaded": {
+        "processMiB": null,
+        "deviceUsedMiB": 1196
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "ganesh-gl",
+        "device": "ganesh-gl via EGL device: NVIDIA Tesla T4; GL_RENDERER Tesla T4/PCIe/SSE2; GL_VERSION 3.3.0 NVIDIA 580.82.07",
+        "gpuBudgetBytes": 268435456,
+        "gpuPurgeableBytes": 87889485,
+        "gpuResourceBytes": 150536748,
+        "gpuResourceCount": 254,
+        "sharedDeviceRefs": 1
+      },
+      "gpuResourceBytes": 1204293984,
+      "closeAllMs": 108.299,
+      "rssClosedMiB": 988.8,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 66
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-gl",
+      "renderers": 1,
+      "share": "thread",
+      "rssBaselineMiB": 61.3,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "createAllMs": 108.69,
+      "frameMs": {
+        "n": 8,
+        "median": 31.045,
+        "mean": 31.398,
+        "p95": 34.244,
+        "min": 30.546,
+        "max": 34.244,
+        "cv": 0.036
+      },
+      "fps": 31.842,
+      "rssLoadedMiB": 318.4,
+      "gpuLoaded": {
+        "processMiB": null,
+        "deviceUsedMiB": 160
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "ganesh-gl",
+        "device": "ganesh-gl via EGL device: NVIDIA Tesla T4; GL_RENDERER Tesla T4/PCIe/SSE2; GL_VERSION 3.3.0 NVIDIA 580.82.07",
+        "gpuBudgetBytes": 268435456,
+        "gpuPurgeableBytes": 87889485,
+        "gpuResourceBytes": 150536748,
+        "gpuResourceCount": 254,
+        "sharedDeviceRefs": 1
+      },
+      "gpuResourceBytes": 150536748,
+      "closeAllMs": 13.243,
+      "rssClosedMiB": 297.4,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 58
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-gl",
+      "renderers": 2,
+      "share": "thread",
+      "rssBaselineMiB": 61.5,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "createAllMs": 116.068,
+      "frameMs": {
+        "n": 16,
+        "median": 31.61,
+        "mean": 31.885,
+        "p95": 33.918,
+        "min": 30.051,
+        "max": 33.918,
+        "cv": 0.034
+      },
+      "fps": 31.356,
+      "rssLoadedMiB": 408.1,
+      "gpuLoaded": {
+        "processMiB": null,
+        "deviceUsedMiB": 170
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "ganesh-gl",
+        "device": "ganesh-gl via EGL device: NVIDIA Tesla T4; GL_RENDERER Tesla T4/PCIe/SSE2; GL_VERSION 3.3.0 NVIDIA 580.82.07",
+        "gpuBudgetBytes": 268435456,
+        "gpuPurgeableBytes": 87889485,
+        "gpuResourceBytes": 158831148,
+        "gpuResourceCount": 255,
+        "sharedDeviceRefs": 2
+      },
+      "gpuResourceBytes": 158831148,
+      "closeAllMs": 15.079,
+      "rssClosedMiB": 378,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 58
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-gl",
+      "renderers": 4,
+      "share": "thread",
+      "rssBaselineMiB": 61.3,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "createAllMs": 126.593,
+      "frameMs": {
+        "n": 32,
+        "median": 30.76,
+        "mean": 31.554,
+        "p95": 35.481,
+        "min": 29.902,
+        "max": 36.444,
+        "cv": 0.055
+      },
+      "fps": 31.687,
+      "rssLoadedMiB": 588,
+      "gpuLoaded": {
+        "processMiB": null,
+        "deviceUsedMiB": 190
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "ganesh-gl",
+        "device": "ganesh-gl via EGL device: NVIDIA Tesla T4; GL_RENDERER Tesla T4/PCIe/SSE2; GL_VERSION 3.3.0 NVIDIA 580.82.07",
+        "gpuBudgetBytes": 268435456,
+        "gpuPurgeableBytes": 87889485,
+        "gpuResourceBytes": 175419948,
+        "gpuResourceCount": 257,
+        "sharedDeviceRefs": 4
+      },
+      "gpuResourceBytes": 175419948,
+      "closeAllMs": 18.039,
+      "rssClosedMiB": 539.4,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 58
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-gl",
+      "renderers": 8,
+      "share": "thread",
+      "rssBaselineMiB": 61.3,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "createAllMs": 157.505,
+      "frameMs": {
+        "n": 64,
+        "median": 31.228,
+        "mean": 31.9,
+        "p95": 36.765,
+        "min": 29.549,
+        "max": 39.307,
+        "cv": 0.067
+      },
+      "fps": 31.343,
+      "rssLoadedMiB": 948.1,
+      "gpuLoaded": {
+        "processMiB": null,
+        "deviceUsedMiB": 230
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "ganesh-gl",
+        "device": "ganesh-gl via EGL device: NVIDIA Tesla T4; GL_RENDERER Tesla T4/PCIe/SSE2; GL_VERSION 3.3.0 NVIDIA 580.82.07",
+        "gpuBudgetBytes": 268435456,
+        "gpuPurgeableBytes": 87889485,
+        "gpuResourceBytes": 208597548,
+        "gpuResourceCount": 261,
+        "sharedDeviceRefs": 8
+      },
+      "gpuResourceBytes": 208597548,
+      "closeAllMs": 25.506,
+      "rssClosedMiB": 862.8,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 58
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-vulkan",
+      "renderers": 1,
+      "share": "renderer",
+      "rssBaselineMiB": 61.4,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "createAllMs": 236.246,
+      "frameMs": {
+        "n": 8,
+        "median": 26.341,
+        "mean": 26.815,
+        "p95": 29.756,
+        "min": 25.582,
+        "max": 29.756,
+        "cv": 0.05
+      },
+      "fps": 37.283,
+      "rssLoadedMiB": 357.7,
+      "gpuLoaded": {
+        "processMiB": 161,
+        "deviceUsedMiB": 171
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "ganesh-vulkan",
+        "device": "ganesh-vulkan: Tesla T4 (DISCRETE_GPU), driver 0x911481c0, API 1.4.312",
+        "gpuBudgetBytes": 268435456,
+        "gpuPurgeableBytes": 93063245,
+        "gpuResourceBytes": 176685580,
+        "gpuResourceCount": 735,
+        "sharedDeviceRefs": 1
+      },
+      "gpuResourceBytes": 176685580,
+      "closeAllMs": 85.923,
+      "rssClosedMiB": 225.2,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-vulkan",
+      "renderers": 2,
+      "share": "renderer",
+      "rssBaselineMiB": 61.1,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "createAllMs": 333.352,
+      "frameMs": {
+        "n": 16,
+        "median": 27.587,
+        "mean": 27.795,
+        "p95": 31.628,
+        "min": 26.09,
+        "max": 31.628,
+        "cv": 0.052
+      },
+      "fps": 35.968,
+      "rssLoadedMiB": 499.4,
+      "gpuLoaded": {
+        "processMiB": 316,
+        "deviceUsedMiB": 326
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "ganesh-vulkan",
+        "device": "ganesh-vulkan: Tesla T4 (DISCRETE_GPU), driver 0x911481c0, API 1.4.312",
+        "gpuBudgetBytes": 268435456,
+        "gpuPurgeableBytes": 93062861,
+        "gpuResourceBytes": 176685196,
+        "gpuResourceCount": 734,
+        "sharedDeviceRefs": 1
+      },
+      "gpuResourceBytes": 353370392,
+      "closeAllMs": 130.476,
+      "rssClosedMiB": 316.9,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-vulkan",
+      "renderers": 4,
+      "share": "renderer",
+      "rssBaselineMiB": 61.1,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "createAllMs": 502.95,
+      "frameMs": {
+        "n": 32,
+        "median": 26.438,
+        "mean": 26.914,
+        "p95": 28.813,
+        "min": 25.743,
+        "max": 29.322,
+        "cv": 0.037
+      },
+      "fps": 37.147,
+      "rssLoadedMiB": 773.1,
+      "gpuLoaded": {
+        "processMiB": 629,
+        "deviceUsedMiB": 640
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "ganesh-vulkan",
+        "device": "ganesh-vulkan: Tesla T4 (DISCRETE_GPU), driver 0x911481c0, API 1.4.312",
+        "gpuBudgetBytes": 268435456,
+        "gpuPurgeableBytes": 93062861,
+        "gpuResourceBytes": 176685196,
+        "gpuResourceCount": 734,
+        "sharedDeviceRefs": 1
+      },
+      "gpuResourceBytes": 706740784,
+      "closeAllMs": 236.306,
+      "rssClosedMiB": 501.6,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-vulkan",
+      "renderers": 8,
+      "share": "renderer",
+      "rssBaselineMiB": 61.4,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 1
+      },
+      "createAllMs": 967.711,
+      "frameMs": {
+        "n": 64,
+        "median": 28.21,
+        "mean": 28.563,
+        "p95": 30.59,
+        "min": 26.526,
+        "max": 30.753,
+        "cv": 0.038
+      },
+      "fps": 35.005,
+      "rssLoadedMiB": 1323.1,
+      "gpuLoaded": {
+        "processMiB": 1254,
+        "deviceUsedMiB": 1266
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "ganesh-vulkan",
+        "device": "ganesh-vulkan: Tesla T4 (DISCRETE_GPU), driver 0x911481c0, API 1.4.312",
+        "gpuBudgetBytes": 268435456,
+        "gpuPurgeableBytes": 93062861,
+        "gpuResourceBytes": 176685196,
+        "gpuResourceCount": 734,
+        "sharedDeviceRefs": 1
+      },
+      "gpuResourceBytes": 1413481568,
+      "closeAllMs": 612.095,
+      "rssClosedMiB": 872.1,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 2
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-vulkan",
+      "renderers": 1,
+      "share": "thread",
+      "rssBaselineMiB": 61.1,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 2
+      },
+      "createAllMs": 252.818,
+      "frameMs": {
+        "n": 8,
+        "median": 26.462,
+        "mean": 27.019,
+        "p95": 30.004,
+        "min": 25.555,
+        "max": 30.004,
+        "cv": 0.049
+      },
+      "fps": 37,
+      "rssLoadedMiB": 357.7,
+      "gpuLoaded": {
+        "processMiB": 161,
+        "deviceUsedMiB": 172
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "ganesh-vulkan",
+        "device": "ganesh-vulkan: Tesla T4 (DISCRETE_GPU), driver 0x911481c0, API 1.4.312",
+        "gpuBudgetBytes": 268435456,
+        "gpuPurgeableBytes": 93063245,
+        "gpuResourceBytes": 176685580,
+        "gpuResourceCount": 735,
+        "sharedDeviceRefs": 1
+      },
+      "gpuResourceBytes": 176685580,
+      "closeAllMs": 87.684,
+      "rssClosedMiB": 225.2,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 2
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-vulkan",
+      "renderers": 2,
+      "share": "thread",
+      "rssBaselineMiB": 61.3,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 2
+      },
+      "createAllMs": 243.362,
+      "frameMs": {
+        "n": 16,
+        "median": 27.782,
+        "mean": 28.203,
+        "p95": 30.906,
+        "min": 27.059,
+        "max": 30.906,
+        "cv": 0.038
+      },
+      "fps": 35.448,
+      "rssLoadedMiB": 447.6,
+      "gpuLoaded": {
+        "processMiB": 171,
+        "deviceUsedMiB": 182
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "ganesh-vulkan",
+        "device": "ganesh-vulkan: Tesla T4 (DISCRETE_GPU), driver 0x911481c0, API 1.4.312",
+        "gpuBudgetBytes": 268435456,
+        "gpuPurgeableBytes": 93062861,
+        "gpuResourceBytes": 184979596,
+        "gpuResourceCount": 736,
+        "sharedDeviceRefs": 2
+      },
+      "gpuResourceBytes": 184979596,
+      "closeAllMs": 90.919,
+      "rssClosedMiB": 307.3,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 2
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-vulkan",
+      "renderers": 4,
+      "share": "thread",
+      "rssBaselineMiB": 61.4,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 2
+      },
+      "createAllMs": 295.216,
+      "frameMs": {
+        "n": 32,
+        "median": 26.67,
+        "mean": 26.997,
+        "p95": 28.556,
+        "min": 26.172,
+        "max": 28.733,
+        "cv": 0.027
+      },
+      "fps": 37.035,
+      "rssLoadedMiB": 626.7,
+      "gpuLoaded": {
+        "processMiB": 191,
+        "deviceUsedMiB": 202
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "ganesh-vulkan",
+        "device": "ganesh-vulkan: Tesla T4 (DISCRETE_GPU), driver 0x911481c0, API 1.4.312",
+        "gpuBudgetBytes": 268435456,
+        "gpuPurgeableBytes": 93063245,
+        "gpuResourceBytes": 201568780,
+        "gpuResourceCount": 741,
+        "sharedDeviceRefs": 4
+      },
+      "gpuResourceBytes": 201568780,
+      "closeAllMs": 93.067,
+      "rssClosedMiB": 470.5,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 2
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-vulkan",
+      "renderers": 8,
+      "share": "thread",
+      "rssBaselineMiB": 61.3,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 2
+      },
+      "createAllMs": 294.88,
+      "frameMs": {
+        "n": 64,
+        "median": 28.198,
+        "mean": 28.555,
+        "p95": 30.804,
+        "min": 27.389,
+        "max": 31.806,
+        "cv": 0.035
+      },
+      "fps": 35.014,
+      "rssLoadedMiB": 987.4,
+      "gpuLoaded": {
+        "processMiB": 231,
+        "deviceUsedMiB": 242
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "ganesh-vulkan",
+        "device": "ganesh-vulkan: Tesla T4 (DISCRETE_GPU), driver 0x911481c0, API 1.4.312",
+        "gpuBudgetBytes": 268435456,
+        "gpuPurgeableBytes": 93062861,
+        "gpuResourceBytes": 234745996,
+        "gpuResourceCount": 748,
+        "sharedDeviceRefs": 8
+      },
+      "gpuResourceBytes": 234745996,
+      "closeAllMs": 104.125,
+      "rssClosedMiB": 799.6,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 2
+      },
+      "exitCode": 0,
+      "signal": null
+    }
+  ]
+}

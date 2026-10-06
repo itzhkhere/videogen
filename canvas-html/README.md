@@ -148,6 +148,8 @@ npm run compare          # Chrome comparison (needs Chrome / Chromium; pass its 
 
 Blitz is pinned to commit `0db8c74` plus the patches in `upstream-patches/blitz` (via `[patch]` in `Cargo.toml`). Patched copies of `anyrender`, `anyrender_skia` and `stylo` are in `vendor/`. The first build compiles Stylo and downloads prebuilt Skia, which takes a few minutes.
 
+Experimental GPU rendering (Phase 4A, opt-in, not in default builds): `cargo build --release --features experimental-gpu-vulkan` adds Skia Ganesh on OpenGL (EGL, headless) and Vulkan next to the CPU renderer; choose per renderer with the private option `experimentalBackend: 'gpu-gl' | 'gpu-vulkan'` (CPU stays the default; a GPU that cannot start throws). Results, numbers and requirements: [`PHASE4A_RESULTS.md`](PHASE4A_RESULTS.md).
+
 ## Changes in v0.5
 
 The API is now the engine's alone; everything about frames moved to the application.

@@ -1,0 +1,3 @@
+[11:48:03] cpu        fresh identical: A=true B=true C=true D=true E=true F=true G1000=true | processes true | long-lived same doc B=true E=true F=true | reloaded B=true E=true F=true | replay {"frames":60,"firstPlayVsReplay":30,"replayVsReplay":0}
+[11:48:33] gpu-gl     fresh identical: A=true B=true C=true D=true E=true F=true G1000=true | processes true | long-lived same doc B=true E=true F=true | reloaded B=true E=true F=true | replay {"frames":60,"firstPlayVsReplay":30,"replayVsReplay":0}
+[11:49:17] gpu-vulkan fresh identical: A=true B=true C=true D=true E=true F=true G1000=true | processes true | long-lived same doc B=true E=true F=true | reloaded B=true E=true F=true | replay {"frames":60,"firstPlayVsReplay":30,"replayVsReplay":0}

@@ -1,0 +1,38 @@
+{
+  "tag": "colab-t4-fix",
+  "date": "2026-10-06T11:46:11.460Z",
+  "host": "4f1f0ee72040",
+  "os": "Linux 6.6.122+",
+  "distro": "Ubuntu 24.04.4 LTS",
+  "glibc": "ldd (Ubuntu GLIBC 2.39-0ubuntu8.9) 2.39",
+  "cpu": "Intel(R) Xeon(R) CPU @ 2.00GHz ×8",
+  "memGiB": 51,
+  "node": "v24.19.0",
+  "addon": "/content/canvas-html/experiments/phase4a/build/canvas-html-gpu.node",
+  "addonBytes": 44089512,
+  "nvidiaSmi": "Tesla T4, 580.82.07, 15360 MiB, 1590 MHz",
+  "vulkanSummary": "apiVersion         = 1.4.312\n\tdeviceName         = Tesla T4\n\tdriverName         = NVIDIA\n\tdriverInfo         = 580.82.07",
+  "backends": {
+    "gpu-gl": {
+      "abandoned": false,
+      "backend": "ganesh-gl",
+      "device": "ganesh-gl via EGL device: NVIDIA Tesla T4; GL_RENDERER Tesla T4/PCIe/SSE2; GL_VERSION 3.3.0 NVIDIA 580.82.07",
+      "gpuBudgetBytes": 268435456,
+      "gpuPurgeableBytes": 0,
+      "gpuResourceBytes": 3686400,
+      "gpuResourceCount": 1,
+      "sharedDeviceRefs": 1
+    },
+    "gpu-vulkan": {
+      "abandoned": false,
+      "backend": "ganesh-vulkan",
+      "device": "ganesh-vulkan: Tesla T4 (DISCRETE_GPU), driver 0x911481c0, API 1.4.312",
+      "gpuBudgetBytes": 268435456,
+      "gpuPurgeableBytes": 0,
+      "gpuResourceBytes": 3686400,
+      "gpuResourceCount": 2,
+      "sharedDeviceRefs": 1
+    }
+  },
+  "gpuDeviceEnv": null
+}

@@ -1,0 +1,349 @@
+{
+  "dpr": 1.5,
+  "frames": 120,
+  "scene": "effects",
+  "rows": [
+    {
+      "backend": "cpu",
+      "runs": [
+        {
+          "workers": 1,
+          "wallMs": 6776.59,
+          "fps": 17.708,
+          "createMs": {
+            "n": 1,
+            "median": 48.386,
+            "mean": 48.386,
+            "p95": 48.386,
+            "min": 48.386,
+            "max": 48.386,
+            "cv": 0
+          },
+          "closeMs": {
+            "n": 1,
+            "median": 1.141,
+            "mean": 1.141,
+            "p95": 1.141,
+            "min": 1.141,
+            "max": 1.141,
+            "cv": 0
+          },
+          "mismatchesVsOneWorker": 0,
+          "distinctDevices": 1
+        },
+        {
+          "workers": 2,
+          "wallMs": 3545.695,
+          "fps": 33.844,
+          "createMs": {
+            "n": 2,
+            "median": 40.13,
+            "mean": 40.13,
+            "p95": 40.574,
+            "min": 39.687,
+            "max": 40.574,
+            "cv": 0.011
+          },
+          "closeMs": {
+            "n": 2,
+            "median": 0.52,
+            "mean": 0.52,
+            "p95": 0.544,
+            "min": 0.496,
+            "max": 0.544,
+            "cv": 0.047
+          },
+          "mismatchesVsOneWorker": 0,
+          "distinctDevices": 1
+        },
+        {
+          "workers": 4,
+          "wallMs": 1990.512,
+          "fps": 60.286,
+          "createMs": {
+            "n": 4,
+            "median": 45.896,
+            "mean": 46.101,
+            "p95": 49.528,
+            "min": 43.086,
+            "max": 49.528,
+            "cv": 0.05
+          },
+          "closeMs": {
+            "n": 4,
+            "median": 0.622,
+            "mean": 0.618,
+            "p95": 0.666,
+            "min": 0.564,
+            "max": 0.666,
+            "cv": 0.069
+          },
+          "mismatchesVsOneWorker": 0,
+          "distinctDevices": 1
+        },
+        {
+          "workers": 8,
+          "wallMs": 1675.478,
+          "fps": 71.621,
+          "createMs": {
+            "n": 8,
+            "median": 64.172,
+            "mean": 64.63,
+            "p95": 71.373,
+            "min": 59.197,
+            "max": 71.373,
+            "cv": 0.067
+          },
+          "closeMs": {
+            "n": 8,
+            "median": 0.679,
+            "mean": 0.701,
+            "p95": 1.229,
+            "min": 0.477,
+            "max": 1.229,
+            "cv": 0.322
+          },
+          "mismatchesVsOneWorker": 0,
+          "distinctDevices": 1
+        }
+      ],
+      "terminateProbe": {
+        "exitCodes": [
+          1,
+          1
+        ],
+        "renderAfterTerminate": true
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-gl",
+      "runs": [
+        {
+          "workers": 1,
+          "wallMs": 4344.659,
+          "fps": 27.62,
+          "createMs": {
+            "n": 1,
+            "median": 169.077,
+            "mean": 169.077,
+            "p95": 169.077,
+            "min": 169.077,
+            "max": 169.077,
+            "cv": 0
+          },
+          "closeMs": {
+            "n": 1,
+            "median": 3.448,
+            "mean": 3.448,
+            "p95": 3.448,
+            "min": 3.448,
+            "max": 3.448,
+            "cv": 0
+          },
+          "mismatchesVsOneWorker": 0,
+          "distinctDevices": 1
+        },
+        {
+          "workers": 2,
+          "wallMs": 2310.547,
+          "fps": 51.936,
+          "createMs": {
+            "n": 2,
+            "median": 141.58,
+            "mean": 141.58,
+            "p95": 142.283,
+            "min": 140.877,
+            "max": 142.283,
+            "cv": 0.005
+          },
+          "closeMs": {
+            "n": 2,
+            "median": 2.204,
+            "mean": 2.204,
+            "p95": 2.349,
+            "min": 2.058,
+            "max": 2.349,
+            "cv": 0.066
+          },
+          "mismatchesVsOneWorker": 0,
+          "distinctDevices": 1
+        },
+        {
+          "workers": 4,
+          "wallMs": 1470.256,
+          "fps": 81.618,
+          "createMs": {
+            "n": 4,
+            "median": 213.597,
+            "mean": 197.71,
+            "p95": 226.888,
+            "min": 136.755,
+            "max": 226.888,
+            "cv": 0.18
+          },
+          "closeMs": {
+            "n": 4,
+            "median": 5.455,
+            "mean": 10.207,
+            "p95": 27.663,
+            "min": 2.254,
+            "max": 27.663,
+            "cv": 1.005
+          },
+          "mismatchesVsOneWorker": 0,
+          "distinctDevices": 1
+        },
+        {
+          "workers": 8,
+          "wallMs": 1741.513,
+          "fps": 68.906,
+          "createMs": {
+            "n": 8,
+            "median": 321.588,
+            "mean": 283.643,
+            "p95": 360.32,
+            "min": 144.437,
+            "max": 360.32,
+            "cv": 0.291
+          },
+          "closeMs": {
+            "n": 8,
+            "median": 4.952,
+            "mean": 10.407,
+            "p95": 40.282,
+            "min": 1.983,
+            "max": 40.282,
+            "cv": 1.195
+          },
+          "mismatchesVsOneWorker": 0,
+          "distinctDevices": 1
+        }
+      ],
+      "terminateProbe": {
+        "exitCodes": [
+          1,
+          1
+        ],
+        "renderAfterTerminate": true
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-vulkan",
+      "runs": [
+        {
+          "workers": 1,
+          "wallMs": 4492.527,
+          "fps": 26.711,
+          "createMs": {
+            "n": 1,
+            "median": 281.52,
+            "mean": 281.52,
+            "p95": 281.52,
+            "min": 281.52,
+            "max": 281.52,
+            "cv": 0
+          },
+          "closeMs": {
+            "n": 1,
+            "median": 129.588,
+            "mean": 129.588,
+            "p95": 129.588,
+            "min": 129.588,
+            "max": 129.588,
+            "cv": 0
+          },
+          "mismatchesVsOneWorker": 0,
+          "distinctDevices": 1
+        },
+        {
+          "workers": 2,
+          "wallMs": 2639.689,
+          "fps": 45.46,
+          "createMs": {
+            "n": 2,
+            "median": 347.685,
+            "mean": 347.685,
+            "p95": 396.76,
+            "min": 298.61,
+            "max": 396.76,
+            "cv": 0.141
+          },
+          "closeMs": {
+            "n": 2,
+            "median": 48.767,
+            "mean": 48.767,
+            "p95": 55.646,
+            "min": 41.889,
+            "max": 55.646,
+            "cv": 0.141
+          },
+          "mismatchesVsOneWorker": 0,
+          "distinctDevices": 1
+        },
+        {
+          "workers": 4,
+          "wallMs": 1939.497,
+          "fps": 61.872,
+          "createMs": {
+            "n": 4,
+            "median": 592.368,
+            "mean": 575.325,
+            "p95": 596.373,
+            "min": 520.19,
+            "max": 596.373,
+            "cv": 0.055
+          },
+          "closeMs": {
+            "n": 4,
+            "median": 37.313,
+            "mean": 40.633,
+            "p95": 55.918,
+            "min": 31.988,
+            "max": 55.918,
+            "cv": 0.236
+          },
+          "mismatchesVsOneWorker": 0,
+          "distinctDevices": 1
+        },
+        {
+          "workers": 8,
+          "wallMs": 2107.716,
+          "fps": 56.934,
+          "createMs": {
+            "n": 8,
+            "median": 773.884,
+            "mean": 731.659,
+            "p95": 847.13,
+            "min": 399.169,
+            "max": 847.13,
+            "cv": 0.186
+          },
+          "closeMs": {
+            "n": 8,
+            "median": 74.051,
+            "mean": 72.403,
+            "p95": 115.178,
+            "min": 38.936,
+            "max": 115.178,
+            "cv": 0.316
+          },
+          "mismatchesVsOneWorker": 0,
+          "distinctDevices": 1
+        }
+      ],
+      "terminateProbe": {
+        "exitCodes": [
+          1,
+          1
+        ],
+        "renderAfterTerminate": true
+      },
+      "exitCode": 0,
+      "signal": null
+    }
+  ]
+}

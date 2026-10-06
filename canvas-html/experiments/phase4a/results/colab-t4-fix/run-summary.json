@@ -1,0 +1,14 @@
+[
+  {
+    "step": "correctness",
+    "code": 0,
+    "signal": null,
+    "seconds": 60.9
+  },
+  {
+    "step": "determinism",
+    "code": 0,
+    "signal": null,
+    "seconds": 124.9
+  }
+]

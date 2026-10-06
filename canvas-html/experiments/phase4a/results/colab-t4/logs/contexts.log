@@ -1,0 +1,16 @@
+[11:25:00] A cpu        reuse        frame median 6.443 ms
+[11:25:00] A cpu        new-renderer frame median 16.025 ms (create 4.594, load 1.694, render 9.309, close 0.255)
+[11:25:00] A gpu-gl     reuse        frame median 6.727 ms
+[11:25:00] A gpu-gl     new-renderer frame median 25.441 ms (create 6.59, load 1.637, render 16.22, close 0.864)
+[11:25:00] A gpu-gl     new-surface  frame median 16.325 ms (create 4.287, load 1.52, render 10.155, close 0.208)
+[11:25:01] A gpu-vulkan reuse        frame median 6.462 ms
+[11:25:03] A gpu-vulkan new-renderer frame median 214.697 ms (create 146.026, load 2.039, render 24.169, close 42.838)
+[11:25:03] A gpu-vulkan new-surface  frame median 15.82 ms (create 4.414, load 1.779, render 9.082, close 0.288)
+[11:25:05] E cpu        reuse        frame median 168.604 ms
+[11:25:07] E cpu        new-renderer frame median 182.442 ms (create 5.133, load 3.568, render 173.229, close 0.938)
+[11:25:08] E gpu-gl     reuse        frame median 32.879 ms
+[11:25:09] E gpu-gl     new-renderer frame median 117.852 ms (create 7.845, load 3.551, render 96.972, close 9.346)
+[11:25:10] E gpu-gl     new-surface  frame median 45.007 ms (create 4.483, load 3.187, render 36.669, close 0.596)
+[11:25:10] E gpu-vulkan reuse        frame median 27.348 ms
+[11:25:15] E gpu-vulkan new-renderer frame median 415.129 ms (create 198.743, load 3.765, render 141.067, close 68.498)
+[11:25:15] E gpu-vulkan new-surface  frame median 37.563 ms (create 4.475, load 3.12, render 29.327, close 0.588)

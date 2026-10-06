@@ -1,0 +1,40 @@
+[11:11:20] correctness 720p
+[11:11:24]   A gpu-gl: minor (0.7418% px, max 53, >32: 0.0053%) | gpu-vulkan: minor (0.7553% px, max 53, >32: 0.0053%)
+[11:11:25]   B gpu-gl: minor (73.3614% px, max 11, >32: 0%) | gpu-vulkan: minor (73.5926% px, max 11, >32: 0%)
+[11:11:26]   C gpu-gl: minor (83.859% px, max 53, >32: 0.0093%) | gpu-vulkan: minor (84.5018% px, max 53, >32: 0.0093%)
+[11:11:27]   D gpu-gl: minor (87.0817% px, max 53, >32: 0.0076%) | gpu-vulkan: minor (87.8979% px, max 53, >32: 0.0077%)
+[11:11:28]   E gpu-gl: minor (89.8952% px, max 66, >32: 0.0099%) | gpu-vulkan: minor (90.534% px, max 66, >32: 0.0095%)
+[11:11:29]   F gpu-gl: edge-aa (52.0748% px, max 122, >32: 1.7118%) | gpu-vulkan: edge-aa (52.0866% px, max 122, >32: 1.7108%)
+[11:11:30]   G100 gpu-gl: minor (12.7287% px, max 63, >32: 0.0143%) | gpu-vulkan: minor (12.852% px, max 63, >32: 0.0144%)
+[11:11:31]   G500 gpu-gl: minor (45.5195% px, max 66, >32: 0.046%) | gpu-vulkan: minor (45.541% px, max 66, >32: 0.0458%)
+[11:11:32]   G1000 gpu-gl: minor (67.1828% px, max 71, >32: 0.0586%) | gpu-vulkan: minor (67.1239% px, max 71, >32: 0.0587%)
+[11:11:32] correctness 1080p
+[11:11:36]   A gpu-gl: minor (0.4687% px, max 64, >32: 0.0037%) | gpu-vulkan: minor (0.4721% px, max 64, >32: 0.0037%)
+[11:11:37]   B gpu-gl: edge-aa (72.3224% px, max 169, >32: 0.7659%) | gpu-vulkan: edge-aa (72.5315% px, max 169, >32: 0.7615%)
+[11:11:39]   C gpu-gl: minor (83.7104% px, max 54, >32: 0.0013%) | gpu-vulkan: minor (84.3713% px, max 55, >32: 0.0013%)
+[11:11:40]   D gpu-gl: minor (87.1676% px, max 68, >32: 0.0019%) | gpu-vulkan: minor (87.969% px, max 68, >32: 0.0018%)
+[11:11:41]   E gpu-gl: minor (84.6032% px, max 82, >32: 0.0068%) | gpu-vulkan: minor (85.5209% px, max 82, >32: 0.0067%)
+[11:11:42]   F gpu-gl: edge-aa (49.0581% px, max 128, >32: 0.9591%) | gpu-vulkan: edge-aa (49.0663% px, max 128, >32: 0.9592%)
+[11:11:43]   G100 gpu-gl: minor (12.4924% px, max 70, >32: 0.0137%) | gpu-vulkan: minor (12.6239% px, max 71, >32: 0.0138%)
+[11:11:44]   G500 gpu-gl: minor (44.7856% px, max 90, >32: 0.0379%) | gpu-vulkan: minor (44.8369% px, max 91, >32: 0.0379%)
+[11:11:44]   G1000 gpu-gl: minor (66.397% px, max 81, >32: 0.0504%) | gpu-vulkan: minor (66.3629% px, max 81, >32: 0.0506%)
+[11:11:44] correctness 4K
+[11:11:53]   A gpu-gl: minor (0.3431% px, max 230, >32: 0.0463%) | gpu-vulkan: minor (0.3445% px, max 231, >32: 0.0465%)
+[11:11:57]   B gpu-gl: edge-aa (70.9176% px, max 216, >32: 1.0216%) | gpu-vulkan: edge-aa (71.1208% px, max 215, >32: 1.0143%)
+[11:11:59]   C gpu-gl: minor (83.6465% px, max 42, >32: 0.0003%) | gpu-vulkan: minor (84.3089% px, max 42, >32: 0.0003%)
+[11:12:01]   D gpu-gl: minor (87.1494% px, max 41, >32: 0.0004%) | gpu-vulkan: minor (87.9372% px, max 41, >32: 0.0004%)
+[11:12:03]   E gpu-gl: minor (70.7661% px, max 38, >32: 0.0001%) | gpu-vulkan: minor (72.0172% px, max 38, >32: 0.0001%)
+[11:12:06]   F gpu-gl: edge-aa (45.57% px, max 104, >32: 0.1162%) | gpu-vulkan: edge-aa (45.5803% px, max 104, >32: 0.1162%)
+[11:12:07]   G100 gpu-gl: minor (12.2451% px, max 76, >32: 0.0066%) | gpu-vulkan: minor (12.3789% px, max 76, >32: 0.0066%)
+[11:12:08]   G500 gpu-gl: minor (44.0915% px, max 85, >32: 0.0196%) | gpu-vulkan: minor (44.176% px, max 85, >32: 0.0197%)
+[11:12:10]   G1000 gpu-gl: minor (65.6431% px, max 91, >32: 0.0254%) | gpu-vulkan: minor (65.6298% px, max 91, >32: 0.0256%)
+[11:12:10]   attribution A text rasterization difference
+[11:12:12]   attribution B text rasterization difference
+[11:12:13]   attribution C image sampling difference
+[11:12:14]   attribution D gradient interpolation difference
+[11:12:15]   attribution E shadow/blur precision difference
+[11:12:17]   attribution F geometry antialiasing difference
+[11:12:18]   attribution G100 layer/opacity blending difference
+[11:12:19]   attribution G500 layer/opacity blending difference
+[11:12:20]   attribution G1000 layer/opacity blending difference
+[11:12:20] wrote /content/canvas-html/experiments/phase4a/results/colab-t4/correctness.json

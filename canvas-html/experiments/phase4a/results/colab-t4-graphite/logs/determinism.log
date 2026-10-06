@@ -1,0 +1,2 @@
+[11:43:35] cpu        fresh identical: A=true B=true C=true D=true E=true F=true G1000=true | processes true | long-lived same doc B=true E=true F=true | reloaded B=true E=true F=true | replay {"frames":60,"firstPlayVsReplay":30,"replayVsReplay":0}
+[11:44:12] gpu-graphite fresh identical: A=true B=true C=true D=true E=true F=true G1000=true | processes true | long-lived same doc B=false E=true F=true | reloaded B=near-exact max 2 E=true F=true | replay {"frames":60,"firstPlayVsReplay":30,"replayVsReplay":0}

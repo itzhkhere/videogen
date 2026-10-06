@@ -1,0 +1,15 @@
+[11:26:32] cpu        1 workers: 17.708 fps (wall 6776.59 ms), create median 48.386 ms, mismatches 0
+[11:26:32] cpu        2 workers: 33.844 fps (wall 3545.695 ms), create median 40.13 ms, mismatches 0
+[11:26:32] cpu        4 workers: 60.286 fps (wall 1990.512 ms), create median 45.896 ms, mismatches 0
+[11:26:32] cpu        8 workers: 71.621 fps (wall 1675.478 ms), create median 64.172 ms, mismatches 0
+[11:26:32] cpu        terminate probe {"exitCodes":[1,1],"renderAfterTerminate":true} exit 0
+[11:26:44] gpu-gl     1 workers: 27.62 fps (wall 4344.659 ms), create median 169.077 ms, mismatches 0
+[11:26:44] gpu-gl     2 workers: 51.936 fps (wall 2310.547 ms), create median 141.58 ms, mismatches 0
+[11:26:44] gpu-gl     4 workers: 81.618 fps (wall 1470.256 ms), create median 213.597 ms, mismatches 0
+[11:26:44] gpu-gl     8 workers: 68.906 fps (wall 1741.513 ms), create median 321.588 ms, mismatches 0
+[11:26:44] gpu-gl     terminate probe {"exitCodes":[1,1],"renderAfterTerminate":true} exit 0
+[11:26:57] gpu-vulkan 1 workers: 26.711 fps (wall 4492.527 ms), create median 281.52 ms, mismatches 0
+[11:26:57] gpu-vulkan 2 workers: 45.46 fps (wall 2639.689 ms), create median 347.685 ms, mismatches 0
+[11:26:57] gpu-vulkan 4 workers: 61.872 fps (wall 1939.497 ms), create median 592.368 ms, mismatches 0
+[11:26:57] gpu-vulkan 8 workers: 56.934 fps (wall 2107.716 ms), create median 773.884 ms, mismatches 0
+[11:26:57] gpu-vulkan terminate probe {"exitCodes":[1,1],"renderAfterTerminate":true} exit 0

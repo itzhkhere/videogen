@@ -1,0 +1,831 @@
+{
+  "resolutions": {
+    "720p": {
+      "A": {
+        "hashes": {
+          "cpu": "909c4dbc0285eca8",
+          "gpu-graphite": "509dbb19293ad8e6"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 6961,
+          "differingPct": 0.7553,
+          "maxDelta": 53,
+          "meanDelta": 1.69,
+          "over8Pct": 0.0212,
+          "over32Pct": 0.0052,
+          "over64Pct": 0,
+          "edgeFraction": 1,
+          "over32EdgeFraction": 1,
+          "severity": "minor"
+        }
+      },
+      "B": {
+        "hashes": {
+          "cpu": "7131a2eb84243857",
+          "gpu-graphite": "0019773c27ae443c"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 672428,
+          "differingPct": 72.9631,
+          "maxDelta": 13,
+          "meanDelta": 1.52,
+          "over8Pct": 0.0005,
+          "over32Pct": 0,
+          "over64Pct": 0,
+          "edgeFraction": 0.587,
+          "over32EdgeFraction": 0,
+          "severity": "minor"
+        }
+      },
+      "C": {
+        "hashes": {
+          "cpu": "dc9bc76092224a95",
+          "gpu-graphite": "5e1c883d6febfb04"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 780451,
+          "differingPct": 84.6844,
+          "maxDelta": 84,
+          "meanDelta": 3.37,
+          "over8Pct": 6.4166,
+          "over32Pct": 0.0161,
+          "over64Pct": 0.0008,
+          "edgeFraction": 0.059,
+          "over32EdgeFraction": 1,
+          "severity": "minor"
+        }
+      },
+      "D": {
+        "hashes": {
+          "cpu": "435c22e045abcd22",
+          "gpu-graphite": "5c37972f435b8be9"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 810033,
+          "differingPct": 87.8942,
+          "maxDelta": 62,
+          "meanDelta": 1.58,
+          "over8Pct": 0.1913,
+          "over32Pct": 0.012,
+          "over64Pct": 0,
+          "edgeFraction": 0.042,
+          "over32EdgeFraction": 1,
+          "severity": "minor"
+        }
+      },
+      "E": {
+        "hashes": {
+          "cpu": "6c466dc160e601c2",
+          "gpu-graphite": "defeff58bc992087"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 830217,
+          "differingPct": 90.0843,
+          "maxDelta": 75,
+          "meanDelta": 1.95,
+          "over8Pct": 0.1149,
+          "over32Pct": 0.0123,
+          "over64Pct": 0.0004,
+          "edgeFraction": 0.059,
+          "over32EdgeFraction": 1,
+          "severity": "minor"
+        }
+      },
+      "F": {
+        "hashes": {
+          "cpu": "1c8f22fb32ba1c48",
+          "gpu-graphite": "1624dffa5249a9db"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 480738,
+          "differingPct": 52.1634,
+          "maxDelta": 136,
+          "meanDelta": 5.85,
+          "over8Pct": 9.5115,
+          "over32Pct": 2.3881,
+          "over64Pct": 0.2874,
+          "edgeFraction": 0.449,
+          "over32EdgeFraction": 1,
+          "severity": "edge-aa"
+        }
+      },
+      "G100": {
+        "hashes": {
+          "cpu": "c8cdb815b4c4542a",
+          "gpu-graphite": "da5fdef1ed609cdf"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 113985,
+          "differingPct": 12.3682,
+          "maxDelta": 71,
+          "meanDelta": 2.59,
+          "over8Pct": 0.7276,
+          "over32Pct": 0.0419,
+          "over64Pct": 0.0001,
+          "edgeFraction": 0.411,
+          "over32EdgeFraction": 1,
+          "severity": "minor"
+        }
+      },
+      "G500": {
+        "hashes": {
+          "cpu": "4dbb364815b2e826",
+          "gpu-graphite": "8cf060937c6d384a"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 418674,
+          "differingPct": 45.429,
+          "maxDelta": 66,
+          "meanDelta": 2.61,
+          "over8Pct": 2.8024,
+          "over32Pct": 0.1284,
+          "over64Pct": 0.0002,
+          "edgeFraction": 0.459,
+          "over32EdgeFraction": 1,
+          "severity": "edge-aa"
+        }
+      },
+      "G1000": {
+        "hashes": {
+          "cpu": "572cb1195487768e",
+          "gpu-graphite": "038a104d4b27cf19"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 617181,
+          "differingPct": 66.9684,
+          "maxDelta": 84,
+          "meanDelta": 2.7,
+          "over8Pct": 4.0097,
+          "over32Pct": 0.1656,
+          "over64Pct": 0.0009,
+          "edgeFraction": 0.505,
+          "over32EdgeFraction": 1,
+          "severity": "edge-aa"
+        }
+      }
+    },
+    "1080p": {
+      "A": {
+        "hashes": {
+          "cpu": "e181f067408c296f",
+          "gpu-graphite": "c5c1608a4cdd1714"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 9788,
+          "differingPct": 0.472,
+          "maxDelta": 64,
+          "meanDelta": 1.7,
+          "over8Pct": 0.0111,
+          "over32Pct": 0.0037,
+          "over64Pct": 0,
+          "edgeFraction": 1,
+          "over32EdgeFraction": 1,
+          "severity": "minor"
+        }
+      },
+      "B": {
+        "hashes": {
+          "cpu": "ff312d8d6b3913fb",
+          "gpu-graphite": "aa95e3e7fdf48c5e"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 1489972,
+          "differingPct": 71.8544,
+          "maxDelta": 168,
+          "meanDelta": 2.63,
+          "over8Pct": 3.059,
+          "over32Pct": 0.76,
+          "over64Pct": 0.1849,
+          "edgeFraction": 0.45,
+          "over32EdgeFraction": 1,
+          "severity": "edge-aa"
+        }
+      },
+      "C": {
+        "hashes": {
+          "cpu": "31ceb41daa323db8",
+          "gpu-graphite": "d15aa0462e02ea3e"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 1742890,
+          "differingPct": 84.0514,
+          "maxDelta": 65,
+          "meanDelta": 2.6,
+          "over8Pct": 3.3208,
+          "over32Pct": 0.0082,
+          "over64Pct": 0.0001,
+          "edgeFraction": 0.047,
+          "over32EdgeFraction": 0.988,
+          "severity": "minor"
+        }
+      },
+      "D": {
+        "hashes": {
+          "cpu": "4cc655ff2b1cf294",
+          "gpu-graphite": "4a897417bf7e93e2"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 1824151,
+          "differingPct": 87.9702,
+          "maxDelta": 76,
+          "meanDelta": 1.6,
+          "over8Pct": 0.2961,
+          "over32Pct": 0.0185,
+          "over64Pct": 0.0003,
+          "edgeFraction": 0.028,
+          "over32EdgeFraction": 1,
+          "severity": "minor"
+        }
+      },
+      "E": {
+        "hashes": {
+          "cpu": "760dcb60d87746dd",
+          "gpu-graphite": "9316f70a439dae30"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 1745030,
+          "differingPct": 84.1546,
+          "maxDelta": 78,
+          "meanDelta": 1.83,
+          "over8Pct": 0.2229,
+          "over32Pct": 0.0105,
+          "over64Pct": 0.0003,
+          "edgeFraction": 0.047,
+          "over32EdgeFraction": 1,
+          "severity": "minor"
+        }
+      },
+      "F": {
+        "hashes": {
+          "cpu": "9ba66e47acaa77f4",
+          "gpu-graphite": "f51ef63caadf3884"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 1023485,
+          "differingPct": 49.3579,
+          "maxDelta": 139,
+          "meanDelta": 4.36,
+          "over8Pct": 6.3445,
+          "over32Pct": 1.5096,
+          "over64Pct": 0.167,
+          "edgeFraction": 0.335,
+          "over32EdgeFraction": 1,
+          "severity": "edge-aa"
+        }
+      },
+      "G100": {
+        "hashes": {
+          "cpu": "b025b81ce701d85a",
+          "gpu-graphite": "3d08b76f5853cb2f"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 251489,
+          "differingPct": 12.1281,
+          "maxDelta": 76,
+          "meanDelta": 2.26,
+          "over8Pct": 0.5376,
+          "over32Pct": 0.0287,
+          "over64Pct": 0.0001,
+          "edgeFraction": 0.322,
+          "over32EdgeFraction": 1,
+          "severity": "minor"
+        }
+      },
+      "G500": {
+        "hashes": {
+          "cpu": "1bb3026626af3488",
+          "gpu-graphite": "5d59ab659b6278b0"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 927153,
+          "differingPct": 44.7122,
+          "maxDelta": 76,
+          "meanDelta": 2.22,
+          "over8Pct": 1.9401,
+          "over32Pct": 0.0914,
+          "over64Pct": 0.0003,
+          "edgeFraction": 0.361,
+          "over32EdgeFraction": 1,
+          "severity": "minor"
+        }
+      },
+      "G1000": {
+        "hashes": {
+          "cpu": "5bf13005144892d4",
+          "gpu-graphite": "3c59b1b8706819ec"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 1371307,
+          "differingPct": 66.1317,
+          "maxDelta": 76,
+          "meanDelta": 2.32,
+          "over8Pct": 2.8342,
+          "over32Pct": 0.1116,
+          "over64Pct": 0.0005,
+          "edgeFraction": 0.398,
+          "over32EdgeFraction": 1,
+          "severity": "edge-aa"
+        }
+      }
+    },
+    "4K": {
+      "A": {
+        "hashes": {
+          "cpu": "e3df7416d9e9b659",
+          "gpu-graphite": "41e9402a1e59e260"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 28526,
+          "differingPct": 0.3439,
+          "maxDelta": 231,
+          "meanDelta": 13.7,
+          "over8Pct": 0.1073,
+          "over32Pct": 0.0476,
+          "over64Pct": 0.0155,
+          "edgeFraction": 0.989,
+          "over32EdgeFraction": 1,
+          "severity": "minor"
+        }
+      },
+      "B": {
+        "hashes": {
+          "cpu": "60d80d67703f712e",
+          "gpu-graphite": "8e5474ccce4be3c7"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 5829067,
+          "differingPct": 70.2771,
+          "maxDelta": 215,
+          "meanDelta": 2.97,
+          "over8Pct": 3.9252,
+          "over32Pct": 1.0176,
+          "over64Pct": 0.2478,
+          "edgeFraction": 0.262,
+          "over32EdgeFraction": 0.999,
+          "severity": "edge-aa"
+        }
+      },
+      "C": {
+        "hashes": {
+          "cpu": "c22cda892c985d53",
+          "gpu-graphite": "a453956ce356d47a"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 6914918,
+          "differingPct": 83.3685,
+          "maxDelta": 70,
+          "meanDelta": 1.55,
+          "over8Pct": 0.4419,
+          "over32Pct": 0.0023,
+          "over64Pct": 0,
+          "edgeFraction": 0.028,
+          "over32EdgeFraction": 1,
+          "severity": "minor"
+        }
+      },
+      "D": {
+        "hashes": {
+          "cpu": "20f625967a9623d4",
+          "gpu-graphite": "a2ebae8ab101cd19"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 7296149,
+          "differingPct": 87.9648,
+          "maxDelta": 73,
+          "meanDelta": 1.55,
+          "over8Pct": 0.0768,
+          "over32Pct": 0.0057,
+          "over64Pct": 0,
+          "edgeFraction": 0.014,
+          "over32EdgeFraction": 1,
+          "severity": "minor"
+        }
+      },
+      "E": {
+        "hashes": {
+          "cpu": "134913b6c53343b0",
+          "gpu-graphite": "6571716253db1e45"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 5978863,
+          "differingPct": 72.0831,
+          "maxDelta": 79,
+          "meanDelta": 1.58,
+          "over8Pct": 0.0477,
+          "over32Pct": 0.0031,
+          "over64Pct": 0,
+          "edgeFraction": 0.027,
+          "over32EdgeFraction": 1,
+          "severity": "minor"
+        }
+      },
+      "F": {
+        "hashes": {
+          "cpu": "aaeb5e799f62a47a",
+          "gpu-graphite": "c3cd0985ca36a2ee"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 3845147,
+          "differingPct": 46.3584,
+          "maxDelta": 151,
+          "meanDelta": 2.79,
+          "over8Pct": 3.1705,
+          "over32Pct": 0.7255,
+          "over64Pct": 0.0723,
+          "edgeFraction": 0.189,
+          "over32EdgeFraction": 1,
+          "severity": "edge-aa"
+        }
+      },
+      "G100": {
+        "hashes": {
+          "cpu": "f3c09371a22ee540",
+          "gpu-graphite": "eec7bfaf3025d12c"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 984706,
+          "differingPct": 11.8719,
+          "maxDelta": 65,
+          "meanDelta": 1.8,
+          "over8Pct": 0.2446,
+          "over32Pct": 0.0141,
+          "over64Pct": 0,
+          "edgeFraction": 0.173,
+          "over32EdgeFraction": 1,
+          "severity": "minor"
+        }
+      },
+      "G500": {
+        "hashes": {
+          "cpu": "44797b7b5e8ba697",
+          "gpu-graphite": "95c5699bbc8d2ad7"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 3649433,
+          "differingPct": 43.9988,
+          "maxDelta": 89,
+          "meanDelta": 1.76,
+          "over8Pct": 0.9246,
+          "over32Pct": 0.0462,
+          "over64Pct": 0.0003,
+          "edgeFraction": 0.2,
+          "over32EdgeFraction": 1,
+          "severity": "minor"
+        }
+      },
+      "G1000": {
+        "hashes": {
+          "cpu": "97a6105ea174293b",
+          "gpu-graphite": "2d1deb248bc0b688"
+        },
+        "cpu-vs-gpu-graphite": {
+          "differingPixels": 5415738,
+          "differingPct": 65.2939,
+          "maxDelta": 90,
+          "meanDelta": 1.86,
+          "over8Pct": 1.3466,
+          "over32Pct": 0.0567,
+          "over64Pct": 0.0004,
+          "edgeFraction": 0.222,
+          "over32EdgeFraction": 1,
+          "severity": "minor"
+        }
+      }
+    }
+  },
+  "attribution": {
+    "A": {
+      "severity": "minor",
+      "class": "text rasterization difference",
+      "dominant": "text",
+      "ablations": {
+        "text": {
+          "differingPixels": 255,
+          "over32Pct": 0.0052,
+          "removedShare": 0.963
+        },
+        "filters": {
+          "differingPixels": 6961,
+          "over32Pct": 0.0052,
+          "removedShare": 0
+        },
+        "shadows": {
+          "differingPixels": 6961,
+          "over32Pct": 0.0052,
+          "removedShare": 0
+        },
+        "images": {
+          "differingPixels": 6961,
+          "over32Pct": 0.0052,
+          "removedShare": 0
+        },
+        "gradients": {
+          "differingPixels": 6961,
+          "over32Pct": 0.0052,
+          "removedShare": 0
+        },
+        "opacity": {
+          "differingPixels": 6961,
+          "over32Pct": 0.0052,
+          "removedShare": 0
+        }
+      }
+    },
+    "B": {
+      "severity": "minor",
+      "class": "text rasterization difference",
+      "dominant": "text",
+      "ablations": {
+        "text": {
+          "differingPixels": 0,
+          "over32Pct": 0,
+          "removedShare": 1
+        },
+        "filters": {
+          "differingPixels": 672428,
+          "over32Pct": 0,
+          "removedShare": 0
+        },
+        "shadows": {
+          "differingPixels": 672428,
+          "over32Pct": 0,
+          "removedShare": 0
+        },
+        "images": {
+          "differingPixels": 672428,
+          "over32Pct": 0,
+          "removedShare": 0
+        },
+        "gradients": {
+          "differingPixels": 672428,
+          "over32Pct": 0,
+          "removedShare": 0
+        },
+        "opacity": {
+          "differingPixels": 128783,
+          "over32Pct": 0,
+          "removedShare": 0.808
+        }
+      }
+    },
+    "C": {
+      "severity": "minor",
+      "class": "image sampling difference",
+      "dominant": "images",
+      "ablations": {
+        "text": {
+          "differingPixels": 780451,
+          "over32Pct": 0.0161,
+          "removedShare": 0
+        },
+        "filters": {
+          "differingPixels": 780451,
+          "over32Pct": 0.0161,
+          "removedShare": 0
+        },
+        "shadows": {
+          "differingPixels": 780451,
+          "over32Pct": 0.0161,
+          "removedShare": 0
+        },
+        "images": {
+          "differingPixels": 0,
+          "over32Pct": 0,
+          "removedShare": 1
+        },
+        "gradients": {
+          "differingPixels": 780451,
+          "over32Pct": 0.0161,
+          "removedShare": 0
+        },
+        "opacity": {
+          "differingPixels": 437342,
+          "over32Pct": 0.1387,
+          "removedShare": 0.44
+        }
+      }
+    },
+    "D": {
+      "severity": "minor",
+      "class": "gradient interpolation difference",
+      "dominant": "gradients",
+      "ablations": {
+        "text": {
+          "differingPixels": 810033,
+          "over32Pct": 0.012,
+          "removedShare": 0
+        },
+        "filters": {
+          "differingPixels": 810033,
+          "over32Pct": 0.012,
+          "removedShare": 0
+        },
+        "shadows": {
+          "differingPixels": 810033,
+          "over32Pct": 0.012,
+          "removedShare": 0
+        },
+        "images": {
+          "differingPixels": 810033,
+          "over32Pct": 0.012,
+          "removedShare": 0
+        },
+        "gradients": {
+          "differingPixels": 0,
+          "over32Pct": 0,
+          "removedShare": 1
+        },
+        "opacity": {
+          "differingPixels": 360885,
+          "over32Pct": 0.0263,
+          "removedShare": 0.554
+        }
+      }
+    },
+    "E": {
+      "severity": "minor",
+      "class": "shadow/blur precision difference",
+      "dominant": "shadows",
+      "ablations": {
+        "text": {
+          "differingPixels": 829680,
+          "over32Pct": 0.0124,
+          "removedShare": 0.001
+        },
+        "filters": {
+          "differingPixels": 835792,
+          "over32Pct": 0.0111,
+          "removedShare": -0.007
+        },
+        "shadows": {
+          "differingPixels": 534290,
+          "over32Pct": 0.0136,
+          "removedShare": 0.356
+        },
+        "images": {
+          "differingPixels": 830217,
+          "over32Pct": 0.0123,
+          "removedShare": 0
+        },
+        "gradients": {
+          "differingPixels": 830217,
+          "over32Pct": 0.0123,
+          "removedShare": 0
+        },
+        "opacity": {
+          "differingPixels": 730844,
+          "over32Pct": 0.0173,
+          "removedShare": 0.12
+        }
+      }
+    },
+    "F": {
+      "severity": "edge-aa",
+      "class": "geometry antialiasing difference",
+      "dominant": "none",
+      "ablations": {
+        "text": {
+          "differingPixels": 480738,
+          "over32Pct": 2.3881,
+          "removedShare": 0
+        },
+        "filters": {
+          "differingPixels": 480738,
+          "over32Pct": 2.3881,
+          "removedShare": 0
+        },
+        "shadows": {
+          "differingPixels": 480738,
+          "over32Pct": 2.3881,
+          "removedShare": 0
+        },
+        "images": {
+          "differingPixels": 480738,
+          "over32Pct": 2.3881,
+          "removedShare": 0
+        },
+        "gradients": {
+          "differingPixels": 480738,
+          "over32Pct": 2.3881,
+          "removedShare": 0
+        },
+        "opacity": {
+          "differingPixels": 480738,
+          "over32Pct": 2.3881,
+          "removedShare": 0
+        }
+      }
+    },
+    "G100": {
+      "severity": "minor",
+      "class": "layer/opacity blending difference",
+      "dominant": "opacity",
+      "ablations": {
+        "text": {
+          "differingPixels": 113985,
+          "over32Pct": 0.0419,
+          "removedShare": 0
+        },
+        "filters": {
+          "differingPixels": 113985,
+          "over32Pct": 0.0419,
+          "removedShare": 0
+        },
+        "shadows": {
+          "differingPixels": 113985,
+          "over32Pct": 0.0419,
+          "removedShare": 0
+        },
+        "images": {
+          "differingPixels": 113985,
+          "over32Pct": 0.0419,
+          "removedShare": 0
+        },
+        "gradients": {
+          "differingPixels": 113985,
+          "over32Pct": 0.0419,
+          "removedShare": 0
+        },
+        "opacity": {
+          "differingPixels": 35837,
+          "over32Pct": 0.1731,
+          "removedShare": 0.686
+        }
+      }
+    },
+    "G500": {
+      "severity": "edge-aa",
+      "class": "layer/opacity blending difference",
+      "dominant": "opacity",
+      "ablations": {
+        "text": {
+          "differingPixels": 418674,
+          "over32Pct": 0.1284,
+          "removedShare": 0
+        },
+        "filters": {
+          "differingPixels": 418674,
+          "over32Pct": 0.1284,
+          "removedShare": 0
+        },
+        "shadows": {
+          "differingPixels": 418674,
+          "over32Pct": 0.1284,
+          "removedShare": 0
+        },
+        "images": {
+          "differingPixels": 418674,
+          "over32Pct": 0.1284,
+          "removedShare": 0
+        },
+        "gradients": {
+          "differingPixels": 418674,
+          "over32Pct": 0.1284,
+          "removedShare": 0
+        },
+        "opacity": {
+          "differingPixels": 128035,
+          "over32Pct": 0.5598,
+          "removedShare": 0.694
+        }
+      }
+    },
+    "G1000": {
+      "severity": "edge-aa",
+      "class": "layer/opacity blending difference",
+      "dominant": "opacity",
+      "ablations": {
+        "text": {
+          "differingPixels": 617181,
+          "over32Pct": 0.1656,
+          "removedShare": 0
+        },
+        "filters": {
+          "differingPixels": 617181,
+          "over32Pct": 0.1656,
+          "removedShare": 0
+        },
+        "shadows": {
+          "differingPixels": 617181,
+          "over32Pct": 0.1656,
+          "removedShare": 0
+        },
+        "images": {
+          "differingPixels": 617181,
+          "over32Pct": 0.1656,
+          "removedShare": 0
+        },
+        "gradients": {
+          "differingPixels": 617181,
+          "over32Pct": 0.1656,
+          "removedShare": 0
+        },
+        "opacity": {
+          "differingPixels": 186502,
+          "over32Pct": 0.7011,
+          "removedShare": 0.698
+        }
+      }
+    }
+  }
+}

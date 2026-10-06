@@ -1,0 +1,487 @@
+{
+  "dpr": 1.5,
+  "rounds": 8,
+  "scene": "E",
+  "rows": [
+    {
+      "backend": "cpu",
+      "renderers": 1,
+      "share": "-",
+      "rssBaselineMiB": 61.3,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "createAllMs": 8.419,
+      "frameMs": {
+        "n": 8,
+        "median": 177.306,
+        "mean": 177.528,
+        "p95": 181.231,
+        "min": 174.807,
+        "max": 181.231,
+        "cv": 0.011
+      },
+      "fps": 5.633,
+      "rssLoadedMiB": 165.4,
+      "gpuLoaded": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "backendInfo": {
+        "backend": "cpu-raster"
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 1.027,
+      "rssClosedMiB": 156.6,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "cpu",
+      "renderers": 2,
+      "share": "-",
+      "rssBaselineMiB": 61.3,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "createAllMs": 19.53,
+      "frameMs": {
+        "n": 16,
+        "median": 178.291,
+        "mean": 179.06,
+        "p95": 187.58,
+        "min": 175.836,
+        "max": 187.58,
+        "cv": 0.017
+      },
+      "fps": 5.584,
+      "rssLoadedMiB": 255.5,
+      "gpuLoaded": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "backendInfo": {
+        "backend": "cpu-raster"
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 2.144,
+      "rssClosedMiB": 237.4,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "cpu",
+      "renderers": 4,
+      "share": "-",
+      "rssBaselineMiB": 61.5,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "createAllMs": 31.213,
+      "frameMs": {
+        "n": 32,
+        "median": 176.625,
+        "mean": 177.034,
+        "p95": 182.79,
+        "min": 173.731,
+        "max": 183.787,
+        "cv": 0.013
+      },
+      "fps": 5.648,
+      "rssLoadedMiB": 435.6,
+      "gpuLoaded": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "backendInfo": {
+        "backend": "cpu-raster"
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 4.382,
+      "rssClosedMiB": 399.4,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "cpu",
+      "renderers": 8,
+      "share": "-",
+      "rssBaselineMiB": 61.2,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "createAllMs": 63.831,
+      "frameMs": {
+        "n": 64,
+        "median": 177.451,
+        "mean": 178.833,
+        "p95": 187.213,
+        "min": 172.141,
+        "max": 198.979,
+        "cv": 0.029
+      },
+      "fps": 5.592,
+      "rssLoadedMiB": 795.4,
+      "gpuLoaded": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "backendInfo": {
+        "backend": "cpu-raster"
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 8.455,
+      "rssClosedMiB": 722.9,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-graphite",
+      "renderers": 1,
+      "share": "renderer",
+      "rssBaselineMiB": 61.4,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "createAllMs": 272.689,
+      "frameMs": {
+        "n": 8,
+        "median": 37.194,
+        "mean": 38.412,
+        "p95": 42.445,
+        "min": 36.565,
+        "max": 42.445,
+        "cv": 0.06
+      },
+      "fps": 26.027,
+      "rssLoadedMiB": 336.4,
+      "gpuLoaded": {
+        "processMiB": 174,
+        "deviceUsedMiB": 184
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "graphite-vulkan",
+        "device": "graphite-vulkan: Tesla T4 (DISCRETE_GPU), driver 0x911481c0, API 1.4.312",
+        "sharedDeviceRefs": 1
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 71.704,
+      "rssClosedMiB": 222.7,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-graphite",
+      "renderers": 2,
+      "share": "renderer",
+      "rssBaselineMiB": 61.5,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "createAllMs": 326.395,
+      "frameMs": {
+        "n": 16,
+        "median": 37.134,
+        "mean": 37.315,
+        "p95": 39.75,
+        "min": 35.399,
+        "max": 39.75,
+        "cv": 0.032
+      },
+      "fps": 26.795,
+      "rssLoadedMiB": 454.4,
+      "gpuLoaded": {
+        "processMiB": 342,
+        "deviceUsedMiB": 351
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "graphite-vulkan",
+        "device": "graphite-vulkan: Tesla T4 (DISCRETE_GPU), driver 0x911481c0, API 1.4.312",
+        "sharedDeviceRefs": 1
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 126.181,
+      "rssClosedMiB": 313.5,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-graphite",
+      "renderers": 4,
+      "share": "renderer",
+      "rssBaselineMiB": 61.5,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "createAllMs": 583.726,
+      "frameMs": {
+        "n": 32,
+        "median": 34.665,
+        "mean": 34.933,
+        "p95": 36.593,
+        "min": 33.841,
+        "max": 37.649,
+        "cv": 0.025
+      },
+      "fps": 28.622,
+      "rssLoadedMiB": 690,
+      "gpuLoaded": {
+        "processMiB": 681,
+        "deviceUsedMiB": 691
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "graphite-vulkan",
+        "device": "graphite-vulkan: Tesla T4 (DISCRETE_GPU), driver 0x911481c0, API 1.4.312",
+        "sharedDeviceRefs": 1
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 206.171,
+      "rssClosedMiB": 495,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-graphite",
+      "renderers": 8,
+      "share": "renderer",
+      "rssBaselineMiB": 61.4,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "createAllMs": 943.04,
+      "frameMs": {
+        "n": 64,
+        "median": 37.632,
+        "mean": 37.601,
+        "p95": 39.762,
+        "min": 33.847,
+        "max": 40.016,
+        "cv": 0.036
+      },
+      "fps": 26.592,
+      "rssLoadedMiB": 1160.2,
+      "gpuLoaded": {
+        "processMiB": 1359,
+        "deviceUsedMiB": 1370
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "graphite-vulkan",
+        "device": "graphite-vulkan: Tesla T4 (DISCRETE_GPU), driver 0x911481c0, API 1.4.312",
+        "sharedDeviceRefs": 1
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 438.092,
+      "rssClosedMiB": 860.7,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-graphite",
+      "renderers": 1,
+      "share": "thread",
+      "rssBaselineMiB": 61.3,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "createAllMs": 247.392,
+      "frameMs": {
+        "n": 8,
+        "median": 38.589,
+        "mean": 39.479,
+        "p95": 43.682,
+        "min": 37.949,
+        "max": 43.682,
+        "cv": 0.047
+      },
+      "fps": 25.325,
+      "rssLoadedMiB": 336.1,
+      "gpuLoaded": {
+        "processMiB": 174,
+        "deviceUsedMiB": 184
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "graphite-vulkan",
+        "device": "graphite-vulkan: Tesla T4 (DISCRETE_GPU), driver 0x911481c0, API 1.4.312",
+        "sharedDeviceRefs": 1
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 87.316,
+      "rssClosedMiB": 222.4,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-graphite",
+      "renderers": 2,
+      "share": "thread",
+      "rssBaselineMiB": 61.5,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "createAllMs": 261.92,
+      "frameMs": {
+        "n": 16,
+        "median": 38.491,
+        "mean": 38.652,
+        "p95": 44.414,
+        "min": 36.993,
+        "max": 44.414,
+        "cv": 0.046
+      },
+      "fps": 25.868,
+      "rssLoadedMiB": 427.9,
+      "gpuLoaded": {
+        "processMiB": 250,
+        "deviceUsedMiB": 259
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "graphite-vulkan",
+        "device": "graphite-vulkan: Tesla T4 (DISCRETE_GPU), driver 0x911481c0, API 1.4.312",
+        "sharedDeviceRefs": 2
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 93.618,
+      "rssClosedMiB": 306.2,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-graphite",
+      "renderers": 4,
+      "share": "thread",
+      "rssBaselineMiB": 61.4,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "createAllMs": 250.715,
+      "frameMs": {
+        "n": 32,
+        "median": 36.216,
+        "mean": 36.798,
+        "p95": 39.212,
+        "min": 35.5,
+        "max": 39.577,
+        "cv": 0.032
+      },
+      "fps": 27.172,
+      "rssLoadedMiB": 611,
+      "gpuLoaded": {
+        "processMiB": 401,
+        "deviceUsedMiB": 410
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "graphite-vulkan",
+        "device": "graphite-vulkan: Tesla T4 (DISCRETE_GPU), driver 0x911481c0, API 1.4.312",
+        "sharedDeviceRefs": 4
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 109.034,
+      "rssClosedMiB": 473.6,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "exitCode": 0,
+      "signal": null
+    },
+    {
+      "backend": "gpu-graphite",
+      "renderers": 8,
+      "share": "thread",
+      "rssBaselineMiB": 61.3,
+      "gpuBaseline": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "createAllMs": 299.937,
+      "frameMs": {
+        "n": 64,
+        "median": 39.719,
+        "mean": 40.167,
+        "p95": 42.439,
+        "min": 38.247,
+        "max": 43.12,
+        "cv": 0.033
+      },
+      "fps": 24.894,
+      "rssLoadedMiB": 977.9,
+      "gpuLoaded": {
+        "processMiB": 710,
+        "deviceUsedMiB": 720
+      },
+      "backendInfo": {
+        "abandoned": false,
+        "backend": "graphite-vulkan",
+        "device": "graphite-vulkan: Tesla T4 (DISCRETE_GPU), driver 0x911481c0, API 1.4.312",
+        "sharedDeviceRefs": 8
+      },
+      "gpuResourceBytes": 0,
+      "closeAllMs": 161.315,
+      "rssClosedMiB": 807.5,
+      "gpuClosed": {
+        "processMiB": null,
+        "deviceUsedMiB": 0
+      },
+      "exitCode": 0,
+      "signal": null
+    }
+  ]
+}

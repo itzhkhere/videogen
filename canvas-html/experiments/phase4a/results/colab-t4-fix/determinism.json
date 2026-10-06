@@ -1,0 +1,473 @@
+{
+  "dpr": 1.5,
+  "scenes": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G1000"
+  ],
+  "backends": {
+    "cpu": {
+      "fresh": {
+        "A": {
+          "hashes": [
+            "e181f067408c296f",
+            "e181f067408c296f",
+            "e181f067408c296f",
+            "e181f067408c296f",
+            "e181f067408c296f"
+          ],
+          "identical": true
+        },
+        "B": {
+          "hashes": [
+            "ff312d8d6b3913fb",
+            "ff312d8d6b3913fb",
+            "ff312d8d6b3913fb",
+            "ff312d8d6b3913fb",
+            "ff312d8d6b3913fb"
+          ],
+          "identical": true
+        },
+        "C": {
+          "hashes": [
+            "31ceb41daa323db8",
+            "31ceb41daa323db8",
+            "31ceb41daa323db8",
+            "31ceb41daa323db8",
+            "31ceb41daa323db8"
+          ],
+          "identical": true
+        },
+        "D": {
+          "hashes": [
+            "4cc655ff2b1cf294",
+            "4cc655ff2b1cf294",
+            "4cc655ff2b1cf294",
+            "4cc655ff2b1cf294",
+            "4cc655ff2b1cf294"
+          ],
+          "identical": true
+        },
+        "E": {
+          "hashes": [
+            "760dcb60d87746dd",
+            "760dcb60d87746dd",
+            "760dcb60d87746dd",
+            "760dcb60d87746dd",
+            "760dcb60d87746dd"
+          ],
+          "identical": true
+        },
+        "F": {
+          "hashes": [
+            "9ba66e47acaa77f4",
+            "9ba66e47acaa77f4",
+            "9ba66e47acaa77f4",
+            "9ba66e47acaa77f4",
+            "9ba66e47acaa77f4"
+          ],
+          "identical": true
+        },
+        "G1000": {
+          "hashes": [
+            "5bf13005144892d4",
+            "5bf13005144892d4",
+            "5bf13005144892d4",
+            "5bf13005144892d4",
+            "5bf13005144892d4"
+          ],
+          "identical": true
+        }
+      },
+      "processes": [
+        "760dcb60d87746dd",
+        "760dcb60d87746dd",
+        "760dcb60d87746dd"
+      ],
+      "longLived": {
+        "B": {
+          "sameDocument": {
+            "distinct": 1,
+            "matchesFresh": true
+          },
+          "reloaded": {
+            "distinct": 1,
+            "matchesFresh": true,
+            "worstVsFresh": {
+              "differingPixels": 0,
+              "differingPct": 0,
+              "maxDelta": 0,
+              "meanDelta": 0,
+              "over8Pct": 0,
+              "over32Pct": 0,
+              "over64Pct": 0,
+              "edgeFraction": 0,
+              "over32EdgeFraction": 0,
+              "severity": "exact"
+            }
+          }
+        },
+        "E": {
+          "sameDocument": {
+            "distinct": 1,
+            "matchesFresh": true
+          },
+          "reloaded": {
+            "distinct": 1,
+            "matchesFresh": true,
+            "worstVsFresh": {
+              "differingPixels": 0,
+              "differingPct": 0,
+              "maxDelta": 0,
+              "meanDelta": 0,
+              "over8Pct": 0,
+              "over32Pct": 0,
+              "over64Pct": 0,
+              "edgeFraction": 0,
+              "over32EdgeFraction": 0,
+              "severity": "exact"
+            }
+          }
+        },
+        "F": {
+          "sameDocument": {
+            "distinct": 1,
+            "matchesFresh": true
+          },
+          "reloaded": {
+            "distinct": 1,
+            "matchesFresh": true,
+            "worstVsFresh": {
+              "differingPixels": 0,
+              "differingPct": 0,
+              "maxDelta": 0,
+              "meanDelta": 0,
+              "over8Pct": 0,
+              "over32Pct": 0,
+              "over64Pct": 0,
+              "edgeFraction": 0,
+              "over32EdgeFraction": 0,
+              "severity": "exact"
+            }
+          }
+        }
+      },
+      "animation": {
+        "frames": 60,
+        "firstPlayVsReplay": 30,
+        "replayVsReplay": 0
+      },
+      "processesIdentical": true
+    },
+    "gpu-gl": {
+      "fresh": {
+        "A": {
+          "hashes": [
+            "5bf9f60df619c6d2",
+            "5bf9f60df619c6d2",
+            "5bf9f60df619c6d2",
+            "5bf9f60df619c6d2",
+            "5bf9f60df619c6d2"
+          ],
+          "identical": true
+        },
+        "B": {
+          "hashes": [
+            "10c20cf06e5bf139",
+            "10c20cf06e5bf139",
+            "10c20cf06e5bf139",
+            "10c20cf06e5bf139",
+            "10c20cf06e5bf139"
+          ],
+          "identical": true
+        },
+        "C": {
+          "hashes": [
+            "e674e0b87f735f6e",
+            "e674e0b87f735f6e",
+            "e674e0b87f735f6e",
+            "e674e0b87f735f6e",
+            "e674e0b87f735f6e"
+          ],
+          "identical": true
+        },
+        "D": {
+          "hashes": [
+            "a43faa3a2f010ce5",
+            "a43faa3a2f010ce5",
+            "a43faa3a2f010ce5",
+            "a43faa3a2f010ce5",
+            "a43faa3a2f010ce5"
+          ],
+          "identical": true
+        },
+        "E": {
+          "hashes": [
+            "0c04aef546ea8b50",
+            "0c04aef546ea8b50",
+            "0c04aef546ea8b50",
+            "0c04aef546ea8b50",
+            "0c04aef546ea8b50"
+          ],
+          "identical": true
+        },
+        "F": {
+          "hashes": [
+            "77ddf11535706878",
+            "77ddf11535706878",
+            "77ddf11535706878",
+            "77ddf11535706878",
+            "77ddf11535706878"
+          ],
+          "identical": true
+        },
+        "G1000": {
+          "hashes": [
+            "b3013b1f077d8d3f",
+            "b3013b1f077d8d3f",
+            "b3013b1f077d8d3f",
+            "b3013b1f077d8d3f",
+            "b3013b1f077d8d3f"
+          ],
+          "identical": true
+        }
+      },
+      "processes": [
+        "0c04aef546ea8b50",
+        "0c04aef546ea8b50",
+        "0c04aef546ea8b50"
+      ],
+      "longLived": {
+        "B": {
+          "sameDocument": {
+            "distinct": 1,
+            "matchesFresh": true
+          },
+          "reloaded": {
+            "distinct": 1,
+            "matchesFresh": true,
+            "worstVsFresh": {
+              "differingPixels": 0,
+              "differingPct": 0,
+              "maxDelta": 0,
+              "meanDelta": 0,
+              "over8Pct": 0,
+              "over32Pct": 0,
+              "over64Pct": 0,
+              "edgeFraction": 0,
+              "over32EdgeFraction": 0,
+              "severity": "exact"
+            }
+          }
+        },
+        "E": {
+          "sameDocument": {
+            "distinct": 1,
+            "matchesFresh": true
+          },
+          "reloaded": {
+            "distinct": 1,
+            "matchesFresh": true,
+            "worstVsFresh": {
+              "differingPixels": 0,
+              "differingPct": 0,
+              "maxDelta": 0,
+              "meanDelta": 0,
+              "over8Pct": 0,
+              "over32Pct": 0,
+              "over64Pct": 0,
+              "edgeFraction": 0,
+              "over32EdgeFraction": 0,
+              "severity": "exact"
+            }
+          }
+        },
+        "F": {
+          "sameDocument": {
+            "distinct": 1,
+            "matchesFresh": true
+          },
+          "reloaded": {
+            "distinct": 1,
+            "matchesFresh": true,
+            "worstVsFresh": {
+              "differingPixels": 0,
+              "differingPct": 0,
+              "maxDelta": 0,
+              "meanDelta": 0,
+              "over8Pct": 0,
+              "over32Pct": 0,
+              "over64Pct": 0,
+              "edgeFraction": 0,
+              "over32EdgeFraction": 0,
+              "severity": "exact"
+            }
+          }
+        }
+      },
+      "animation": {
+        "frames": 60,
+        "firstPlayVsReplay": 30,
+        "replayVsReplay": 0
+      },
+      "processesIdentical": true
+    },
+    "gpu-vulkan": {
+      "fresh": {
+        "A": {
+          "hashes": [
+            "0585a489282832bb",
+            "0585a489282832bb",
+            "0585a489282832bb",
+            "0585a489282832bb",
+            "0585a489282832bb"
+          ],
+          "identical": true
+        },
+        "B": {
+          "hashes": [
+            "c957349adb626852",
+            "c957349adb626852",
+            "c957349adb626852",
+            "c957349adb626852",
+            "c957349adb626852"
+          ],
+          "identical": true
+        },
+        "C": {
+          "hashes": [
+            "f50c5779e26cc408",
+            "f50c5779e26cc408",
+            "f50c5779e26cc408",
+            "f50c5779e26cc408",
+            "f50c5779e26cc408"
+          ],
+          "identical": true
+        },
+        "D": {
+          "hashes": [
+            "abf33f59da361910",
+            "abf33f59da361910",
+            "abf33f59da361910",
+            "abf33f59da361910",
+            "abf33f59da361910"
+          ],
+          "identical": true
+        },
+        "E": {
+          "hashes": [
+            "3ae29869a2cc6e8a",
+            "3ae29869a2cc6e8a",
+            "3ae29869a2cc6e8a",
+            "3ae29869a2cc6e8a",
+            "3ae29869a2cc6e8a"
+          ],
+          "identical": true
+        },
+        "F": {
+          "hashes": [
+            "2eda0f5e050240e4",
+            "2eda0f5e050240e4",
+            "2eda0f5e050240e4",
+            "2eda0f5e050240e4",
+            "2eda0f5e050240e4"
+          ],
+          "identical": true
+        },
+        "G1000": {
+          "hashes": [
+            "31dbe9a74254d014",
+            "31dbe9a74254d014",
+            "31dbe9a74254d014",
+            "31dbe9a74254d014",
+            "31dbe9a74254d014"
+          ],
+          "identical": true
+        }
+      },
+      "processes": [
+        "3ae29869a2cc6e8a",
+        "3ae29869a2cc6e8a",
+        "3ae29869a2cc6e8a"
+      ],
+      "longLived": {
+        "B": {
+          "sameDocument": {
+            "distinct": 1,
+            "matchesFresh": true
+          },
+          "reloaded": {
+            "distinct": 1,
+            "matchesFresh": true,
+            "worstVsFresh": {
+              "differingPixels": 0,
+              "differingPct": 0,
+              "maxDelta": 0,
+              "meanDelta": 0,
+              "over8Pct": 0,
+              "over32Pct": 0,
+              "over64Pct": 0,
+              "edgeFraction": 0,
+              "over32EdgeFraction": 0,
+              "severity": "exact"
+            }
+          }
+        },
+        "E": {
+          "sameDocument": {
+            "distinct": 1,
+            "matchesFresh": true
+          },
+          "reloaded": {
+            "distinct": 1,
+            "matchesFresh": true,
+            "worstVsFresh": {
+              "differingPixels": 0,
+              "differingPct": 0,
+              "maxDelta": 0,
+              "meanDelta": 0,
+              "over8Pct": 0,
+              "over32Pct": 0,
+              "over64Pct": 0,
+              "edgeFraction": 0,
+              "over32EdgeFraction": 0,
+              "severity": "exact"
+            }
+          }
+        },
+        "F": {
+          "sameDocument": {
+            "distinct": 1,
+            "matchesFresh": true
+          },
+          "reloaded": {
+            "distinct": 1,
+            "matchesFresh": true,
+            "worstVsFresh": {
+              "differingPixels": 0,
+              "differingPct": 0,
+              "maxDelta": 0,
+              "meanDelta": 0,
+              "over8Pct": 0,
+              "over32Pct": 0,
+              "over64Pct": 0,
+              "edgeFraction": 0,
+              "over32EdgeFraction": 0,
+              "severity": "exact"
+            }
+          }
+        }
+      },
+      "animation": {
+        "frames": 60,
+        "firstPlayVsReplay": 30,
+        "replayVsReplay": 0
+      },
+      "processesIdentical": true
+    }
+  }
+}

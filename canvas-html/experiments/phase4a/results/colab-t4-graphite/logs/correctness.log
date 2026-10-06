@@ -1,0 +1,40 @@
+[11:31:03] correctness 720p
+[11:31:06]   A gpu-graphite: minor (0.7553% px, max 53, >32: 0.0052%)
+[11:31:06]   B gpu-graphite: minor (72.9631% px, max 13, >32: 0%)
+[11:31:07]   C gpu-graphite: minor (84.6844% px, max 84, >32: 0.0161%)
+[11:31:08]   D gpu-graphite: minor (87.8942% px, max 62, >32: 0.012%)
+[11:31:08]   E gpu-graphite: minor (90.0843% px, max 75, >32: 0.0123%)
+[11:31:09]   F gpu-graphite: edge-aa (52.1634% px, max 136, >32: 2.3881%)
+[11:31:09]   G100 gpu-graphite: minor (12.3682% px, max 71, >32: 0.0419%)
+[11:31:10]   G500 gpu-graphite: edge-aa (45.429% px, max 66, >32: 0.1284%)
+[11:31:10]   G1000 gpu-graphite: edge-aa (66.9684% px, max 84, >32: 0.1656%)
+[11:31:10] correctness 1080p
+[11:31:14]   A gpu-graphite: minor (0.472% px, max 64, >32: 0.0037%)
+[11:31:14]   B gpu-graphite: edge-aa (71.8544% px, max 168, >32: 0.76%)
+[11:31:15]   C gpu-graphite: minor (84.0514% px, max 65, >32: 0.0082%)
+[11:31:15]   D gpu-graphite: minor (87.9702% px, max 76, >32: 0.0185%)
+[11:31:16]   E gpu-graphite: minor (84.1546% px, max 78, >32: 0.0105%)
+[11:31:16]   F gpu-graphite: edge-aa (49.3579% px, max 139, >32: 1.5096%)
+[11:31:17]   G100 gpu-graphite: minor (12.1281% px, max 76, >32: 0.0287%)
+[11:31:17]   G500 gpu-graphite: minor (44.7122% px, max 76, >32: 0.0914%)
+[11:31:18]   G1000 gpu-graphite: edge-aa (66.1317% px, max 76, >32: 0.1116%)
+[11:31:18] correctness 4K
+[11:31:24]   A gpu-graphite: minor (0.3439% px, max 231, >32: 0.0476%)
+[11:31:26]   B gpu-graphite: edge-aa (70.2771% px, max 215, >32: 1.0176%)
+[11:31:27]   C gpu-graphite: minor (83.3685% px, max 70, >32: 0.0023%)
+[11:31:28]   D gpu-graphite: minor (87.9648% px, max 73, >32: 0.0057%)
+[11:31:28]   E gpu-graphite: minor (72.0831% px, max 79, >32: 0.0031%)
+[11:31:30]   F gpu-graphite: edge-aa (46.3584% px, max 151, >32: 0.7255%)
+[11:31:30]   G100 gpu-graphite: minor (11.8719% px, max 65, >32: 0.0141%)
+[11:31:31]   G500 gpu-graphite: minor (43.9988% px, max 89, >32: 0.0462%)
+[11:31:32]   G1000 gpu-graphite: minor (65.2939% px, max 90, >32: 0.0567%)
+[11:31:32]   attribution A text rasterization difference
+[11:31:34]   attribution B text rasterization difference
+[11:31:35]   attribution C image sampling difference
+[11:31:36]   attribution D gradient interpolation difference
+[11:31:37]   attribution E shadow/blur precision difference
+[11:31:40]   attribution F geometry antialiasing difference
+[11:31:40]   attribution G100 layer/opacity blending difference
+[11:31:41]   attribution G500 layer/opacity blending difference
+[11:31:43]   attribution G1000 layer/opacity blending difference
+[11:31:43] wrote /content/canvas-html/experiments/phase4a/results/colab-t4-graphite/correctness.json

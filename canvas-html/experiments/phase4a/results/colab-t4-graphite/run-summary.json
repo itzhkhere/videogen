@@ -1,0 +1,62 @@
+[
+  {
+    "step": "correctness",
+    "code": 0,
+    "signal": null,
+    "seconds": 40.5
+  },
+  {
+    "step": "bench",
+    "code": 0,
+    "signal": null,
+    "seconds": 394.4
+  },
+  {
+    "step": "animated",
+    "code": 0,
+    "signal": null,
+    "seconds": 174.6
+  },
+  {
+    "step": "contexts",
+    "code": 0,
+    "signal": null,
+    "seconds": 14
+  },
+  {
+    "step": "multi",
+    "code": 0,
+    "signal": null,
+    "seconds": 48.9
+  },
+  {
+    "step": "workers",
+    "code": 0,
+    "signal": null,
+    "seconds": 29.6
+  },
+  {
+    "step": "determinism",
+    "code": 0,
+    "signal": null,
+    "seconds": 88
+  },
+  {
+    "step": "memory",
+    "code": 0,
+    "signal": null,
+    "seconds": 54.4
+  },
+  {
+    "step": "fonts",
+    "code": 0,
+    "signal": null,
+    "seconds": 33.2
+  },
+  {
+    "step": "failures",
+    "code": 0,
+    "signal": null,
+    "seconds": 5.9
+  }
+]

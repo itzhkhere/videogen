@@ -1,0 +1,12 @@
+[11:38:36] css 120 cpu        median 25.142 ms, p95 28.777, total 5334.458 ms (22.495 fps) | no-readback median 18.181
+[11:38:52] css 120 gpu-graphite median 13.129 ms, p95 22.27, total 4341.975 ms (27.637 fps) | no-readback median 7.109 | vs cpu: minor,minor,minor
+[11:39:05] css 300 cpu        median 25.212 ms, p95 28.924, total 13700.074 ms (21.898 fps)
+[11:39:18] css 300 gpu-graphite median 19.646 ms, p95 23.712, total 11645.469 ms (25.761 fps) | vs cpu: minor,minor,minor
+[11:39:26] gsap 120 cpu        median 8.316 ms, p95 12.407, total 3531.339 ms (33.981 fps) | no-readback median 3.25
+[11:39:36] gsap 120 gpu-graphite median 8.737 ms, p95 12.809, total 3661.008 ms (32.778 fps) | no-readback median 2.976 | vs cpu: minor,minor,minor
+[11:39:44] gsap 300 cpu        median 7.468 ms, p95 11.286, total 8670.174 ms (34.601 fps)
+[11:39:55] gsap 300 gpu-graphite median 11.913 ms, p95 14.027, total 9609.521 ms (31.219 fps) | vs cpu: minor,minor,minor
+[11:40:22] effects 120 cpu        median 33.932 ms, p95 37.88, total 6607.178 ms (18.162 fps) | no-readback median 30.081
+[11:40:42] effects 120 gpu-graphite median 11.898 ms, p95 19.767, total 4090.476 ms (29.336 fps) | no-readback median 5.261 | vs cpu: minor,minor,minor
+[11:40:59] effects 300 cpu        median 34.24 ms, p95 39.258, total 16772.604 ms (17.886 fps)
+[11:41:11] effects 300 gpu-graphite median 18.116 ms, p95 22.456, total 11378.664 ms (26.365 fps) | vs cpu: minor,minor,minor

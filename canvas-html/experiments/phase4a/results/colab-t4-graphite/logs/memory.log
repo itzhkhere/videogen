@@ -1,0 +1,6 @@
+[11:44:38] cpu        -        baseline: rss 62 gpu null skia 0 | gpu initialized (1 renderer, empty): rss 63.9 gpu null skia 0 | 1 renderer: rss 117.6 gpu null skia 0 | 4 renderers: rss 244.4 gpu null skia 0 | 8 renderers: rss 410.5 gpu null skia 0 | after close: rss 410.5 gpu null skia 0
+[11:44:38]                     anim rss 420.4→420.5→420.6→420.8 | cycles rss 420.8→420.8→420.8
+[11:44:53] gpu-graphite renderer baseline: rss 62 gpu null skia 0 | gpu initialized (1 renderer, empty): rss 201.1 gpu 17 skia 0 | 1 renderer: rss 286.4 gpu 255 skia 0 | 4 renderers: rss 497.8 gpu 1003 skia 0 | 8 renderers: rss 767.3 gpu 2003 skia 0 | after close: rss 492.5 gpu null skia 0
+[11:44:53]                     anim rss 607.7→607.7→607.7→607.7 | cycles rss 516.6→516.6→516.7
+[11:45:07] gpu-graphite thread   baseline: rss 61.8 gpu null skia 0 | gpu initialized (1 renderer, empty): rss 200.8 gpu 17 skia 0 | 1 renderer: rss 286 gpu 255 skia 0 | 4 renderers: rss 430.9 gpu 494 skia 0 | 8 renderers: rss 619.6 gpu 813 skia 0 | after close: rss 463 gpu null skia 0
+[11:45:07]                     anim rss 578.2→578.2→578.2→578.2 | cycles rss 487.1→487.1→487.1

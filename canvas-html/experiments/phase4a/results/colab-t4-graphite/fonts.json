@@ -1,0 +1,214 @@
+{
+  "iterations": 40,
+  "scene": "B",
+  "rows": [
+    {
+      "backend": "cpu",
+      "mode": "per-renderer",
+      "points": [
+        {
+          "i": 0,
+          "rssMiB": 63.9
+        },
+        {
+          "i": 10,
+          "rssMiB": 90.1,
+          "gpu": {
+            "processMiB": null,
+            "deviceUsedMiB": 0
+          },
+          "gpuResourceMiB": null
+        },
+        {
+          "i": 20,
+          "rssMiB": 90.3,
+          "gpu": {
+            "processMiB": null,
+            "deviceUsedMiB": 0
+          },
+          "gpuResourceMiB": null
+        },
+        {
+          "i": 30,
+          "rssMiB": 90.4,
+          "gpu": {
+            "processMiB": null,
+            "deviceUsedMiB": 0
+          },
+          "gpuResourceMiB": null
+        },
+        {
+          "i": 40,
+          "rssMiB": 90.5,
+          "gpu": {
+            "processMiB": null,
+            "deviceUsedMiB": 0
+          },
+          "gpuResourceMiB": null
+        }
+      ],
+      "rssAfterCloseMiB": 90.5,
+      "purge": {
+        "fontCacheBytesAfter": 0,
+        "fontCacheBytesBefore": 1465295
+      },
+      "rssAfterPurgeMiB": 90.5
+    },
+    {
+      "backend": "cpu",
+      "mode": "reused",
+      "points": [
+        {
+          "i": 0,
+          "rssMiB": 63.9
+        },
+        {
+          "i": 10,
+          "rssMiB": 103.8,
+          "gpu": {
+            "processMiB": null,
+            "deviceUsedMiB": 0
+          },
+          "gpuResourceMiB": 0
+        },
+        {
+          "i": 20,
+          "rssMiB": 106.9,
+          "gpu": {
+            "processMiB": null,
+            "deviceUsedMiB": 0
+          },
+          "gpuResourceMiB": 0
+        },
+        {
+          "i": 30,
+          "rssMiB": 105.2,
+          "gpu": {
+            "processMiB": null,
+            "deviceUsedMiB": 0
+          },
+          "gpuResourceMiB": 0
+        },
+        {
+          "i": 40,
+          "rssMiB": 104.7,
+          "gpu": {
+            "processMiB": null,
+            "deviceUsedMiB": 0
+          },
+          "gpuResourceMiB": 0
+        }
+      ],
+      "rssAfterCloseMiB": 101.2,
+      "purge": {
+        "fontCacheBytesAfter": 0,
+        "fontCacheBytesBefore": 1465295
+      },
+      "rssAfterPurgeMiB": 101.2
+    },
+    {
+      "backend": "gpu-graphite",
+      "mode": "per-renderer",
+      "points": [
+        {
+          "i": 0,
+          "rssMiB": 64
+        },
+        {
+          "i": 10,
+          "rssMiB": 182.2,
+          "gpu": {
+            "processMiB": null,
+            "deviceUsedMiB": 0
+          },
+          "gpuResourceMiB": null
+        },
+        {
+          "i": 20,
+          "rssMiB": 182.3,
+          "gpu": {
+            "processMiB": null,
+            "deviceUsedMiB": 0
+          },
+          "gpuResourceMiB": null
+        },
+        {
+          "i": 30,
+          "rssMiB": 182.5,
+          "gpu": {
+            "processMiB": null,
+            "deviceUsedMiB": 0
+          },
+          "gpuResourceMiB": null
+        },
+        {
+          "i": 40,
+          "rssMiB": 182.5,
+          "gpu": {
+            "processMiB": null,
+            "deviceUsedMiB": 0
+          },
+          "gpuResourceMiB": null
+        }
+      ],
+      "rssAfterCloseMiB": 182.5,
+      "purge": {
+        "fontCacheBytesAfter": 0,
+        "fontCacheBytesBefore": 1465295
+      },
+      "rssAfterPurgeMiB": 182.5
+    },
+    {
+      "backend": "gpu-graphite",
+      "mode": "reused",
+      "points": [
+        {
+          "i": 0,
+          "rssMiB": 63.8
+        },
+        {
+          "i": 10,
+          "rssMiB": 284.2,
+          "gpu": {
+            "processMiB": 139,
+            "deviceUsedMiB": 148
+          },
+          "gpuResourceMiB": 0
+        },
+        {
+          "i": 20,
+          "rssMiB": 286.7,
+          "gpu": {
+            "processMiB": 139,
+            "deviceUsedMiB": 148
+          },
+          "gpuResourceMiB": 0
+        },
+        {
+          "i": 30,
+          "rssMiB": 287.1,
+          "gpu": {
+            "processMiB": 139,
+            "deviceUsedMiB": 148
+          },
+          "gpuResourceMiB": 0
+        },
+        {
+          "i": 40,
+          "rssMiB": 287.1,
+          "gpu": {
+            "processMiB": 139,
+            "deviceUsedMiB": 148
+          },
+          "gpuResourceMiB": 0
+        }
+      ],
+      "rssAfterCloseMiB": 168.4,
+      "purge": {
+        "fontCacheBytesAfter": 0,
+        "fontCacheBytesBefore": 1465295
+      },
+      "rssAfterPurgeMiB": 168.4
+    }
+  ]
+}
