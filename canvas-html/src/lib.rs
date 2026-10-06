@@ -206,16 +206,33 @@ pub struct HtmlRenderer {
     closed: bool,
 }
 
+/// Parses the `background` option: `#rrggbb` or `#rrggbbaa` (the `#` is optional, surrounding
+/// whitespace is ignored). Works on bytes after checking that every one is an ASCII hex digit,
+/// so no input (non-ASCII, multi-byte UTF-8, NUL, any length) can split a character or panic.
 fn parse_hex(s: &str) -> Result<Color> {
-    let h = s.trim().trim_start_matches('#');
-    let p = |i: usize| u8::from_str_radix(&h[i..i + 2], 16);
-    let bad = || Error::from_reason(format!("background must be #rrggbb or #rrggbbaa, got {s}"));
-    match h.len() {
-        6 => Ok(Color::from_rgba8(p(0).map_err(|_| bad())?, p(2).map_err(|_| bad())?, p(4).map_err(|_| bad())?, 255)),
-        8 => Ok(Color::from_rgba8(p(0).map_err(|_| bad())?, p(2).map_err(|_| bad())?, p(4).map_err(|_| bad())?, p(6).map_err(|_| bad())?)),
-        _ => Err(bad()),
+    let bad = || {
+        let shown: String = s.chars().take(64).collect();
+        let more = if s.chars().count() > 64 { "…" } else { "" };
+        Error::from_reason(format!("background must be #rrggbb or #rrggbbaa, got {shown:?}{more}"))
+    };
+    let h = s.trim();
+    let h = h.strip_prefix('#').unwrap_or(h).as_bytes();
+    if !(h.len() == 6 || h.len() == 8) || !h.iter().all(u8::is_ascii_hexdigit) {
+        return Err(bad());
     }
+    let nibble = |b: u8| match b {
+        b'0'..=b'9' => b - b'0',
+        b'a'..=b'f' => b - b'a' + 10,
+        _ => b - b'A' + 10, // only A-F remain after the check above
+    };
+    let byte = |i: usize| (nibble(h[i]) << 4) | nibble(h[i + 1]);
+    let a = if h.len() == 8 { byte(6) } else { 255 };
+    Ok(Color::from_rgba8(byte(0), byte(2), byte(4), a))
 }
+
+/// The largest frozen-clock time, in ms since load: the range of a JS `Date` (±8.64e15 ms). Larger
+/// times cannot be shown to the page, and far larger ones cannot be represented as a `Duration`.
+const MAX_CLOCK_MS: f64 = 8.64e15;
 
 impl HtmlRenderer {
     fn build_document(&mut self) -> Result<Doc> {
@@ -272,6 +289,22 @@ impl HtmlRenderer {
             self.loaded_at.elapsed().as_secs_f64() * 1000.0
         } else {
             self.clock_ms
+        }
+    }
+
+    /// The N-API boundary backstop: runs `f`, and if it panics (a bug, never ordinary input:
+    /// that is validated and returned as an error), returns a generic JS error instead of
+    /// letting the panic abort the process. The renderer may be inconsistent after a panic, so it
+    /// is closed; its document is leaked rather than dropped, since dropping half-updated state
+    /// could panic again. The panic message is not passed to JS.
+    fn guarded<T>(&mut self, what: &str, f: impl FnOnce(&mut Self) -> Result<T>) -> Result<T> {
+        match std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| f(self))) {
+            Ok(r) => r,
+            Err(_) => {
+                self.closed = true;
+                std::mem::forget(self.doc.take());
+                Err(Error::from_reason(format!("internal error in {what}(); the renderer was closed (please report this)")))
+            }
         }
     }
 
@@ -413,14 +446,35 @@ impl HtmlRenderer {
     }
 }
 
+/// Premultiplied RGBA (the frame format) → straight RGBA (what PNG stores). A = 0 → all zero;
+/// A = 255 → unchanged; otherwise each channel is round(c × 255 / a), capped at 255.
+fn unpremultiply(rgba: &[u8]) -> std::borrow::Cow<'_, [u8]> {
+    if rgba.chunks_exact(4).all(|p| p[3] == 255) {
+        return std::borrow::Cow::Borrowed(rgba);
+    }
+    let mut out = rgba.to_vec();
+    for p in out.chunks_exact_mut(4) {
+        let a = p[3] as u32;
+        if a == 0 {
+            p[..3].fill(0);
+        } else if a < 255 {
+            for c in &mut p[..3] {
+                *c = ((*c as u32 * 255 + a / 2) / a).min(255) as u8;
+            }
+        }
+    }
+    std::borrow::Cow::Owned(out)
+}
+
 fn encode_png(rgba: &[u8], pw: u32, ph: u32) -> Result<Vec<u8>> {
+    let rgba = unpremultiply(rgba);
     let mut out = Vec::new();
     {
         let mut enc = png::Encoder::new(&mut out, pw, ph);
         enc.set_color(png::ColorType::Rgba);
         enc.set_depth(png::BitDepth::Eight);
         let mut w = enc.write_header().map_err(|e| Error::from_reason(e.to_string()))?;
-        w.write_image_data(rgba).map_err(|e| Error::from_reason(e.to_string()))?;
+        w.write_image_data(&rgba).map_err(|e| Error::from_reason(e.to_string()))?;
     }
     Ok(out)
 }
@@ -563,6 +617,11 @@ pub struct TimedRenderOptions {
 impl HtmlRenderer {
     #[napi(constructor)]
     pub fn new(options: RendererOptions) -> Result<Self> {
+        std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| Self::new_impl(options)))
+            .unwrap_or_else(|_| Err(Error::from_reason("internal error in the constructor (please report this)")))
+    }
+
+    fn new_impl(options: RendererOptions) -> Result<Self> {
         if options.width == 0 || options.height == 0 {
             return Err(Error::from_reason("width and height must be > 0"));
         }
@@ -634,6 +693,10 @@ impl HtmlRenderer {
     /// pass a file:// URL of the folder the assets live in.
     #[napi]
     pub fn load(&mut self, html: String, base_url: Option<String>) -> Result<()> {
+        self.guarded("load", |this| this.load_impl(html, base_url))
+    }
+
+    fn load_impl(&mut self, html: String, base_url: Option<String>) -> Result<()> {
         self.check_open()?;
         if let Some(b) = &base_url {
             url::Url::parse(b).map_err(|e| Error::from_reason(format!("invalid baseUrl {b}: {e}")))?;
@@ -655,8 +718,12 @@ impl HtmlRenderer {
     /// Draws the document as it is now. Like a browser's rendering step, it first updates running
     /// Web Animations and runs requestAnimationFrame callbacks, then styles, lays out and paints.
     /// Returns RGBA pixels (`pixelWidth` x `pixelHeight`, 4 bytes each, row by row) or a PNG.
-    #[napi(catch_unwind)]
+    #[napi]
     pub fn render<'env>(&mut self, env: &'env Env, options: Option<RenderOptions>) -> Result<BufferSlice<'env>> {
+        self.guarded("render", |this| this.render_impl(env, options))
+    }
+
+    fn render_impl<'env>(&mut self, env: &'env Env, options: Option<RenderOptions>) -> Result<BufferSlice<'env>> {
         let png = match options.and_then(|o| o.format).as_deref() {
             None | Some("rgba") => false,
             Some("png") => true,
@@ -684,8 +751,18 @@ impl HtmlRenderer {
     /// controlled from script, and the timers that come due on the way (in order).
     #[napi]
     pub fn advance_clock(&mut self, ms: f64) -> Result<()> {
+        self.guarded("advanceClock", |this| this.advance_clock_impl(ms))
+    }
+
+    fn advance_clock_impl(&mut self, ms: f64) -> Result<()> {
         if !(ms >= 0.0 && ms.is_finite()) {
             return Err(Error::from_reason(format!("advanceClock needs a finite number >= 0, got {ms}")));
+        }
+        if ms > MAX_CLOCK_MS - self.clock_ms {
+            return Err(Error::from_reason(format!(
+                "advanceClock({ms:e}) would move the clock past {MAX_CLOCK_MS:e} ms (the range of a JS Date); the clock is at {:e} ms",
+                self.clock_ms
+            )));
         }
         if self.real_clock {
             return Err(Error::from_reason("advanceClock is for clock: \"frozen\"; this renderer uses the real clock"));
@@ -693,7 +770,10 @@ impl HtmlRenderer {
         self.doc_mut()?;
         let target_ms = self.clock_ms + ms;
         if let (Some(Doc::Script(doc)), Some(start)) = (self.doc.as_mut(), self.script_start) {
-            let target = start + Duration::from_secs_f64(target_ms / 1000.0);
+            let target = Duration::try_from_secs_f64(target_ms / 1000.0)
+                .ok()
+                .and_then(|d| start.checked_add(d))
+                .ok_or_else(|| Error::from_reason(format!("advanceClock: clock time {target_ms} ms is out of range")))?;
             let mut runs = 0;
             while let Some(deadline) = doc.next_timer_deadline() {
                 if deadline > target {
@@ -726,6 +806,10 @@ impl HtmlRenderer {
     /// `id`, as the document is now.
     #[napi]
     pub fn boxes(&mut self) -> Result<Vec<ElementBox>> {
+        self.guarded("boxes", |this| this.boxes_impl())
+    }
+
+    fn boxes_impl(&mut self) -> Result<Vec<ElementBox>> {
         self.resolve()?;
         let mut out = Vec::new();
         self.doc.as_mut().ok_or_else(|| Error::from_reason("no document loaded"))?.with_base(|doc| {
@@ -760,6 +844,10 @@ impl HtmlRenderer {
     /// fallback font has the characters, as the document is now. Register a font that covers them.
     #[napi]
     pub fn missing_glyphs(&mut self) -> Result<Vec<MissingGlyphs>> {
+        self.guarded("missingGlyphs", |this| this.missing_glyphs_impl())
+    }
+
+    fn missing_glyphs_impl(&mut self) -> Result<Vec<MissingGlyphs>> {
         self.resolve()?;
         let mut out = Vec::new();
         self.doc.as_mut().ok_or_else(|| Error::from_reason("no document loaded"))?.with_base(|doc| {
@@ -818,6 +906,10 @@ impl HtmlRenderer {
     /// expression, converted through JSON. Throws if the code throws.
     #[napi]
     pub fn eval(&mut self, code: String) -> Result<serde_json::Value> {
+        self.guarded("eval", |this| this.eval_impl(code))
+    }
+
+    fn eval_impl(&mut self, code: String) -> Result<serde_json::Value> {
         self.run_due_timers();
         self.eval_json(&code)
     }
@@ -885,6 +977,10 @@ impl HtmlRenderer {
     /// which copies the renderer's frame into a new Buffer).
     #[napi(js_name = "_renderTimed")]
     pub fn render_timed<'env>(&mut self, env: &'env Env, options: Option<TimedRenderOptions>) -> Result<Object<'env>> {
+        self.guarded("_renderTimed", |this| this.render_timed_impl(env, options))
+    }
+
+    fn render_timed_impl<'env>(&mut self, env: &'env Env, options: Option<TimedRenderOptions>) -> Result<Object<'env>> {
         let total = Instant::now();
         let o = options.unwrap_or(TimedRenderOptions { format: None, readback: None, measure_paint_prep: None, output: None });
         let format = o.format.unwrap_or_else(|| "rgba".into());
@@ -974,8 +1070,12 @@ impl HtmlRenderer {
     /// returns, `target` holds the whole frame; canvas-html allocates and copies nothing and keeps
     /// no reference to `target`. A rejected target throws before anything runs (no frame step,
     /// no write).
-    #[napi(catch_unwind)]
+    #[napi]
     pub fn render_into(&mut self, env: &Env, target: Unknown<'_>) -> Result<()> {
+        self.guarded("renderInto", |this| this.render_into_impl(env, target))
+    }
+
+    fn render_into_impl(&mut self, env: &Env, target: Unknown<'_>) -> Result<()> {
         let mut target = self.checked_target(env, &target, "target")?;
         self.prepare_frame()?;
         // SAFETY: inside the native call that validated `target`; this is the only slice of it.
@@ -987,6 +1087,10 @@ impl HtmlRenderer {
     /// every step, like `_renderTimed`. Private; not part of the supported API.
     #[napi(js_name = "_renderIntoTimed")]
     pub fn render_into_timed<'env>(&mut self, env: &'env Env, target: Unknown<'_>) -> Result<Object<'env>> {
+        self.guarded("_renderIntoTimed", |this| this.render_into_timed_impl(env, target))
+    }
+
+    fn render_into_timed_impl<'env>(&mut self, env: &'env Env, target: Unknown<'_>) -> Result<Object<'env>> {
         let total = Instant::now();
         let mut target = self.checked_target(env, &target, "target")?;
         let mut t: HashMap<String, f64> = HashMap::new();
@@ -1077,6 +1181,10 @@ impl HtmlRenderer {
     /// full. Returns the frame index and timings.
     #[napi(js_name = "_pipelineSubmit")]
     pub fn pipeline_submit<'env>(&mut self, env: &'env Env) -> Result<Object<'env>> {
+        self.guarded("_pipelineSubmit", |this| this.pipeline_submit_impl(env))
+    }
+
+    fn pipeline_submit_impl<'env>(&mut self, env: &'env Env) -> Result<Object<'env>> {
         let mut t: HashMap<String, f64> = HashMap::new();
         self.prepare_timed(&mut t, false)?;
         #[cfg(feature = "experimental-gpu")]
@@ -1100,6 +1208,10 @@ impl HtmlRenderer {
     /// frame of bytes). Returns its index and timings (gpuWait, readback, latency).
     #[napi(js_name = "_pipelineComplete")]
     pub fn pipeline_complete<'env>(&mut self, env: &'env Env, target: Unknown<'_>) -> Result<Object<'env>> {
+        self.guarded("_pipelineComplete", |this| this.pipeline_complete_impl(env, target))
+    }
+
+    fn pipeline_complete_impl<'env>(&mut self, env: &'env Env, target: Unknown<'_>) -> Result<Object<'env>> {
         let mut target = self.checked_target(env, &target, "target")?;
         #[cfg(feature = "experimental-gpu")]
         {
@@ -1137,6 +1249,10 @@ impl HtmlRenderer {
     /// with up to `depth` frames in flight). Returns per-frame timings.
     #[napi(js_name = "_renderFramesExperimental")]
     pub fn render_frames_experimental<'env>(&mut self, env: &'env Env, times: Vec<f64>, targets: Vec<Unknown<'_>>, options: Option<FramesOptions>) -> Result<Object<'env>> {
+        self.guarded("_renderFramesExperimental", |this| this.render_frames_experimental_impl(env, times, targets, options))
+    }
+
+    fn render_frames_experimental_impl<'env>(&mut self, env: &'env Env, times: Vec<f64>, targets: Vec<Unknown<'_>>, options: Option<FramesOptions>) -> Result<Object<'env>> {
         self.check_open()?;
         let o = options.unwrap_or(FramesOptions { mode: None, depth: None, seek: None });
         let mode = o.mode.unwrap_or_else(|| "sync".into());
@@ -1329,6 +1445,10 @@ impl HtmlRenderer {
     /// node matched.
     #[napi(js_name = "_dropNodeForTesting")]
     pub fn drop_node_for_testing(&mut self, selector: String) -> Result<bool> {
+        self.guarded("_dropNodeForTesting", |this| this.drop_node_for_testing_impl(selector))
+    }
+
+    fn drop_node_for_testing_impl(&mut self, selector: String) -> Result<bool> {
         use canvas_dom_host::DomHost as _;
         let result = self.doc_mut()?.with_base(|b| {
             let Some(node) = b.query_first(None, &selector)? else { return Ok(false) };

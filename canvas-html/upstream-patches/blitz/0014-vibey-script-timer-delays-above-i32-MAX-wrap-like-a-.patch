@@ -1,0 +1,44 @@
+From 789fdf6429d3ca6d406c25abfa7018a292f43579 Mon Sep 17 00:00:00 2001
+From: Harikrishnan <hkupim@gmail.com>
+Date: Tue, 6 Oct 2026 20:05:01 +0000
+Subject: [PATCH] vibey-script: timer delays above i32::MAX wrap like a WebIDL
+ long instead of panicking
+
+setTimeout/setInterval converted any finite positive delay with
+Duration::from_secs_f64(delay / 1000), which panics for delays beyond
+Duration's range (e.g. setTimeout(f, 1e25)) and aborts the embedding
+process. HTML defines the timeout as a WebIDL long: delays that fit an
+i32 keep their value (fractions included, unchanged), larger ones wrap
+like ToInt32 and negative results become 0, as in browsers.
+---
+ packages/blitz-vibey-script/src/runtime.rs | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/packages/blitz-vibey-script/src/runtime.rs b/packages/blitz-vibey-script/src/runtime.rs
+index be879550..671c1ac3 100644
+--- a/packages/blitz-vibey-script/src/runtime.rs
++++ b/packages/blitz-vibey-script/src/runtime.rs
+@@ -2126,10 +2126,18 @@ fn timer_args(
+         Some(value) => value.to_number(context)?,
+         None => 0.0,
+     };
+-    let delay_ms = if delay_ms.is_finite() && delay_ms > 0.0 {
++    // HTML: the timeout is a WebIDL `long`. Delays that fit an i32 keep their value (fractions
++    // included, as before); larger ones wrap like ToInt32 and negative results become 0, as in
++    // browsers. This also keeps the Duration below in range: a delay such as 1e25 ms used to
++    // panic in Duration::from_secs_f64.
++    let delay_ms = if !delay_ms.is_finite() || delay_ms <= 0.0 {
++        0.0
++    } else if delay_ms <= i32::MAX as f64 {
+         delay_ms
+     } else {
+-        0.0
++        let wrapped = delay_ms.trunc() % 4_294_967_296.0;
++        let wrapped = if wrapped >= 2_147_483_648.0 { wrapped - 4_294_967_296.0 } else { wrapped };
++        wrapped.max(0.0)
+     };
+     let rest: Vec<JsValue> = args.iter().skip(2).cloned().collect();
+     Ok(Some((
+-- 
+2.43.0
+
