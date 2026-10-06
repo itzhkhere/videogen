@@ -1,0 +1,20 @@
+render-into (gpu-gl): all passed
+RENDER_INTO_gpu-gl=0
+transfer   1 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0, 2 buffers allocated for 24 frames, use-after-transfer rejected 24/24, 84.0 fps
+transfer   2 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0,0, 4 buffers allocated for 24 frames, use-after-transfer rejected 24/24, 88.3 fps
+transfer   4 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0,0,0,0, 8 buffers allocated for 24 frames, use-after-transfer rejected 24/24, 67.5 fps
+in-process 1 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0, 73.0 fps
+in-process 2 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0,0, 83.0 fps
+in-process 4 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0,0,0,0, 68.7 fps
+render-into-workers (gpu-gl): all passed
+WORKERS_gpu-gl=0
+render-into (gpu-vulkan): all passed
+RENDER_INTO_gpu-vulkan=0
+transfer   1 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0, 2 buffers allocated for 24 frames, use-after-transfer rejected 24/24, 50.7 fps
+transfer   2 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0,0, 4 buffers allocated for 24 frames, use-after-transfer rejected 24/24, 44.2 fps
+transfer   4 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0,0,0,0, 8 buffers allocated for 24 frames, use-after-transfer rejected 24/24, 31.9 fps
+in-process 1 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0, 46.5 fps
+in-process 2 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0,0, 42.6 fps
+in-process 4 worker(s): 24 frames, 0 missing, 0 mismatched, exits 0,0,0,0, 32.9 fps
+render-into-workers (gpu-vulkan): all passed
+WORKERS_gpu-vulkan=0
