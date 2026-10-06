@@ -71,7 +71,7 @@ def new_path(p):
         return 'docs/handoff/' + p[len('handoff/'):]
     assert p.startswith('canvas-html/'), p
     p = p[len('canvas-html/'):]
-    if re.fullmatch(r'(PHASE[0-9A-Z]*_RESULTS|POC_RESULTS)\.md', p) and p != 'PHASE4A3_RESULTS.md':
+    if re.fullmatch(r'(PHASE[0-9A-Z]*_RESULTS|POC_RESULTS)\.md', p):
         return 'docs/phases/' + p
     return p
 
@@ -81,6 +81,7 @@ EXCLUDE = [
     r'^experiments/.*\.(png|zip|tgz)$', r'^experiments/phase4a2/review-bundle/', r'^experiments/phase4a2/phase4a2-review-bundle\.zip$',
     r'^experiments/phase4a1/colab/bundle\.tgz$',
     r'^experiments/phase4a3/history/(state\.json|cargo-step\.log|step\.log|run\.out)$',
+    r'^experiments/phase4a3/review-bundle/', r'(^|/)build/',
 ]
 # The tooling that performs the rename must keep the old names it maps from.
 VERBATIM = r'^experiments/phase4a3/history/'

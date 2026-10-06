@@ -5,7 +5,7 @@
 #   make-bundle.sh <canonical repo> <baseline gpu.node: 4A.1 or 4A.2> <4a3 gpu.node> [out.tgz]
 set -euo pipefail
 here=$(cd "$(dirname "$0")" && pwd)
-repo=$1 old=$2 new=$3 out=${4:-$here/bundle.tgz}
+repo=$(realpath "$1") old=$(realpath "$2") new=$(realpath "$3") out=${4:-$here/bundle.tgz}
 stage=$(mktemp -d)
 cd "$repo"
 tar -cf - index.js package.json test experiments/phase4a/lib experiments/phase4a/correctness.mjs \
