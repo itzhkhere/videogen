@@ -1,0 +1,10 @@
+PNG output with a translucent background (pre-existing behaviour, not changed in Phase 4A.2).
+40x20 page, a 50%-alpha red box, pixel (5,5), decoded with pngjs:
+
+background #00000000 → PNG pixel [128,0,0,128]   (straight-alpha PNG of that colour is [255,0,0,128])
+background #ffffff   → PNG pixel [255,127,127,255] (opaque: correct)
+
+render({format:'png'}) encodes the premultiplied RGBA frame as PNG colour type 6, which PNG
+defines as straight (unpremultiplied) alpha. With an opaque background (the default) every alpha
+byte is 255 and the PNG is exact; with a non-opaque background, translucent pixels come out darker.
+Fix later: unpremultiply before encoding (rendering semantics of the raw frame stay as they are).

@@ -37,3 +37,51 @@ pub(crate) fn alloc_frame(len: usize) -> Result<Vec<u8>, String> {
         Ok(Vec::from_raw_parts(ptr, len, len))
     }
 }
+
+/// Experiment (Phase 4A.2, time-boxed): a frame in its own anonymous mapping, so freeing it
+/// returns the pages to the OS at once (glibc may keep freed heap frames). Unix only.
+#[cfg(unix)]
+pub(crate) struct MmapFrame {
+    ptr: std::ptr::NonNull<u8>,
+    len: usize,
+}
+
+#[cfg(unix)]
+impl MmapFrame {
+    pub(crate) fn new(len: usize) -> Result<Self, String> {
+        if len == 0 {
+            return Err("frame of 0 bytes".into());
+        }
+        // SAFETY: a fresh private anonymous mapping; no existing memory is affected.
+        let p = unsafe {
+            libc::mmap(std::ptr::null_mut(), len, libc::PROT_READ | libc::PROT_WRITE, libc::MAP_PRIVATE | libc::MAP_ANONYMOUS, -1, 0)
+        };
+        if p == libc::MAP_FAILED {
+            return Err(format!("could not allocate a {} MiB frame", len >> 20));
+        }
+        let ptr = std::ptr::NonNull::new(p.cast::<u8>()).ok_or_else(|| "mmap returned null".to_string())?;
+        Ok(Self { ptr, len })
+    }
+
+    pub(crate) fn as_mut_ptr(&mut self) -> *mut u8 {
+        self.ptr.as_ptr()
+    }
+
+    pub(crate) fn len(&self) -> usize {
+        self.len
+    }
+
+    pub(crate) fn as_mut_slice(&mut self) -> &mut [u8] {
+        // SAFETY: the mapping is `len` readable/writable bytes (zero-filled by the kernel), owned
+        // by `self`, and only reachable through `&mut self` here.
+        unsafe { std::slice::from_raw_parts_mut(self.ptr.as_ptr(), self.len) }
+    }
+}
+
+#[cfg(unix)]
+impl Drop for MmapFrame {
+    fn drop(&mut self) {
+        // SAFETY: unmaps exactly the mapping created in `new`, once.
+        unsafe { libc::munmap(self.ptr.as_ptr().cast(), self.len) };
+    }
+}

@@ -1,0 +1,148 @@
+[
+ {
+  "mode": "transfer",
+  "kind": "speed",
+  "dpr": 1.5,
+  "turns": false,
+  "medianMs": 5.68,
+  "peakRssMiB": 541
+ },
+ {
+  "mode": "mmap",
+  "kind": "speed",
+  "dpr": 1.5,
+  "turns": false,
+  "medianMs": 5.33,
+  "peakRssMiB": 541
+ },
+ {
+  "mode": "transfer",
+  "kind": "speed",
+  "dpr": 1.5,
+  "turns": true,
+  "medianMs": 2.17,
+  "peakRssMiB": 161
+ },
+ {
+  "mode": "mmap",
+  "kind": "speed",
+  "dpr": 1.5,
+  "turns": true,
+  "medianMs": 5.49,
+  "peakRssMiB": 82
+ },
+ {
+  "mode": "transfer",
+  "kind": "speed",
+  "dpr": 3,
+  "turns": false,
+  "medianMs": 27.97,
+  "peakRssMiB": 1965
+ },
+ {
+  "mode": "mmap",
+  "kind": "speed",
+  "dpr": 3,
+  "turns": false,
+  "medianMs": 26.61,
+  "peakRssMiB": 1964
+ },
+ {
+  "mode": "transfer",
+  "kind": "speed",
+  "dpr": 3,
+  "turns": true,
+  "medianMs": 14.46,
+  "peakRssMiB": 193
+ },
+ {
+  "mode": "mmap",
+  "kind": "speed",
+  "dpr": 3,
+  "turns": true,
+  "medianMs": 24.17,
+  "peakRssMiB": 130
+ },
+ {
+  "mode": "transfer",
+  "kind": "speed",
+  "dpr": 1.5,
+  "turns": false,
+  "medianMs": 5.44,
+  "peakRssMiB": 541
+ },
+ {
+  "mode": "mmap",
+  "kind": "speed",
+  "dpr": 1.5,
+  "turns": false,
+  "medianMs": 5.53,
+  "peakRssMiB": 541
+ },
+ {
+  "mode": "transfer",
+  "kind": "speed",
+  "dpr": 1.5,
+  "turns": true,
+  "medianMs": 2.13,
+  "peakRssMiB": 161
+ },
+ {
+  "mode": "mmap",
+  "kind": "speed",
+  "dpr": 1.5,
+  "turns": true,
+  "medianMs": 4.95,
+  "peakRssMiB": 82
+ },
+ {
+  "mode": "transfer",
+  "kind": "speed",
+  "dpr": 3,
+  "turns": false,
+  "medianMs": 21.5,
+  "peakRssMiB": 1965
+ },
+ {
+  "mode": "mmap",
+  "kind": "speed",
+  "dpr": 3,
+  "turns": false,
+  "medianMs": 21.51,
+  "peakRssMiB": 1965
+ },
+ {
+  "mode": "transfer",
+  "kind": "speed",
+  "dpr": 3,
+  "turns": true,
+  "medianMs": 11.82,
+  "peakRssMiB": 256
+ },
+ {
+  "mode": "mmap",
+  "kind": "speed",
+  "dpr": 3,
+  "turns": true,
+  "medianMs": 21.66,
+  "peakRssMiB": 129
+ },
+ {
+  "mode": "transfer",
+  "kind": "retain",
+  "dpr": 3,
+  "rssBaselineMiB": 66,
+  "rssRetainedMiB": 3230,
+  "rssAfterDropMiB": 66,
+  "nativeInUseAfterDropMiB": 3
+ },
+ {
+  "mode": "mmap",
+  "kind": "retain",
+  "dpr": 3,
+  "rssBaselineMiB": 66,
+  "rssRetainedMiB": 3230,
+  "rssAfterDropMiB": 66,
+  "nativeInUseAfterDropMiB": 3
+ }
+]
