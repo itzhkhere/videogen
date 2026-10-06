@@ -1,0 +1,92 @@
+{
+  "mode": "contracts",
+  "points": [
+    {
+      "label": "baseline Node",
+      "peakRssBytes": 52871168,
+      "node": {
+        "rss": 52871168,
+        "heapTotal": 8122368,
+        "heapUsed": 5729448,
+        "external": 2392635,
+        "arrayBuffers": 143823
+      },
+      "currentRssUnavailable": null,
+      "deno": []
+    },
+    {
+      "label": "addon loaded",
+      "peakRssBytes": 62676992,
+      "node": {
+        "rss": 62676992,
+        "heapTotal": 8122368,
+        "heapUsed": 5672808,
+        "external": 2392676,
+        "arrayBuffers": 143823
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 4214784,
+        "allocated": 3130768,
+        "freeInArenas": 1084016,
+        "mapped": 0,
+        "mappedRegions": 0
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 0,
+          "dropped": 0,
+          "watchdogs": 0
+        },
+        "openRenderers": 0,
+        "executionThreads": 0,
+        "wrongThreadDrops": 0
+      },
+      "deno": []
+    },
+    {
+      "label": "final",
+      "peakRssBytes": 97173504,
+      "node": {
+        "rss": 96931840,
+        "heapTotal": 10481664,
+        "heapUsed": 5287000,
+        "external": 2433292,
+        "arrayBuffers": 143787
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 7753728,
+        "allocated": 3601552,
+        "freeInArenas": 4152176,
+        "mapped": 0,
+        "mappedRegions": 0
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 5,
+          "dropped": 5,
+          "watchdogs": 0
+        },
+        "openRenderers": 0,
+        "executionThreads": 0,
+        "wrongThreadDrops": 0
+      },
+      "deno": []
+    }
+  ],
+  "timeoutMs": 100.776355,
+  "contracts": "passed",
+  "lifecycle": {
+    "engine": {
+      "created": 5,
+      "dropped": 5,
+      "watchdogs": 0
+    },
+    "openRenderers": 0,
+    "executionThreads": 0,
+    "wrongThreadDrops": 0
+  }
+}

@@ -93,6 +93,12 @@ pub struct RendererOptions {
     /// `performance.now() = clock`, so pages that read the date render the same pixels on every
     /// run. Default: the wall-clock time at load (the previous behaviour).
     pub epoch_ms: Option<f64>,
+    /// Experimental, private (Phase 4A): "cpu" (default), "gpu-gl" or "gpu-vulkan". GPU backends
+    /// exist only in builds with the `experimental-gpu` cargo feature.
+    pub experimental_backend: Option<String>,
+    /// Experimental: "renderer" (default, one GPU device per renderer) or "thread" (renderers on
+    /// the same thread share one device).
+    pub experimental_gpu_share: Option<String>,
 }
 
 #[napi(object)]
@@ -183,7 +189,7 @@ pub struct HtmlRenderer {
     loaded_at: Instant,
     /// The script clock's origin (virtual or real Instant).
     script_start: Option<Instant>,
-    renderer: SkiaImageRenderer,
+    renderer: Painter,
     buffer: Vec<u8>,
     errors: Arc<Mutex<Vec<String>>>,
     js_errors: Vec<String>,
@@ -330,20 +336,132 @@ impl HtmlRenderer {
         Ok(v.get("ok").cloned().unwrap_or(serde_json::Value::Null))
     }
 
-    fn paint(&mut self) {
+    /// Paint into `self.buffer` (with `readback`, always on CPU) and report where the time went.
+    fn paint(&mut self, readback: bool) -> Result<PaintTimings> {
         let pw = (self.width as f64 * self.dpr).round() as u32;
         let ph = (self.height as f64 * self.dpr).round() as u32;
         let bg = self.background;
         let dpr = self.dpr;
         let doc = self.doc.as_mut().expect("document");
-        self.renderer.render_to_vec(
-            |scene| {
-                scene.fill(Fill::NonZero, Default::default(), bg, Default::default(), &Rect::new(0.0, 0.0, pw as f64, ph as f64));
-                doc.with_base(|b| paint_scene(scene, b, dpr, pw, ph, 0, 0));
-            },
-            &mut self.buffer,
-        );
+        let draw = |scene: &mut anyrender_skia::SkiaScenePainter<'_>| {
+            scene.fill(Fill::NonZero, Default::default(), bg, Default::default(), &Rect::new(0.0, 0.0, pw as f64, ph as f64));
+            doc.with_base(|b| paint_scene(scene, b, dpr, pw, ph, 0, 0));
+        };
+        match &mut self.renderer {
+            Painter::Closed => Err(Error::from_reason("renderer is closed")),
+            Painter::Cpu(renderer) => {
+                let _ = readback; // the CPU rasterizes into memory: there is nothing to read back
+                let start = Instant::now();
+                renderer.render_to_vec(draw, &mut self.buffer);
+                Ok(PaintTimings { record_ns: start.elapsed().as_nanos(), ..Default::default() })
+            }
+            #[cfg(feature = "experimental-gpu")]
+            Painter::Gpu(renderer) => {
+                let t = renderer
+                    .render_timed(draw, readback.then_some(&mut self.buffer))
+                    .map_err(|e| Error::from_reason(format!("GPU render failed ({}): {e}", renderer.device().kind().name())))?;
+                Ok(PaintTimings { record_ns: t.record_ns, submit_ns: t.submit_ns, wait_ns: t.wait_ns, readback_ns: t.readback_ns })
+            }
+        }
     }
+}
+
+#[derive(Default, Clone, Copy)]
+struct PaintTimings {
+    record_ns: u128,
+    submit_ns: u128,
+    wait_ns: u128,
+    readback_ns: u128,
+}
+
+/// The surface the page is painted into. CPU (Skia raster into the output buffer) is the default
+/// and the only backend of default builds.
+enum Painter {
+    /// After `close()`: the surface (and a GPU device reference) is released.
+    Closed,
+    Cpu(SkiaImageRenderer),
+    #[cfg(feature = "experimental-gpu")]
+    Gpu(anyrender_skia::SkiaGpuImageRenderer),
+}
+
+#[cfg(feature = "experimental-gpu")]
+thread_local! {
+    /// Devices shared by renderers of one thread (`experimentalGpuShare: "thread"`). Weak, so a
+    /// device is released when its last renderer closes.
+    static SHARED_GPU: std::cell::RefCell<Vec<std::rc::Weak<anyrender_skia::GpuDevice>>> = const { std::cell::RefCell::new(Vec::new()) };
+}
+
+impl Painter {
+    fn new(backend: Option<&str>, share: Option<&str>, pw: u32, ph: u32) -> Result<Self> {
+        match backend.unwrap_or("cpu") {
+            "cpu" => Ok(Painter::Cpu(SkiaImageRenderer::new(pw, ph))),
+            #[cfg(feature = "experimental-gpu")]
+            name => {
+                use anyrender_skia::{GpuApi, GpuDevice, SkiaGpuImageRenderer};
+                let api = GpuApi::parse(name).map_err(|e| Error::from_reason(e.to_string()))?;
+                let shared = match share.unwrap_or("renderer") {
+                    "renderer" => false,
+                    "thread" => true,
+                    other => return Err(Error::from_reason(format!("experimentalGpuShare must be \"renderer\" or \"thread\", got {other:?}"))),
+                };
+                let existing = shared
+                    .then(|| SHARED_GPU.with(|s| s.borrow().iter().filter_map(|w| w.upgrade()).find(|d| d.kind() == api && !d.is_abandoned())))
+                    .flatten();
+                let device = match existing {
+                    Some(d) => d,
+                    None => {
+                        let d = GpuDevice::new(api).map_err(|e| Error::from_reason(format!("GPU initialization failed ({}): {e}", api.name())))?;
+                        if shared {
+                            SHARED_GPU.with(|s| {
+                                let mut s = s.borrow_mut();
+                                s.retain(|w| w.strong_count() > 0);
+                                s.push(std::rc::Rc::downgrade(&d));
+                            });
+                        }
+                        d
+                    }
+                };
+                let r = SkiaGpuImageRenderer::new(device, pw, ph).map_err(|e| Error::from_reason(e.to_string()))?;
+                Ok(Painter::Gpu(r))
+            }
+            #[cfg(not(feature = "experimental-gpu"))]
+            other => {
+                let _ = share;
+                Err(Error::from_reason(format!("experimentalBackend {other:?} needs a build with the experimental-gpu feature")))
+            }
+        }
+    }
+
+    fn name(&self) -> &'static str {
+        match self {
+            Painter::Closed => "closed",
+            Painter::Cpu(_) => "cpu-raster",
+            #[cfg(feature = "experimental-gpu")]
+            Painter::Gpu(r) => r.device().kind().name(),
+        }
+    }
+}
+
+#[napi(object)]
+pub struct TimedRenderOptions {
+    /// "rgba" (default), "png", or "none" (render without returning pixels).
+    pub format: Option<String>,
+    /// GPU only: copy the pixels back to the CPU (default true). False keeps the frame on the GPU.
+    pub readback: Option<bool>,
+    /// Also time Blitz's paint-command generation alone (an extra pass into a no-op painter),
+    /// reported as `paintPrep`. Default false.
+    pub measure_paint_prep: Option<bool>,
+}
+
+#[napi(object)]
+pub struct TimedRender {
+    /// The backend that rendered this frame: "cpu-raster", "ganesh-gl" or "ganesh-vulkan".
+    pub backend: String,
+    /// Nanoseconds per step: frameJs (rAF + animations), resolve (style + layout), paint
+    /// (CPU: command generation + rasterization; GPU: command generation + Skia recording),
+    /// gpuSubmit, gpuWait, readback, buffer (Node Buffer creation), png, total.
+    pub timings_ns: HashMap<String, f64>,
+    pub pixels: Option<Buffer>,
 }
 
 #[napi]
@@ -392,7 +510,7 @@ impl HtmlRenderer {
             clock_ms: 0.0,
             loaded_at: Instant::now(),
             script_start: None,
-            renderer: SkiaImageRenderer::new(pw, ph),
+            renderer: Painter::new(options.experimental_backend.as_deref(), options.experimental_gpu_share.as_deref(), pw, ph)?,
             buffer: Vec::with_capacity((pw * ph * 4) as usize),
             errors: Arc::new(Mutex::new(Vec::new())),
             js_errors: Vec::new(),
@@ -448,7 +566,7 @@ impl HtmlRenderer {
             self.js_errors.extend(doc.take_js_errors());
         }
         self.resolve()?;
-        self.paint();
+        self.paint(true)?;
         if !png {
             return Ok(Buffer::from(self.buffer.clone()));
         }
@@ -619,6 +737,127 @@ impl HtmlRenderer {
         self.errors.lock().unwrap().clone()
     }
 
+    /// Experimental (Phase 4A): render like `render()` and report the time of every step. The
+    /// backend that drew the frame is named in the result; nothing falls back silently.
+    #[napi(js_name = "_renderTimed")]
+    pub fn render_timed(&mut self, options: Option<TimedRenderOptions>) -> Result<TimedRender> {
+        let total = Instant::now();
+        let (format, readback, measure_prep) = match options {
+            Some(o) => (o.format.unwrap_or_else(|| "rgba".into()), o.readback.unwrap_or(true), o.measure_paint_prep.unwrap_or(false)),
+            None => ("rgba".into(), true, false),
+        };
+        let readback = readback || format != "none";
+        let mut t: HashMap<String, f64> = HashMap::new();
+        self.doc_mut()?;
+        self.run_due_timers();
+        let start = Instant::now();
+        if let Some(Doc::Script(doc)) = self.doc.as_mut() {
+            doc.eval("globalThis.__canvasHtml.frame();");
+            self.js_errors.extend(doc.take_js_errors());
+        }
+        t.insert("frameJs".into(), start.elapsed().as_nanos() as f64);
+        let start = Instant::now();
+        self.resolve()?;
+        t.insert("resolve".into(), start.elapsed().as_nanos() as f64);
+        if measure_prep {
+            let pw = (self.width as f64 * self.dpr).round() as u32;
+            let ph = (self.height as f64 * self.dpr).round() as u32;
+            let dpr = self.dpr;
+            let doc = self.doc.as_mut().expect("document");
+            let start = Instant::now();
+            doc.with_base(|b| paint_scene(&mut anyrender::NullScenePainter, b, dpr, pw, ph, 0, 0));
+            t.insert("paintPrep".into(), start.elapsed().as_nanos() as f64);
+        }
+        let p = self.paint(readback)?;
+        t.insert("paint".into(), p.record_ns as f64);
+        t.insert("gpuSubmit".into(), p.submit_ns as f64);
+        t.insert("gpuWait".into(), p.wait_ns as f64);
+        t.insert("readback".into(), p.readback_ns as f64);
+        let pixels = match format.as_str() {
+            "none" => None,
+            "rgba" => {
+                let start = Instant::now();
+                let b = Buffer::from(self.buffer.clone());
+                t.insert("buffer".into(), start.elapsed().as_nanos() as f64);
+                Some(b)
+            }
+            "png" => {
+                let start = Instant::now();
+                let pw = (self.width as f64 * self.dpr).round() as u32;
+                let ph = (self.height as f64 * self.dpr).round() as u32;
+                let mut out = Vec::new();
+                {
+                    let mut enc = png::Encoder::new(&mut out, pw, ph);
+                    enc.set_color(png::ColorType::Rgba);
+                    enc.set_depth(png::BitDepth::Eight);
+                    let mut w = enc.write_header().map_err(|e| Error::from_reason(e.to_string()))?;
+                    w.write_image_data(&self.buffer).map_err(|e| Error::from_reason(e.to_string()))?;
+                }
+                t.insert("png".into(), start.elapsed().as_nanos() as f64);
+                let start = Instant::now();
+                let b = Buffer::from(out);
+                t.insert("buffer".into(), start.elapsed().as_nanos() as f64);
+                Some(b)
+            }
+            other => return Err(Error::from_reason(format!("format must be \"rgba\", \"png\" or \"none\", got {other:?}"))),
+        };
+        t.insert("total".into(), total.elapsed().as_nanos() as f64);
+        Ok(TimedRender { backend: self.renderer.name().into(), timings_ns: t, pixels })
+    }
+
+    /// Experimental: the backend, the GPU device description and Skia's GPU resource cache.
+    #[napi(js_name = "_backendInfo")]
+    pub fn backend_info(&self) -> serde_json::Value {
+        match &self.renderer {
+            Painter::Closed => serde_json::json!({ "backend": "closed" }),
+            Painter::Cpu(_) => serde_json::json!({ "backend": "cpu-raster" }),
+            #[cfg(feature = "experimental-gpu")]
+            Painter::Gpu(r) => {
+                let u = r.device().resource_usage();
+                serde_json::json!({
+                    "backend": r.device().kind().name(),
+                    "device": r.device().description(),
+                    "sharedDeviceRefs": std::rc::Rc::strong_count(r.device()),
+                    "gpuResourceCount": u.resource_count,
+                    "gpuResourceBytes": u.resource_bytes,
+                    "gpuPurgeableBytes": u.purgeable_bytes,
+                    "gpuBudgetBytes": u.budget_bytes,
+                    "abandoned": r.device().is_abandoned(),
+                })
+            }
+        }
+    }
+
+    /// Experimental (font-retention probe): drop Skia's process-wide glyph/typeface caches.
+    #[napi(js_name = "_purgeSkiaFontCache")]
+    pub fn purge_skia_font_cache(&self) -> serde_json::Value {
+        let (before, after) = anyrender_skia::purge_font_cache();
+        serde_json::json!({ "fontCacheBytesBefore": before, "fontCacheBytesAfter": after })
+    }
+
+    /// Experimental: free purgeable GPU resources (no-op on CPU).
+    #[napi(js_name = "_gpuFreeResources")]
+    pub fn gpu_free_resources(&self) {
+        #[cfg(feature = "experimental-gpu")]
+        if let Painter::Gpu(r) = &self.renderer {
+            r.device().free_resources();
+        }
+    }
+
+    /// Testing only: make the GPU context unusable, as a lost device would. Later renders fail
+    /// with an error; close() still works.
+    #[napi(js_name = "_gpuAbandonForTesting")]
+    pub fn gpu_abandon_for_testing(&self) -> Result<()> {
+        match &self.renderer {
+            Painter::Closed | Painter::Cpu(_) => Err(Error::from_reason("not a GPU renderer")),
+            #[cfg(feature = "experimental-gpu")]
+            Painter::Gpu(r) => {
+                r.device().abandon_for_testing();
+                Ok(())
+            }
+        }
+    }
+
     /// Releases the document, the script runtime and their callbacks now instead of at garbage
     /// collection. Idempotent; every later call (except close) throws "renderer is closed".
     #[napi]
@@ -628,6 +867,7 @@ impl HtmlRenderer {
         self.html = None;
         self.fonts.clear();
         self.buffer = Vec::new();
+        self.renderer = Painter::Closed;
     }
 
     /// Testing only: drop the native node matched by `selector` (and its subtree), as an

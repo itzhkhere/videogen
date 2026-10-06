@@ -38,6 +38,14 @@ png = "0.18"
 # Engine-neutral DOM host shared with the experimental Deno/V8 adapter (see dom-host/)
 canvas-dom-host = { path = "dom-host" }
 
+[features]
+default = []
+# Phase 4A experiment: an offscreen GPU (Skia Ganesh) backend next to the CPU renderer, chosen with
+# the private `experimentalBackend` option. Off by default; the default build is CPU only.
+experimental-gpu = ["anyrender_skia/headless-gpu"]
+# Also Vulkan (switches the prebuilt Skia binary to ganesh-gl-vulkan)
+experimental-gpu-vulkan = ["experimental-gpu", "anyrender_skia/vulkan"]
+
 [build-dependencies]
 napi-build = "2"
 

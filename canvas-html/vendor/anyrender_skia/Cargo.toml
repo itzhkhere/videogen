@@ -36,6 +36,9 @@ log_frame_times = [
 pixels_window_renderer = ["dep:pixels_window_renderer"]
 softbuffer_window_renderer = ["dep:softbuffer_window_renderer"]
 vulkan = ["skia-safe/vulkan"]
+# canvas-html: offscreen GPU rendering (SkiaGpuImageRenderer). Off by default; the GL path uses
+# the glutin/EGL and skia-safe "gl" dependencies already present, Vulkan needs `vulkan` too.
+headless-gpu = []
 
 [lib]
 name = "anyrender_skia"

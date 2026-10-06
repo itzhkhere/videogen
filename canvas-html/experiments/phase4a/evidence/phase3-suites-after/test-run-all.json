@@ -1,0 +1,104 @@
+[
+  {
+    "mode": "contracts",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 583.396341
+  },
+  {
+    "mode": "cycles",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 40807.606835000006
+  },
+  {
+    "mode": "long",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 1367.4459969999953
+  },
+  {
+    "mode": "simultaneous",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 954.8295359999975
+  },
+  {
+    "mode": "workers",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 5357.1792579999965
+  },
+  {
+    "mode": "exit-alive",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 98.04719900000055,
+    "finalizers": 1,
+    "finalState": {
+      "engine": {
+        "created": 1,
+        "dropped": 1,
+        "watchdogs": 0
+      },
+      "openRenderers": 0,
+      "executionThreads": 0,
+      "wrongThreadDrops": 0
+    },
+    "ownerMatches": true
+  },
+  {
+    "mode": "exit-closed",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 111.69585399999778,
+    "finalizers": 1,
+    "finalState": {
+      "engine": {
+        "created": 1,
+        "dropped": 1,
+        "watchdogs": 0
+      },
+      "openRenderers": 0,
+      "executionThreads": 0,
+      "wrongThreadDrops": 0
+    },
+    "ownerMatches": true
+  },
+  {
+    "mode": "exit-multiple",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 254.6184540000031,
+    "finalizers": 8,
+    "finalState": {
+      "engine": {
+        "created": 8,
+        "dropped": 8,
+        "watchdogs": 0
+      },
+      "openRenderers": 0,
+      "executionThreads": 0,
+      "wrongThreadDrops": 0
+    },
+    "ownerMatches": true
+  },
+  {
+    "mode": "exit-exception",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 87.80469699999958,
+    "finalizers": 1,
+    "finalState": {
+      "engine": {
+        "created": 1,
+        "dropped": 1,
+        "watchdogs": 0
+      },
+      "openRenderers": 0,
+      "executionThreads": 0,
+      "wrongThreadDrops": 0
+    },
+    "ownerMatches": true
+  }
+]

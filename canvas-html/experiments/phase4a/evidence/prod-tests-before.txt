@@ -1,0 +1,14 @@
+node v24.19.0
+9b0d148da9c570a426f8f1d7e29ca514a64a8be9
+== smoke
+smoke: all passed
+== smoke-js
+smoke-js: all passed
+== smoke-waapi
+smoke-waapi: all passed
+== smoke-fonts
+smoke-fonts: all passed
+== workers
+CSS motion, 30 fps       identical | 1 renderer 0.76 s, 2 workers 0.61 s (1.3x)
+GSAP, 30 fps             identical | 1 renderer 0.97 s, 2 workers 0.46 s (2.1x)
+Motion library, 24 fps   identical | 1 renderer 0.60 s, 2 workers 0.41 s (1.5x)
