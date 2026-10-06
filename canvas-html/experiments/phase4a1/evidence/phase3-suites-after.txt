@@ -1,0 +1,29 @@
+== contract/run.mjs
+  events                 boa:pass deno:pass same:yes add/dispatch/remove, target/currentTarget, bubbling to document and window
+  events                 boa:pass deno:pass same:yes preventDefault, stopPropagation, stopImmediatePropagation, once, removal during dispatch, errors
+  errors                 boa:pass deno:pass same:yes stale node after native removal: InvalidStateError everywhere in the subset
+  errors                 boa:pass deno:pass same:yes wrong this / non-node arguments: TypeError
+  errors                 boa:pass deno:pass same:yes closed renderer
+  errors                 boa:pass deno:pass same:yes eval exception, then continued use
+  deterministic timers   boa:pass deno:pass same:yes Date, performance and timeOrigin from visual time
+  deterministic timers   boa:pass deno:pass same:yes setTimeout/clearTimeout/setInterval order, microtasks after each timer
+  rAF                    boa:pass deno:pass same:yes callbacks run at render, in order, with performance.now(); cancel; next-frame registration
+  Promise ordering       boa:pass deno:pass same:yes microtasks: eval, timer, rAF and listener boundaries
+  unsupported operation  boa:diag deno:diag same:NO  APIs outside the shared subset (diagnostic, engines may differ)
+30/30 cases pass on both engines with identical results
+exit 0
+== contract/scenes.mjs
+determinism boa: 5 fresh replays identical=true, distinct frame hashes=5
+determinism deno: 5 fresh replays identical=true, distinct frame hashes=5
+determinism cross-engine: [{"t":0,"identical":true,"firstDifferingLayer":null},{"t":250,"identical":true,"firstDifferingLayer":null},{"t":500,"identical":true,"firstDifferingLayer":null},{"t":750,"identical":true,"firstDifferingLayer":null},{"t":1000,"identical":true,"firstDifferingLayer":null}]
+gsap paused boa: version 3.15.0, expected values=true, errors=0, console=null
+gsap paused deno: version 3.15.0, expected values=true, errors=0, console=[]
+gsap paused cross-engine: [{"t":0,"identical":true,"firstDifferingLayer":null},{"t":250,"identical":true,"firstDifferingLayer":null},{"t":500,"identical":true,"firstDifferingLayer":null},{"t":750,"identical":true,"firstDifferingLayer":null},{"t":1000,"identical":true,"firstDifferingLayer":null}]
+gsap auto boa: version 3.15.0, expected values=true, errors=0, console=null
+gsap auto deno: version 3.15.0, expected values=true, errors=0, console=[]
+gsap auto cross-engine: [{"t":0,"identical":true,"firstDifferingLayer":null},{"t":250,"identical":true,"firstDifferingLayer":null},{"t":500,"identical":true,"firstDifferingLayer":null},{"t":750,"identical":true,"firstDifferingLayer":null},{"t":1000,"identical":true,"firstDifferingLayer":null}]
+gsap paused vs auto identical: {"boa":true,"deno":true}
+motion boa: load motion.min.js="object" | typeof Motion.animate="function" | animate(#box, {opacity, x}) paused="object" | seek 0=["1","none"] | seek 500=["0.75","none"] | seek 1000=["0.5","none"] | render, then computed at 1000=null | computed after render=["0.5","matrix(1, 0, 0, 1, 100, 0)"] | animate(0, 100, onUpdate) value animation=[]
+motion deno: load motion.min.js="object" | typeof Motion.animate="function" | animate(#box, {opacity, x}) paused=ERROR ReferenceError: EventTarget is not defined | seek 0=ERROR ReferenceError: c is not defined | seek 500=ERROR ReferenceError: c is not defined | seek 1000=ERROR ReferenceError: c is not defined | render, then computed at 1000=null | computed after render=["1","none"] | animate(0, 100, onUpdate) value animation=[] | with stand-in EventTarget: animate="1" | typeof element.animate="undefined"
+exit 0
+== tests/run.mjs
