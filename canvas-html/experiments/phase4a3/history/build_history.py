@@ -137,6 +137,24 @@ def transform(files):
     return out
 
 
+def sort_lock(text):
+    """Cargo.lock in Cargo's own order (packages by name, version, source; dependency lists sorted).
+    The renamed crates (html-renderer, dom-host) would otherwise sit where their old names sorted,
+    and every build would rewrite the lockfile."""
+    head, *blocks = text.split('\n[[package]]\n')
+    dep_key = lambda s: tuple(s.strip().rstrip(',').strip('"').split(' '))
+    def fix(b):
+        return re.sub(r'(dependencies = \[\n)((?: .*\n)+?)(\])',
+                      lambda m: m.group(1) + '\n'.join(sorted(m.group(2).strip('\n').split('\n'), key=dep_key)) + '\n' + m.group(3), b)
+    def key(b):
+        f = dict(re.findall(r'^(name|version|source) = "([^"]*)"', b, re.M))
+        ver = tuple((0, int(x), '') if x.isdigit() else (1, 0, x) for x in re.split(r'[.+-]', f.get('version', '')))
+        return (f.get('name', ''), ver, f.get('source', ''))
+    trail = '\n' if blocks and blocks[-1].endswith('\n') else ''
+    blocks = sorted((fix(b).rstrip('\n') for b in blocks), key=key)
+    return head + ''.join('\n[[package]]\n' + b + '\n' for b in blocks).rstrip('\n') + trail
+
+
 def licence_policy(q, data):
     """No licence has been chosen for the engine yet: the package is private and UNLICENSED and
     the engine's own crates carry no licence field. Vendored crates keep their licences."""
@@ -148,6 +166,8 @@ def licence_policy(q, data):
         return s.encode()
     if q == 'package-lock.json':
         return re.sub(rb'("name": "html-renderer",\s*"version": "[^"]*",\s*)"license": "[^"]*",\s*', rb'\1', data)
+    if q == 'Cargo.lock':
+        return sort_lock(data.decode()).encode()
     if q in ('Cargo.toml', 'dom-host/Cargo.toml'):
         data = re.sub(rb'(?m)^license = "[^"]*"\n', b'', data)
         # Layout: Blitz lives in third_party/ inside the workspace directory, so it must be

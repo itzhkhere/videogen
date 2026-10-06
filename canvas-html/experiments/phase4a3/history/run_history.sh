@@ -38,6 +38,7 @@ for i in $(seq "$1" "$2"); do
     rm -f html-renderer.linux-x64-gnu.node "$CARGO_TARGET_DIR/release/libhtml_renderer.so"
     if ! cargo build --release > "$here/cargo-step.log" 2>&1; then grep -E '^error' -A12 "$here/cargo-step.log" | head -40; echo "BUILD FAILED"; exit 1; fi
     echo "release build ok"
+    if [ -n "$(git status --porcelain --untracked-files=no)" ]; then git status --short --untracked-files=no; echo "BUILD MODIFIED TRACKED FILES"; exit 1; fi
     cp "$CARGO_TARGET_DIR/release/libhtml_renderer.so" html-renderer.linux-x64-gnu.node
     ln -sfn "$NODE_MODULES" node_modules
     timeout 3000 npm test --silent 2>&1 | grep -E 'passed|Error|assert|failed' | head -20

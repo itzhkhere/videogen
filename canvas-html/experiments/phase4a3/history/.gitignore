@@ -2,3 +2,5 @@ state.json
 step.log
 cargo-step.log
 run.out
+verify.log
+state.json.excluded.json
