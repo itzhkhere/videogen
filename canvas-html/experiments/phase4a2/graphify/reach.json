@@ -1,0 +1,2345 @@
+[
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 65,
+  "code": "unsafe fn create_external_buffer(",
+  "fn": "napi_bindgen_runtime_js_values_buffer_create_external_buffer",
+  "reachedFrom": {
+   "renderInto (public)": "create_external_buffer() \u2190 .from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": "create_external_buffer() \u2190 .from_data() \u2190 .render()",
+   "_renderIntoTimed (private)": "create_external_buffer() \u2190 .from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": "create_external_buffer() \u2190 .from_data() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": "create_external_buffer() \u2190 .from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_frames_experimental()"
+  }
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 87,
+  "code": "unsafe {",
+  "fn": "napi_bindgen_runtime_js_values_buffer_create_external_buffer",
+  "reachedFrom": {
+   "renderInto (public)": "create_external_buffer() \u2190 .from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": "create_external_buffer() \u2190 .from_data() \u2190 .render()",
+   "_renderIntoTimed (private)": "create_external_buffer() \u2190 .from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": "create_external_buffer() \u2190 .from_data() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": "create_external_buffer() \u2190 .from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_frames_experimental()"
+  }
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 104,
+  "code": "unsafe fn buffer_data_ptr(env: sys::napi_env, buf: sys::napi_value) -> Result<*mut u8> {",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_data_ptr",
+  "reachedFrom": {
+   "renderInto (public)": "buffer_data_ptr() \u2190 .from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": "buffer_data_ptr() \u2190 .from_data() \u2190 .render()",
+   "_renderIntoTimed (private)": "buffer_data_ptr() \u2190 .from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": "buffer_data_ptr() \u2190 .from_data() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": "buffer_data_ptr() \u2190 .from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_frames_experimental()"
+  }
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 108,
+  "code": "unsafe { sys::napi_get_buffer_info(env, buf, &mut data, &mut len) },",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_data_ptr",
+  "reachedFrom": {
+   "renderInto (public)": "buffer_data_ptr() \u2190 .from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": "buffer_data_ptr() \u2190 .from_data() \u2190 .render()",
+   "_renderIntoTimed (private)": "buffer_data_ptr() \u2190 .from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": "buffer_data_ptr() \u2190 .from_data() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": "buffer_data_ptr() \u2190 .from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_frames_experimental()"
+  }
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 135,
+  "code": "let mut status = unsafe {",
+  "fn": "napi_bindgen_runtime_js_values_buffer_bufferslice_env_from_data",
+  "reachedFrom": {
+   "renderInto (public)": ".from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".from_data() \u2190 .render()",
+   "_renderIntoTimed (private)": ".from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".from_data() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_frames_experimental()"
+  }
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 147,
+  "code": "unsafe {",
+  "fn": "napi_bindgen_runtime_js_values_buffer_bufferslice_env_from_data",
+  "reachedFrom": {
+   "renderInto (public)": ".from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".from_data() \u2190 .render()",
+   "_renderIntoTimed (private)": ".from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".from_data() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_frames_experimental()"
+  }
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 150,
+  "code": "status = unsafe {",
+  "fn": "napi_bindgen_runtime_js_values_buffer_bufferslice_env_from_data",
+  "reachedFrom": {
+   "renderInto (public)": ".from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".from_data() \u2190 .render()",
+   "_renderIntoTimed (private)": ".from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".from_data() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_frames_experimental()"
+  }
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 169,
+  "code": "unsafe { buffer_data_ptr(env.0, buf)? }",
+  "fn": "napi_bindgen_runtime_js_values_buffer_bufferslice_env_from_data",
+  "reachedFrom": {
+   "renderInto (public)": ".from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".from_data() \u2190 .render()",
+   "_renderIntoTimed (private)": ".from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".from_data() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_frames_experimental()"
+  }
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 178,
+  "code": "unsafe { slice::from_raw_parts_mut(data_ptr, len) }",
+  "fn": "napi_bindgen_runtime_js_values_buffer_bufferslice_env_from_data",
+  "reachedFrom": {
+   "renderInto (public)": ".from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".from_data() \u2190 .render()",
+   "_renderIntoTimed (private)": ".from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".from_data() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".from_data() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_frames_experimental()"
+  }
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 204,
+  "code": "pub unsafe fn from_external<T: 'env, F: FnOnce(Env, T)>(",
+  "fn": "napi_bindgen_runtime_js_values_buffer_bufferslice_env_from_external",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 229,
+  "code": "let mut status = unsafe {",
+  "fn": "napi_bindgen_runtime_js_values_buffer_bufferslice_env_from_external",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 243,
+  "code": "unsafe { sys::napi_create_buffer_copy(env.0, len, data.cast(), ptr::null_mut(), &mut buf) };",
+  "fn": "napi_bindgen_runtime_js_values_buffer_bufferslice_env_from_external",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 257,
+  "code": "unsafe { buffer_data_ptr(env.0, buf)? }",
+  "fn": "napi_bindgen_runtime_js_values_buffer_bufferslice_env_from_external",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 266,
+  "code": "unsafe { slice::from_raw_parts_mut(data_ptr, len) }",
+  "fn": "napi_bindgen_runtime_js_values_buffer_bufferslice_env_from_external",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 280,
+  "code": "unsafe {",
+  "fn": "napi_bindgen_runtime_js_values_buffer_bufferslice_env_copy_from",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 288,
+  "code": "let copied_ptr = unsafe { buffer_data_ptr(env.0, buf)? };",
+  "fn": "napi_bindgen_runtime_js_values_buffer_bufferslice_env_copy_from",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 293,
+  "code": "unsafe { slice::from_raw_parts_mut(copied_ptr, len) }",
+  "fn": "napi_bindgen_runtime_js_values_buffer_bufferslice_env_copy_from",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 304,
+  "code": "unsafe { Buffer::from_napi_value(env.0, self.raw_value) }",
+  "fn": "napi_bindgen_runtime_js_values_buffer_bufferslice_env_into_buffer",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 321,
+  "code": "unsafe fn from_napi_value(env: sys::napi_env, napi_val: sys::napi_value) -> Result<Self> {",
+  "fn": "napi_bindgen_runtime_js_values_buffer_bufferslice_from_napi_value",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 325,
+  "code": "unsafe { sys::napi_get_buffer_info(env, napi_val, &mut buf, &mut len) },",
+  "fn": "napi_bindgen_runtime_js_values_buffer_bufferslice_from_napi_value",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 339,
+  "code": "unsafe { slice::from_raw_parts_mut(buf.cast(), len) }",
+  "fn": "napi_bindgen_runtime_js_values_buffer_bufferslice_from_napi_value",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 349,
+  "code": "unsafe fn to_napi_value(env: sys::napi_env, val: Self) -> Result<sys::napi_value> {",
+  "fn": "napi_bindgen_runtime_js_values_buffer_bufferslice_to_napi_value",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 365,
+  "code": "unsafe fn validate(env: sys::napi_env, napi_val: sys::napi_value) -> Result<sys::napi_value> {",
+  "fn": "napi_bindgen_runtime_js_values_buffer_bufferslice_validate",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 368,
+  "code": "unsafe { sys::napi_is_buffer(env, napi_val, &mut is_buffer) },",
+  "fn": "napi_bindgen_runtime_js_values_buffer_bufferslice_validate",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 443,
+  "code": "unsafe { sys::napi_reference_unref(env, ref_, &mut ref_count) },",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_drop",
+  "reachedFrom": {
+   "renderInto (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".drop() \u2190 .pipeline_stop() \u2190 .close()",
+   "_renderIntoTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".drop() \u2190 .pipeline_stop() \u2190 .render_frames_experimental()",
+   "Buffer finalizer (napi-rs drop_buffer)": ".drop() \u2190 drop_buffer()"
+  }
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 452,
+  "code": "unsafe { sys::napi_delete_reference(env, ref_) },",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_drop",
+  "reachedFrom": {
+   "renderInto (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".drop() \u2190 .pipeline_stop() \u2190 .close()",
+   "_renderIntoTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".drop() \u2190 .pipeline_stop() \u2190 .render_frames_experimental()",
+   "Buffer finalizer (napi-rs drop_buffer)": ".drop() \u2190 drop_buffer()"
+  }
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 458,
+  "code": "unsafe { sys::napi_call_threadsafe_function(handle.get_raw(), ref_.cast(), 1) };",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_drop",
+  "reachedFrom": {
+   "renderInto (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".drop() \u2190 .pipeline_stop() \u2190 .close()",
+   "_renderIntoTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".drop() \u2190 .pipeline_stop() \u2190 .render_frames_experimental()",
+   "Buffer finalizer (napi-rs drop_buffer)": ".drop() \u2190 drop_buffer()"
+  }
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 476,
+  "code": "unsafe { sys::napi_reference_unref(env, ref_, &mut ref_count) },",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_drop",
+  "reachedFrom": {
+   "renderInto (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".drop() \u2190 .pipeline_stop() \u2190 .close()",
+   "_renderIntoTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".drop() \u2190 .pipeline_stop() \u2190 .render_frames_experimental()",
+   "Buffer finalizer (napi-rs drop_buffer)": ".drop() \u2190 drop_buffer()"
+  }
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 485,
+  "code": "unsafe { sys::napi_delete_reference(env, ref_) },",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_drop",
+  "reachedFrom": {
+   "renderInto (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".drop() \u2190 .pipeline_stop() \u2190 .close()",
+   "_renderIntoTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".drop() \u2190 .pipeline_stop() \u2190 .render_frames_experimental()",
+   "Buffer finalizer (napi-rs drop_buffer)": ".drop() \u2190 drop_buffer()"
+  }
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 489,
+  "code": "unsafe { Vec::from_raw_parts(self.inner.as_ptr(), self.len, self.capacity) };",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_drop",
+  "reachedFrom": {
+   "renderInto (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".drop() \u2190 .pipeline_stop() \u2190 .close()",
+   "_renderIntoTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".drop() \u2190 .pipeline_stop() \u2190 .render_frames_experimental()",
+   "Buffer finalizer (napi-rs drop_buffer)": ".drop() \u2190 drop_buffer()"
+  }
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 496,
+  "code": "unsafe impl Send for Buffer {}",
+  "fn": null,
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 497,
+  "code": "unsafe impl Sync for Buffer {}",
+  "fn": null,
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 525,
+  "code": "inner: unsafe { NonNull::new_unchecked(inner_ptr) },",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_from",
+  "reachedFrom": {
+   "renderInto (public)": ".from() \u2190 .default() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".from() \u2190 .new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": ".from() \u2190 .new() \u2190 .close()",
+   "constructor (public)": ".from() \u2190 .new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".from() \u2190 .new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".from() \u2190 .new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".from() \u2190 .new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".from() \u2190 .new() \u2190 .pipeline_complete()",
+   "Buffer finalizer (napi-rs drop_buffer)": ".from() \u2190 .drop() \u2190 drop_buffer()"
+  }
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 556,
+  "code": "unsafe { slice::from_raw_parts(self.inner.as_ptr(), self.len) }",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_as_ref",
+  "reachedFrom": {
+   "renderInto (public)": ".as_ref() \u2190 .build_document() \u2190 .doc_mut() \u2190 .prepare_frame() \u2190 .render_into()",
+   "render (public)": ".as_ref() \u2190 .from() \u2190 .new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": ".as_ref() \u2190 .drop() \u2190 .pipeline_stop() \u2190 .close()",
+   "constructor (public)": ".as_ref() \u2190 .from() \u2190 .new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".as_ref() \u2190 .from() \u2190 .new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".as_ref() \u2190 .from() \u2190 .new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".as_ref() \u2190 .pipeline_in_flight() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".as_ref() \u2190 .from() \u2190 .new() \u2190 .pipeline_complete()",
+   "Buffer finalizer (napi-rs drop_buffer)": ".as_ref() \u2190 .drop() \u2190 drop_buffer()"
+  }
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 565,
+  "code": "unsafe { slice::from_raw_parts_mut(self.inner.as_ptr(), self.len) }",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_as_mut",
+  "reachedFrom": {
+   "renderInto (public)": ".as_mut() \u2190 .prepare_frame() \u2190 .render_into()",
+   "render (public)": ".as_mut() \u2190 .prepare_frame() \u2190 .render()",
+   "close (public)": ".as_mut() \u2190 .unwrap() \u2190 .new() \u2190 .close()",
+   "constructor (public)": ".as_mut() \u2190 .unwrap() \u2190 .new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".as_mut() \u2190 .prepare_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".as_mut() \u2190 .prepare_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".as_mut() \u2190 .pipeline_submit_inner() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".as_mut() \u2190 .pipeline_complete() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 594,
+  "code": "unsafe fn from_napi_value(env: sys::napi_env, napi_val: sys::napi_value) -> Result<Self> {",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_from_napi_value",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 599,
+  "code": "unsafe { sys::napi_create_reference(env, napi_val, 1, &mut ref_) },",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_from_napi_value",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 603,
+  "code": "unsafe { sys::napi_get_buffer_info(env, napi_val, &mut buf, &mut len as *mut usize) },",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_from_napi_value",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 632,
+  "code": "unsafe fn to_napi_value(env: sys::napi_env, mut val: Self) -> Result<sys::napi_value> {",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_to_napi_value",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 637,
+  "code": "unsafe { sys::napi_get_reference_value(env, ref_, &mut buf) },",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_to_napi_value",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 642,
+  "code": "unsafe { sys::napi_delete_reference(env, ref_) },",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_to_napi_value",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 655,
+  "code": "unsafe { sys::napi_create_buffer(env, len, ptr::null_mut(), &mut ret) }",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_to_napi_value",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 659,
+  "code": "let mut status = unsafe {",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_to_napi_value",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 670,
+  "code": "let value = unsafe { Box::from_raw(val_box_ptr) };",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_to_napi_value",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 671,
+  "code": "status = unsafe {",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_to_napi_value",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 691,
+  "code": "unsafe fn validate(env: sys::napi_env, napi_val: sys::napi_value) -> Result<sys::napi_value> {",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_validate",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/js_values/buffer.rs",
+  "line": 694,
+  "code": "unsafe { sys::napi_is_buffer(env, napi_val, &mut is_buffer) },",
+  "fn": "napi_bindgen_runtime_js_values_buffer_buffer_validate",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/mod.rs",
+  "line": 68,
+  "code": "let data: Box<T> = unsafe { Box::from_raw(finalize_data.cast()) };",
+  "fn": "napi_bindgen_runtime_mod_raw_finalize_unchecked",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/mod.rs",
+  "line": 79,
+  "code": "let finalize_callbacks_rc = unsafe { Arc::from_raw(finalize_callbacks_ptr) };",
+  "fn": "napi_bindgen_runtime_mod_raw_finalize_unchecked",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/mod.rs",
+  "line": 91,
+  "code": "let finalize = unsafe { Box::from_raw(finalize_callbacks_rc.get()) };",
+  "fn": "napi_bindgen_runtime_mod_raw_finalize_unchecked",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/mod.rs",
+  "line": 93,
+  "code": "let delete_reference_status = unsafe { sys::napi_delete_reference(env, ref_val) };",
+  "fn": "napi_bindgen_runtime_mod_raw_finalize_unchecked",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/mod.rs",
+  "line": 103,
+  "code": "unsafe { e.throw_into(env) };",
+  "fn": "napi_bindgen_runtime_mod_raw_finalize_unchecked",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/mod.rs",
+  "line": 123,
+  "code": "unsafe {",
+  "fn": "napi_bindgen_runtime_mod_drop_buffer",
+  "reachedFrom": {
+   "Buffer finalizer (napi-rs drop_buffer)": "drop_buffer()"
+  }
+ },
+ {
+  "file": "napi/bindgen_runtime/mod.rs",
+  "line": 137,
+  "code": "let (len, cap): (usize, usize) = *unsafe { Box::from_raw(finalize_hint.cast()) };",
+  "fn": "napi_bindgen_runtime_mod_drop_buffer_slice",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/mod.rs",
+  "line": 148,
+  "code": "unsafe {",
+  "fn": "napi_bindgen_runtime_mod_drop_buffer_slice",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/mod.rs",
+  "line": 162,
+  "code": "pub unsafe fn create_object_with_properties(",
+  "fn": "napi_bindgen_runtime_mod_create_object_with_properties",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/bindgen_runtime/mod.rs",
+  "line": 186,
+  "code": "pub unsafe fn create_object_with_properties(",
+  "fn": null,
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 88,
+  "code": "check_status!(unsafe { sys::napi_get_boolean(self.0, value, &mut raw_value) })?;",
+  "fn": "napi_env_env_get_boolean",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 89,
+  "code": "Ok(unsafe { JsBoolean::from_raw_unchecked(self.0, raw_value) })",
+  "fn": "napi_env_env_get_boolean",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 95,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_create_int32",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 98,
+  "code": "unsafe { JsNumber::from_napi_value(self.0, raw_value) }",
+  "fn": "napi_env_env_create_int32",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 104,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_create_int64",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 107,
+  "code": "unsafe { JsNumber::from_napi_value(self.0, raw_value) }",
+  "fn": "napi_env_env_create_int64",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 113,
+  "code": "check_status!(unsafe { sys::napi_create_uint32(self.0, number, &mut raw_value) })?;",
+  "fn": "napi_env_env_create_uint32",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 114,
+  "code": "unsafe { JsNumber::from_napi_value(self.0, raw_value) }",
+  "fn": "napi_env_env_create_uint32",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 120,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_create_double",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 123,
+  "code": "unsafe { JsNumber::from_napi_value(self.0, raw_value) }",
+  "fn": "napi_env_env_create_double",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 131,
+  "code": "check_status!(unsafe { sys::napi_create_bigint_int64(self.0, value, &mut raw_value) })?;",
+  "fn": "napi_env_env_create_bigint_from_i64",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 139,
+  "code": "check_status!(unsafe { sys::napi_create_bigint_uint64(self.0, value, &mut raw_value) })?;",
+  "fn": "napi_env_env_create_bigint_from_u64",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 146,
+  "code": "unsafe {",
+  "fn": "napi_env_env_create_bigint_from_i128",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 156,
+  "code": "unsafe {",
+  "fn": "napi_env_env_create_bigint_from_u128",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 170,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_create_bigint_from_words",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 188,
+  "code": "unsafe { self.create_string_from_c_char(s.as_ptr().cast(), s.len() as isize) }",
+  "fn": "napi_env_env_create_string",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 193,
+  "code": "unsafe { self.create_string_from_c_char(s.as_ptr().cast(), s.len() as isize) }",
+  "fn": "napi_env_env_create_string_from_std",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 204,
+  "code": "pub unsafe fn create_string_from_c_char<'env>(",
+  "fn": "napi_env_env_create_string_from_c_char",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 210,
+  "code": "check_status!(unsafe { sys::napi_create_string_utf8(self.0, data_ptr, len, &mut raw_value) })?;",
+  "fn": "napi_env_env_create_string_from_c_char",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 211,
+  "code": "unsafe { JsString::from_napi_value(self.0, raw_value) }",
+  "fn": "napi_env_env_create_string_from_c_char",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 218,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_create_string_utf16",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 221,
+  "code": "unsafe { JsString::from_napi_value(self.0, raw_value) }",
+  "fn": "napi_env_env_create_string_utf16",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 228,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_create_string_latin1",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 236,
+  "code": "unsafe { JsString::from_napi_value(self.0, raw_value) }",
+  "fn": "napi_env_env_create_string_latin1",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 242,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_create_symbol",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 266,
+  "code": "check_status!(unsafe { sys::napi_create_object(self.0, &mut raw_value) })?;",
+  "fn": "napi_env_env_create_object",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 267,
+  "code": "Ok(unsafe { JsObject::from_raw_unchecked(self.0, raw_value) })",
+  "fn": "napi_env_env_create_object",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 274,
+  "code": "check_status!(unsafe { sys::napi_create_array(self.0, &mut raw_value) })?;",
+  "fn": "napi_env_env_create_empty_array",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 275,
+  "code": "Ok(unsafe { JsObject::from_raw_unchecked(self.0, raw_value) })",
+  "fn": "napi_env_env_create_empty_array",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 282,
+  "code": "check_status!(unsafe { sys::napi_create_array_with_length(self.0, length, &mut raw_value) })?;",
+  "fn": "napi_env_env_create_array_with_length",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 283,
+  "code": "Ok(unsafe { JsObject::from_raw_unchecked(self.0, raw_value) })",
+  "fn": "napi_env_env_create_array_with_length",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 292,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_create_buffer",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 305,
+  "code": "unsafe { Vec::from_raw_parts(data_ptr as *mut _, length, length) }",
+  "fn": "napi_env_env_create_buffer",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 319,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_create_buffer_with_data",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 380,
+  "code": "pub unsafe fn create_buffer_with_borrowed_data<Hint, Finalize>(",
+  "fn": "napi_env_env_create_buffer_with_borrowed_data",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 398,
+  "code": "unsafe {",
+  "fn": "napi_env_env_create_buffer_with_borrowed_data",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 430,
+  "code": "mem::ManuallyDrop::new(unsafe { Vec::from_raw_parts(data, length, length) }),",
+  "fn": "napi_env_env_create_buffer_with_borrowed_data",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 442,
+  "code": "check_status!(unsafe { sys::napi_adjust_external_memory(self.0, size, &mut changed) })?;",
+  "fn": "napi_env_env_adjust_external_memory",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 465,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_create_buffer_copy",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 483,
+  "code": "unsafe { Vec::from_raw_parts(copy_data as *mut u8, length, length) }",
+  "fn": "napi_env_env_create_buffer_copy",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 493,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_create_arraybuffer",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 498,
+  "code": "unsafe { JsArrayBuffer::from_raw_unchecked(self.0, raw_value) },",
+  "fn": "napi_env_env_create_arraybuffer",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 515,
+  "code": "unsafe { sys::napi_create_arraybuffer(self.0, length, ptr::null_mut(), &mut raw_value) },",
+  "fn": "napi_env_env_create_arraybuffer_with_data",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 520,
+  "code": "let mut status = unsafe {",
+  "fn": "napi_env_env_create_arraybuffer_with_data",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 531,
+  "code": "unsafe { drop(Box::from_raw(hint_ptr)) };",
+  "fn": "napi_env_env_create_arraybuffer_with_data",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 533,
+  "code": "status = unsafe {",
+  "fn": "napi_env_env_create_arraybuffer_with_data",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 538,
+  "code": "unsafe { ptr::copy_nonoverlapping(data_ptr, underlying_data.cast(), length) };",
+  "fn": "napi_env_env_create_arraybuffer_with_data",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 574,
+  "code": "pub unsafe fn create_arraybuffer_with_borrowed_data<Hint, Finalize>(",
+  "fn": "napi_env_env_create_arraybuffer_with_borrowed_data",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 589,
+  "code": "unsafe {",
+  "fn": "napi_env_env_create_arraybuffer_with_borrowed_data",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 656,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_create_function",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 667,
+  "code": "unsafe { Function::<Args, Return>::from_napi_value(self.0, raw_result) }",
+  "fn": "napi_env_env_create_function",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 684,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_create_function_from_closure",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 703,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_create_function_from_closure",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 714,
+  "code": "unsafe { Function::from_napi_value(self.0, raw_result) }",
+  "fn": "napi_env_env_create_function_from_closure",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 726,
+  "code": "check_status!(unsafe { sys::napi_get_last_error_info(self.0, &mut raw_extended_error) })?;",
+  "fn": "napi_env_env_get_last_error_info",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 727,
+  "code": "unsafe { ptr::read(raw_extended_error) }.try_into()",
+  "fn": "napi_env_env_get_last_error_info",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 732,
+  "code": "check_status!(unsafe { sys::napi_throw(self.0, ToNapiValue::to_napi_value(self.0, value)?,) })",
+  "fn": "napi_env_env_throw",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 739,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_throw_error",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 752,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_throw_range_error",
+  "reachedFrom": {
+   "renderInto (public)": ".throw_range_error() \u2190 range_error() \u2190 .from_js() \u2190 .checked_target() \u2190 .render_into()",
+   "_renderIntoTimed (private)": ".throw_range_error() \u2190 range_error() \u2190 .from_js() \u2190 .checked_target() \u2190 .render_into_timed()",
+   "_renderFramesExperimental (private)": ".throw_range_error() \u2190 range_error() \u2190 .from_js() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".throw_range_error() \u2190 range_error() \u2190 .from_js() \u2190 .checked_target() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 765,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_throw_type_error",
+  "reachedFrom": {
+   "renderInto (public)": ".throw_type_error() \u2190 type_error_code() \u2190 .from_js() \u2190 .checked_target() \u2190 .render_into()",
+   "_renderIntoTimed (private)": ".throw_type_error() \u2190 type_error_code() \u2190 .from_js() \u2190 .checked_target() \u2190 .render_into_timed()",
+   "_renderFramesExperimental (private)": ".throw_type_error() \u2190 type_error_code() \u2190 .from_js() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".throw_type_error() \u2190 type_error_code() \u2190 .from_js() \u2190 .checked_target() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 786,
+  "code": "unsafe { sys::node_api_throw_syntax_error(self.0, code_ptr, msg_ptr,) },",
+  "fn": "napi_env_env_throw_syntax_error",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 799,
+  "code": "unsafe {",
+  "fn": "napi_env_env_fatal_error",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 814,
+  "code": "unsafe {",
+  "fn": "napi_env_env_fatal_exception",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 836,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_define_class",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 849,
+  "code": "unsafe { Function::from_napi_value(self.0, raw_result) }",
+  "fn": "napi_env_env_define_class",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 863,
+  "code": "if let Err(err) = check_status!(unsafe {",
+  "fn": "napi_env_env_wrap",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 873,
+  "code": "drop(unsafe { Box::from_raw(tagged_object) });",
+  "fn": "napi_env_env_wrap",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 874,
+  "code": "drop(unsafe { Box::from_raw(size_hint_ptr) });",
+  "fn": "napi_env_env_wrap",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 886,
+  "code": "unsafe {",
+  "fn": "napi_env_env_unwrap",
+  "reachedFrom": {
+   "renderInto (public)": ".unwrap() \u2190 .new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".unwrap() \u2190 .new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": ".unwrap() \u2190 .new() \u2190 .close()",
+   "constructor (public)": ".unwrap() \u2190 .new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".unwrap() \u2190 .new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".unwrap() \u2190 .new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".unwrap() \u2190 .new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".unwrap() \u2190 .new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 903,
+  "code": "unsafe {",
+  "fn": "napi_env_env_drop_wrapped",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 937,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_get_reference_value",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 940,
+  "code": "unsafe { T::from_napi_value(self.0, js_value) }",
+  "fn": "napi_env_env_get_reference_value",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 955,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_get_reference_value_unchecked",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 958,
+  "code": "unsafe { T::from_napi_value(self.0, js_value) }",
+  "fn": "napi_env_env_get_reference_value_unchecked",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 976,
+  "code": "if let Err(err) = check_status!(unsafe {",
+  "fn": "napi_env_env_create_external",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 985,
+  "code": "drop(unsafe { Box::from_raw(tagged_object) });",
+  "fn": "napi_env_env_create_external",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 986,
+  "code": "drop(unsafe { Box::from_raw(size_hint_ptr) });",
+  "fn": "napi_env_env_create_external",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 995,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_create_external",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1000,
+  "code": "unsafe { JsExternal::from_napi_value(self.0, object_value) }",
+  "fn": "napi_env_env_create_external",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1007,
+  "code": "unsafe {",
+  "fn": "napi_env_env_get_value_external",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1054,
+  "code": "if let Some(result) = unsafe { e.referenced_value(self.0) } {",
+  "fn": "napi_env_env_create_error",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1055,
+  "code": "if unsafe { crate::error::is_js_error(self.0, result) } {",
+  "fn": "napi_env_env_create_error",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1063,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_create_error",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1082,
+  "code": "check_status!(unsafe { sys::napi_open_handle_scope(self.0, &mut handle_scope) })?;",
+  "fn": "napi_env_env_run_in_scope",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1086,
+  "code": "check_status!(unsafe { sys::napi_close_handle_scope(self.0, handle_scope) })?;",
+  "fn": "napi_env_env_run_in_scope",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1098,
+  "code": "check_status!(unsafe { sys::napi_run_script(self.0, s.raw(), &mut raw_value) })?;",
+  "fn": "napi_env_env_run_script",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1099,
+  "code": "unsafe { V::from_napi_value(self.0, raw_value) }",
+  "fn": "napi_env_env_run_script",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1116,
+  "code": "check_status!(unsafe { sys::napi_get_uv_event_loop(self.0, &mut uv_loop) })?;",
+  "fn": "napi_env_env_get_uv_event_loop",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1137,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_add_env_cleanup_hook",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1148,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_add_env_cleanup_hook",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1166,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_remove_env_cleanup_hook",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1180,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_remove_env_cleanup_hook",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1231,
+  "code": "let promise = tokio_runtime::execute_tokio_future(self.0, fut, |env, val| unsafe {",
+  "fn": "napi_env_env_execute_tokio_future",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1235,
+  "code": "Ok(unsafe { JsObject::from_raw_unchecked(self.0, promise) })",
+  "fn": "napi_env_env_execute_tokio_future",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1252,
+  "code": "let promise = tokio_runtime::execute_tokio_future(self.0, fut, |env, val| unsafe {",
+  "fn": "napi_env_env_spawn_future",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1278,
+  "code": "let promise = tokio_runtime::execute_tokio_future(self.0, fut, move |env, val| unsafe {",
+  "fn": "napi_env_env_spawn_future_with_callback",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1304,
+  "code": "check_status!(unsafe { sys::napi_create_date(self.0, time, &mut js_value) })?;",
+  "fn": "napi_env_env_create_date",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1325,
+  "code": "if let Err(err) = check_status!(unsafe {",
+  "fn": "napi_env_env_set_instance_data",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1340,
+  "code": "drop(unsafe { Box::from_raw(instance_data) });",
+  "fn": "napi_env_env_set_instance_data",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1341,
+  "code": "drop(unsafe { Box::from_raw(hint_ptr) });",
+  "fn": "napi_env_env_set_instance_data",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1359,
+  "code": "unsafe {",
+  "fn": "napi_env_env_get_instance_data",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1406,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_add_removable_async_cleanup_hook",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1429,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_add_async_cleanup_hook",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1445,
+  "code": "check_status!(unsafe {",
+  "fn": "napi_env_env_symbol_for",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1475,
+  "code": "unsafe { sys::node_api_get_module_file_name(self.0, &mut char_ptr) },",
+  "fn": "napi_env_env_get_module_file_name",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1480,
+  "code": "let module_filename = unsafe { std::ffi::CStr::from_ptr(char_ptr) };",
+  "fn": "napi_env_env_get_module_file_name",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1551,
+  "code": "check_status!(unsafe { sys::napi_strict_equals(self.0, a.raw(), b.raw(), &mut result) })?;",
+  "fn": "napi_env_env_strict_equals",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1557,
+  "code": "check_status!(unsafe { sys::napi_get_node_version(self.0, &mut result) })?;",
+  "fn": "napi_env_env_get_node_version",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1558,
+  "code": "let version = unsafe { *result };",
+  "fn": "napi_env_env_get_node_version",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1578,
+  "code": "let (length, cap) = unsafe { *Box::from_raw(length_ptr) };",
+  "fn": "napi_env_drop_buffer",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1582,
+  "code": "mem::drop(unsafe { Vec::from_raw_parts(finalize_data as *mut u8, length, cap) });",
+  "fn": "napi_env_drop_buffer",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1592,
+  "code": "drop(unsafe { Box::from_raw(tagged_object) });",
+  "fn": "napi_env_raw_finalize",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1595,
+  "code": "let size_hint = unsafe { *Box::from_raw(finalize_hint as *mut i64) };",
+  "fn": "napi_env_raw_finalize",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1598,
+  "code": "let status = unsafe { sys::napi_adjust_external_memory(env, -size_hint, &mut adjusted) };",
+  "fn": "napi_env_raw_finalize",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1641,
+  "code": "} = unsafe { *Box::from_raw(finalize_data as *mut InstanceData<T, F>) };",
+  "fn": "napi_env_set_instance_finalize_callback",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1642,
+  "code": "let hint = unsafe { *Box::from_raw(finalize_hint as *mut Hint) };",
+  "fn": "napi_env_set_instance_finalize_callback",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1653,
+  "code": "let cleanup_env_hook = unsafe { Box::from_raw(hook_data as *mut CleanupEnvHookData<T>) };",
+  "fn": "napi_env_cleanup_env",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1664,
+  "code": "let (hint, callback) = unsafe { *Box::from_raw(finalize_hint as *mut (Hint, Finalize)) };",
+  "fn": "napi_env_raw_finalize_with_custom_callback",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1676,
+  "code": "let (arg, callback) = unsafe { *Box::from_raw(data as *mut (Arg, F)) };",
+  "fn": "napi_env_async_finalize",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1679,
+  "code": "let status = unsafe { sys::napi_remove_async_cleanup_hook(handle) };",
+  "fn": "napi_env_async_finalize",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1717,
+  "code": "unsafe {",
+  "fn": "napi_env_trampoline",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1734,
+  "code": "unsafe {",
+  "fn": "napi_env_trampoline",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1747,
+  "code": "unsafe { raw_args.set_len(argc) };",
+  "fn": "napi_env_trampoline",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1752,
+  "code": "let closure: &F = Box::leak(unsafe { Box::from_raw(closure_data_ptr.cast()) });",
+  "fn": "napi_env_trampoline",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1760,
+  "code": ".and_then(|ret| unsafe { <Return as ToNapiValue>::to_napi_value(raw_env, ret) })",
+  "fn": "napi_env_trampoline",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1766,
+  "code": "unsafe { JsError::from(e).throw_into(raw_env) };",
+  "fn": "napi_env_trampoline",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1787,
+  "code": "let status = unsafe {",
+  "fn": "napi_env_trampoline_setter",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1797,
+  "code": "unsafe { raw_args.set_len(argc) };",
+  "fn": "napi_env_trampoline_setter",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1803,
+  "code": "let closure_data_ptr = unsafe { *(data_ptr as *mut PropertyClosures) }.setter_closure;",
+  "fn": "napi_env_trampoline_setter",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1807,
+  "code": "let closure: &F = Box::leak(unsafe { Box::from_raw(closure_data_ptr.cast()) });",
+  "fn": "napi_env_trampoline_setter",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1814,
+  "code": "let value = unsafe { V::from_napi_value(raw_env, *value)? };",
+  "fn": "napi_env_trampoline_setter",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1817,
+  "code": "unsafe { This::from_napi_value(raw_env, raw_this)? },",
+  "fn": "napi_env_trampoline_setter",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1826,
+  "code": "unsafe { JsError::from(e).throw_into(raw_env) };",
+  "fn": "napi_env_trampoline_setter",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1843,
+  "code": "let status = unsafe {",
+  "fn": "napi_env_trampoline_getter",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1858,
+  "code": "let closure_data_ptr = unsafe { *(data_ptr as *mut PropertyClosures) }.getter_closure;",
+  "fn": "napi_env_trampoline_getter",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1862,
+  "code": "let closure: &F = Box::leak(unsafe { Box::from_raw(closure_data_ptr.cast()) });",
+  "fn": "napi_env_trampoline_getter",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1865,
+  "code": "let this = unsafe { crate::bindgen_runtime::This::from_napi_value(raw_env, raw_this)? };",
+  "fn": "napi_env_trampoline_getter",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1866,
+  "code": "closure(env, this).and_then(|ret: R| unsafe { <R as ToNapiValue>::to_napi_value(env.0, ret) })",
+  "fn": "napi_env_trampoline_getter",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1871,
+  "code": "unsafe { JsError::from(e).throw_into(raw_env) };",
+  "fn": "napi_env_trampoline_getter",
+  "reachedFrom": {}
+ },
+ {
+  "file": "napi/env.rs",
+  "line": 1883,
+  "code": "drop(unsafe { Box::<F>::from_raw(closure_data_ptr.cast()) })",
+  "fn": "napi_env_finalize_box_trampoline",
+  "reachedFrom": {}
+ },
+ {
+  "file": "canvas-html/frames.rs",
+  "line": 32,
+  "code": "unsafe {",
+  "fn": "canvas_html_frames_alloc_frame",
+  "reachedFrom": {
+   "renderInto (public)": "alloc_frame() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": "alloc_frame() \u2190 .next_frame() \u2190 .render()",
+   "_renderIntoTimed (private)": "alloc_frame() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": "alloc_frame() \u2190 .next_frame() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": "alloc_frame() \u2190 .paint_into() \u2190 .render_frames_experimental()"
+  }
+ },
+ {
+  "file": "canvas-html/target.rs",
+  "line": 39,
+  "code": "check(unsafe { sys::napi_is_typedarray(raw_env, raw, &mut is_typedarray) })?;",
+  "fn": "canvas_html_target_bytetarget_from_js",
+  "reachedFrom": {
+   "renderInto (public)": ".from_js() \u2190 .checked_target() \u2190 .render_into()",
+   "_renderIntoTimed (private)": ".from_js() \u2190 .checked_target() \u2190 .render_into_timed()",
+   "_renderFramesExperimental (private)": ".from_js() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".from_js() \u2190 .checked_target() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "canvas-html/target.rs",
+  "line": 49,
+  "code": "check(unsafe {",
+  "fn": "canvas_html_target_bytetarget_from_js",
+  "reachedFrom": {
+   "renderInto (public)": ".from_js() \u2190 .checked_target() \u2190 .render_into()",
+   "_renderIntoTimed (private)": ".from_js() \u2190 .checked_target() \u2190 .render_into_timed()",
+   "_renderFramesExperimental (private)": ".from_js() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".from_js() \u2190 .checked_target() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "canvas-html/target.rs",
+  "line": 58,
+  "code": "check(unsafe { sys::napi_is_arraybuffer(raw_env, arraybuffer, &mut is_plain) })?;",
+  "fn": "canvas_html_target_bytetarget_from_js",
+  "reachedFrom": {
+   "renderInto (public)": ".from_js() \u2190 .checked_target() \u2190 .render_into()",
+   "_renderIntoTimed (private)": ".from_js() \u2190 .checked_target() \u2190 .render_into_timed()",
+   "_renderFramesExperimental (private)": ".from_js() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".from_js() \u2190 .checked_target() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "canvas-html/target.rs",
+  "line": 64,
+  "code": "check(unsafe { sys::napi_is_detached_arraybuffer(raw_env, arraybuffer, &mut detached) })?;",
+  "fn": "canvas_html_target_bytetarget_from_js",
+  "reachedFrom": {
+   "renderInto (public)": ".from_js() \u2190 .checked_target() \u2190 .render_into()",
+   "_renderIntoTimed (private)": ".from_js() \u2190 .checked_target() \u2190 .render_into_timed()",
+   "_renderFramesExperimental (private)": ".from_js() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".from_js() \u2190 .checked_target() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "canvas-html/target.rs",
+  "line": 84,
+  "code": "pub(crate) unsafe fn bytes(&mut self) -> &mut [u8] {",
+  "fn": "canvas_html_target_bytetarget_bytes",
+  "reachedFrom": {
+   "renderInto (public)": ".bytes() \u2190 .render_into()",
+   "render (public)": ".bytes() \u2190 .try_render() \u2190 .paint_into() \u2190 .render()",
+   "_renderIntoTimed (private)": ".bytes() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".bytes() \u2190 .try_render() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".bytes() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".bytes() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "canvas-html/target.rs",
+  "line": 88,
+  "code": "unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }",
+  "fn": "canvas_html_target_bytetarget_bytes",
+  "reachedFrom": {
+   "renderInto (public)": ".bytes() \u2190 .render_into()",
+   "render (public)": ".bytes() \u2190 .try_render() \u2190 .paint_into() \u2190 .render()",
+   "_renderIntoTimed (private)": ".bytes() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".bytes() \u2190 .try_render() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".bytes() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".bytes() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 57,
+  "code": "let entry = unsafe { ash::Entry::load() }.map_err(|e| err(\"Vulkan loader not found\", e))?;",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 59,
+  "code": "unsafe { entry.try_enumerate_instance_version() }.ok().flatten().unwrap_or(avk::API_VERSION_1_1)",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 62,
+  "code": "let instance = unsafe { entry.create_instance(&avk::InstanceCreateInfo::default().application_info(&app), None",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 64,
+  "code": "let devices = unsafe { instance.enumerate_physical_devices() }.map_err(|e| err(\"no Vulkan devices\", e))?;",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 68,
+  "code": "let props = unsafe { instance.get_physical_device_properties(pd) };",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 69,
+  "code": "let q = unsafe { instance.get_physical_device_queue_family_properties(pd) }",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 76,
+  "code": "unsafe { instance.destroy_instance(None) };",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 82,
+  "code": "unsafe { instance.destroy_instance(None) };",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 90,
+  "code": "let device = match unsafe { instance.create_device(physical, &avk::DeviceCreateInfo::default().queue_create_in",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 93,
+  "code": "unsafe { instance.destroy_instance(None) };",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 97,
+  "code": "let queue = unsafe { device.get_device_queue(queue_family, 0) };",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 98,
+  "code": "let name = unsafe { CStr::from_ptr(props.device_name.as_ptr()) }.to_string_lossy().into_owned();",
+  "fn": "anyrender_skia_gpu_common_vkdevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 114,
+  "code": "let get_proc = |gpo: GetProcOf| unsafe {",
+  "fn": "anyrender_skia_gpu_common_vkdevice_with_backend",
+  "reachedFrom": {
+   "renderInto (public)": ".with_backend() \u2190 .new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".with_backend() \u2190 .new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": ".with_backend() \u2190 .new() \u2190 .close()",
+   "constructor (public)": ".with_backend() \u2190 .new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".with_backend() \u2190 .new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".with_backend() \u2190 .new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".with_backend() \u2190 .new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".with_backend() \u2190 .new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 122,
+  "code": "let backend = unsafe {",
+  "fn": "anyrender_skia_gpu_common_vkdevice_with_backend",
+  "reachedFrom": {
+   "renderInto (public)": ".with_backend() \u2190 .new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".with_backend() \u2190 .new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": ".with_backend() \u2190 .new() \u2190 .close()",
+   "constructor (public)": ".with_backend() \u2190 .new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".with_backend() \u2190 .new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".with_backend() \u2190 .new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".with_backend() \u2190 .new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".with_backend() \u2190 .new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_common.rs",
+  "line": 139,
+  "code": "unsafe {",
+  "fn": "anyrender_skia_gpu_common_vkdevice_drop",
+  "reachedFrom": {
+   "renderInto (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".drop() \u2190 .pipeline_stop() \u2190 .close()",
+   "_renderIntoTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".drop() \u2190 .pipeline_stop() \u2190 .render_frames_experimental()",
+   "Buffer finalizer (napi-rs drop_buffer)": ".drop() \u2190 drop_buffer()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 170,
+  "code": "unsafe {",
+  "fn": "anyrender_skia_gpu_image_renderer_gpudevice_drop",
+  "reachedFrom": {
+   "renderInto (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".drop() \u2190 .pipeline_stop() \u2190 .close()",
+   "_renderIntoTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".drop() \u2190 .pipeline_stop() \u2190 .render_frames_experimental()",
+   "Buffer finalizer (napi-rs drop_buffer)": ".drop() \u2190 drop_buffer()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 215,
+  "code": "let display = unsafe { Display::with_device(device, None) }.map_err(|e| err(\"EGL display on device failed\", e)",
+  "fn": "anyrender_skia_gpu_image_renderer_gldevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 220,
+  "code": "let config = unsafe { display.find_configs(template) }",
+  "fn": "anyrender_skia_gpu_image_renderer_gldevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 225,
+  "code": "let context = unsafe { display.create_context(&config, &attrs) }",
+  "fn": "anyrender_skia_gpu_image_renderer_gldevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 249,
+  "code": "let get: GetString = unsafe { std::mem::transmute(f) };",
+  "fn": "anyrender_skia_gpu_image_renderer_gldevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 250,
+  "code": "let s = |id: u32| unsafe {",
+  "fn": "anyrender_skia_gpu_image_renderer_gldevice_new",
+  "reachedFrom": {
+   "renderInto (public)": ".new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": ".new() \u2190 .close()",
+   "constructor (public)": ".new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 432,
+  "code": "unsafe { gl::DeleteSync(fence) };",
+  "fn": "anyrender_skia_gpu_image_renderer_gpupipeline_drop",
+  "reachedFrom": {
+   "renderInto (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".drop() \u2190 .pipeline_stop() \u2190 .close()",
+   "_renderIntoTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".drop() \u2190 .pipeline_stop() \u2190 .render_frames_experimental()",
+   "Buffer finalizer (napi-rs drop_buffer)": ".drop() \u2190 drop_buffer()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 436,
+  "code": "unsafe { gl::DeleteBuffers(self.pbos.len() as i32, self.pbos.as_ptr()) };",
+  "fn": "anyrender_skia_gpu_image_renderer_gpupipeline_drop",
+  "reachedFrom": {
+   "renderInto (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".drop() \u2190 .pipeline_stop() \u2190 .close()",
+   "_renderIntoTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".drop() \u2190 .pipeline_stop() \u2190 .render_frames_experimental()",
+   "Buffer finalizer (napi-rs drop_buffer)": ".drop() \u2190 drop_buffer()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 480,
+  "code": "unsafe {",
+  "fn": "anyrender_skia_gpu_image_renderer_skiagpuimagerenderer_pipeline_start",
+  "reachedFrom": {
+   "_renderFramesExperimental (private)": ".pipeline_start() \u2190 .render_frames_experimental()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 548,
+  "code": "unsafe {",
+  "fn": "anyrender_skia_gpu_image_renderer_skiagpuimagerenderer_pipeline_submit",
+  "reachedFrom": {
+   "_renderFramesExperimental (private)": ".pipeline_submit() \u2190 .pipeline_submit_inner() \u2190 .render_frames_experimental()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 606,
+  "code": "let status = unsafe { gl::ClientWaitSync(fence, gl::SYNC_FLUSH_COMMANDS_BIT, 10_000_000_000) };",
+  "fn": "anyrender_skia_gpu_image_renderer_skiagpuimagerenderer_pipeline_complete",
+  "reachedFrom": {
+   "_renderFramesExperimental (private)": ".pipeline_complete() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".pipeline_complete() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 607,
+  "code": "unsafe { gl::DeleteSync(fence) };",
+  "fn": "anyrender_skia_gpu_image_renderer_skiagpuimagerenderer_pipeline_complete",
+  "reachedFrom": {
+   "_renderFramesExperimental (private)": ".pipeline_complete() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".pipeline_complete() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/gpu_image_renderer.rs",
+  "line": 616,
+  "code": "let ok = unsafe {",
+  "fn": "anyrender_skia_gpu_image_renderer_skiagpuimagerenderer_pipeline_complete",
+  "reachedFrom": {
+   "_renderFramesExperimental (private)": ".pipeline_complete() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".pipeline_complete() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "anyrender_skia/graphite_image_renderer.rs",
+  "line": 53,
+  "code": "unsafe {",
+  "fn": "anyrender_skia_graphite_image_renderer_graphitedevice_drop",
+  "reachedFrom": {
+   "renderInto (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".drop() \u2190 .pipeline_stop() \u2190 .close()",
+   "_renderIntoTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".drop() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".drop() \u2190 .pipeline_stop() \u2190 .render_frames_experimental()",
+   "Buffer finalizer (napi-rs drop_buffer)": ".drop() \u2190 drop_buffer()"
+  }
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 30,
+  "code": "Surface::from_ptr(unsafe { sb::C_SkSurfaces_Null(size.width, size.height) })",
+  "fn": "skia_safe_core_surface_null",
+  "reachedFrom": {
+   "renderInto (public)": "null() \u2190 .new() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": "null() \u2190 .new() \u2190 .from_data() \u2190 .render()",
+   "close (public)": "null() \u2190 .new() \u2190 .close()",
+   "constructor (public)": "null() \u2190 .new() \u2190 .new()",
+   "_renderIntoTimed (private)": "null() \u2190 .new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": "null() \u2190 .new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": "null() \u2190 .new() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": "null() \u2190 .new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 80,
+  "code": "Surface::from_ptr(unsafe {",
+  "fn": "skia_safe_core_surface_raster",
+  "reachedFrom": {}
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 124,
+  "code": "Surface::from_ptr(unsafe {",
+  "fn": "skia_safe_core_surface_wrap_pixels",
+  "reachedFrom": {
+   "renderInto (public)": "wrap_pixels() \u2190 .try_render() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": "wrap_pixels() \u2190 .try_render() \u2190 .paint_into() \u2190 .render()",
+   "_renderIntoTimed (private)": "wrap_pixels() \u2190 .try_render() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": "wrap_pixels() \u2190 .try_render() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": "wrap_pixels() \u2190 .try_render() \u2190 .paint_into() \u2190 .render_frames_experimental()"
+  }
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 275,
+  "code": "unsafe { sb::C_SkSurface_width(self.native()) }",
+  "fn": "skia_safe_core_surface_surface_width",
+  "reachedFrom": {
+   "renderInto (public)": ".width() \u2190 .try_render() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".width() \u2190 .try_render() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".width() \u2190 .make_surface() \u2190 .new() \u2190 .close()",
+   "constructor (public)": ".width() \u2190 .make_surface() \u2190 .new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".width() \u2190 .make_surface() \u2190 .new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".width() \u2190 .make_surface() \u2190 .new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".width() \u2190 .pipeline_submit() \u2190 .pipeline_submit_inner() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".width() \u2190 .make_surface() \u2190 .new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 283,
+  "code": "unsafe { sb::C_SkSurface_height(self.native()) }",
+  "fn": "skia_safe_core_surface_surface_height",
+  "reachedFrom": {
+   "renderInto (public)": ".height() \u2190 .try_render() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".height() \u2190 .try_render() \u2190 .paint_into() \u2190 .render()",
+   "close (public)": ".height() \u2190 .make_surface() \u2190 .new() \u2190 .close()",
+   "constructor (public)": ".height() \u2190 .make_surface() \u2190 .new() \u2190 .new()",
+   "_renderIntoTimed (private)": ".height() \u2190 .make_surface() \u2190 .new() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".height() \u2190 .make_surface() \u2190 .new() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".height() \u2190 .pipeline_submit() \u2190 .pipeline_submit_inner() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".height() \u2190 .make_surface() \u2190 .new() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 289,
+  "code": "unsafe { sb::C_SkSurface_imageInfo(self.native(), info.native_mut()) };",
+  "fn": "skia_safe_core_surface_surface_image_info",
+  "reachedFrom": {}
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 301,
+  "code": "unsafe { self.native_mut().generationID() }",
+  "fn": "skia_safe_core_surface_surface_generation_id",
+  "reachedFrom": {}
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 309,
+  "code": "unsafe { self.native_mut().notifyContentWillChange(mode) }",
+  "fn": "skia_safe_core_surface_surface_notify_content_will_change",
+  "reachedFrom": {}
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 333,
+  "code": "gpu::RecordingContext::from_unshared_ptr(unsafe { self.native().recordingContext() })",
+  "fn": null,
+  "reachedFrom": {}
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 373,
+  "code": "unsafe {",
+  "fn": "skia_safe_core_surface_surface_replace_backend_texture_with_mode",
+  "reachedFrom": {}
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 393,
+  "code": "let canvas_ref = unsafe { &*self.native_mut().getCanvas() };",
+  "fn": "skia_safe_core_surface_surface_canvas",
+  "reachedFrom": {
+   "renderInto (public)": ".canvas() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".canvas() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
+   "_renderIntoTimed (private)": ".canvas() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".canvas() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".canvas() \u2190 .pipeline_submit() \u2190 .pipeline_submit_inner() \u2190 .render_frames_experimental()"
+  }
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 415,
+  "code": "Self::from_ptr(unsafe {",
+  "fn": "skia_safe_core_surface_surface_new_surface",
+  "reachedFrom": {}
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 424,
+  "code": "Self::from_ptr(unsafe {",
+  "fn": "skia_safe_core_surface_surface_new_surface_with_dimensions",
+  "reachedFrom": {}
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 437,
+  "code": "Image::from_ptr(unsafe {",
+  "fn": "skia_safe_core_surface_surface_image_snapshot",
+  "reachedFrom": {}
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 455,
+  "code": "Image::from_ptr(unsafe { sb::C_SkSurface_makeTemporaryImage(self.native_mut()) })",
+  "fn": "skia_safe_core_surface_surface_make_temporary_image",
+  "reachedFrom": {}
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 470,
+  "code": "Image::from_ptr(unsafe {",
+  "fn": "skia_safe_core_surface_surface_image_snapshot_with_bounds",
+  "reachedFrom": {}
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 496,
+  "code": "unsafe {",
+  "fn": "skia_safe_core_surface_surface_draw",
+  "reachedFrom": {}
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 509,
+  "code": "unsafe { self.native_mut().peekPixels(pm.native_mut()) }.then_some(pm)",
+  "fn": "skia_safe_core_surface_surface_peek_pixels",
+  "reachedFrom": {}
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 547,
+  "code": "unsafe { self.native_mut().readPixels(dst.native(), src.x, src.y) }",
+  "fn": "skia_safe_core_surface_surface_read_pixels_to_pixmap",
+  "reachedFrom": {}
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 592,
+  "code": "unsafe {",
+  "fn": "skia_safe_core_surface_surface_read_pixels",
+  "reachedFrom": {
+   "renderInto (public)": ".read_pixels() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": ".read_pixels() \u2190 .render_timed() \u2190 .paint_into() \u2190 .render()",
+   "_renderIntoTimed (private)": ".read_pixels() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": ".read_pixels() \u2190 .render_timed() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": ".read_pixels() \u2190 .pipeline_complete() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".read_pixels() \u2190 .pipeline_complete() \u2190 .pipeline_complete()"
+  }
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 640,
+  "code": "unsafe { self.native_mut().readPixels2(bitmap.native(), src.x, src.y) }",
+  "fn": "skia_safe_core_surface_surface_read_pixels_to_bitmap",
+  "reachedFrom": {}
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 664,
+  "code": "unsafe { self.native_mut().writePixels(src.native(), dst.x, dst.y) }",
+  "fn": "skia_safe_core_surface_surface_write_pixels_from_pixmap",
+  "reachedFrom": {}
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 683,
+  "code": "unsafe {",
+  "fn": "skia_safe_core_surface_surface_write_pixels_from_bitmap",
+  "reachedFrom": {}
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 693,
+  "code": "SurfaceProps::from_native_ref(unsafe { &*sb::C_SkSurface_props(self.native()) })",
+  "fn": "skia_safe_core_surface_surface_props",
+  "reachedFrom": {}
+ },
+ {
+  "file": "skia-safe/core/surface.rs",
+  "line": 717,
+  "code": "unsafe {",
+  "fn": "skia_safe_core_surface_surface_wait",
+  "reachedFrom": {}
+ },
+ {
+  "file": "canvas-html/lib.rs",
+  "line": 982,
+  "code": "self.paint_into(Some(unsafe { target.bytes() }))?;",
+  "fn": "canvas_html_lib_htmlrenderer_render_into",
+  "reachedFrom": {
+   "renderInto (public)": ".render_into()"
+  }
+ },
+ {
+  "file": "canvas-html/lib.rs",
+  "line": 995,
+  "code": "self.paint_timed(&mut t, Some(unsafe { target.bytes() }))?;",
+  "fn": "canvas_html_lib_htmlrenderer_render_into_timed",
+  "reachedFrom": {
+   "_renderIntoTimed (private)": ".render_into_timed()"
+  }
+ },
+ {
+  "file": "canvas-html/lib.rs",
+  "line": 1107,
+  "code": "let c = self.gpu_renderer()?.pipeline_complete(unsafe { target.bytes() }).map_err(|e| Error::from_reason(forma",
+  "fn": "canvas_html_lib_htmlrenderer_pipeline_complete",
+  "reachedFrom": {
+   "_renderFramesExperimental (private)": ".pipeline_complete() \u2190 .render_frames_experimental()",
+   "_pipelineComplete (private)": ".pipeline_complete()"
+  }
+ },
+ {
+  "file": "canvas-html/lib.rs",
+  "line": 1174,
+  "code": "let p = self.paint_into(Some(unsafe { targets[i % k].bytes() }))?;",
+  "fn": "canvas_html_lib_htmlrenderer_render_frames_experimental",
+  "reachedFrom": {
+   "_renderFramesExperimental (private)": ".render_frames_experimental()"
+  }
+ },
+ {
+  "file": "canvas-html/lib.rs",
+  "line": 1196,
+  "code": "let c = self.gpu_renderer()?.pipeline_complete(unsafe { targets[next_out % k].bytes() }).map_err(|e| Error::fr",
+  "fn": "canvas_html_lib_htmlrenderer_render_frames_experimental",
+  "reachedFrom": {
+   "_renderFramesExperimental (private)": ".render_frames_experimental()"
+  }
+ },
+ {
+  "file": "canvas-html/lib.rs",
+  "line": 1208,
+  "code": "let c = self.gpu_renderer()?.pipeline_complete(unsafe { targets[next_out % k].bytes() }).map_err(|e| Error::fr",
+  "fn": "canvas_html_lib_htmlrenderer_render_frames_experimental",
+  "reachedFrom": {
+   "_renderFramesExperimental (private)": ".render_frames_experimental()"
+  }
+ },
+ {
+  "file": "canvas-html/lib.rs",
+  "line": 1243,
+  "code": "let m = unsafe { libc::mallinfo2() };",
+  "fn": "canvas_html_lib_htmlrenderer_native_heap",
+  "reachedFrom": {}
+ },
+ {
+  "file": "anyrender_skia/scene.rs",
+  "line": 1013,
+  "code": "let pixels = unsafe {",
+  "fn": "anyrender_skia_scene_shader_from_image_brush",
+  "reachedFrom": {
+   "renderInto (public)": "shader_from_image_brush() \u2190 .set_paint_brush() \u2190 .fill() \u2190 .paint_into() \u2190 .render_into()",
+   "render (public)": "shader_from_image_brush() \u2190 .set_paint_brush() \u2190 .fill() \u2190 .paint_into() \u2190 .render()",
+   "_renderIntoTimed (private)": "shader_from_image_brush() \u2190 .set_paint_brush() \u2190 .fill() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_into_timed()",
+   "_renderTimed (private)": "shader_from_image_brush() \u2190 .set_paint_brush() \u2190 .fill() \u2190 .paint_into() \u2190 .paint_timed() \u2190 .render_timed()",
+   "_renderFramesExperimental (private)": "shader_from_image_brush() \u2190 .set_paint_brush() \u2190 .fill() \u2190 .pipeline_submit_inner() \u2190 .render_frames_experimental()"
+  }
+ }
+]

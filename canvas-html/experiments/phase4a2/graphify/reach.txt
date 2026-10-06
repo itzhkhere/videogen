@@ -1,0 +1,873 @@
+342 functions, 1717 call edges (Graphify + name-based), 266 unsafe sites
+
+napi/bindgen_runtime/js_values/buffer.rs:525  in .from()  — inner: unsafe { NonNull::new_unchecked(inner_ptr) },
+    may be reached from renderInto (public): .from() ← .default() ← .paint_into() ← .render_into()
+    may be reached from render (public): .from() ← .new() ← .from_data() ← .render()
+    may be reached from close (public): .from() ← .new() ← .close()
+    may be reached from constructor (public): .from() ← .new() ← .new()
+    may be reached from _renderIntoTimed (private): .from() ← .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .from() ← .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .from() ← .new() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .from() ← .new() ← .pipeline_complete()
+    may be reached from Buffer finalizer (napi-rs drop_buffer): .from() ← .drop() ← drop_buffer()
+napi/bindgen_runtime/js_values/buffer.rs:556  in .as_ref()  — unsafe { slice::from_raw_parts(self.inner.as_ptr(), self.len) }
+    may be reached from renderInto (public): .as_ref() ← .build_document() ← .doc_mut() ← .prepare_frame() ← .render_into()
+    may be reached from render (public): .as_ref() ← .from() ← .new() ← .from_data() ← .render()
+    may be reached from close (public): .as_ref() ← .drop() ← .pipeline_stop() ← .close()
+    may be reached from constructor (public): .as_ref() ← .from() ← .new() ← .new()
+    may be reached from _renderIntoTimed (private): .as_ref() ← .from() ← .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .as_ref() ← .from() ← .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .as_ref() ← .pipeline_in_flight() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .as_ref() ← .from() ← .new() ← .pipeline_complete()
+    may be reached from Buffer finalizer (napi-rs drop_buffer): .as_ref() ← .drop() ← drop_buffer()
+anyrender_skia/gpu_common.rs:57  in .new()  — let entry = unsafe { ash::Entry::load() }.map_err(|e| err("Vulkan loader not found", e))?;
+    may be reached from renderInto (public): .new() ← .paint_into() ← .render_into()
+    may be reached from render (public): .new() ← .from_data() ← .render()
+    may be reached from close (public): .new() ← .close()
+    may be reached from constructor (public): .new() ← .new()
+    may be reached from _renderIntoTimed (private): .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .new() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .new() ← .pipeline_complete()
+anyrender_skia/gpu_common.rs:59  in .new()  — unsafe { entry.try_enumerate_instance_version() }.ok().flatten().unwrap_or(avk::API_VERSION_1_1)
+    may be reached from renderInto (public): .new() ← .paint_into() ← .render_into()
+    may be reached from render (public): .new() ← .from_data() ← .render()
+    may be reached from close (public): .new() ← .close()
+    may be reached from constructor (public): .new() ← .new()
+    may be reached from _renderIntoTimed (private): .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .new() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .new() ← .pipeline_complete()
+anyrender_skia/gpu_common.rs:62  in .new()  — let instance = unsafe { entry.create_instance(&avk::InstanceCreateInfo::default().application_info(&app), None
+    may be reached from renderInto (public): .new() ← .paint_into() ← .render_into()
+    may be reached from render (public): .new() ← .from_data() ← .render()
+    may be reached from close (public): .new() ← .close()
+    may be reached from constructor (public): .new() ← .new()
+    may be reached from _renderIntoTimed (private): .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .new() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .new() ← .pipeline_complete()
+anyrender_skia/gpu_common.rs:64  in .new()  — let devices = unsafe { instance.enumerate_physical_devices() }.map_err(|e| err("no Vulkan devices", e))?;
+    may be reached from renderInto (public): .new() ← .paint_into() ← .render_into()
+    may be reached from render (public): .new() ← .from_data() ← .render()
+    may be reached from close (public): .new() ← .close()
+    may be reached from constructor (public): .new() ← .new()
+    may be reached from _renderIntoTimed (private): .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .new() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .new() ← .pipeline_complete()
+anyrender_skia/gpu_common.rs:68  in .new()  — let props = unsafe { instance.get_physical_device_properties(pd) };
+    may be reached from renderInto (public): .new() ← .paint_into() ← .render_into()
+    may be reached from render (public): .new() ← .from_data() ← .render()
+    may be reached from close (public): .new() ← .close()
+    may be reached from constructor (public): .new() ← .new()
+    may be reached from _renderIntoTimed (private): .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .new() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .new() ← .pipeline_complete()
+anyrender_skia/gpu_common.rs:69  in .new()  — let q = unsafe { instance.get_physical_device_queue_family_properties(pd) }
+    may be reached from renderInto (public): .new() ← .paint_into() ← .render_into()
+    may be reached from render (public): .new() ← .from_data() ← .render()
+    may be reached from close (public): .new() ← .close()
+    may be reached from constructor (public): .new() ← .new()
+    may be reached from _renderIntoTimed (private): .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .new() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .new() ← .pipeline_complete()
+anyrender_skia/gpu_common.rs:76  in .new()  — unsafe { instance.destroy_instance(None) };
+    may be reached from renderInto (public): .new() ← .paint_into() ← .render_into()
+    may be reached from render (public): .new() ← .from_data() ← .render()
+    may be reached from close (public): .new() ← .close()
+    may be reached from constructor (public): .new() ← .new()
+    may be reached from _renderIntoTimed (private): .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .new() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .new() ← .pipeline_complete()
+anyrender_skia/gpu_common.rs:82  in .new()  — unsafe { instance.destroy_instance(None) };
+    may be reached from renderInto (public): .new() ← .paint_into() ← .render_into()
+    may be reached from render (public): .new() ← .from_data() ← .render()
+    may be reached from close (public): .new() ← .close()
+    may be reached from constructor (public): .new() ← .new()
+    may be reached from _renderIntoTimed (private): .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .new() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .new() ← .pipeline_complete()
+anyrender_skia/gpu_common.rs:90  in .new()  — let device = match unsafe { instance.create_device(physical, &avk::DeviceCreateInfo::default().queue_create_in
+    may be reached from renderInto (public): .new() ← .paint_into() ← .render_into()
+    may be reached from render (public): .new() ← .from_data() ← .render()
+    may be reached from close (public): .new() ← .close()
+    may be reached from constructor (public): .new() ← .new()
+    may be reached from _renderIntoTimed (private): .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .new() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .new() ← .pipeline_complete()
+anyrender_skia/gpu_common.rs:93  in .new()  — unsafe { instance.destroy_instance(None) };
+    may be reached from renderInto (public): .new() ← .paint_into() ← .render_into()
+    may be reached from render (public): .new() ← .from_data() ← .render()
+    may be reached from close (public): .new() ← .close()
+    may be reached from constructor (public): .new() ← .new()
+    may be reached from _renderIntoTimed (private): .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .new() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .new() ← .pipeline_complete()
+anyrender_skia/gpu_common.rs:97  in .new()  — let queue = unsafe { device.get_device_queue(queue_family, 0) };
+    may be reached from renderInto (public): .new() ← .paint_into() ← .render_into()
+    may be reached from render (public): .new() ← .from_data() ← .render()
+    may be reached from close (public): .new() ← .close()
+    may be reached from constructor (public): .new() ← .new()
+    may be reached from _renderIntoTimed (private): .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .new() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .new() ← .pipeline_complete()
+anyrender_skia/gpu_common.rs:98  in .new()  — let name = unsafe { CStr::from_ptr(props.device_name.as_ptr()) }.to_string_lossy().into_owned();
+    may be reached from renderInto (public): .new() ← .paint_into() ← .render_into()
+    may be reached from render (public): .new() ← .from_data() ← .render()
+    may be reached from close (public): .new() ← .close()
+    may be reached from constructor (public): .new() ← .new()
+    may be reached from _renderIntoTimed (private): .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .new() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .new() ← .pipeline_complete()
+anyrender_skia/gpu_common.rs:114  in .with_backend()  — let get_proc = |gpo: GetProcOf| unsafe {
+    may be reached from renderInto (public): .with_backend() ← .new() ← .paint_into() ← .render_into()
+    may be reached from render (public): .with_backend() ← .new() ← .from_data() ← .render()
+    may be reached from close (public): .with_backend() ← .new() ← .close()
+    may be reached from constructor (public): .with_backend() ← .new() ← .new()
+    may be reached from _renderIntoTimed (private): .with_backend() ← .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .with_backend() ← .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .with_backend() ← .new() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .with_backend() ← .new() ← .pipeline_complete()
+anyrender_skia/gpu_common.rs:122  in .with_backend()  — let backend = unsafe {
+    may be reached from renderInto (public): .with_backend() ← .new() ← .paint_into() ← .render_into()
+    may be reached from render (public): .with_backend() ← .new() ← .from_data() ← .render()
+    may be reached from close (public): .with_backend() ← .new() ← .close()
+    may be reached from constructor (public): .with_backend() ← .new() ← .new()
+    may be reached from _renderIntoTimed (private): .with_backend() ← .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .with_backend() ← .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .with_backend() ← .new() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .with_backend() ← .new() ← .pipeline_complete()
+anyrender_skia/gpu_image_renderer.rs:215  in .new()  — let display = unsafe { Display::with_device(device, None) }.map_err(|e| err("EGL display on device failed", e)
+    may be reached from renderInto (public): .new() ← .paint_into() ← .render_into()
+    may be reached from render (public): .new() ← .from_data() ← .render()
+    may be reached from close (public): .new() ← .close()
+    may be reached from constructor (public): .new() ← .new()
+    may be reached from _renderIntoTimed (private): .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .new() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .new() ← .pipeline_complete()
+anyrender_skia/gpu_image_renderer.rs:220  in .new()  — let config = unsafe { display.find_configs(template) }
+    may be reached from renderInto (public): .new() ← .paint_into() ← .render_into()
+    may be reached from render (public): .new() ← .from_data() ← .render()
+    may be reached from close (public): .new() ← .close()
+    may be reached from constructor (public): .new() ← .new()
+    may be reached from _renderIntoTimed (private): .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .new() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .new() ← .pipeline_complete()
+anyrender_skia/gpu_image_renderer.rs:225  in .new()  — let context = unsafe { display.create_context(&config, &attrs) }
+    may be reached from renderInto (public): .new() ← .paint_into() ← .render_into()
+    may be reached from render (public): .new() ← .from_data() ← .render()
+    may be reached from close (public): .new() ← .close()
+    may be reached from constructor (public): .new() ← .new()
+    may be reached from _renderIntoTimed (private): .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .new() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .new() ← .pipeline_complete()
+anyrender_skia/gpu_image_renderer.rs:249  in .new()  — let get: GetString = unsafe { std::mem::transmute(f) };
+    may be reached from renderInto (public): .new() ← .paint_into() ← .render_into()
+    may be reached from render (public): .new() ← .from_data() ← .render()
+    may be reached from close (public): .new() ← .close()
+    may be reached from constructor (public): .new() ← .new()
+    may be reached from _renderIntoTimed (private): .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .new() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .new() ← .pipeline_complete()
+anyrender_skia/gpu_image_renderer.rs:250  in .new()  — let s = |id: u32| unsafe {
+    may be reached from renderInto (public): .new() ← .paint_into() ← .render_into()
+    may be reached from render (public): .new() ← .from_data() ← .render()
+    may be reached from close (public): .new() ← .close()
+    may be reached from constructor (public): .new() ← .new()
+    may be reached from _renderIntoTimed (private): .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .new() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .new() ← .pipeline_complete()
+napi/bindgen_runtime/js_values/buffer.rs:565  in .as_mut()  — unsafe { slice::from_raw_parts_mut(self.inner.as_ptr(), self.len) }
+    may be reached from renderInto (public): .as_mut() ← .prepare_frame() ← .render_into()
+    may be reached from render (public): .as_mut() ← .prepare_frame() ← .render()
+    may be reached from close (public): .as_mut() ← .unwrap() ← .new() ← .close()
+    may be reached from constructor (public): .as_mut() ← .unwrap() ← .new() ← .new()
+    may be reached from _renderIntoTimed (private): .as_mut() ← .prepare_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): .as_mut() ← .prepare_timed() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .as_mut() ← .pipeline_submit_inner() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .as_mut() ← .pipeline_complete() ← .pipeline_complete()
+napi/env.rs:886  in .unwrap()  — unsafe {
+    may be reached from renderInto (public): .unwrap() ← .new() ← .paint_into() ← .render_into()
+    may be reached from render (public): .unwrap() ← .new() ← .from_data() ← .render()
+    may be reached from close (public): .unwrap() ← .new() ← .close()
+    may be reached from constructor (public): .unwrap() ← .new() ← .new()
+    may be reached from _renderIntoTimed (private): .unwrap() ← .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .unwrap() ← .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .unwrap() ← .new() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .unwrap() ← .new() ← .pipeline_complete()
+skia-safe/core/surface.rs:30  in null()  — Surface::from_ptr(unsafe { sb::C_SkSurfaces_Null(size.width, size.height) })
+    may be reached from renderInto (public): null() ← .new() ← .paint_into() ← .render_into()
+    may be reached from render (public): null() ← .new() ← .from_data() ← .render()
+    may be reached from close (public): null() ← .new() ← .close()
+    may be reached from constructor (public): null() ← .new() ← .new()
+    may be reached from _renderIntoTimed (private): null() ← .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): null() ← .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): null() ← .new() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): null() ← .new() ← .pipeline_complete()
+skia-safe/core/surface.rs:275  in .width()  — unsafe { sb::C_SkSurface_width(self.native()) }
+    may be reached from renderInto (public): .width() ← .try_render() ← .paint_into() ← .render_into()
+    may be reached from render (public): .width() ← .try_render() ← .paint_into() ← .render()
+    may be reached from close (public): .width() ← .make_surface() ← .new() ← .close()
+    may be reached from constructor (public): .width() ← .make_surface() ← .new() ← .new()
+    may be reached from _renderIntoTimed (private): .width() ← .make_surface() ← .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .width() ← .make_surface() ← .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .width() ← .pipeline_submit() ← .pipeline_submit_inner() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .width() ← .make_surface() ← .new() ← .pipeline_complete()
+skia-safe/core/surface.rs:283  in .height()  — unsafe { sb::C_SkSurface_height(self.native()) }
+    may be reached from renderInto (public): .height() ← .try_render() ← .paint_into() ← .render_into()
+    may be reached from render (public): .height() ← .try_render() ← .paint_into() ← .render()
+    may be reached from close (public): .height() ← .make_surface() ← .new() ← .close()
+    may be reached from constructor (public): .height() ← .make_surface() ← .new() ← .new()
+    may be reached from _renderIntoTimed (private): .height() ← .make_surface() ← .new() ← .render_into_timed()
+    may be reached from _renderTimed (private): .height() ← .make_surface() ← .new() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .height() ← .pipeline_submit() ← .pipeline_submit_inner() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .height() ← .make_surface() ← .new() ← .pipeline_complete()
+anyrender_skia/gpu_common.rs:139  in .drop()  — unsafe {
+    may be reached from renderInto (public): .drop() ← .render_timed() ← .paint_into() ← .render_into()
+    may be reached from render (public): .drop() ← .render_timed() ← .paint_into() ← .render()
+    may be reached from close (public): .drop() ← .pipeline_stop() ← .close()
+    may be reached from _renderIntoTimed (private): .drop() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): .drop() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .drop() ← .pipeline_stop() ← .render_frames_experimental()
+    may be reached from Buffer finalizer (napi-rs drop_buffer): .drop() ← drop_buffer()
+anyrender_skia/gpu_image_renderer.rs:170  in .drop()  — unsafe {
+    may be reached from renderInto (public): .drop() ← .render_timed() ← .paint_into() ← .render_into()
+    may be reached from render (public): .drop() ← .render_timed() ← .paint_into() ← .render()
+    may be reached from close (public): .drop() ← .pipeline_stop() ← .close()
+    may be reached from _renderIntoTimed (private): .drop() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): .drop() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .drop() ← .pipeline_stop() ← .render_frames_experimental()
+    may be reached from Buffer finalizer (napi-rs drop_buffer): .drop() ← drop_buffer()
+anyrender_skia/gpu_image_renderer.rs:432  in .drop()  — unsafe { gl::DeleteSync(fence) };
+    may be reached from renderInto (public): .drop() ← .render_timed() ← .paint_into() ← .render_into()
+    may be reached from render (public): .drop() ← .render_timed() ← .paint_into() ← .render()
+    may be reached from close (public): .drop() ← .pipeline_stop() ← .close()
+    may be reached from _renderIntoTimed (private): .drop() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): .drop() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .drop() ← .pipeline_stop() ← .render_frames_experimental()
+    may be reached from Buffer finalizer (napi-rs drop_buffer): .drop() ← drop_buffer()
+anyrender_skia/gpu_image_renderer.rs:436  in .drop()  — unsafe { gl::DeleteBuffers(self.pbos.len() as i32, self.pbos.as_ptr()) };
+    may be reached from renderInto (public): .drop() ← .render_timed() ← .paint_into() ← .render_into()
+    may be reached from render (public): .drop() ← .render_timed() ← .paint_into() ← .render()
+    may be reached from close (public): .drop() ← .pipeline_stop() ← .close()
+    may be reached from _renderIntoTimed (private): .drop() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): .drop() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .drop() ← .pipeline_stop() ← .render_frames_experimental()
+    may be reached from Buffer finalizer (napi-rs drop_buffer): .drop() ← drop_buffer()
+anyrender_skia/graphite_image_renderer.rs:53  in .drop()  — unsafe {
+    may be reached from renderInto (public): .drop() ← .render_timed() ← .paint_into() ← .render_into()
+    may be reached from render (public): .drop() ← .render_timed() ← .paint_into() ← .render()
+    may be reached from close (public): .drop() ← .pipeline_stop() ← .close()
+    may be reached from _renderIntoTimed (private): .drop() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): .drop() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .drop() ← .pipeline_stop() ← .render_frames_experimental()
+    may be reached from Buffer finalizer (napi-rs drop_buffer): .drop() ← drop_buffer()
+napi/bindgen_runtime/js_values/buffer.rs:443  in .drop()  — unsafe { sys::napi_reference_unref(env, ref_, &mut ref_count) },
+    may be reached from renderInto (public): .drop() ← .render_timed() ← .paint_into() ← .render_into()
+    may be reached from render (public): .drop() ← .render_timed() ← .paint_into() ← .render()
+    may be reached from close (public): .drop() ← .pipeline_stop() ← .close()
+    may be reached from _renderIntoTimed (private): .drop() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): .drop() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .drop() ← .pipeline_stop() ← .render_frames_experimental()
+    may be reached from Buffer finalizer (napi-rs drop_buffer): .drop() ← drop_buffer()
+napi/bindgen_runtime/js_values/buffer.rs:452  in .drop()  — unsafe { sys::napi_delete_reference(env, ref_) },
+    may be reached from renderInto (public): .drop() ← .render_timed() ← .paint_into() ← .render_into()
+    may be reached from render (public): .drop() ← .render_timed() ← .paint_into() ← .render()
+    may be reached from close (public): .drop() ← .pipeline_stop() ← .close()
+    may be reached from _renderIntoTimed (private): .drop() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): .drop() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .drop() ← .pipeline_stop() ← .render_frames_experimental()
+    may be reached from Buffer finalizer (napi-rs drop_buffer): .drop() ← drop_buffer()
+napi/bindgen_runtime/js_values/buffer.rs:458  in .drop()  — unsafe { sys::napi_call_threadsafe_function(handle.get_raw(), ref_.cast(), 1) };
+    may be reached from renderInto (public): .drop() ← .render_timed() ← .paint_into() ← .render_into()
+    may be reached from render (public): .drop() ← .render_timed() ← .paint_into() ← .render()
+    may be reached from close (public): .drop() ← .pipeline_stop() ← .close()
+    may be reached from _renderIntoTimed (private): .drop() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): .drop() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .drop() ← .pipeline_stop() ← .render_frames_experimental()
+    may be reached from Buffer finalizer (napi-rs drop_buffer): .drop() ← drop_buffer()
+napi/bindgen_runtime/js_values/buffer.rs:476  in .drop()  — unsafe { sys::napi_reference_unref(env, ref_, &mut ref_count) },
+    may be reached from renderInto (public): .drop() ← .render_timed() ← .paint_into() ← .render_into()
+    may be reached from render (public): .drop() ← .render_timed() ← .paint_into() ← .render()
+    may be reached from close (public): .drop() ← .pipeline_stop() ← .close()
+    may be reached from _renderIntoTimed (private): .drop() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): .drop() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .drop() ← .pipeline_stop() ← .render_frames_experimental()
+    may be reached from Buffer finalizer (napi-rs drop_buffer): .drop() ← drop_buffer()
+napi/bindgen_runtime/js_values/buffer.rs:485  in .drop()  — unsafe { sys::napi_delete_reference(env, ref_) },
+    may be reached from renderInto (public): .drop() ← .render_timed() ← .paint_into() ← .render_into()
+    may be reached from render (public): .drop() ← .render_timed() ← .paint_into() ← .render()
+    may be reached from close (public): .drop() ← .pipeline_stop() ← .close()
+    may be reached from _renderIntoTimed (private): .drop() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): .drop() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .drop() ← .pipeline_stop() ← .render_frames_experimental()
+    may be reached from Buffer finalizer (napi-rs drop_buffer): .drop() ← drop_buffer()
+napi/bindgen_runtime/js_values/buffer.rs:489  in .drop()  — unsafe { Vec::from_raw_parts(self.inner.as_ptr(), self.len, self.capacity) };
+    may be reached from renderInto (public): .drop() ← .render_timed() ← .paint_into() ← .render_into()
+    may be reached from render (public): .drop() ← .render_timed() ← .paint_into() ← .render()
+    may be reached from close (public): .drop() ← .pipeline_stop() ← .close()
+    may be reached from _renderIntoTimed (private): .drop() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): .drop() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .drop() ← .pipeline_stop() ← .render_frames_experimental()
+    may be reached from Buffer finalizer (napi-rs drop_buffer): .drop() ← drop_buffer()
+canvas-html/target.rs:84  in .bytes()  — pub(crate) unsafe fn bytes(&mut self) -> &mut [u8] {
+    may be reached from renderInto (public): .bytes() ← .render_into()
+    may be reached from render (public): .bytes() ← .try_render() ← .paint_into() ← .render()
+    may be reached from _renderIntoTimed (private): .bytes() ← .render_into_timed()
+    may be reached from _renderTimed (private): .bytes() ← .try_render() ← .paint_into() ← .paint_timed() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .bytes() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .bytes() ← .pipeline_complete()
+canvas-html/target.rs:88  in .bytes()  — unsafe { std::slice::from_raw_parts_mut(self.ptr, self.len) }
+    may be reached from renderInto (public): .bytes() ← .render_into()
+    may be reached from render (public): .bytes() ← .try_render() ← .paint_into() ← .render()
+    may be reached from _renderIntoTimed (private): .bytes() ← .render_into_timed()
+    may be reached from _renderTimed (private): .bytes() ← .try_render() ← .paint_into() ← .paint_timed() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .bytes() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .bytes() ← .pipeline_complete()
+skia-safe/core/surface.rs:592  in .read_pixels()  — unsafe {
+    may be reached from renderInto (public): .read_pixels() ← .render_timed() ← .paint_into() ← .render_into()
+    may be reached from render (public): .read_pixels() ← .render_timed() ← .paint_into() ← .render()
+    may be reached from _renderIntoTimed (private): .read_pixels() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): .read_pixels() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .read_pixels() ← .pipeline_complete() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .read_pixels() ← .pipeline_complete() ← .pipeline_complete()
+anyrender_skia/scene.rs:1013  in shader_from_image_brush()  — let pixels = unsafe {
+    may be reached from renderInto (public): shader_from_image_brush() ← .set_paint_brush() ← .fill() ← .paint_into() ← .render_into()
+    may be reached from render (public): shader_from_image_brush() ← .set_paint_brush() ← .fill() ← .paint_into() ← .render()
+    may be reached from _renderIntoTimed (private): shader_from_image_brush() ← .set_paint_brush() ← .fill() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): shader_from_image_brush() ← .set_paint_brush() ← .fill() ← .paint_into() ← .paint_timed() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): shader_from_image_brush() ← .set_paint_brush() ← .fill() ← .pipeline_submit_inner() ← .render_frames_experimental()
+canvas-html/frames.rs:32  in alloc_frame()  — unsafe {
+    may be reached from renderInto (public): alloc_frame() ← .paint_into() ← .render_into()
+    may be reached from render (public): alloc_frame() ← .next_frame() ← .render()
+    may be reached from _renderIntoTimed (private): alloc_frame() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): alloc_frame() ← .next_frame() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): alloc_frame() ← .paint_into() ← .render_frames_experimental()
+napi/bindgen_runtime/js_values/buffer.rs:65  in create_external_buffer()  — unsafe fn create_external_buffer(
+    may be reached from renderInto (public): create_external_buffer() ← .from_data() ← .render_timed() ← .paint_into() ← .render_into()
+    may be reached from render (public): create_external_buffer() ← .from_data() ← .render()
+    may be reached from _renderIntoTimed (private): create_external_buffer() ← .from_data() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): create_external_buffer() ← .from_data() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): create_external_buffer() ← .from_data() ← .render_timed() ← .paint_into() ← .render_frames_experimental()
+napi/bindgen_runtime/js_values/buffer.rs:87  in create_external_buffer()  — unsafe {
+    may be reached from renderInto (public): create_external_buffer() ← .from_data() ← .render_timed() ← .paint_into() ← .render_into()
+    may be reached from render (public): create_external_buffer() ← .from_data() ← .render()
+    may be reached from _renderIntoTimed (private): create_external_buffer() ← .from_data() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): create_external_buffer() ← .from_data() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): create_external_buffer() ← .from_data() ← .render_timed() ← .paint_into() ← .render_frames_experimental()
+napi/bindgen_runtime/js_values/buffer.rs:104  in buffer_data_ptr()  — unsafe fn buffer_data_ptr(env: sys::napi_env, buf: sys::napi_value) -> Result<*mut u8> {
+    may be reached from renderInto (public): buffer_data_ptr() ← .from_data() ← .render_timed() ← .paint_into() ← .render_into()
+    may be reached from render (public): buffer_data_ptr() ← .from_data() ← .render()
+    may be reached from _renderIntoTimed (private): buffer_data_ptr() ← .from_data() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): buffer_data_ptr() ← .from_data() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): buffer_data_ptr() ← .from_data() ← .render_timed() ← .paint_into() ← .render_frames_experimental()
+napi/bindgen_runtime/js_values/buffer.rs:108  in buffer_data_ptr()  — unsafe { sys::napi_get_buffer_info(env, buf, &mut data, &mut len) },
+    may be reached from renderInto (public): buffer_data_ptr() ← .from_data() ← .render_timed() ← .paint_into() ← .render_into()
+    may be reached from render (public): buffer_data_ptr() ← .from_data() ← .render()
+    may be reached from _renderIntoTimed (private): buffer_data_ptr() ← .from_data() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): buffer_data_ptr() ← .from_data() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): buffer_data_ptr() ← .from_data() ← .render_timed() ← .paint_into() ← .render_frames_experimental()
+napi/bindgen_runtime/js_values/buffer.rs:135  in .from_data()  — let mut status = unsafe {
+    may be reached from renderInto (public): .from_data() ← .render_timed() ← .paint_into() ← .render_into()
+    may be reached from render (public): .from_data() ← .render()
+    may be reached from _renderIntoTimed (private): .from_data() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): .from_data() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .from_data() ← .render_timed() ← .paint_into() ← .render_frames_experimental()
+napi/bindgen_runtime/js_values/buffer.rs:147  in .from_data()  — unsafe {
+    may be reached from renderInto (public): .from_data() ← .render_timed() ← .paint_into() ← .render_into()
+    may be reached from render (public): .from_data() ← .render()
+    may be reached from _renderIntoTimed (private): .from_data() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): .from_data() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .from_data() ← .render_timed() ← .paint_into() ← .render_frames_experimental()
+napi/bindgen_runtime/js_values/buffer.rs:150  in .from_data()  — status = unsafe {
+    may be reached from renderInto (public): .from_data() ← .render_timed() ← .paint_into() ← .render_into()
+    may be reached from render (public): .from_data() ← .render()
+    may be reached from _renderIntoTimed (private): .from_data() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): .from_data() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .from_data() ← .render_timed() ← .paint_into() ← .render_frames_experimental()
+napi/bindgen_runtime/js_values/buffer.rs:169  in .from_data()  — unsafe { buffer_data_ptr(env.0, buf)? }
+    may be reached from renderInto (public): .from_data() ← .render_timed() ← .paint_into() ← .render_into()
+    may be reached from render (public): .from_data() ← .render()
+    may be reached from _renderIntoTimed (private): .from_data() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): .from_data() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .from_data() ← .render_timed() ← .paint_into() ← .render_frames_experimental()
+napi/bindgen_runtime/js_values/buffer.rs:178  in .from_data()  — unsafe { slice::from_raw_parts_mut(data_ptr, len) }
+    may be reached from renderInto (public): .from_data() ← .render_timed() ← .paint_into() ← .render_into()
+    may be reached from render (public): .from_data() ← .render()
+    may be reached from _renderIntoTimed (private): .from_data() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): .from_data() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .from_data() ← .render_timed() ← .paint_into() ← .render_frames_experimental()
+skia-safe/core/surface.rs:124  in wrap_pixels()  — Surface::from_ptr(unsafe {
+    may be reached from renderInto (public): wrap_pixels() ← .try_render() ← .paint_into() ← .render_into()
+    may be reached from render (public): wrap_pixels() ← .try_render() ← .paint_into() ← .render()
+    may be reached from _renderIntoTimed (private): wrap_pixels() ← .try_render() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): wrap_pixels() ← .try_render() ← .paint_into() ← .paint_timed() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): wrap_pixels() ← .try_render() ← .paint_into() ← .render_frames_experimental()
+skia-safe/core/surface.rs:393  in .canvas()  — let canvas_ref = unsafe { &*self.native_mut().getCanvas() };
+    may be reached from renderInto (public): .canvas() ← .render_timed() ← .paint_into() ← .render_into()
+    may be reached from render (public): .canvas() ← .render_timed() ← .paint_into() ← .render()
+    may be reached from _renderIntoTimed (private): .canvas() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_into_timed()
+    may be reached from _renderTimed (private): .canvas() ← .render_timed() ← .paint_into() ← .paint_timed() ← .render_timed()
+    may be reached from _renderFramesExperimental (private): .canvas() ← .pipeline_submit() ← .pipeline_submit_inner() ← .render_frames_experimental()
+canvas-html/target.rs:39  in .from_js()  — check(unsafe { sys::napi_is_typedarray(raw_env, raw, &mut is_typedarray) })?;
+    may be reached from renderInto (public): .from_js() ← .checked_target() ← .render_into()
+    may be reached from _renderIntoTimed (private): .from_js() ← .checked_target() ← .render_into_timed()
+    may be reached from _renderFramesExperimental (private): .from_js() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .from_js() ← .checked_target() ← .pipeline_complete()
+canvas-html/target.rs:49  in .from_js()  — check(unsafe {
+    may be reached from renderInto (public): .from_js() ← .checked_target() ← .render_into()
+    may be reached from _renderIntoTimed (private): .from_js() ← .checked_target() ← .render_into_timed()
+    may be reached from _renderFramesExperimental (private): .from_js() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .from_js() ← .checked_target() ← .pipeline_complete()
+canvas-html/target.rs:58  in .from_js()  — check(unsafe { sys::napi_is_arraybuffer(raw_env, arraybuffer, &mut is_plain) })?;
+    may be reached from renderInto (public): .from_js() ← .checked_target() ← .render_into()
+    may be reached from _renderIntoTimed (private): .from_js() ← .checked_target() ← .render_into_timed()
+    may be reached from _renderFramesExperimental (private): .from_js() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .from_js() ← .checked_target() ← .pipeline_complete()
+canvas-html/target.rs:64  in .from_js()  — check(unsafe { sys::napi_is_detached_arraybuffer(raw_env, arraybuffer, &mut detached) })?;
+    may be reached from renderInto (public): .from_js() ← .checked_target() ← .render_into()
+    may be reached from _renderIntoTimed (private): .from_js() ← .checked_target() ← .render_into_timed()
+    may be reached from _renderFramesExperimental (private): .from_js() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .from_js() ← .checked_target() ← .pipeline_complete()
+napi/env.rs:752  in .throw_range_error()  — check_status!(unsafe {
+    may be reached from renderInto (public): .throw_range_error() ← range_error() ← .from_js() ← .checked_target() ← .render_into()
+    may be reached from _renderIntoTimed (private): .throw_range_error() ← range_error() ← .from_js() ← .checked_target() ← .render_into_timed()
+    may be reached from _renderFramesExperimental (private): .throw_range_error() ← range_error() ← .from_js() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .throw_range_error() ← range_error() ← .from_js() ← .checked_target() ← .pipeline_complete()
+napi/env.rs:765  in .throw_type_error()  — check_status!(unsafe {
+    may be reached from renderInto (public): .throw_type_error() ← type_error_code() ← .from_js() ← .checked_target() ← .render_into()
+    may be reached from _renderIntoTimed (private): .throw_type_error() ← type_error_code() ← .from_js() ← .checked_target() ← .render_into_timed()
+    may be reached from _renderFramesExperimental (private): .throw_type_error() ← type_error_code() ← .from_js() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .throw_type_error() ← type_error_code() ← .from_js() ← .checked_target() ← .pipeline_complete()
+anyrender_skia/gpu_image_renderer.rs:606  in .pipeline_complete()  — let status = unsafe { gl::ClientWaitSync(fence, gl::SYNC_FLUSH_COMMANDS_BIT, 10_000_000_000) };
+    may be reached from _renderFramesExperimental (private): .pipeline_complete() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .pipeline_complete() ← .pipeline_complete()
+anyrender_skia/gpu_image_renderer.rs:607  in .pipeline_complete()  — unsafe { gl::DeleteSync(fence) };
+    may be reached from _renderFramesExperimental (private): .pipeline_complete() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .pipeline_complete() ← .pipeline_complete()
+anyrender_skia/gpu_image_renderer.rs:616  in .pipeline_complete()  — let ok = unsafe {
+    may be reached from _renderFramesExperimental (private): .pipeline_complete() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .pipeline_complete() ← .pipeline_complete()
+canvas-html/lib.rs:1107  in .pipeline_complete()  — let c = self.gpu_renderer()?.pipeline_complete(unsafe { target.bytes() }).map_err(|e| Error::from_reason(forma
+    may be reached from _renderFramesExperimental (private): .pipeline_complete() ← .render_frames_experimental()
+    may be reached from _pipelineComplete (private): .pipeline_complete()
+anyrender_skia/gpu_image_renderer.rs:480  in .pipeline_start()  — unsafe {
+    may be reached from _renderFramesExperimental (private): .pipeline_start() ← .render_frames_experimental()
+anyrender_skia/gpu_image_renderer.rs:548  in .pipeline_submit()  — unsafe {
+    may be reached from _renderFramesExperimental (private): .pipeline_submit() ← .pipeline_submit_inner() ← .render_frames_experimental()
+canvas-html/lib.rs:982  in .render_into()  — self.paint_into(Some(unsafe { target.bytes() }))?;
+    may be reached from renderInto (public): .render_into()
+canvas-html/lib.rs:995  in .render_into_timed()  — self.paint_timed(&mut t, Some(unsafe { target.bytes() }))?;
+    may be reached from _renderIntoTimed (private): .render_into_timed()
+canvas-html/lib.rs:1174  in .render_frames_experimental()  — let p = self.paint_into(Some(unsafe { targets[i % k].bytes() }))?;
+    may be reached from _renderFramesExperimental (private): .render_frames_experimental()
+canvas-html/lib.rs:1196  in .render_frames_experimental()  — let c = self.gpu_renderer()?.pipeline_complete(unsafe { targets[next_out % k].bytes() }).map_err(|e| Error::fr
+    may be reached from _renderFramesExperimental (private): .render_frames_experimental()
+canvas-html/lib.rs:1208  in .render_frames_experimental()  — let c = self.gpu_renderer()?.pipeline_complete(unsafe { targets[next_out % k].bytes() }).map_err(|e| Error::fr
+    may be reached from _renderFramesExperimental (private): .render_frames_experimental()
+napi/bindgen_runtime/mod.rs:123  in drop_buffer()  — unsafe {
+    may be reached from Buffer finalizer (napi-rs drop_buffer): drop_buffer()
+canvas-html/lib.rs:1243  in .native_heap()  — let m = unsafe { libc::mallinfo2() };
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:204  in .from_external()  — pub unsafe fn from_external<T: 'env, F: FnOnce(Env, T)>(
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:229  in .from_external()  — let mut status = unsafe {
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:243  in .from_external()  — unsafe { sys::napi_create_buffer_copy(env.0, len, data.cast(), ptr::null_mut(), &mut buf) };
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:257  in .from_external()  — unsafe { buffer_data_ptr(env.0, buf)? }
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:266  in .from_external()  — unsafe { slice::from_raw_parts_mut(data_ptr, len) }
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:280  in .copy_from()  — unsafe {
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:288  in .copy_from()  — let copied_ptr = unsafe { buffer_data_ptr(env.0, buf)? };
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:293  in .copy_from()  — unsafe { slice::from_raw_parts_mut(copied_ptr, len) }
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:304  in .into_buffer()  — unsafe { Buffer::from_napi_value(env.0, self.raw_value) }
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:321  in .from_napi_value()  — unsafe fn from_napi_value(env: sys::napi_env, napi_val: sys::napi_value) -> Result<Self> {
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:325  in .from_napi_value()  — unsafe { sys::napi_get_buffer_info(env, napi_val, &mut buf, &mut len) },
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:339  in .from_napi_value()  — unsafe { slice::from_raw_parts_mut(buf.cast(), len) }
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:349  in .to_napi_value()  — unsafe fn to_napi_value(env: sys::napi_env, val: Self) -> Result<sys::napi_value> {
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:365  in .validate()  — unsafe fn validate(env: sys::napi_env, napi_val: sys::napi_value) -> Result<sys::napi_value> {
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:368  in .validate()  — unsafe { sys::napi_is_buffer(env, napi_val, &mut is_buffer) },
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:496  in ?  — unsafe impl Send for Buffer {}
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:497  in ?  — unsafe impl Sync for Buffer {}
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:594  in .from_napi_value()  — unsafe fn from_napi_value(env: sys::napi_env, napi_val: sys::napi_value) -> Result<Self> {
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:599  in .from_napi_value()  — unsafe { sys::napi_create_reference(env, napi_val, 1, &mut ref_) },
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:603  in .from_napi_value()  — unsafe { sys::napi_get_buffer_info(env, napi_val, &mut buf, &mut len as *mut usize) },
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:632  in .to_napi_value()  — unsafe fn to_napi_value(env: sys::napi_env, mut val: Self) -> Result<sys::napi_value> {
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:637  in .to_napi_value()  — unsafe { sys::napi_get_reference_value(env, ref_, &mut buf) },
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:642  in .to_napi_value()  — unsafe { sys::napi_delete_reference(env, ref_) },
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:655  in .to_napi_value()  — unsafe { sys::napi_create_buffer(env, len, ptr::null_mut(), &mut ret) }
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:659  in .to_napi_value()  — let mut status = unsafe {
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:670  in .to_napi_value()  — let value = unsafe { Box::from_raw(val_box_ptr) };
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:671  in .to_napi_value()  — status = unsafe {
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:691  in .validate()  — unsafe fn validate(env: sys::napi_env, napi_val: sys::napi_value) -> Result<sys::napi_value> {
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/js_values/buffer.rs:694  in .validate()  — unsafe { sys::napi_is_buffer(env, napi_val, &mut is_buffer) },
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/mod.rs:68  in raw_finalize_unchecked()  — let data: Box<T> = unsafe { Box::from_raw(finalize_data.cast()) };
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/mod.rs:79  in raw_finalize_unchecked()  — let finalize_callbacks_rc = unsafe { Arc::from_raw(finalize_callbacks_ptr) };
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/mod.rs:91  in raw_finalize_unchecked()  — let finalize = unsafe { Box::from_raw(finalize_callbacks_rc.get()) };
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/mod.rs:93  in raw_finalize_unchecked()  — let delete_reference_status = unsafe { sys::napi_delete_reference(env, ref_val) };
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/mod.rs:103  in raw_finalize_unchecked()  — unsafe { e.throw_into(env) };
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/mod.rs:137  in drop_buffer_slice()  — let (len, cap): (usize, usize) = *unsafe { Box::from_raw(finalize_hint.cast()) };
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/mod.rs:148  in drop_buffer_slice()  — unsafe {
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/mod.rs:162  in create_object_with_properties()  — pub unsafe fn create_object_with_properties(
+    not reachable from the frame-output entry points
+napi/bindgen_runtime/mod.rs:186  in ?  — pub unsafe fn create_object_with_properties(
+    not reachable from the frame-output entry points
+napi/env.rs:88  in .get_boolean()  — check_status!(unsafe { sys::napi_get_boolean(self.0, value, &mut raw_value) })?;
+    not reachable from the frame-output entry points
+napi/env.rs:89  in .get_boolean()  — Ok(unsafe { JsBoolean::from_raw_unchecked(self.0, raw_value) })
+    not reachable from the frame-output entry points
+napi/env.rs:95  in .create_int32()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:98  in .create_int32()  — unsafe { JsNumber::from_napi_value(self.0, raw_value) }
+    not reachable from the frame-output entry points
+napi/env.rs:104  in .create_int64()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:107  in .create_int64()  — unsafe { JsNumber::from_napi_value(self.0, raw_value) }
+    not reachable from the frame-output entry points
+napi/env.rs:113  in .create_uint32()  — check_status!(unsafe { sys::napi_create_uint32(self.0, number, &mut raw_value) })?;
+    not reachable from the frame-output entry points
+napi/env.rs:114  in .create_uint32()  — unsafe { JsNumber::from_napi_value(self.0, raw_value) }
+    not reachable from the frame-output entry points
+napi/env.rs:120  in .create_double()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:123  in .create_double()  — unsafe { JsNumber::from_napi_value(self.0, raw_value) }
+    not reachable from the frame-output entry points
+napi/env.rs:131  in .create_bigint_from_i64()  — check_status!(unsafe { sys::napi_create_bigint_int64(self.0, value, &mut raw_value) })?;
+    not reachable from the frame-output entry points
+napi/env.rs:139  in .create_bigint_from_u64()  — check_status!(unsafe { sys::napi_create_bigint_uint64(self.0, value, &mut raw_value) })?;
+    not reachable from the frame-output entry points
+napi/env.rs:146  in .create_bigint_from_i128()  — unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:156  in .create_bigint_from_u128()  — unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:170  in .create_bigint_from_words()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:188  in .create_string()  — unsafe { self.create_string_from_c_char(s.as_ptr().cast(), s.len() as isize) }
+    not reachable from the frame-output entry points
+napi/env.rs:193  in .create_string_from_std()  — unsafe { self.create_string_from_c_char(s.as_ptr().cast(), s.len() as isize) }
+    not reachable from the frame-output entry points
+napi/env.rs:204  in .create_string_from_c_char()  — pub unsafe fn create_string_from_c_char<'env>(
+    not reachable from the frame-output entry points
+napi/env.rs:210  in .create_string_from_c_char()  — check_status!(unsafe { sys::napi_create_string_utf8(self.0, data_ptr, len, &mut raw_value) })?;
+    not reachable from the frame-output entry points
+napi/env.rs:211  in .create_string_from_c_char()  — unsafe { JsString::from_napi_value(self.0, raw_value) }
+    not reachable from the frame-output entry points
+napi/env.rs:218  in .create_string_utf16()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:221  in .create_string_utf16()  — unsafe { JsString::from_napi_value(self.0, raw_value) }
+    not reachable from the frame-output entry points
+napi/env.rs:228  in .create_string_latin1()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:236  in .create_string_latin1()  — unsafe { JsString::from_napi_value(self.0, raw_value) }
+    not reachable from the frame-output entry points
+napi/env.rs:242  in .create_symbol()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:266  in .create_object()  — check_status!(unsafe { sys::napi_create_object(self.0, &mut raw_value) })?;
+    not reachable from the frame-output entry points
+napi/env.rs:267  in .create_object()  — Ok(unsafe { JsObject::from_raw_unchecked(self.0, raw_value) })
+    not reachable from the frame-output entry points
+napi/env.rs:274  in .create_empty_array()  — check_status!(unsafe { sys::napi_create_array(self.0, &mut raw_value) })?;
+    not reachable from the frame-output entry points
+napi/env.rs:275  in .create_empty_array()  — Ok(unsafe { JsObject::from_raw_unchecked(self.0, raw_value) })
+    not reachable from the frame-output entry points
+napi/env.rs:282  in .create_array_with_length()  — check_status!(unsafe { sys::napi_create_array_with_length(self.0, length, &mut raw_value) })?;
+    not reachable from the frame-output entry points
+napi/env.rs:283  in .create_array_with_length()  — Ok(unsafe { JsObject::from_raw_unchecked(self.0, raw_value) })
+    not reachable from the frame-output entry points
+napi/env.rs:292  in .create_buffer()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:305  in .create_buffer()  — unsafe { Vec::from_raw_parts(data_ptr as *mut _, length, length) }
+    not reachable from the frame-output entry points
+napi/env.rs:319  in .create_buffer_with_data()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:380  in .create_buffer_with_borrowed_data()  — pub unsafe fn create_buffer_with_borrowed_data<Hint, Finalize>(
+    not reachable from the frame-output entry points
+napi/env.rs:398  in .create_buffer_with_borrowed_data()  — unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:430  in .create_buffer_with_borrowed_data()  — mem::ManuallyDrop::new(unsafe { Vec::from_raw_parts(data, length, length) }),
+    not reachable from the frame-output entry points
+napi/env.rs:442  in .adjust_external_memory()  — check_status!(unsafe { sys::napi_adjust_external_memory(self.0, size, &mut changed) })?;
+    not reachable from the frame-output entry points
+napi/env.rs:465  in .create_buffer_copy()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:483  in .create_buffer_copy()  — unsafe { Vec::from_raw_parts(copy_data as *mut u8, length, length) }
+    not reachable from the frame-output entry points
+napi/env.rs:493  in .create_arraybuffer()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:498  in .create_arraybuffer()  — unsafe { JsArrayBuffer::from_raw_unchecked(self.0, raw_value) },
+    not reachable from the frame-output entry points
+napi/env.rs:515  in .create_arraybuffer_with_data()  — unsafe { sys::napi_create_arraybuffer(self.0, length, ptr::null_mut(), &mut raw_value) },
+    not reachable from the frame-output entry points
+napi/env.rs:520  in .create_arraybuffer_with_data()  — let mut status = unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:531  in .create_arraybuffer_with_data()  — unsafe { drop(Box::from_raw(hint_ptr)) };
+    not reachable from the frame-output entry points
+napi/env.rs:533  in .create_arraybuffer_with_data()  — status = unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:538  in .create_arraybuffer_with_data()  — unsafe { ptr::copy_nonoverlapping(data_ptr, underlying_data.cast(), length) };
+    not reachable from the frame-output entry points
+napi/env.rs:574  in .create_arraybuffer_with_borrowed_data()  — pub unsafe fn create_arraybuffer_with_borrowed_data<Hint, Finalize>(
+    not reachable from the frame-output entry points
+napi/env.rs:589  in .create_arraybuffer_with_borrowed_data()  — unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:656  in .create_function()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:667  in .create_function()  — unsafe { Function::<Args, Return>::from_napi_value(self.0, raw_result) }
+    not reachable from the frame-output entry points
+napi/env.rs:684  in .create_function_from_closure()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:703  in .create_function_from_closure()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:714  in .create_function_from_closure()  — unsafe { Function::from_napi_value(self.0, raw_result) }
+    not reachable from the frame-output entry points
+napi/env.rs:726  in .get_last_error_info()  — check_status!(unsafe { sys::napi_get_last_error_info(self.0, &mut raw_extended_error) })?;
+    not reachable from the frame-output entry points
+napi/env.rs:727  in .get_last_error_info()  — unsafe { ptr::read(raw_extended_error) }.try_into()
+    not reachable from the frame-output entry points
+napi/env.rs:732  in .throw()  — check_status!(unsafe { sys::napi_throw(self.0, ToNapiValue::to_napi_value(self.0, value)?,) })
+    not reachable from the frame-output entry points
+napi/env.rs:739  in .throw_error()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:786  in .throw_syntax_error()  — unsafe { sys::node_api_throw_syntax_error(self.0, code_ptr, msg_ptr,) },
+    not reachable from the frame-output entry points
+napi/env.rs:799  in .fatal_error()  — unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:814  in .fatal_exception()  — unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:836  in .define_class()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:849  in .define_class()  — unsafe { Function::from_napi_value(self.0, raw_result) }
+    not reachable from the frame-output entry points
+napi/env.rs:863  in .wrap()  — if let Err(err) = check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:873  in .wrap()  — drop(unsafe { Box::from_raw(tagged_object) });
+    not reachable from the frame-output entry points
+napi/env.rs:874  in .wrap()  — drop(unsafe { Box::from_raw(size_hint_ptr) });
+    not reachable from the frame-output entry points
+napi/env.rs:903  in .drop_wrapped()  — unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:937  in .get_reference_value()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:940  in .get_reference_value()  — unsafe { T::from_napi_value(self.0, js_value) }
+    not reachable from the frame-output entry points
+napi/env.rs:955  in .get_reference_value_unchecked()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:958  in .get_reference_value_unchecked()  — unsafe { T::from_napi_value(self.0, js_value) }
+    not reachable from the frame-output entry points
+napi/env.rs:976  in .create_external()  — if let Err(err) = check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:985  in .create_external()  — drop(unsafe { Box::from_raw(tagged_object) });
+    not reachable from the frame-output entry points
+napi/env.rs:986  in .create_external()  — drop(unsafe { Box::from_raw(size_hint_ptr) });
+    not reachable from the frame-output entry points
+napi/env.rs:995  in .create_external()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:1000  in .create_external()  — unsafe { JsExternal::from_napi_value(self.0, object_value) }
+    not reachable from the frame-output entry points
+napi/env.rs:1007  in .get_value_external()  — unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:1054  in .create_error()  — if let Some(result) = unsafe { e.referenced_value(self.0) } {
+    not reachable from the frame-output entry points
+napi/env.rs:1055  in .create_error()  — if unsafe { crate::error::is_js_error(self.0, result) } {
+    not reachable from the frame-output entry points
+napi/env.rs:1063  in .create_error()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:1082  in .run_in_scope()  — check_status!(unsafe { sys::napi_open_handle_scope(self.0, &mut handle_scope) })?;
+    not reachable from the frame-output entry points
+napi/env.rs:1086  in .run_in_scope()  — check_status!(unsafe { sys::napi_close_handle_scope(self.0, handle_scope) })?;
+    not reachable from the frame-output entry points
+napi/env.rs:1098  in .run_script()  — check_status!(unsafe { sys::napi_run_script(self.0, s.raw(), &mut raw_value) })?;
+    not reachable from the frame-output entry points
+napi/env.rs:1099  in .run_script()  — unsafe { V::from_napi_value(self.0, raw_value) }
+    not reachable from the frame-output entry points
+napi/env.rs:1116  in .get_uv_event_loop()  — check_status!(unsafe { sys::napi_get_uv_event_loop(self.0, &mut uv_loop) })?;
+    not reachable from the frame-output entry points
+napi/env.rs:1137  in .add_env_cleanup_hook()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:1148  in .add_env_cleanup_hook()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:1166  in .remove_env_cleanup_hook()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:1180  in .remove_env_cleanup_hook()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:1231  in .execute_tokio_future()  — let promise = tokio_runtime::execute_tokio_future(self.0, fut, |env, val| unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:1235  in .execute_tokio_future()  — Ok(unsafe { JsObject::from_raw_unchecked(self.0, promise) })
+    not reachable from the frame-output entry points
+napi/env.rs:1252  in .spawn_future()  — let promise = tokio_runtime::execute_tokio_future(self.0, fut, |env, val| unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:1278  in .spawn_future_with_callback()  — let promise = tokio_runtime::execute_tokio_future(self.0, fut, move |env, val| unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:1304  in .create_date()  — check_status!(unsafe { sys::napi_create_date(self.0, time, &mut js_value) })?;
+    not reachable from the frame-output entry points
+napi/env.rs:1325  in .set_instance_data()  — if let Err(err) = check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:1340  in .set_instance_data()  — drop(unsafe { Box::from_raw(instance_data) });
+    not reachable from the frame-output entry points
+napi/env.rs:1341  in .set_instance_data()  — drop(unsafe { Box::from_raw(hint_ptr) });
+    not reachable from the frame-output entry points
+napi/env.rs:1359  in .get_instance_data()  — unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:1406  in .add_removable_async_cleanup_hook()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:1429  in .add_async_cleanup_hook()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:1445  in .symbol_for()  — check_status!(unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:1475  in .get_module_file_name()  — unsafe { sys::node_api_get_module_file_name(self.0, &mut char_ptr) },
+    not reachable from the frame-output entry points
+napi/env.rs:1480  in .get_module_file_name()  — let module_filename = unsafe { std::ffi::CStr::from_ptr(char_ptr) };
+    not reachable from the frame-output entry points
+napi/env.rs:1551  in .strict_equals()  — check_status!(unsafe { sys::napi_strict_equals(self.0, a.raw(), b.raw(), &mut result) })?;
+    not reachable from the frame-output entry points
+napi/env.rs:1557  in .get_node_version()  — check_status!(unsafe { sys::napi_get_node_version(self.0, &mut result) })?;
+    not reachable from the frame-output entry points
+napi/env.rs:1558  in .get_node_version()  — let version = unsafe { *result };
+    not reachable from the frame-output entry points
+napi/env.rs:1578  in drop_buffer()  — let (length, cap) = unsafe { *Box::from_raw(length_ptr) };
+    not reachable from the frame-output entry points
+napi/env.rs:1582  in drop_buffer()  — mem::drop(unsafe { Vec::from_raw_parts(finalize_data as *mut u8, length, cap) });
+    not reachable from the frame-output entry points
+napi/env.rs:1592  in raw_finalize()  — drop(unsafe { Box::from_raw(tagged_object) });
+    not reachable from the frame-output entry points
+napi/env.rs:1595  in raw_finalize()  — let size_hint = unsafe { *Box::from_raw(finalize_hint as *mut i64) };
+    not reachable from the frame-output entry points
+napi/env.rs:1598  in raw_finalize()  — let status = unsafe { sys::napi_adjust_external_memory(env, -size_hint, &mut adjusted) };
+    not reachable from the frame-output entry points
+napi/env.rs:1641  in set_instance_finalize_callback()  — } = unsafe { *Box::from_raw(finalize_data as *mut InstanceData<T, F>) };
+    not reachable from the frame-output entry points
+napi/env.rs:1642  in set_instance_finalize_callback()  — let hint = unsafe { *Box::from_raw(finalize_hint as *mut Hint) };
+    not reachable from the frame-output entry points
+napi/env.rs:1653  in cleanup_env()  — let cleanup_env_hook = unsafe { Box::from_raw(hook_data as *mut CleanupEnvHookData<T>) };
+    not reachable from the frame-output entry points
+napi/env.rs:1664  in raw_finalize_with_custom_callback()  — let (hint, callback) = unsafe { *Box::from_raw(finalize_hint as *mut (Hint, Finalize)) };
+    not reachable from the frame-output entry points
+napi/env.rs:1676  in async_finalize()  — let (arg, callback) = unsafe { *Box::from_raw(data as *mut (Arg, F)) };
+    not reachable from the frame-output entry points
+napi/env.rs:1679  in async_finalize()  — let status = unsafe { sys::napi_remove_async_cleanup_hook(handle) };
+    not reachable from the frame-output entry points
+napi/env.rs:1717  in trampoline()  — unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:1734  in trampoline()  — unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:1747  in trampoline()  — unsafe { raw_args.set_len(argc) };
+    not reachable from the frame-output entry points
+napi/env.rs:1752  in trampoline()  — let closure: &F = Box::leak(unsafe { Box::from_raw(closure_data_ptr.cast()) });
+    not reachable from the frame-output entry points
+napi/env.rs:1760  in trampoline()  — .and_then(|ret| unsafe { <Return as ToNapiValue>::to_napi_value(raw_env, ret) })
+    not reachable from the frame-output entry points
+napi/env.rs:1766  in trampoline()  — unsafe { JsError::from(e).throw_into(raw_env) };
+    not reachable from the frame-output entry points
+napi/env.rs:1787  in trampoline_setter()  — let status = unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:1797  in trampoline_setter()  — unsafe { raw_args.set_len(argc) };
+    not reachable from the frame-output entry points
+napi/env.rs:1803  in trampoline_setter()  — let closure_data_ptr = unsafe { *(data_ptr as *mut PropertyClosures) }.setter_closure;
+    not reachable from the frame-output entry points
+napi/env.rs:1807  in trampoline_setter()  — let closure: &F = Box::leak(unsafe { Box::from_raw(closure_data_ptr.cast()) });
+    not reachable from the frame-output entry points
+napi/env.rs:1814  in trampoline_setter()  — let value = unsafe { V::from_napi_value(raw_env, *value)? };
+    not reachable from the frame-output entry points
+napi/env.rs:1817  in trampoline_setter()  — unsafe { This::from_napi_value(raw_env, raw_this)? },
+    not reachable from the frame-output entry points
+napi/env.rs:1826  in trampoline_setter()  — unsafe { JsError::from(e).throw_into(raw_env) };
+    not reachable from the frame-output entry points
+napi/env.rs:1843  in trampoline_getter()  — let status = unsafe {
+    not reachable from the frame-output entry points
+napi/env.rs:1858  in trampoline_getter()  — let closure_data_ptr = unsafe { *(data_ptr as *mut PropertyClosures) }.getter_closure;
+    not reachable from the frame-output entry points
+napi/env.rs:1862  in trampoline_getter()  — let closure: &F = Box::leak(unsafe { Box::from_raw(closure_data_ptr.cast()) });
+    not reachable from the frame-output entry points
+napi/env.rs:1865  in trampoline_getter()  — let this = unsafe { crate::bindgen_runtime::This::from_napi_value(raw_env, raw_this)? };
+    not reachable from the frame-output entry points
+napi/env.rs:1866  in trampoline_getter()  — closure(env, this).and_then(|ret: R| unsafe { <R as ToNapiValue>::to_napi_value(env.0, ret) })
+    not reachable from the frame-output entry points
+napi/env.rs:1871  in trampoline_getter()  — unsafe { JsError::from(e).throw_into(raw_env) };
+    not reachable from the frame-output entry points
+napi/env.rs:1883  in finalize_box_trampoline()  — drop(unsafe { Box::<F>::from_raw(closure_data_ptr.cast()) })
+    not reachable from the frame-output entry points
+skia-safe/core/surface.rs:80  in raster()  — Surface::from_ptr(unsafe {
+    not reachable from the frame-output entry points
+skia-safe/core/surface.rs:289  in .image_info()  — unsafe { sb::C_SkSurface_imageInfo(self.native(), info.native_mut()) };
+    not reachable from the frame-output entry points
+skia-safe/core/surface.rs:301  in .generation_id()  — unsafe { self.native_mut().generationID() }
+    not reachable from the frame-output entry points
+skia-safe/core/surface.rs:309  in .notify_content_will_change()  — unsafe { self.native_mut().notifyContentWillChange(mode) }
+    not reachable from the frame-output entry points
+skia-safe/core/surface.rs:333  in ?  — gpu::RecordingContext::from_unshared_ptr(unsafe { self.native().recordingContext() })
+    not reachable from the frame-output entry points
+skia-safe/core/surface.rs:373  in .replace_backend_texture_with_mode()  — unsafe {
+    not reachable from the frame-output entry points
+skia-safe/core/surface.rs:415  in .new_surface()  — Self::from_ptr(unsafe {
+    not reachable from the frame-output entry points
+skia-safe/core/surface.rs:424  in .new_surface_with_dimensions()  — Self::from_ptr(unsafe {
+    not reachable from the frame-output entry points
+skia-safe/core/surface.rs:437  in .image_snapshot()  — Image::from_ptr(unsafe {
+    not reachable from the frame-output entry points
+skia-safe/core/surface.rs:455  in .make_temporary_image()  — Image::from_ptr(unsafe { sb::C_SkSurface_makeTemporaryImage(self.native_mut()) })
+    not reachable from the frame-output entry points
+skia-safe/core/surface.rs:470  in .image_snapshot_with_bounds()  — Image::from_ptr(unsafe {
+    not reachable from the frame-output entry points
+skia-safe/core/surface.rs:496  in .draw()  — unsafe {
+    not reachable from the frame-output entry points
+skia-safe/core/surface.rs:509  in .peek_pixels()  — unsafe { self.native_mut().peekPixels(pm.native_mut()) }.then_some(pm)
+    not reachable from the frame-output entry points
+skia-safe/core/surface.rs:547  in .read_pixels_to_pixmap()  — unsafe { self.native_mut().readPixels(dst.native(), src.x, src.y) }
+    not reachable from the frame-output entry points
+skia-safe/core/surface.rs:640  in .read_pixels_to_bitmap()  — unsafe { self.native_mut().readPixels2(bitmap.native(), src.x, src.y) }
+    not reachable from the frame-output entry points
+skia-safe/core/surface.rs:664  in .write_pixels_from_pixmap()  — unsafe { self.native_mut().writePixels(src.native(), dst.x, dst.y) }
+    not reachable from the frame-output entry points
+skia-safe/core/surface.rs:683  in .write_pixels_from_bitmap()  — unsafe {
+    not reachable from the frame-output entry points
+skia-safe/core/surface.rs:693  in .props()  — SurfaceProps::from_native_ref(unsafe { &*sb::C_SkSurface_props(self.native()) })
+    not reachable from the frame-output entry points
+skia-safe/core/surface.rs:717  in .wait()  — unsafe {
+    not reachable from the frame-output entry points
