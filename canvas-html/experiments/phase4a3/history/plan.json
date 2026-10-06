@@ -1,0 +1,355 @@
+{
+ "steps": [
+  {
+   "date_from": "951dc13",
+   "ops": [
+    [
+     "rev",
+     "951dc13",
+     "^(Cargo\\.toml|Cargo\\.lock|build\\.rs|index\\.js|index\\.d\\.ts|package\\.json|package-lock\\.json|README\\.md|src/|dom-host/|vendor/|upstream-patches/|scripts/|test/)"
+    ],
+    [
+     "overlay",
+     [
+      "base"
+     ]
+    ]
+   ],
+   "message": "build: import the v0.5.0 engine\n\nHTML, CSS and JavaScript rendered to pixels in Node without a browser: Blitz (Stylo CSS, Taffy\nlayout, Parley text) for style and layout, Skia (CPU raster) for painting, Boa for page scripts,\nexposed as a napi-rs addon with a frozen, host-controlled clock.\n\nThis is the v0.5.0 snapshot that the research phases started from, laid out with the engine at\nthe repository root and the provisional internal names (html-renderer, dom-host). Blitz is\ncloned into third_party/blitz and patched by scripts/setup-blitz.sh (patches 0001-0012);\nanyrender_skia and Stylo are vendored with their patches in upstream-patches/."
+  },
+  {
+   "date_from": "951dc13",
+   "ops": [
+    [
+     "rev",
+     "fc6b1e4",
+     "^(experiments/(?!phase3/|phase4)|docs/handoff/|docs/phases/(POC|PHASE2)_RESULTS\\.md)"
+    ]
+   ],
+   "message": "docs(experiments): phase 2 runtime research and the phase 3 handoff\n\nEvidence for choosing the JS runtime: the proof of concept, the Deno/V8 feasibility probes\n(deno-core smoke test, Deno + N-API coexistence, Deno-canvas bridge), baselines and the phase 2\nreport, plus the handoff documents that defined phase 3. Experiments are not part of the build."
+  },
+  {
+   "date_from": "9b0d148",
+   "ops": [
+    [
+     "rev",
+     "9b0d148",
+     "^(Cargo\\.toml|Cargo\\.lock|build\\.rs|index\\.js|index\\.d\\.ts|package\\.json|package-lock\\.json|README\\.md|src/|dom-host/|vendor/|upstream-patches/|scripts/|test/)"
+    ],
+    [
+     "overlay",
+     [
+      "base"
+     ]
+    ]
+   ],
+   "message": "refactor(dom): introduce the shared engine-neutral DOM host\n\nThe DOM subset that page scripts see (selectors, text, attributes, classList, inline and\ncomputed style, geometry, event listeners, timer ordering and the clock contract) moves into the\ndom-host crate, so that more than one JS engine can drive the same document with identical\nresults. The Boa runtime in Blitz (patch 0013) now delegates to it; the engine's public API is\nunchanged."
+  },
+  {
+   "date_from": "9b0d148",
+   "ops": [
+    [
+     "rev",
+     "fc6b1e4",
+     "^(experiments/phase3/|docs/phases/PHASE3_RESULTS\\.md)"
+    ]
+   ],
+   "message": "feat(experiments): experimental Deno/V8 runtime adapter and shared contract suite\n\nA Deno/V8 adapter built on the shared DOM host, and the contract suite that runs the same cases\non Boa and V8 and requires identical results (30 cases), deterministic scene replay, GSAP and\nMotion probes, lifecycle, memory and benchmark harnesses, and the phase 3 report. Experimental:\nnot part of the production build."
+  },
+  {
+   "date_from": "65baa4c",
+   "ops": [
+    [
+     "rev",
+     "65baa4c",
+     "^(Cargo\\.toml|Cargo\\.lock|build\\.rs|index\\.js|index\\.d\\.ts|package\\.json|package-lock\\.json|README\\.md|src/|dom-host/|vendor/|upstream-patches/|scripts/|test/)"
+    ],
+    [
+     "overlay",
+     [
+      "base"
+     ]
+    ]
+   ],
+   "message": "feat(gpu): experimental headless GPU backends (Ganesh GL/Vulkan, Graphite)\n\nAn offscreen Skia GPU backend next to the CPU raster renderer, chosen per renderer with the\nprivate experimentalBackend option: Ganesh on OpenGL (EGL device, surfaceless context) or\nVulkan, and Graphite on Vulkan. Off by default; the default build stays CPU only (features\nexperimental-gpu, experimental-gpu-vulkan, experimental-graphite). anyrender_skia patch 0003."
+  },
+  {
+   "date_from": "7a02570",
+   "ops": [
+    [
+     "rev",
+     "7a02570",
+     "^(Cargo\\.toml|Cargo\\.lock|build\\.rs|index\\.js|index\\.d\\.ts|package\\.json|package-lock\\.json|README\\.md|src/|dom-host/|vendor/|upstream-patches/|scripts/|test/)"
+    ],
+    [
+     "overlay",
+     [
+      "base"
+     ]
+    ],
+    [
+     "rev",
+     "e185c33",
+     "^upstream-patches/anyrender_skia/0004"
+    ]
+   ],
+   "message": "fix(gpu): deterministic Ganesh output across document reloads\n\nGanesh caches path geometry (triangulations reused within a tolerance), so a document's pixels\ndepended on what the context had drawn before. A Ganesh renderer now frees its purgeable GPU\nresources on load(). Also: Ganesh context options from an environment variable, for experiments\nonly (anyrender_skia patch 0004)."
+  },
+  {
+   "date_from": "d5eb865",
+   "ops": [
+    [
+     "rev",
+     "d5eb865",
+     "^README\\.md"
+    ],
+    [
+     "rev",
+     "fc6b1e4",
+     "^(experiments/phase4a/|docs/phases/PHASE4A_RESULTS\\.md)"
+    ]
+   ],
+   "message": "docs(experiments): phase 4A GPU backend research and results\n\nCorrectness, determinism, performance, memory and worker harnesses for the GPU backends, Mesa\nand Tesla T4 results (JSON and logs; images stay in the research archive), the Skia source graph\nnotes, and the phase 4A report. README: GPU backend status."
+  },
+  {
+   "date_from": "9ab1b7f",
+   "ops": [
+    [
+     "rev",
+     "9ab1b7f",
+     "^(Cargo\\.toml|Cargo\\.lock|build\\.rs|index\\.js|package\\.json|package-lock\\.json|README\\.md|src/|dom-host/|vendor/|upstream-patches/|scripts/|test/)"
+    ],
+    [
+     "overlay",
+     [
+      "base"
+     ]
+    ]
+   ],
+   "message": "perf(output): hand render() frames to Node without a copy\n\nrender() used to paint into a renderer-owned scratch frame and clone it into the Buffer. The\nframe Vec is now handed to Node as the Buffer's memory (napi external buffer, freed by its\nfinalizer); allocation is fallible, so running out of memory is a JS error, not an abort.\nExperimental, for measurement: _renderInto (paint into a caller's Buffer), a bounded frame pool,\nand a switch back to the clone path."
+  },
+  {
+   "date_from": "e185c33",
+   "ops": [
+    [
+     "rev",
+     "5bc5553",
+     "^(Cargo\\.toml|Cargo\\.lock|build\\.rs|index\\.js|package\\.json|package-lock\\.json|README\\.md|src/|dom-host/|vendor/|upstream-patches/|scripts/|test/)"
+    ],
+    [
+     "overlay",
+     [
+      "base"
+     ]
+    ],
+    [
+     "rev",
+     "e185c33",
+     "^(index\\.d\\.ts|upstream-patches/)"
+    ]
+   ],
+   "message": "feat(gpu): experimental pipelined GPU readback; types for the output experiments\n\nPrototype readback pipelines for the Ganesh backend (a ring of surfaces read back later, and GL\npixel-pack buffers with fences) and _renderFramesExperimental, which renders a sequence natively.\nMeasured and not adopted (phase 4A.1); private. anyrender_skia patch 0005, typings for the\nexperimental output APIs."
+  },
+  {
+   "date_from": "e185c33",
+   "ops": [
+    [
+     "rev",
+     "fc6b1e4",
+     "^(experiments/phase4a1/|docs/phases/PHASE4A1_RESULTS\\.md)"
+    ]
+   ],
+   "message": "docs(experiments): phase 4A.1 output-path research\n\nThe map of the old output path, transport, animation, memory, worker and lifetime harnesses, the\npipelined-readback measurements, T4 and L4 results, and the phase 4A.1 report."
+  },
+  {
+   "date_from": "99e59cf",
+   "ops": [
+    [
+     "rev",
+     "13fc5d0",
+     "^(src/|index\\.d\\.ts)"
+    ],
+    [
+     "rev",
+     "99e59cf",
+     "^vendor/"
+    ],
+    [
+     "rev",
+     "286aa5c",
+     "^upstream-patches/"
+    ]
+   ],
+   "message": "feat(api): add renderInto() and frameByteLength\n\nrenderInto(target) draws the frame into memory the caller owns and reuses: a Buffer, Uint8Array\nor Uint8ClampedArray of exactly frameByteLength (pixelWidth x pixelHeight x 4) bytes. Same frame\nstep and same bytes as render(), with no allocation and no copy in the engine.\n\n- Synchronous; the renderer keeps no reference to the target and never writes it after return.\n- The typed-array kind is read with N-API directly; other typed arrays, DataView, ArrayBuffer and\n  views over a SharedArrayBuffer are rejected (an exclusive &mut [u8] over shared memory would be\n  a data race), as are detached views and wrong lengths; a rejected call runs nothing.\n- Workers: render into a transferable ArrayBuffer and postMessage(ab, [ab]) (zero-copy); render()\n  Buffers are external memory and cannot be transferred.\n- The frame pool, huge-page frames and the clone switch are removed; clone stays as a private\n  diagnostic. Known panic paths in the output code become errors (anyrender_skia patch 0006:\n  try_render), with a catch_unwind backstop on render() and renderInto()."
+  },
+  {
+   "date_from": "13fc5d0",
+   "ops": [
+    [
+     "rev",
+     "13fc5d0",
+     "^(test/|package\\.json)"
+    ]
+   ],
+   "message": "test(frame-api): renderInto contract, workers and documented examples\n\ntest/render-into.mjs: accepted and rejected targets with their error classes and codes, no side\neffects on rejection, same bytes as render(), ownership and lifetimes, close and size limits.\ntest/render-into-workers.mjs: 1, 2 and 4 workers with transferable ArrayBuffers (recycled) and\nin-process buffers; use-after-transfer rejected. test/render-into-examples.mjs: the README\nexamples, including the asynchronous-consumer ring. Type-level tests in test/types."
+  },
+  {
+   "date_from": "13fc5d0",
+   "ops": [
+    [
+     "rev",
+     "13fc5d0",
+     "^README\\.md"
+    ]
+   ],
+   "message": "docs(frame-api): document render(), renderInto() and the pixel format\n\nWhen to use each API, a sequence into one buffer, a ring for asynchronous consumers, the worker\ntransfer pattern, accepted and rejected targets, the SharedArrayBuffer policy, the pixel format\nand the Electron/V8 sandbox note."
+  },
+  {
+   "date_from": "a938f6b",
+   "ops": [
+    [
+     "rev",
+     "a938f6b",
+     "^(vendor/|upstream-patches/)"
+    ]
+   ],
+   "message": "docs(gpu): SAFETY comments on the pipelined GL readback\n\nComments only: the invariants of the raw GL blocks in the experimental pixel-pack-buffer\nreadback (anyrender_skia patch 0007)."
+  },
+  {
+   "date_from": "f61788a",
+   "ops": [
+    [
+     "rev",
+     "fc6b1e4",
+     "^(experiments/phase4a2/|docs/phases/PHASE4A2_RESULTS\\.md)"
+    ]
+   ],
+   "message": "docs(experiments): phase 4A.2 frame API research\n\nOutput regression, pixel format, out-of-memory, catch_unwind and allocator (mmap, rejected)\nexperiments, the Graphify-based unsafe reachability audit, L4 results and the phase 4A.2 report."
+  },
+  {
+   "date": "2026-10-06T20:00:00+00:00",
+   "ops": [
+    [
+     "work_from",
+     "/tmp/claude-0/-home-user-videogen/fc66e88c-4246-59e8-87f3-462058d15114/scratchpad/stage-g",
+     [
+      "canvas-html/src/lib.rs",
+      "canvas-html/test/hardening.mjs",
+      "canvas-html/package.json"
+     ],
+     "^(src/lib\\.rs|test/hardening\\.mjs|package\\.json)"
+    ],
+    [
+     "rev",
+     "fc6b1e4",
+     "^upstream-patches/blitz/"
+    ]
+   ],
+   "message": "fix(render): malformed input is a JS error, never a panic\n\n- background: parsed as bytes after checking that every character is an ASCII hex digit; any\n  non-ASCII, multi-byte, NUL or overlong input used to be sliced by byte index and could panic.\n- advanceClock: the frozen clock is limited to 8.64e15 ms (the range of a JS Date); larger finite\n  values are rejected before any Duration/Instant arithmetic, which is now checked.\n- Page timers: setTimeout/setInterval delays above i32::MAX wrap like a WebIDL long instead of\n  overflowing Duration (setTimeout(f, 1e25) aborted the process; Blitz patch 0014).\n- Every N-API method that runs engine code is guarded: a panic (a bug) becomes a generic Error,\n  the renderer is closed, and no panic text reaches JS.\ntest/hardening.mjs covers the inputs above."
+  },
+  {
+   "date": "2026-10-06T20:10:00+00:00",
+   "ops": [
+    [
+     "rev",
+     "fc6b1e4",
+     "^(src/lib\\.rs|test/hardening\\.mjs)"
+    ]
+   ],
+   "message": "fix(png): encode transparent output with straight alpha\n\nFrames are premultiplied RGBA; PNG stores straight alpha. render({ format: 'png' }) wrote the\npremultiplied bytes as they were, so translucent pixels over a non-opaque background came out too\ndark (50% red: [128,0,0,128] instead of [255,0,0,128]). The PNG path now unpremultiplies\n(A = 0 \u2192 0; otherwise round(c x 255 / a)); raw render()/renderInto() bytes are unchanged and\nopaque frames encode exactly as before. Tests compare decoded PNG pixels with the expected\nstraight-alpha values."
+  },
+  {
+   "date_from": "1940663",
+   "ops": [
+    [
+     "rev",
+     "1940663",
+     "^(rustfmt\\.toml|src/|dom-host/)"
+    ]
+   ],
+   "message": "style: rustfmt configuration, cargo fmt, clippy clean\n\nrustfmt.toml (140 columns, small heuristics off) and the formatting it implies for src/ and\ndom-host/; clippy fixes (collapsible ifs, let-chains) and a documented allow of\nlarge_enum_variant on the two enums that hold one backend each. No behaviour change; the build\nhas no clippy warnings."
+  },
+  {
+   "date": "@DOCS",
+   "ops": [
+    [
+     "overlay",
+     [
+      "docs"
+     ]
+    ],
+    [
+     "delete",
+     "^upstream-patches/UPSTREAM\\.md$"
+    ]
+   ],
+   "message": "docs: project status, contracts, trust model, third-party notices, local checks\n\n- README: what the engine is, provisional names, build and checks, repository layout.\n- docs/: FEATURE_STATUS (supported, experimental, research only), API_CONTRACT and\n  PIXEL-FORMAT (frame output, straight-alpha PNG, AlphaType), PANIC-SAFETY (every public\n  method, the guard policy), UNSAFE_AUDIT, SECURITY (trust model: trusted content only, local\n  file access, no script timeout), GITHUB_MIGRATION, an inactive CI draft in docs/ci.\n- upstream-patches/README.md replaces UPSTREAM.md: base, reason, dependent test and removal\n  condition for every patch.\n- THIRD_PARTY_NOTICES.md: what a built addon contains and under which licences.\n- PROJECT_IDENTITY.md: current names, which are public, and how to rename.\n- scripts/check.sh (fmt, clippy, tests, workers, types) and scripts/check-gpu.sh replace hosted\n  CI."
+  },
+  {
+   "date": "@RELEASE",
+   "ops": [
+    [
+     "overlay",
+     [
+      "release"
+     ]
+    ],
+    [
+     "replace",
+     "package.json",
+     "\"version\": \"0.5.0\"",
+     "\"version\": \"0.6.0-rc.1\"",
+     1
+    ],
+    [
+     "replace",
+     "package-lock.json",
+     "\"version\": \"0.1.0\"",
+     "\"version\": \"0.6.0-rc.1\"",
+     2
+    ],
+    [
+     "replace",
+     "Cargo.toml",
+     "(?m)^version = \"0.5.0\"$",
+     "version = \"0.6.0-rc.1\"",
+     1
+    ],
+    [
+     "replace",
+     "Cargo.lock",
+     "name = \"html-renderer\"\nversion = \"0.5.0\"",
+     "name = \"html-renderer\"\nversion = \"0.6.0-rc.1\"",
+     1
+    ]
+   ],
+   "message": "chore(release): 0.6.0-rc.1\n\nRelease candidate for the frame API (renderInto, frameByteLength) and the 4A.3 hardening.\nCHANGELOG.md has the release notes. Not published; the package stays private."
+  },
+  {
+   "date": "@FINAL",
+   "ops": [
+    [
+     "work",
+     [
+      "canvas-html/experiments/phase4a3"
+     ],
+     "^experiments/phase4a3/"
+    ],
+    [
+     "work",
+     [
+      "canvas-html/PHASE4A3_RESULTS.md"
+     ],
+     "^docs/phases/PHASE4A3_RESULTS\\.md$"
+    ],
+    [
+     "overlay",
+     [
+      "final"
+     ]
+    ]
+   ],
+   "message": "docs(experiments): phase 4A.3 hardening and repository normalization\n\nThe AlphaType experiment (Opaque and Premul give identical bytes on CPU, Ganesh GL and\nVulkan), regression and L4 evidence, the tooling that rebuilt this history from the research\nrepository (build_history.py, plan.json, overlays) with its verification log, docs/GIT-HISTORY.md\nand the phase 4A.3 report."
+  }
+ ]
+}
