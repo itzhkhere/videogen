@@ -1,0 +1,5 @@
+smoke-waapi: all passed
+
+real	0m0.371s
+user	0m0.330s
+sys	0m0.032s

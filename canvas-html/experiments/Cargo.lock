@@ -438,6 +438,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "canvas-dom-host"
+version = "0.1.0"
+dependencies = [
+ "blitz-dom",
+ "serde_json",
+]
+
+[[package]]
 name = "cc"
 version = "1.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2397,6 +2405,42 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "serde_json",
+]
+
+[[package]]
+name = "phase3-addon"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "anyrender",
+ "anyrender_skia",
+ "blitz-dom",
+ "blitz-html",
+ "blitz-paint",
+ "blitz-traits",
+ "canvas-dom-host",
+ "libc",
+ "napi",
+ "napi-build",
+ "napi-derive",
+ "parley",
+ "peniko",
+ "phase3-engine",
+ "png",
+ "serde_json",
+]
+
+[[package]]
+name = "phase3-engine"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "blitz-dom",
+ "canvas-dom-host",
+ "deno_core",
+ "deno_error",
+ "serde_json",
+ "tokio",
 ]
 
 [[package]]

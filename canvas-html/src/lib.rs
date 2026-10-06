@@ -88,6 +88,11 @@ pub struct RendererOptions {
     /// when you call advanceClock(ms), so a page that reads the time by mistake still renders the
     /// same pixels every time. "real": the clock follows the wall clock, like a browser tab.
     pub clock: Option<String>,
+    /// The epoch of JS time in milliseconds since the Unix epoch: `performance.timeOrigin`, and
+    /// `Date.now()` at clock 0. With the frozen clock, `Date.now() = floor(epochMs + clock)` and
+    /// `performance.now() = clock`, so pages that read the date render the same pixels on every
+    /// run. Default: the wall-clock time at load (the previous behaviour).
+    pub epoch_ms: Option<f64>,
 }
 
 #[napi(object)]
@@ -182,6 +187,9 @@ pub struct HtmlRenderer {
     buffer: Vec<u8>,
     errors: Arc<Mutex<Vec<String>>>,
     js_errors: Vec<String>,
+    epoch_ms: Option<f64>,
+    /// Set by close(): the document and script runtime are dropped; every call then fails.
+    closed: bool,
 }
 
 fn parse_hex(s: &str) -> Result<Color> {
@@ -225,6 +233,9 @@ impl HtmlRenderer {
             if !self.real_clock {
                 sdoc = sdoc.with_virtual_time();
             }
+            if let Some(epoch) = self.epoch_ms {
+                sdoc = sdoc.with_epoch_ms(epoch);
+            }
             self.script_start = Some(sdoc.clock_now());
             sdoc.eval(JS_PRELUDE);
             sdoc.execute_scripts();
@@ -250,7 +261,15 @@ impl HtmlRenderer {
         }
     }
 
+    fn check_open(&self) -> Result<()> {
+        if self.closed {
+            return Err(Error::from_reason("renderer is closed"));
+        }
+        Ok(())
+    }
+
     fn doc_mut(&mut self) -> Result<&mut Doc> {
+        self.check_open()?;
         if self.doc.is_none() {
             self.doc = Some(self.build_document()?);
         }
@@ -377,6 +396,11 @@ impl HtmlRenderer {
             buffer: Vec::with_capacity((pw * ph * 4) as usize),
             errors: Arc::new(Mutex::new(Vec::new())),
             js_errors: Vec::new(),
+            epoch_ms: match options.epoch_ms {
+                None => None,
+                Some(e) => Some(canvas_dom_host::clock::ClockContract::validate_epoch(e).map_err(Error::from_reason)?),
+            },
+            closed: false,
         })
     }
 
@@ -384,6 +408,9 @@ impl HtmlRenderer {
     /// Applies to documents loaded after this call.
     #[napi]
     pub fn register_font(&mut self, data: Buffer) {
+        if self.closed {
+            return;
+        }
         self.fonts.push(data.to_vec());
         self.doc = None;
     }
@@ -392,6 +419,7 @@ impl HtmlRenderer {
     /// pass a file:// URL of the folder the assets live in.
     #[napi]
     pub fn load(&mut self, html: String, base_url: Option<String>) -> Result<()> {
+        self.check_open()?;
         if let Some(b) = &base_url {
             url::Url::parse(b).map_err(|e| Error::from_reason(format!("invalid baseUrl {b}: {e}")))?;
         }
@@ -589,6 +617,32 @@ impl HtmlRenderer {
     #[napi(getter)]
     pub fn load_errors(&self) -> Vec<String> {
         self.errors.lock().unwrap().clone()
+    }
+
+    /// Releases the document, the script runtime and their callbacks now instead of at garbage
+    /// collection. Idempotent; every later call (except close) throws "renderer is closed".
+    #[napi]
+    pub fn close(&mut self) {
+        self.closed = true;
+        self.doc = None;
+        self.html = None;
+        self.fonts.clear();
+        self.buffer = Vec::new();
+    }
+
+    /// Testing only: drop the native node matched by `selector` (and its subtree), as an
+    /// embedder teardown would. JS wrappers of it become stale: using them throws an
+    /// `InvalidStateError` DOMException (the shared stale-handle contract). Returns whether a
+    /// node matched.
+    #[napi(js_name = "_dropNodeForTesting")]
+    pub fn drop_node_for_testing(&mut self, selector: String) -> Result<bool> {
+        use canvas_dom_host::DomHost as _;
+        let result = self.doc_mut()?.with_base(|b| {
+            let Some(node) = b.query_first(None, &selector)? else { return Ok(false) };
+            b.drop_node(node)?;
+            Ok(true)
+        });
+        result.map_err(|e: canvas_dom_host::DomError| Error::from_reason(e.to_string()))
     }
 
     #[napi(getter)]

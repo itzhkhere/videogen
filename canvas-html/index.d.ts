@@ -22,6 +22,12 @@ export interface RendererOptions {
    * "real": the clock follows the wall clock, like a browser tab.
    */
   clock?: 'frozen' | 'real'
+  /**
+   * Epoch of JS time, in ms since the Unix epoch: performance.timeOrigin, and Date.now() at clock 0.
+   * With the frozen clock, Date.now() = floor(epochMs + clockTime) and performance.now() = clockTime.
+   * Default: the wall-clock time at load.
+   */
+  epochMs?: number
 }
 export interface RenderOptions {
   /** "rgba" (default): raw pixels, 4 bytes per pixel, row by row. "png": a PNG file. */
@@ -70,4 +76,11 @@ export declare class HtmlRenderer {
   readonly loadErrors: string[]
   readonly pixelWidth: number
   readonly pixelHeight: number
+  /** Release the document and script runtime now. Idempotent; later calls throw "renderer is closed". */
+  close(): void
+  /**
+   * Testing only: drop the native node matched by selector, as an embedder teardown would. Its JS
+   * wrappers become stale and throw an InvalidStateError DOMException when used.
+   */
+  _dropNodeForTesting(selector: string): boolean
 }

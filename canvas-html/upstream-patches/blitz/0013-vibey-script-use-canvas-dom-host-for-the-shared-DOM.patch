@@ -1,0 +1,2212 @@
+From 73638f65868bced1e544203d5fea25f071ecae46 Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Tue, 6 Oct 2026 00:21:41 +0000
+Subject: [PATCH] vibey-script: use canvas-dom-host for the shared DOM subset
+
+Selectors, text, attributes, classList, inline and computed style, geometry,
+listener metadata, timer ordering and the clock contract now come from
+canvas-html's engine-neutral DOM host, shared with the Deno/V8 adapter.
+Boa keeps its wrappers, callbacks and event objects.
+
+Also: element.style and classList are cached per element, synthetic
+Event/CustomEvent + dispatchEvent, microtasks drain after each timer,
+timers cleared earlier in a batch do not run, performance.now() is the
+exact (fractional) clock time and the epoch can be set.
+---
+ packages/blitz-vibey-script/Cargo.toml        |   5 +
+ packages/blitz-vibey-script/src/clock.rs      |  71 ++-
+ packages/blitz-vibey-script/src/document.rs   |   9 +
+ .../blitz-vibey-script/src/dom/document.rs    |  40 +-
+ .../blitz-vibey-script/src/dom/element.rs     | 267 +++++-----
+ packages/blitz-vibey-script/src/dom/event.rs  |  36 +-
+ packages/blitz-vibey-script/src/dom/mod.rs    |  37 ++
+ packages/blitz-vibey-script/src/dom/node.rs   | 256 ++++++----
+ packages/blitz-vibey-script/src/dom/style.rs  | 111 ++---
+ packages/blitz-vibey-script/src/runtime.rs    | 466 ++++++++++--------
+ packages/blitz-vibey-script/src/state.rs      | 113 ++++-
+ packages/blitz-vibey-script/src/timers.rs     |  92 ++--
+ 12 files changed, 886 insertions(+), 617 deletions(-)
+
+diff --git a/packages/blitz-vibey-script/Cargo.toml b/packages/blitz-vibey-script/Cargo.toml
+index 052fe7cf..4b69ddaf 100644
+--- a/packages/blitz-vibey-script/Cargo.toml
++++ b/packages/blitz-vibey-script/Cargo.toml
+@@ -20,6 +20,11 @@ blitz-dom = { workspace = true, features = ["autofocus"] }
+ blitz-html = { workspace = true }
+ blitz-traits = { workspace = true }
+ 
++# canvas-html's engine-neutral DOM host: the DOM subset shared with the Deno/V8 adapter
++# (selectors, text, attributes, classList, inline/computed style, geometry, listener
++# metadata, timer ordering, clock contract). Lives next to this checkout (../canvas-html).
++canvas-dom-host = { path = "../../../canvas-html/dom-host" }
++
+ # Boa (JavaScript engine)
+ # `annex-b` enables the Annex B (web-compatibility) ECMAScript features
+ # (String.prototype.substr, escape/unescape, HTML comments in scripts, ...)
+diff --git a/packages/blitz-vibey-script/src/clock.rs b/packages/blitz-vibey-script/src/clock.rs
+index 5ebf522f..35916615 100644
+--- a/packages/blitz-vibey-script/src/clock.rs
++++ b/packages/blitz-vibey-script/src/clock.rs
+@@ -1,8 +1,9 @@
+-//! The clock which drives JS-observable time (timers and `Date`).
++//! The clock which drives JS-observable time (timers, `Date` and `performance`).
+ 
+-use std::cell::RefCell;
++use std::cell::{Cell, RefCell};
+ use std::rc::Rc;
+ 
++use canvas_dom_host::clock::ClockContract;
+ use web_time::{Duration, Instant, SystemTime, UNIX_EPOCH};
+ 
+ /// The clock used for JS timer deadlines and `Date`.
+@@ -15,6 +16,7 @@ use web_time::{Duration, Instant, SystemTime, UNIX_EPOCH};
+ #[derive(Clone)]
+ pub(crate) struct ScriptClock {
+     inner: Rc<RefCell<ClockMode>>,
++    origin: Rc<ClockOrigin>,
+ }
+ 
+ enum ClockMode {
+@@ -22,10 +24,25 @@ enum ClockMode {
+     Virtual { now: Instant },
+ }
+ 
++/// Where JS time starts: the instant `performance.now()` is 0 and the epoch time of that
++/// instant (`performance.timeOrigin`, `Date.now()` at 0). Shared with the Boa clock adapter.
++pub(crate) struct ClockOrigin {
++    pub base: Cell<Instant>,
++    pub epoch_ms: Cell<f64>,
++}
++
+ impl Default for ScriptClock {
+     fn default() -> Self {
++        let wall = SystemTime::now()
++            .duration_since(UNIX_EPOCH)
++            .unwrap_or(Duration::ZERO)
++            .as_millis() as f64;
+         Self {
+             inner: Rc::new(RefCell::new(ClockMode::Real)),
++            origin: Rc::new(ClockOrigin {
++                base: Cell::new(Instant::now()),
++                epoch_ms: Cell::new(wall),
++            }),
+         }
+     }
+ }
+@@ -40,13 +57,14 @@ impl ScriptClock {
+     }
+ 
+     /// Switch to virtual mode. Time stops at the current instant and only
+-    /// advances via [`advance_to`](Self::advance_to).
++    /// advances via [`advance_to`](Self::advance_to). The time origin moves to that instant,
++    /// so that `performance.now()` is exactly the virtual time elapsed.
+     pub fn make_virtual(&self) {
+         let mut mode = self.inner.borrow_mut();
+         if matches!(*mode, ClockMode::Real) {
+-            *mode = ClockMode::Virtual {
+-                now: Instant::now(),
+-            };
++            let now = Instant::now();
++            *mode = ClockMode::Virtual { now };
++            self.origin.base.set(now);
+         }
+     }
+ 
+@@ -57,34 +75,43 @@ impl ScriptClock {
+             *now = (*now).max(deadline);
+         }
+     }
++
++    /// Set `performance.timeOrigin` (and so `Date.now()` at time 0) in milliseconds since the
++    /// Unix epoch. By default it is the wall-clock time at creation.
++    pub fn set_epoch_ms(&self, epoch_ms: f64) {
++        self.origin.epoch_ms.set(epoch_ms);
++    }
++
++    /// Milliseconds since the time origin (fractional).
++    pub fn elapsed_ms(&self) -> f64 {
++        self.now()
++            .saturating_duration_since(self.origin.base.get())
++            .as_secs_f64()
++            * 1000.0
++    }
++
++    /// The shared clock contract (see canvas-dom-host): `Date.now() = floor(epoch + t)`,
++    /// `performance.now() = t`, `performance.timeOrigin = epoch`.
++    pub fn contract(&self) -> ClockContract {
++        ClockContract::new(self.origin.epoch_ms.get())
++    }
+ }
+ 
+ /// Adapter exposing a [`ScriptClock`] as a Boa [`Clock`](boa_engine::context::Clock),
+ /// so that `Date` observes virtual time consistently with timers.
+ pub(crate) struct BoaClockAdapter {
+     pub clock: ScriptClock,
+-    /// Anchor for converting `Instant`s to durations-since-an-epoch
+-    pub base: Instant,
+-    /// Wall-clock time (ms since the Unix epoch) at `base`
+-    pub base_system_millis: i64,
+ }
+ 
+ impl BoaClockAdapter {
+     pub fn new(clock: ScriptClock) -> Self {
+-        let base = clock.now();
+-        let base_system_millis = SystemTime::now()
+-            .duration_since(UNIX_EPOCH)
+-            .unwrap_or(Duration::ZERO)
+-            .as_millis() as i64;
+-        Self {
+-            clock,
+-            base,
+-            base_system_millis,
+-        }
++        Self { clock }
+     }
+ 
+     fn elapsed(&self) -> Duration {
+-        self.clock.now().saturating_duration_since(self.base)
++        self.clock
++            .now()
++            .saturating_duration_since(self.clock.origin.base.get())
+     }
+ }
+ 
+@@ -95,6 +122,6 @@ impl boa_engine::context::Clock for BoaClockAdapter {
+     }
+ 
+     fn system_time_millis(&self) -> i64 {
+-        self.base_system_millis + self.elapsed().as_millis() as i64
++        self.clock.contract().date_now(self.clock.elapsed_ms()) as i64
+     }
+ }
+diff --git a/packages/blitz-vibey-script/src/document.rs b/packages/blitz-vibey-script/src/document.rs
+index 3d66f1c5..c6a77df4 100644
+--- a/packages/blitz-vibey-script/src/document.rs
++++ b/packages/blitz-vibey-script/src/document.rs
+@@ -133,6 +133,15 @@ impl ScriptDocument {
+     }
+ 
+     /// The current time according to the document's clock (virtual or real)
++    /// Set the epoch of JS time (`performance.timeOrigin`, and `Date.now()` at time 0), in
++    /// milliseconds since the Unix epoch. By default it is the wall-clock time at creation.
++    /// With a virtual clock this makes `Date` deterministic:
++    /// `Date.now() = floor(epochMs + elapsed)`, `performance.now() = elapsed`.
++    pub fn with_epoch_ms(self, epoch_ms: f64) -> Self {
++        self.runtime.ctx.state.borrow().clock.set_epoch_ms(epoch_ms);
++        self
++    }
++
+     pub fn clock_now(&self) -> Instant {
+         self.runtime.ctx.state.borrow().clock.now()
+     }
+diff --git a/packages/blitz-vibey-script/src/dom/document.rs b/packages/blitz-vibey-script/src/dom/document.rs
+index 2c39d883..4309e8d3 100644
+--- a/packages/blitz-vibey-script/src/dom/document.rs
++++ b/packages/blitz-vibey-script/src/dom/document.rs
+@@ -6,6 +6,8 @@ use boa_engine::object::builtins::JsArray;
+ use boa_engine::value::JsValue;
+ use boa_engine::{Context, JsResult};
+ 
++use canvas_dom_host::DomHost;
++
+ use super::{
+     define_accessor, define_method, dom_ctx, node_or_null, node_wrapper, qual_name, qual_name_ns,
+     this_node_id, to_rust_string,
+@@ -168,13 +170,9 @@ fn ready_state(this: &JsValue, _: &[JsValue], context: &mut Context) -> JsResult
+ fn create_element(this: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+     let ctx = dom_ctx(context)?;
+     let _ = this_node_id(this)?;
+-    let tag = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?
+-        .to_ascii_lowercase();
+-    let node_id = {
+-        let mut doc = ctx.doc.borrow_mut();
+-        doc.mutate().create_element(qual_name(&tag), Vec::new())
+-    };
+-    Ok(node_wrapper(&ctx, node_id, context).into())
++    let tag = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
++    let handle = ctx.doc.borrow_mut().create_element(&tag);
++    Ok(node_wrapper(&ctx, handle.into(), context).into())
+ }
+ 
+ fn create_element_ns(this: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+@@ -233,8 +231,8 @@ fn get_element_by_id(this: &JsValue, args: &[JsValue], context: &mut Context) ->
+     let ctx = dom_ctx(context)?;
+     let _ = this_node_id(this)?;
+     let id = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
+-    let node_id = ctx.doc.borrow().get_element_by_id(&id);
+-    Ok(node_or_null(&ctx, node_id, context))
++    let handle = ctx.doc.borrow().element_by_id(&id);
++    Ok(super::handle_or_null(&ctx, handle, context))
+ }
+ 
+ fn get_elements_by_tag_name(
+@@ -340,25 +338,12 @@ fn elements_from_point(
+     Ok(JsArray::from_iter(wrappers, context).into())
+ }
+ 
+-/// A `DOMException` for an unparseable selector, per the spec for
+-/// `querySelector` and friends
+-fn invalid_selector_error(context: &mut Context, selector: &str) -> boa_engine::JsError {
+-    super::dom_exception(
+-        context,
+-        "SyntaxError",
+-        &format!("{selector:?} is not a valid selector"),
+-    )
+-}
+-
+ fn query_selector(this: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+     let ctx = dom_ctx(context)?;
+     let _ = this_node_id(this)?;
+     let selector = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
+-    let node_id = match ctx.doc.borrow().query_selector(&selector) {
+-        Ok(node_id) => node_id,
+-        Err(_) => return Err(invalid_selector_error(context, &selector)),
+-    };
+-    Ok(node_or_null(&ctx, node_id, context))
++    let found = super::host(context, |doc| doc.query_first(None, &selector))?;
++    Ok(super::handle_or_null(&ctx, found, context))
+ }
+ 
+ fn query_selector_all(
+@@ -369,13 +354,10 @@ fn query_selector_all(
+     let ctx = dom_ctx(context)?;
+     let _ = this_node_id(this)?;
+     let selector = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
+-    let matches = match ctx.doc.borrow().query_selector_all(&selector) {
+-        Ok(matches) => matches,
+-        Err(_) => return Err(invalid_selector_error(context, &selector)),
+-    };
++    let matches = super::host(context, |doc| doc.query_all(None, &selector))?;
+     let wrappers: Vec<JsValue> = matches
+         .into_iter()
+-        .map(|match_id| node_wrapper(&ctx, match_id, context).into())
++        .map(|id| node_wrapper(&ctx, id.into(), context).into())
+         .collect();
+     Ok(JsArray::from_iter(wrappers, context).into())
+ }
+diff --git a/packages/blitz-vibey-script/src/dom/element.rs b/packages/blitz-vibey-script/src/dom/element.rs
+index 3b978128..bb8def28 100644
+--- a/packages/blitz-vibey-script/src/dom/element.rs
++++ b/packages/blitz-vibey-script/src/dom/element.rs
+@@ -7,6 +7,8 @@ use boa_engine::property::Attribute as PropAttribute;
+ use boa_engine::value::JsValue;
+ use boa_engine::{Context, JsNativeError, JsResult, js_string};
+ 
++use canvas_dom_host::DomHost;
++
+ use super::{
+     define_accessor, define_method, dom_ctx, js_str, node_wrapper, this_node_id, to_rust_string,
+ };
+@@ -302,11 +304,11 @@ pub(crate) fn element_child_ids(doc: &blitz_dom::BaseDocument, node_id: NodeId)
+ 
+ fn children(this: &JsValue, _: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+     let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
+-    let child_ids = element_child_ids(&ctx.doc.borrow(), node_id);
+-    let wrappers: Vec<JsValue> = child_ids
++    let handle = super::this_handle(this)?;
++    let ids = super::host(context, |doc| doc.element_children(handle))?;
++    let wrappers: Vec<JsValue> = ids
+         .into_iter()
+-        .map(|child_id| node_wrapper(&ctx, child_id, context).into())
++        .map(|id| node_wrapper(&ctx, id.into(), context).into())
+         .collect();
+     Ok(boa_engine::object::builtins::JsArray::from_iter(wrappers, context).into())
+ }
+@@ -328,11 +330,9 @@ pub(crate) fn first_element_child(
+     context: &mut Context,
+ ) -> JsResult<JsValue> {
+     let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
+-    let child_id = element_child_ids(&ctx.doc.borrow(), node_id)
+-        .first()
+-        .copied();
+-    Ok(super::node_or_null(&ctx, child_id, context))
++    let handle = super::this_handle(this)?;
++    let first = super::host(context, |doc| doc.element_children(handle))?.first().copied();
++    Ok(super::handle_or_null(&ctx, first, context))
+ }
+ 
+ pub(crate) fn last_element_child(
+@@ -391,59 +391,123 @@ fn previous_element_sibling(
+ // === Attributes ===
+ 
+ fn get_attribute(this: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+-    let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
+-    let name = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?
+-        .to_ascii_lowercase();
+-    match read_attr(&ctx, node_id, &name) {
++    let handle = super::this_handle(this)?;
++    let name = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
++    match super::host(context, |doc| doc.get_attribute(handle, &name))? {
+         Some(value) => Ok(js_str(&value)),
+         None => Ok(JsValue::null()),
+     }
+ }
+ 
+ fn set_attribute(this: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+-    let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
+-    let name = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?
+-        .to_ascii_lowercase();
++    let handle = super::this_handle(this)?;
++    let name = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
+     let value = to_rust_string(args.get(1).unwrap_or(&JsValue::undefined()), context)?;
+-    write_attr(&ctx, node_id, &name, &value);
++    super::host(context, |doc| doc.set_attribute(handle, &name, &value))?;
+     Ok(JsValue::undefined())
+ }
+ 
+ fn remove_attribute(this: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+-    let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
+-    let name = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?
+-        .to_ascii_lowercase();
+-    clear_attr(&ctx, node_id, &name);
++    let handle = super::this_handle(this)?;
++    let name = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
++    super::host(context, |doc| doc.remove_attribute(handle, &name))?;
+     Ok(JsValue::undefined())
+ }
+ 
+ fn has_attribute(this: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+-    let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
+-    let name = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?
+-        .to_ascii_lowercase();
+-    Ok(JsValue::from(read_attr(&ctx, node_id, &name).is_some()))
++    let handle = super::this_handle(this)?;
++    let name = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
++    Ok(JsValue::from(super::host(context, |doc| doc.has_attribute(handle, &name))?))
+ }
+ 
+ // === Reflected DOM properties ===
+ 
+-fn get_id(this: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+-    let _ = args;
+-    attr_getter("id", this, context)
++fn get_id(this: &JsValue, _: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
++    shared_attr_get("id", this, context)
+ }
+ fn set_id(this: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+-    attr_setter("id", this, args, context)
++    shared_attr_set("id", this, args, context)
+ }
+ 
+-fn get_class_name(this: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+-    let _ = args;
+-    attr_getter("class", this, context)
++fn get_class_name(this: &JsValue, _: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
++    shared_attr_get("class", this, context)
+ }
+ fn set_class_name(this: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+-    attr_setter("class", this, args, context)
++    shared_attr_set("class", this, args, context)
++}
++
++/// Reflected string attribute (`id`, `className`) through the shared host
++fn shared_attr_get(name: &str, this: &JsValue, context: &mut Context) -> JsResult<JsValue> {
++    let handle = super::this_handle(this)?;
++    let value = super::host(context, |doc| doc.get_attribute(handle, name))?;
++    Ok(js_str(&value.unwrap_or_default()))
++}
++
++fn shared_attr_set(
++    name: &str,
++    this: &JsValue,
++    args: &[JsValue],
++    context: &mut Context,
++) -> JsResult<JsValue> {
++    let handle = super::this_handle(this)?;
++    let value = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
++    super::host(context, |doc| doc.set_attribute(handle, name, &value))?;
++    Ok(JsValue::undefined())
++}
++
++/// `__blitz_class_list(element, op, ...args)`: DOMTokenList operations for the bootstrap's
++/// cached `classList` object, implemented by the shared host.
++pub(crate) fn class_list_op(
++    _: &JsValue,
++    args: &[JsValue],
++    context: &mut Context,
++) -> JsResult<JsValue> {
++    let handle = args
++        .first()
++        .and_then(super::node_id_of_value)
++        .map(canvas_dom_host::NodeHandle::from)
++        .ok_or_else(|| {
++            boa_engine::JsError::from(
++                boa_engine::JsNativeError::typ().with_message("classList: not an element"),
++            )
++        })?;
++    let op = to_rust_string(args.get(1).unwrap_or(&JsValue::undefined()), context)?;
++    let mut rest = Vec::new();
++    for value in args.iter().skip(2) {
++        if !value.is_undefined() {
++            rest.push(to_rust_string(value, context)?);
++        }
++    }
++    let tokens: Vec<&str> = rest.iter().map(String::as_str).collect();
++    match op.as_str() {
++        "list" => {
++            let list = super::host(context, |doc| doc.class_list(handle))?;
++            let values: Vec<JsValue> = list.iter().map(|t| js_str(t)).collect();
++            Ok(boa_engine::object::builtins::JsArray::from_iter(values, context).into())
++        }
++        "add" => {
++            super::host(context, |doc| doc.class_list_add(handle, &tokens))?;
++            Ok(JsValue::undefined())
++        }
++        "remove" => {
++            super::host(context, |doc| doc.class_list_remove(handle, &tokens))?;
++            Ok(JsValue::undefined())
++        }
++        "contains" => {
++            let token = tokens.first().copied().unwrap_or("");
++            Ok(JsValue::from(super::host(context, |doc| doc.class_list_contains(handle, token))?))
++        }
++        "toggle" => {
++            let token = tokens.first().copied().unwrap_or("undefined");
++            let force = args.get(3).filter(|v| !v.is_undefined()).map(|v| v.to_boolean());
++            Ok(JsValue::from(super::host(context, |doc| {
++                doc.class_list_toggle(handle, token, force)
++            })?))
++        }
++        _ => Err(boa_engine::JsNativeError::typ()
++            .with_message(format!("classList: unknown operation {op}"))
++            .into()),
++    }
+ }
+ 
+ fn get_placeholder(this: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+@@ -820,9 +884,21 @@ fn set_selection_range(
+ fn get_style(this: &JsValue, _: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+     let ctx = dom_ctx(context)?;
+     let node_id = this_node_id(this)?;
++    // One style object per element (`el.style === el.style`). The canonical style state is
++    // the element's `style` attribute in the document; this object only forwards to it.
++    if let Some(style) = ctx.state.borrow().style_wrappers.get(&node_id) {
++        return Ok(style.clone().into());
++    }
+     let proto = ctx.state.borrow().protos().style.clone();
+     let obj = JsObject::from_proto_and_data(Some(proto), super::NodeRef { node_id });
+-    Ok(super::wrap_style_object(obj, context))
++    let wrapped = super::wrap_style_object(obj, context);
++    if let Some(wrapped_obj) = wrapped.as_object() {
++        ctx.state
++            .borrow_mut()
++            .style_wrappers
++            .insert(node_id, wrapped_obj.clone());
++    }
++    Ok(wrapped)
+ }
+ 
+ /// `HTMLStyleElement.sheet` / `HTMLLinkElement.sheet`: the `CSSStyleSheet`
+@@ -949,12 +1025,10 @@ fn offset_value(
+     context: &mut Context,
+     f: impl FnOnce(&blitz_dom::BoundingRect) -> f64,
+ ) -> JsResult<JsValue> {
+-    let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
+-    let mut doc = ctx.doc.borrow_mut();
+-    doc.resolve_at_current_time();
+-    let value = doc.offset_rect(node_id).map(|rect| f(&rect)).unwrap_or(0.0);
+-    Ok(JsValue::from(value.round()))
++    let handle = super::this_handle(this)?;
++    let r = super::host(context, |doc| doc.offset_box(handle))?;
++    let rect = blitz_dom::BoundingRect { x: r.x, y: r.y, width: r.width, height: r.height };
++    Ok(JsValue::from(f(&rect)))
+ }
+ 
+ fn offset_width(this: &JsValue, _: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+@@ -973,51 +1047,14 @@ fn offset_top(this: &JsValue, _: &[JsValue], context: &mut Context) -> JsResult<
+     offset_value(this, context, |rect| rect.y)
+ }
+ 
+-/// `clientWidth`/`clientHeight`. For the root element (in no-quirks mode, which
+-/// is all Blitz supports) these are the viewport dimensions minus scrollbars.
+-fn client_size(
+-    this: &JsValue,
+-    context: &mut Context,
+-    axis: impl FnOnce(&blitz_dom::Node) -> f32,
+-    viewport_axis: impl FnOnce(&blitz_dom::Node, (f32, f32)) -> f32,
+-) -> JsResult<JsValue> {
+-    let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
+-    let mut doc = ctx.doc.borrow_mut();
+-    doc.resolve_at_current_time();
+-    let Some(node) = doc.get_node(node_id) else {
+-        return Ok(JsValue::from(0.0));
+-    };
+-    let value = if node_id == doc.root_element().id {
+-        let viewport = doc.viewport();
+-        let scale = viewport.scale();
+-        let size = (
+-            viewport.window_size.0 as f32 / scale,
+-            viewport.window_size.1 as f32 / scale,
+-        );
+-        viewport_axis(node, size)
+-    } else {
+-        axis(node)
+-    };
+-    Ok(JsValue::from(value.round() as f64))
+-}
+-
+ fn client_width(this: &JsValue, _: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+-    client_size(
+-        this,
+-        context,
+-        |node| node.client_width(),
+-        |node, (w, _)| w - node.final_layout().scrollbar_size.width,
+-    )
++    let handle = super::this_handle(this)?;
++    Ok(JsValue::from(super::host(context, |doc| doc.client_size(handle))?.0))
+ }
+ 
+ fn client_height(this: &JsValue, _: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+-    client_size(
+-        this,
+-        context,
+-        |node| node.client_height(),
+-        |node, (_, h)| h - node.final_layout().scrollbar_size.height,
+-    )
++    let handle = super::this_handle(this)?;
++    Ok(JsValue::from(super::host(context, |doc| doc.client_size(handle))?.1))
+ }
+ 
+ fn scroll_width(this: &JsValue, _: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+@@ -1275,48 +1312,22 @@ fn make_rect_object(context: &mut Context, x: f64, y: f64, width: f64, height: f
+         .build()
+ }
+ 
+-/// Does the node generate any boxes? (`getClientRects()` returns an empty list
+-/// for boxless nodes, e.g. `display: none` or detached elements)
+-fn node_has_boxes(doc: &blitz_dom::BaseDocument, node_id: NodeId) -> bool {
+-    doc.get_node(node_id).is_some_and(|node| node.has_boxes())
+-}
+-
+ fn get_bounding_client_rect(
+     this: &JsValue,
+     _: &[JsValue],
+     context: &mut Context,
+ ) -> JsResult<JsValue> {
+-    let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
+-    ctx.doc.borrow_mut().resolve_at_current_time();
+-    let rect = ctx.doc.borrow().get_client_bounding_rect(node_id);
+-    let (x, y, width, height) = match rect {
+-        Some(rect) => (rect.x, rect.y, rect.width, rect.height),
+-        None => (0.0, 0.0, 0.0, 0.0),
+-    };
+-    Ok(make_rect_object(context, x, y, width, height).into())
++    let handle = super::this_handle(this)?;
++    let r = super::host(context, |doc| doc.bounding_client_rect(handle))?;
++    Ok(make_rect_object(context, r.x, r.y, r.width, r.height).into())
+ }
+ 
+ fn get_client_rects(this: &JsValue, _: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+-    let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
+-    ctx.doc.borrow_mut().resolve_at_current_time();
+-
+-    // One rect per box fragment: a single border-box rect for nodes with their
+-    // own layout box, one rect per line box for non-atomic inline elements,
+-    // and an empty list for boxless (e.g. `display: none`) elements
+-    let rects = {
+-        let doc = ctx.doc.borrow();
+-        if node_has_boxes(&doc, node_id) {
+-            doc.node_client_rects(node_id)
+-        } else {
+-            Vec::new()
+-        }
+-    };
+-
++    let handle = super::this_handle(this)?;
++    let rects = super::host(context, |doc| doc.client_rects(handle))?;
+     let rect_objects: Vec<JsValue> = rects
+         .into_iter()
+-        .map(|rect| make_rect_object(context, rect.x, rect.y, rect.width, rect.height).into())
++        .map(|r| make_rect_object(context, r.x, r.y, r.width, r.height).into())
+         .collect();
+     Ok(boa_engine::object::builtins::JsArray::from_iter(rect_objects, context).into())
+ }
+@@ -1335,15 +1346,10 @@ fn invalid_selector_error(context: &mut Context, selector: &str) -> boa_engine::
+ 
+ fn query_selector(this: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+     let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
++    let handle = super::this_handle(this)?;
+     let selector = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
+-
+-    let result = ctx.doc.borrow().query_selector_in(node_id, &selector);
+-    let result = match result {
+-        Ok(result) => result,
+-        Err(_) => return Err(invalid_selector_error(context, &selector)),
+-    };
+-    Ok(super::node_or_null(&ctx, result, context))
++    let found = super::host(context, |doc| doc.query_first(Some(handle), &selector))?;
++    Ok(super::handle_or_null(&ctx, found, context))
+ }
+ 
+ fn query_selector_all(
+@@ -1352,17 +1358,12 @@ fn query_selector_all(
+     context: &mut Context,
+ ) -> JsResult<JsValue> {
+     let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
++    let handle = super::this_handle(this)?;
+     let selector = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
+-
+-    let matches = ctx.doc.borrow().query_selector_all_in(node_id, &selector);
+-    let matches = match matches {
+-        Ok(matches) => matches,
+-        Err(_) => return Err(invalid_selector_error(context, &selector)),
+-    };
++    let matches = super::host(context, |doc| doc.query_all(Some(handle), &selector))?;
+     let wrappers: Vec<JsValue> = matches
+         .into_iter()
+-        .map(|match_id| node_wrapper(&ctx, match_id, context).into())
++        .map(|id| node_wrapper(&ctx, id.into(), context).into())
+         .collect();
+     Ok(boa_engine::object::builtins::JsArray::from_iter(wrappers, context).into())
+ }
+diff --git a/packages/blitz-vibey-script/src/dom/event.rs b/packages/blitz-vibey-script/src/dom/event.rs
+index d19da049..e4c51b21 100644
+--- a/packages/blitz-vibey-script/src/dom/event.rs
++++ b/packages/blitz-vibey-script/src/dom/event.rs
+@@ -21,6 +21,12 @@ pub(crate) struct EventRef {
+     pub stopped: Cell<bool>,
+     #[unsafe_ignore_trace]
+     pub stopped_immediate: Cell<bool>,
++    /// `preventDefault()` only has an effect on cancelable events
++    #[unsafe_ignore_trace]
++    pub cancelable: Cell<bool>,
++    /// Set while the event is being dispatched (re-dispatching it throws)
++    #[unsafe_ignore_trace]
++    pub dispatching: Cell<bool>,
+ }
+ 
+ pub(crate) fn init_event_proto(proto: &JsObject, context: &mut Context) {
+@@ -74,7 +80,11 @@ fn event_ref<T>(this: &JsValue, f: impl FnOnce(&EventRef) -> T) -> Option<T> {
+ }
+ 
+ fn prevent_default(this: &JsValue, _: &[JsValue], _: &mut Context) -> JsResult<JsValue> {
+-    event_ref(this, |event| event.prevented.set(true));
++    event_ref(this, |event| {
++        if event.cancelable.get() {
++            event.prevented.set(true)
++        }
++    });
+     Ok(JsValue::undefined())
+ }
+ 
+@@ -107,7 +117,9 @@ pub(crate) fn create_event(
+     context: &mut Context,
+ ) -> JsObject {
+     let proto = ctx.state.borrow().protos().event.clone();
+-    let event = JsObject::from_proto_and_data(Some(proto), EventRef::default());
++    let data = EventRef::default();
++    data.cancelable.set(cancelable);
++    let event = JsObject::from_proto_and_data(Some(proto), data);
+     define_value(&event, "type", js_str(event_type), context);
+     define_value(&event, "target", target.clone(), context);
+     define_value(&event, "srcElement", target.clone(), context);
+@@ -292,3 +304,23 @@ pub(crate) fn create_event_for_dom_event(
+ 
+     event
+ }
++
++/// `__blitz_create_event(type, bubbles, cancelable)`: the native object behind
++/// `new Event()` / `new CustomEvent()` (see the bootstrap). Untrusted, with no target until
++/// dispatched.
++pub(crate) fn create_synthetic_event(
++    _: &JsValue,
++    args: &[JsValue],
++    context: &mut Context,
++) -> JsResult<JsValue> {
++    let ctx = super::dom_ctx(context)?;
++    let event_type = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
++    let bubbles = args.get(1).is_some_and(|v| v.to_boolean());
++    let cancelable = args.get(2).is_some_and(|v| v.to_boolean());
++    let event = create_event(&ctx, &event_type, bubbles, cancelable, &JsValue::null(), context);
++    define_value(&event, "isTrusted", JsValue::from(false), context);
++    define_value(&event, "eventPhase", JsValue::from(0), context);
++    let clock = ctx.state.borrow().clock.clone();
++    define_value(&event, "timeStamp", JsValue::from(clock.elapsed_ms()), context);
++    Ok(event.into())
++}
+diff --git a/packages/blitz-vibey-script/src/dom/mod.rs b/packages/blitz-vibey-script/src/dom/mod.rs
+index be15093c..d90d3ef9 100644
+--- a/packages/blitz-vibey-script/src/dom/mod.rs
++++ b/packages/blitz-vibey-script/src/dom/mod.rs
+@@ -190,6 +190,43 @@ pub(crate) fn node_or_null(
+     }
+ }
+ 
++/// The shared node handle behind the `this` value of a native function
++pub(crate) fn this_handle(this: &JsValue) -> JsResult<canvas_dom_host::NodeHandle> {
++    this_node_id(this).map(Into::into)
++}
++
++/// Throw a shared host error as the JS exception canvas-dom-host prescribes, so that Boa and
++/// the Deno adapter fail identically.
++pub(crate) fn throw_dom(context: &mut Context, error: canvas_dom_host::DomError) -> boa_engine::JsError {
++    match error.js_error() {
++        canvas_dom_host::JsErrorKind::DomException(name) => {
++            dom_exception(context, name, &error.to_string())
++        }
++        canvas_dom_host::JsErrorKind::TypeError => JsNativeError::typ()
++            .with_message(error.to_string())
++            .into(),
++    }
++}
++
++/// Run a shared host operation on the document, mapping errors to JS exceptions
++pub(crate) fn host<T>(
++    context: &mut Context,
++    f: impl FnOnce(&mut blitz_dom::BaseDocument) -> canvas_dom_host::DomResult<T>,
++) -> JsResult<T> {
++    let ctx = dom_ctx(context)?;
++    let result = f(&mut ctx.doc.borrow_mut());
++    result.map_err(|e| throw_dom(context, e))
++}
++
++/// Convert a shared handle to a JS value (wrapper object or `null`)
++pub(crate) fn handle_or_null(
++    ctx: &DomCtx,
++    handle: Option<canvas_dom_host::NodeHandle>,
++    context: &mut Context,
++) -> JsValue {
++    node_or_null(ctx, handle.map(Into::into), context)
++}
++
+ /// Construct an HTML `QualName` from a string
+ pub(crate) fn qual_name(local: &str) -> QualName {
+     QualName::new(None, markup5ever::ns!(html), LocalName::from(local))
+diff --git a/packages/blitz-vibey-script/src/dom/node.rs b/packages/blitz-vibey-script/src/dom/node.rs
+index eea78e2a..6e028acc 100644
+--- a/packages/blitz-vibey-script/src/dom/node.rs
++++ b/packages/blitz-vibey-script/src/dom/node.rs
+@@ -12,13 +12,14 @@ use super::{
+     define_accessor, define_method, dom_ctx, js_str, node_id_of_value, node_or_null, node_wrapper,
+     this_node_id, to_rust_string,
+ };
+-use crate::state::Listener;
++use canvas_dom_host::DomHost;
++use canvas_dom_host::events::EventTarget;
+ 
+ pub(crate) fn init_node_proto(proto: &JsObject, context: &mut Context) {
+     define_accessor(proto, "nodeType", Some(node_type), None, context);
+     define_accessor(proto, "nodeName", Some(node_name), None, context);
+     define_accessor(proto, "parentNode", Some(parent_node), None, context);
+-    define_accessor(proto, "parentElement", Some(parent_node), None, context);
++    define_accessor(proto, "parentElement", Some(parent_element), None, context);
+     define_accessor(proto, "childNodes", Some(child_nodes), None, context);
+     define_accessor(proto, "firstChild", Some(first_child), None, context);
+     define_accessor(proto, "lastChild", Some(last_child), None, context);
+@@ -67,6 +68,7 @@ pub(crate) fn init_node_proto(proto: &JsObject, context: &mut Context) {
+         remove_event_listener,
+         context,
+     );
++    define_method(proto, "dispatchEvent", 1, dispatch_event, context);
+ }
+ 
+ pub(crate) fn init_character_data_proto(proto: &JsObject, context: &mut Context) {
+@@ -125,6 +127,14 @@ fn parent_node(this: &JsValue, _: &[JsValue], context: &mut Context) -> JsResult
+     Ok(node_or_null(&ctx, parent_id, context))
+ }
+ 
++/// `parentElement` (shared host): the parent if it is an element, else `null`
++fn parent_element(this: &JsValue, _: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
++    let ctx = dom_ctx(context)?;
++    let handle = super::this_handle(this)?;
++    let parent = super::host(context, |doc| doc.parent_element(handle))?;
++    Ok(super::handle_or_null(&ctx, parent, context))
++}
++
+ fn child_ids(ctx: &crate::state::DomCtx, node_id: NodeId) -> Vec<NodeId> {
+     ctx.doc
+         .borrow()
+@@ -210,44 +220,22 @@ fn owner_document(this: &JsValue, _: &[JsValue], context: &mut Context) -> JsRes
+ // === Text content ===
+ 
+ fn text_content(this: &JsValue, _: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+-    let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
+-    let doc = ctx.doc.borrow();
+-    let text = doc
+-        .get_node(node_id)
+-        .map(|node| node.text_content())
+-        .unwrap_or_default();
++    let handle = super::this_handle(this)?;
++    let text = super::host(context, |doc| doc.text_content(handle))?;
+     Ok(js_str(&text))
+ }
+ 
++/// `textContent` setter (shared host): text-like nodes change their data; other nodes have
++/// their children detached (wrappers to them stay valid) and replaced by one text node.
+ fn set_text_content(this: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+-    let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
+-    let text = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
+-
+-    let is_text_like = {
+-        let doc = ctx.doc.borrow();
+-        matches!(
+-            doc.get_node(node_id).map(|node| &node.data),
+-            Some(NodeData::Text(_)) | Some(NodeData::Comment { .. })
+-        )
++    let handle = super::this_handle(this)?;
++    // `[LegacyNullToEmptyString]`
++    let text = match args.first() {
++        Some(v) if v.is_null() => String::new(),
++        Some(v) => to_rust_string(v, context)?,
++        None => String::new(),
+     };
+-
+-    let mut doc = ctx.doc.borrow_mut();
+-    let mut mutr = doc.mutate();
+-    if is_text_like {
+-        mutr.set_node_text(node_id, &text);
+-    } else {
+-        // Detach (rather than drop) any existing children so that JS wrappers
+-        // referencing them remain valid.
+-        for child_id in mutr.child_ids(node_id) {
+-            mutr.remove_node(child_id);
+-        }
+-        if !text.is_empty() {
+-            let text_id = mutr.create_text_node(&text);
+-            mutr.append_children(node_id, &[text_id]);
+-        }
+-    }
++    super::host(context, |doc| doc.set_text_content(handle, &text))?;
+     Ok(JsValue::undefined())
+ }
+ 
+@@ -387,13 +375,8 @@ fn replace_child(this: &JsValue, args: &[JsValue], context: &mut Context) -> JsR
+ }
+ 
+ fn remove(this: &JsValue, _: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+-    let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
+-    let mut doc = ctx.doc.borrow_mut();
+-    let mut mutr = doc.mutate();
+-    if mutr.node_has_parent(node_id) {
+-        mutr.remove_node(node_id);
+-    }
++    let handle = super::this_handle(this)?;
++    super::host(context, |doc| doc.remove_node(handle))?;
+     Ok(JsValue::undefined())
+ }
+ 
+@@ -592,91 +575,154 @@ fn clone_node(this: &JsValue, args: &[JsValue], context: &mut Context) -> JsResu
+ 
+ // === Event listeners ===
+ 
+-fn add_event_listener(
+-    this: &JsValue,
+-    args: &[JsValue],
+-    context: &mut Context,
+-) -> JsResult<JsValue> {
+-    let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
+-    let event_type = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
+-    let Some(callback) = args.get(1).and_then(|value| value.as_object()) else {
+-        return Ok(JsValue::undefined());
+-    };
+-    if !callback.is_callable() {
+-        return Ok(JsValue::undefined());
+-    }
+-
+-    // Parse options (bool `capture` or `{ capture, once }`)
+-    let mut capture = false;
+-    let mut once = false;
+-    match args.get(2) {
++/// Parse `addEventListener` options: a boolean `capture`, or `{ capture, once }`
++fn listener_options(value: Option<&JsValue>, context: &mut Context) -> JsResult<(bool, bool)> {
++    match value {
+         Some(options) if options.is_object() => {
+             let options = options.as_object().unwrap();
+-            capture = options
++            let capture = options
+                 .get(boa_engine::js_string!("capture"), context)?
+                 .to_boolean();
+-            once = options
++            let once = options
+                 .get(boa_engine::js_string!("once"), context)?
+                 .to_boolean();
++            Ok((capture, once))
+         }
+-        Some(options) => capture = options.to_boolean(),
+-        None => {}
+-    }
+-
+-    let mut state = ctx.state.borrow_mut();
+-    let listeners = state
+-        .node_listeners
+-        .entry(node_id)
+-        .or_default()
+-        .entry(event_type)
+-        .or_default();
+-
+-    // Duplicate listeners (same callback + capture flag) are ignored
+-    if !listeners
+-        .iter()
+-        .any(|l| JsObject::equals(&l.callback, &callback) && l.capture == capture)
+-    {
+-        listeners.push(Listener {
+-            callback,
+-            capture,
+-            once,
+-        });
++        Some(options) => Ok((options.to_boolean(), false)),
++        None => Ok((false, false)),
+     }
++}
+ 
++/// `addEventListener` on a node or the window. The listener metadata goes to the shared
++/// registry; the callback stays in this Boa runtime.
++pub(crate) fn add_listener(
++    target: EventTarget,
++    args: &[JsValue],
++    context: &mut Context,
++) -> JsResult<JsValue> {
++    let ctx = dom_ctx(context)?;
++    let event_type = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
++    let Some(callback) = args
++        .get(1)
++        .and_then(|value| value.as_object())
++        .filter(|obj| obj.is_callable())
++    else {
++        return Ok(JsValue::undefined());
++    };
++    let (capture, once) = listener_options(args.get(2), context)?;
++    ctx.state
++        .borrow_mut()
++        .add_listener(target, &event_type, &callback, capture, once);
+     Ok(JsValue::undefined())
+ }
+ 
+-fn remove_event_listener(
+-    this: &JsValue,
++/// `removeEventListener` on a node or the window
++pub(crate) fn remove_listener(
++    target: EventTarget,
+     args: &[JsValue],
+     context: &mut Context,
+ ) -> JsResult<JsValue> {
+     let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
+     let event_type = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
+     let Some(callback) = args.get(1).and_then(|value| value.as_object()) else {
+         return Ok(JsValue::undefined());
+     };
++    let (capture, _) = listener_options(args.get(2), context)?;
++    ctx.state
++        .borrow_mut()
++        .remove_listener(target, &event_type, &callback, capture);
++    Ok(JsValue::undefined())
++}
+ 
+-    let capture = match args.get(2) {
+-        Some(options) if options.is_object() => options
+-            .as_object()
+-            .unwrap()
+-            .get(boa_engine::js_string!("capture"), context)?
+-            .to_boolean(),
+-        Some(options) => options.to_boolean(),
+-        None => false,
++/// `dispatchEvent(event)` on a node or the window: the shared dispatch algorithm (see
++/// `crate::runtime::dispatch_to_chain`). Returns `!defaultPrevented`.
++pub(crate) fn dispatch_event_to(
++    target: EventTarget,
++    args: &[JsValue],
++    context: &mut Context,
++) -> JsResult<JsValue> {
++    use super::event::EventRef;
++    let ctx = dom_ctx(context)?;
++    let Some(event_obj) = args
++        .first()
++        .and_then(|v| v.as_object())
++        .filter(|o| o.downcast_ref::<EventRef>().is_some())
++    else {
++        return Err(JsNativeError::typ()
++            .with_message("dispatchEvent: argument is not an Event")
++            .into());
+     };
+-
+-    let mut state = ctx.state.borrow_mut();
+-    if let Some(listeners) = state
+-        .node_listeners
+-        .get_mut(&node_id)
+-        .and_then(|map| map.get_mut(&event_type))
+-    {
+-        listeners.retain(|l| !(JsObject::equals(&l.callback, &callback) && l.capture == capture));
++    let already = event_obj
++        .downcast_ref::<EventRef>()
++        .map(|e| e.dispatching.replace(true))
++        .unwrap_or(false);
++    if already {
++        return Err(super::dom_exception(
++            context,
++            "InvalidStateError",
++            "the event is already being dispatched",
++        ));
++    }
++    if let Some(e) = event_obj.downcast_ref::<EventRef>() {
++        e.stopped.set(false);
++        e.stopped_immediate.set(false);
+     }
++    let event_type = to_rust_string(
++        &event_obj.get(boa_engine::js_string!("type"), context)?,
++        context,
++    )?;
++    let bubbles = event_obj
++        .get(boa_engine::js_string!("bubbles"), context)?
++        .to_boolean();
++
++    let result = match target {
++        EventTarget::Node(handle) => super::host(context, |doc| {
++            Ok((doc.event_path(handle)?, doc.is_connected(handle)?))
++        })
++        .map(|(path, connected)| {
++            let target_value: JsValue = node_wrapper(&ctx, handle.into(), context).into();
++            super::define_value(&event_obj, "target", target_value.clone(), context);
++            super::define_value(&event_obj, "srcElement", target_value, context);
++            let chain: Vec<NodeId> = path.into_iter().map(Into::into).collect();
++            crate::runtime::dispatch_to_chain(
++                &ctx, context, &chain, &event_type, bubbles, connected, &event_obj,
++            );
++        }),
++        EventTarget::Window => {
++            let global: JsValue = context.global_object().into();
++            super::define_value(&event_obj, "target", global.clone(), context);
++            super::define_value(&event_obj, "srcElement", global, context);
++            // The window is the whole path: its listeners run as the target's.
++            crate::runtime::dispatch_to_chain(&ctx, context, &[], &event_type, true, true, &event_obj);
++            Ok(())
++        }
++    };
++    let prevented = event_obj
++        .downcast_ref::<EventRef>()
++        .map(|e| {
++            e.dispatching.set(false);
++            e.prevented.get()
++        })
++        .unwrap_or(false);
++    result?;
++    Ok(JsValue::from(!prevented))
++}
+ 
+-    Ok(JsValue::undefined())
++fn add_event_listener(this: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
++    let handle = super::this_handle(this)?;
++    add_listener(EventTarget::Node(handle), args, context)
++}
++
++fn remove_event_listener(
++    this: &JsValue,
++    args: &[JsValue],
++    context: &mut Context,
++) -> JsResult<JsValue> {
++    let handle = super::this_handle(this)?;
++    remove_listener(EventTarget::Node(handle), args, context)
++}
++
++fn dispatch_event(this: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
++    let handle = super::this_handle(this)?;
++    dispatch_event_to(EventTarget::Node(handle), args, context)
+ }
+diff --git a/packages/blitz-vibey-script/src/dom/style.rs b/packages/blitz-vibey-script/src/dom/style.rs
+index 40c299fa..1e489e55 100644
+--- a/packages/blitz-vibey-script/src/dom/style.rs
++++ b/packages/blitz-vibey-script/src/dom/style.rs
+@@ -1,12 +1,12 @@
+ //! A minimal `CSSStyleDeclaration` binding (`element.style`).
+ 
+-use blitz_dom::NodeId;
+ use boa_engine::object::JsObject;
+ use boa_engine::value::JsValue;
+ use boa_engine::{Context, JsResult};
+ 
+-use super::element::attr_name;
+-use super::{define_accessor, define_method, dom_ctx, js_str, this_node_id, to_rust_string};
++use canvas_dom_host::DomHost;
++
++use super::{define_accessor, define_method, js_str, to_rust_string};
+ 
+ pub(crate) fn init_style_proto(proto: &JsObject, context: &mut Context) {
+     define_accessor(
+@@ -19,6 +19,8 @@ pub(crate) fn init_style_proto(proto: &JsObject, context: &mut Context) {
+     define_method(proto, "setProperty", 2, set_property, context);
+     define_method(proto, "removeProperty", 1, remove_property, context);
+     define_method(proto, "getPropertyValue", 1, get_property_value, context);
++    define_accessor(proto, "length", Some(get_inline_length), None, context);
++    define_method(proto, "item", 1, get_inline_item, context);
+ }
+ 
+ /// The prototype for the read-only `CSSStyleDeclaration`s returned by
+@@ -71,42 +73,19 @@ fn get_resolved_property_value(
+     args: &[JsValue],
+     context: &mut Context,
+ ) -> JsResult<JsValue> {
+-    let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
++    let handle = super::this_handle(this)?;
+     let name = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?
+         .trim()
+-        .to_ascii_lowercase();
+-
+-    let mut doc = ctx.doc.borrow_mut();
+-    // Resolved values of layout-dependent properties are used values, so make
+-    // sure style and layout are up to date before reading.
+-    doc.resolve_at_current_time();
+-    let value = doc.resolved_style_value(node_id, &name);
++        .to_string();
++    // The shared host resolves style and layout first (layout-dependent values are used
++    // values) and maps the name with the shared property-name policy.
++    let value = super::host(context, |doc| doc.computed_style(handle, &name))?;
+     Ok(js_str(&value))
+ }
+ 
+-/// Read the node's `style` attribute (empty string if unset)
+-fn read_style_attr(ctx: &crate::state::DomCtx, node_id: NodeId) -> String {
+-    ctx.doc
+-        .borrow()
+-        .get_node(node_id)
+-        .and_then(|node| node.attr(blitz_dom::local_name!("style")))
+-        .unwrap_or_default()
+-        .to_string()
+-}
+-
+-fn write_style_attr(ctx: &crate::state::DomCtx, node_id: NodeId, style_attr: &str) {
+-    let mut doc = ctx.doc.borrow_mut();
+-    doc.mutate()
+-        .set_attribute(node_id, attr_name("style"), style_attr);
+-}
+-
+ fn get_css_text(this: &JsValue, _: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+-    let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
+-    let style_attr = read_style_attr(&ctx, node_id);
+-    let css = ctx.doc.borrow().style_attr_serialize(&style_attr);
+-    Ok(js_str(&css))
++    let handle = super::this_handle(this)?;
++    Ok(js_str(&super::host(context, |doc| doc.style_css_text(handle))?))
+ }
+ 
+ pub(crate) fn set_css_text(
+@@ -114,19 +93,14 @@ pub(crate) fn set_css_text(
+     args: &[JsValue],
+     context: &mut Context,
+ ) -> JsResult<JsValue> {
+-    let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
++    let handle = super::this_handle(this)?;
+     let css = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
+-    // Parse and re-serialize so that the stored attribute is canonical and
+-    // invalid declarations are dropped
+-    let css = ctx.doc.borrow().style_attr_serialize(&css);
+-    write_style_attr(&ctx, node_id, &css);
++    super::host(context, |doc| doc.set_style_css_text(handle, &css))?;
+     Ok(JsValue::undefined())
+ }
+ 
+ fn set_property(this: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+-    let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
++    let handle = super::this_handle(this)?;
+     let name = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
+     // Both arguments are `[LegacyNullToEmptyString]` in the WebIDL
+     let value = match args.get(1) {
+@@ -134,38 +108,17 @@ fn set_property(this: &JsValue, args: &[JsValue], context: &mut Context) -> JsRe
+         _ => String::new(),
+     };
+     let priority = match args.get(2) {
+-        Some(v) if !v.is_null() => to_rust_string(v, context)?,
++        Some(v) if !v.is_null() && !v.is_undefined() => to_rust_string(v, context)?,
+         _ => String::new(),
+     };
+-    let important = priority.eq_ignore_ascii_case("important");
+-
+-    let style_attr = read_style_attr(&ctx, node_id);
+-    let new_style_attr =
+-        ctx.doc
+-            .borrow()
+-            .style_attr_set_property(&style_attr, &name, &value, important);
+-    // `None` means the declaration was invalid: ignore it (per CSSOM)
+-    if let Some(new_style_attr) = new_style_attr {
+-        write_style_attr(&ctx, node_id, &new_style_attr);
+-    }
++    super::host(context, |doc| doc.style_set(handle, &name, &value, &priority))?;
+     Ok(JsValue::undefined())
+ }
+ 
+ fn remove_property(this: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+-    let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
++    let handle = super::this_handle(this)?;
+     let name = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
+-
+-    let style_attr = read_style_attr(&ctx, node_id);
+-    let removed = ctx
+-        .doc
+-        .borrow()
+-        .style_attr_remove_property(&style_attr, &name);
+-    let Some((new_style_attr, removed_value)) = removed else {
+-        return Ok(js_str(""));
+-    };
+-    write_style_attr(&ctx, node_id, &new_style_attr);
+-    Ok(js_str(&removed_value))
++    Ok(js_str(&super::host(context, |doc| doc.style_remove(handle, &name))?))
+ }
+ 
+ fn get_property_value(
+@@ -173,11 +126,27 @@ fn get_property_value(
+     args: &[JsValue],
+     context: &mut Context,
+ ) -> JsResult<JsValue> {
+-    let ctx = dom_ctx(context)?;
+-    let node_id = this_node_id(this)?;
++    let handle = super::this_handle(this)?;
+     let name = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
++    Ok(js_str(&super::host(context, |doc| doc.style_get(handle, &name))?))
++}
+ 
+-    let style_attr = read_style_attr(&ctx, node_id);
+-    let value = ctx.doc.borrow().style_attr_get_property(&style_attr, &name);
+-    Ok(js_str(&value))
++fn get_inline_length(this: &JsValue, _: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
++    let handle = super::this_handle(this)?;
++    Ok(JsValue::from(super::host(context, |doc| doc.style_names(handle))?.len() as u32))
++}
++
++fn get_inline_item(this: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
++    let handle = super::this_handle(this)?;
++    let index = args
++        .first()
++        .unwrap_or(&JsValue::undefined())
++        .to_number(context)?;
++    let names = super::host(context, |doc| doc.style_names(handle))?;
++    let name = if index >= 0.0 && index < names.len() as f64 {
++        names[index as usize].clone()
++    } else {
++        String::new()
++    };
++    Ok(js_str(&name))
+ }
+diff --git a/packages/blitz-vibey-script/src/runtime.rs b/packages/blitz-vibey-script/src/runtime.rs
+index 45fb2adf..5d004396 100644
+--- a/packages/blitz-vibey-script/src/runtime.rs
++++ b/packages/blitz-vibey-script/src/runtime.rs
+@@ -27,7 +27,8 @@ use crate::dom::{
+     NodeRef, dom_ctx, js_str, node_id_of_value, node_wrapper, to_rust_string, wrap_style_object,
+ };
+ use crate::fetch::ScriptFetcher;
+-use crate::state::{DomCtx, Listener, ReadyState};
++use crate::state::{DomCtx, ReadyState};
++use canvas_dom_host::events::EventTarget;
+ 
+ /// Geometry Interfaces (DOMPoint, DOMRect, DOMQuad, DOMMatrix), defined in JS
+ const GEOMETRY_JS: &str = include_str!("geometry.js");
+@@ -75,6 +76,18 @@ const BOOTSTRAP_JS: &str = r#"
+         };
+     }
+ 
++    // `performance`: the shared clock contract (canvas-dom-host). `now()` is the elapsed
++    // (possibly virtual) time in fractional milliseconds; `timeOrigin` is the epoch.
++    if (typeof globalThis.performance === "undefined") {
++        globalThis.performance = {
++            now: () => __blitz_performance_now(),
++            get timeOrigin() { return __blitz_time_origin(); },
++            mark() {},
++            measure() {},
++            toJSON() { return { timeOrigin: this.timeOrigin }; },
++        };
++    }
++
+     if (typeof globalThis.queueMicrotask !== "function") {
+         globalThis.queueMicrotask = function (callback) {
+             Promise.resolve().then(callback);
+@@ -371,6 +384,36 @@ const BOOTSTRAP_JS: &str = r#"
+         globalThis.Window = makeInterface("Window", windowProto);
+     }
+ 
++    // Synthetic events: `new Event(type, { bubbles, cancelable })` and `CustomEvent`
++    // (with `detail`), dispatched with `dispatchEvent`. The objects are native Boa events,
++    // so `preventDefault` / `stopPropagation` feed the shared dispatch algorithm.
++    {
++        const eventProto = Object.getPrototypeOf(__blitz_create_event("probe", false, false));
++        const Event = function Event(type, init) {
++            if (!new.target) throw new TypeError("Constructor Event requires 'new'");
++            if (arguments.length === 0) throw new TypeError("Event: type is required");
++            const e = __blitz_create_event(String(type), !!(init && init.bubbles), !!(init && init.cancelable));
++            if (new.target !== Event) Object.setPrototypeOf(e, new.target.prototype);
++            return e;
++        };
++        Event.prototype = eventProto;
++        Object.defineProperty(eventProto, "constructor", { value: Event, writable: true, configurable: true });
++        for (const [k, v] of Object.entries({ NONE: 0, CAPTURING_PHASE: 1, AT_TARGET: 2, BUBBLING_PHASE: 3 })) {
++            Event[k] = v;
++        }
++        class CustomEvent extends Event {
++            constructor(type, init) {
++                super(type, init);
++                Object.defineProperty(this, "detail", {
++                    value: init && init.detail !== undefined ? init.detail : null,
++                    enumerable: true,
++                });
++            }
++        }
++        globalThis.Event = Event;
++        globalThis.CustomEvent = CustomEvent;
++    }
++
+     for (const name of [
+         "EventTarget", "CharacterData", "Text", "Comment", "DocumentFragment",
+         "HTMLInputElement", "HTMLTextAreaElement", "HTMLSelectElement",
+@@ -388,55 +431,66 @@ const BOOTSTRAP_JS: &str = r#"
+         globalThis.Element = makeInterface("Element", elementProto);
+         globalThis.HTMLElement = globalThis.Element;
+ 
+-        // `classList` (DOMTokenList), backed by the `class` attribute
++        // `classList` (DOMTokenList), backed by the `class` attribute. Token semantics
++        // (ordered set, validation) come from canvas-dom-host via `__blitz_class_list`; the
++        // list object is cached per element so that `el.classList === el.classList`.
++        const classLists = new WeakMap();
++        const tokens = (el) => __blitz_class_list(el, "list");
+         Object.defineProperty(elementProto, "classList", {
+             configurable: true,
+             get() {
+                 const el = this;
+-                const classes = () =>
+-                    (el.getAttribute("class") || "").split(/\s+/).filter(Boolean);
+-                const write = (list) => el.setAttribute("class", list.join(" "));
+-                return {
++                let list = classLists.get(el);
++                if (list) return list;
++                list = {
+                     add(...names) {
+-                        const list = classes();
+-                        for (const name of names.map(String)) {
+-                            if (!list.includes(name)) list.push(name);
+-                        }
+-                        write(list);
++                        __blitz_class_list(el, "add", ...names.map(String));
+                     },
+                     remove(...names) {
+-                        const removed = names.map(String);
+-                        write(classes().filter((name) => !removed.includes(name)));
++                        __blitz_class_list(el, "remove", ...names.map(String));
+                     },
+                     toggle(name, force) {
+-                        name = String(name);
+-                        const list = classes();
+-                        const has = list.includes(name);
+-                        const shouldHave = force !== undefined ? Boolean(force) : !has;
+-                        if (shouldHave && !has) list.push(name);
+-                        if (!shouldHave && has) list.splice(list.indexOf(name), 1);
+-                        write(list);
+-                        return shouldHave;
++                        return __blitz_class_list(
++                            el, "toggle", String(name), force === undefined ? undefined : Boolean(force)
++                        );
+                     },
+                     contains(name) {
+-                        return classes().includes(String(name));
++                        return __blitz_class_list(el, "contains", String(name));
++                    },
++                    replace(oldName, newName) {
++                        oldName = String(oldName); newName = String(newName);
++                        if (!__blitz_class_list(el, "contains", oldName)) return false;
++                        const next = tokens(el).map((t) => (t === oldName ? newName : t));
++                        el.setAttribute("class", [...new Set(next)].join(" "));
++                        return true;
+                     },
+                     item(index) {
+-                        return classes()[index] ?? null;
++                        return tokens(el)[index] ?? null;
+                     },
+                     get length() {
+-                        return classes().length;
++                        return tokens(el).length;
+                     },
+                     get value() {
+                         return el.getAttribute("class") || "";
+                     },
++                    set value(v) {
++                        el.setAttribute("class", String(v));
++                    },
+                     toString() {
+                         return el.getAttribute("class") || "";
+                     },
+                     forEach(callback, thisArg) {
+-                        classes().forEach(callback, thisArg);
++                        tokens(el).forEach(callback, thisArg);
++                    },
++                    [Symbol.iterator]() {
++                        return tokens(el)[Symbol.iterator]();
+                     },
+                 };
++                classLists.set(el, list);
++                return list;
++            },
++            set(value) {
++                this.setAttribute("class", String(value));
+             },
+         });
+ 
+@@ -1116,17 +1170,10 @@ fn report_js_error(ctx: &DomCtx, context: &mut Context, what: &str, error: &JsEr
+ /// exception. Exceptions thrown by the handlers themselves are recorded (via
+ /// [`report_js_error`]) but do not fire further `error` events.
+ fn dispatch_error_event(ctx: &DomCtx, context: &mut Context, error: &JsError) {
+-    let listeners: Vec<Listener> = {
+-        let mut state = ctx.state.borrow_mut();
+-        match state.window_listeners.get_mut("error") {
+-            Some(listeners) => {
+-                let cloned = listeners.clone();
+-                listeners.retain(|l| !l.once);
+-                cloned
+-            }
+-            None => Vec::new(),
+-        }
+-    };
++    let listeners = ctx
++        .state
++        .borrow()
++        .listener_ids(EventTarget::Window, "error");
+     let onerror = context
+         .global_object()
+         .get(js_string!("onerror"), context)
+@@ -1154,11 +1201,15 @@ fn dispatch_error_event(ctx: &DomCtx, context: &mut Context, error: &JsError) {
+     crate::dom::define_value(&event_obj, "colno", JsValue::from(0), context);
+     crate::dom::define_value(&event_obj, "error", error_value.clone(), context);
+ 
+-    for listener in listeners {
+-        if let Err(error) = listener
+-            .callback
+-            .call(&global, &[event_obj.clone().into()], context)
+-        {
++    for id in listeners {
++        let Some(callback) = ctx
++            .state
++            .borrow_mut()
++            .begin_invoke(EventTarget::Window, "error", id)
++        else {
++            continue;
++        };
++        if let Err(error) = callback.call(&global, &[event_obj.clone().into()], context) {
+             report_js_error(ctx, context, "error event listener", &error);
+         }
+     }
+@@ -1379,6 +1430,13 @@ impl ScriptRuntime {
+             2,
+             window_remove_event_listener,
+         );
++        register_global_fn(&mut context, "dispatchEvent", 1, window_dispatch_event);
++        // Synthetic events (`new Event(type, init)`, see the bootstrap) and `classList`
++        register_global_fn(&mut context, "__blitz_create_event", 3, crate::dom::event::create_synthetic_event);
++        register_global_fn(&mut context, "__blitz_class_list", 2, crate::dom::element::class_list_op);
++        // `performance`: the shared clock contract (canvas-dom-host)
++        register_global_fn(&mut context, "__blitz_performance_now", 0, performance_now);
++        register_global_fn(&mut context, "__blitz_time_origin", 0, time_origin);
+ 
+         // Embedder message channel (see `ScriptDocument::take_messages`)
+         register_global_fn(&mut context, "__blitz_send_message", 1, send_message);
+@@ -1624,7 +1682,12 @@ impl ScriptRuntime {
+         if due.is_empty() {
+             return false;
+         }
+-        for timer in due {
++        // Each timer callback is a task: microtasks drain after it (before the next timer).
++        // A timer cleared by an earlier callback of the same batch does not run.
++        for id in due {
++            let Some(timer) = self.ctx.state.borrow_mut().timers.begin_run(id) else {
++                continue;
++            };
+             if let Err(error) =
+                 timer
+                     .callback
+@@ -1632,8 +1695,8 @@ impl ScriptRuntime {
+             {
+                 report_js_error(&self.ctx, &mut self.context, "timer callback", &error);
+             }
++            self.run_jobs("timer microtasks");
+         }
+-        self.run_jobs("timer microtasks");
+         true
+     }
+ 
+@@ -1716,21 +1779,14 @@ impl ScriptRuntime {
+     ) -> bool {
+         let ctx = self.ctx.clone();
+         let context = &mut self.context;
+-        let on_name = JsString::from(format!("on{name}"));
+ 
+         // Fast path: bail if no listener of this type could possibly be registered
+         let may_have_listeners = {
+             let state = ctx.state.borrow();
+-            let registry_hit = chain.iter().any(|node_id| {
+-                state
+-                    .node_listeners
+-                    .get(node_id)
+-                    .and_then(|map| map.get(name))
+-                    .is_some_and(|listeners| !listeners.is_empty())
+-            }) || state
+-                .window_listeners
+-                .get(name)
+-                .is_some_and(|listeners| !listeners.is_empty());
++            let registry_hit = chain
++                .iter()
++                .any(|node_id| state.has_listeners(EventTarget::Node((*node_id).into()), name))
++                || state.has_listeners(EventTarget::Window, name);
+             // `on<event>` handlers can only exist on nodes that script has touched
+             // (i.e. nodes with a cached wrapper)
+             let wrapper_hit = chain
+@@ -1744,108 +1800,17 @@ impl ScriptRuntime {
+ 
+         let target: JsValue = node_wrapper(&ctx, chain[0], context).into();
+         let event_obj = make_event(&ctx, &target, context);
+-        let event_ref = |event_obj: &JsObject, f: &dyn Fn(&EventRef) -> bool| -> bool {
+-            event_obj
+-                .downcast_ref::<EventRef>()
+-                .map(|event| f(&event))
+-                .unwrap_or(false)
+-        };
+-
+-        let mut any_called = false;
+-
+-        'chain: for &node_id in chain {
+-            // Gather listeners for this node: `addEventListener` listeners plus
+-            // an `on<event>` property handler (if any)
+-            let mut callbacks: Vec<JsObject> = Vec::new();
+-            {
+-                let mut state = ctx.state.borrow_mut();
+-                if let Some(listeners) = state
+-                    .node_listeners
+-                    .get_mut(&node_id)
+-                    .and_then(|map| map.get_mut(name))
+-                {
+-                    callbacks.extend(listeners.iter().map(|l| l.callback.clone()));
+-                    // `once` listeners are removed at dispatch time
+-                    listeners.retain(|l| !l.once);
+-                }
+-            }
+-            let wrapper = ctx.state.borrow().node_wrappers.get(&node_id).cloned();
+-            if let Some(wrapper) = wrapper {
+-                if let Ok(handler) = wrapper.get(on_name.clone(), context) {
+-                    if let Some(handler) = handler.as_object() {
+-                        if handler.is_callable() {
+-                            callbacks.push(handler);
+-                        }
+-                    }
+-                }
+-            }
+-
+-            if callbacks.is_empty() {
+-                if !bubbles {
+-                    break;
+-                }
+-                continue;
+-            }
+-
+-            let current_target: JsValue = node_wrapper(&ctx, node_id, context).into();
+-            crate::dom::define_value(&event_obj, "currentTarget", current_target.clone(), context);
+-
+-            for callback in callbacks {
+-                any_called = true;
+-                if let Err(error) =
+-                    callback.call(&current_target, &[event_obj.clone().into()], context)
+-                {
+-                    report_js_error(&ctx, context, "event listener", &error);
+-                }
+-                if event_ref(&event_obj, &|event| event.stopped_immediate.get()) {
+-                    break 'chain;
+-                }
+-            }
+-
+-            if !bubbles || event_ref(&event_obj, &|event| event.stopped.get()) {
+-                break;
+-            }
+-        }
+-
+-        // Window-level listeners
+-        if bubbles && !event_ref(&event_obj, &|event| event.stopped.get()) {
+-            let listeners: Vec<Listener> = {
+-                let mut state = ctx.state.borrow_mut();
+-                match state.window_listeners.get_mut(name) {
+-                    Some(listeners) => {
+-                        let cloned = listeners.clone();
+-                        listeners.retain(|l| !l.once);
+-                        cloned
+-                    }
+-                    None => Vec::new(),
+-                }
+-            };
+-            if !listeners.is_empty() {
+-                let global: JsValue = context.global_object().into();
+-                crate::dom::define_value(&event_obj, "currentTarget", global.clone(), context);
+-                for listener in listeners {
+-                    any_called = true;
+-                    if let Err(error) =
+-                        listener
+-                            .callback
+-                            .call(&global, &[event_obj.clone().into()], context)
+-                    {
+-                        report_js_error(&ctx, context, "event listener", &error);
+-                    }
+-                    if event_ref(&event_obj, &|event| event.stopped_immediate.get()) {
+-                        break;
+-                    }
+-                }
+-            }
+-        }
+-
+-        crate::dom::define_value(&event_obj, "currentTarget", JsValue::null(), context);
++        let any_called = dispatch_to_chain(&ctx, context, chain, name, bubbles, true, &event_obj);
+ 
++        let flags = event_obj
++            .downcast_ref::<EventRef>()
++            .map(|event| (event.prevented.get(), event.stopped.get()))
++            .unwrap_or((false, false));
+         // Feed `preventDefault` / `stopPropagation` back into Blitz
+-        if event_ref(&event_obj, &|event| event.prevented.get()) {
++        if flags.0 {
+             event_state.prevent_default();
+         }
+-        if event_ref(&event_obj, &|event| event.stopped.get()) {
++        if flags.1 {
+             event_state.stop_propagation();
+         }
+         if any_called {
+@@ -1877,30 +1842,23 @@ impl ScriptRuntime {
+         let ctx = self.ctx.clone();
+         let context = &mut self.context;
+ 
+-        let listeners: Vec<Listener> = {
+-            let mut state = ctx.state.borrow_mut();
+-            match state.window_listeners.get_mut(name) {
+-                Some(listeners) => {
+-                    let cloned = listeners.clone();
+-                    listeners.retain(|l| !l.once);
+-                    cloned
+-                }
+-                None => Vec::new(),
+-            }
+-        };
++        let listeners = ctx.state.borrow().listener_ids(EventTarget::Window, name);
+ 
+         let global: JsValue = context.global_object().into();
+         let event_obj = create_event(&ctx, name, false, false, &global, context);
+         crate::dom::define_value(&event_obj, "currentTarget", global.clone(), context);
+ 
+         let mut any_called = false;
+-        for listener in listeners {
++        for id in listeners {
++            let Some(callback) = ctx
++                .state
++                .borrow_mut()
++                .begin_invoke(EventTarget::Window, name, id)
++            else {
++                continue;
++            };
+             any_called = true;
+-            if let Err(error) =
+-                listener
+-                    .callback
+-                    .call(&global, &[event_obj.clone().into()], context)
+-            {
++            if let Err(error) = callback.call(&global, &[event_obj.clone().into()], context) {
+                 report_js_error(&ctx, context, "event listener", &error);
+             }
+         }
+@@ -1925,6 +1883,122 @@ impl ScriptRuntime {
+     }
+ }
+ 
++/// Dispatch `event_obj` along `chain` (target first): the event dispatch algorithm described
++/// in canvas-dom-host's `events` module, plus Boa's `on<event>` handler properties (run after
++/// the listeners of each node). Listener selection (snapshot, removed-meanwhile, `once`) comes
++/// from the shared registry; callbacks are Boa objects held by this runtime. With
++/// `include_window`, bubbling events then reach `window` listeners.
++/// Returns `true` if any callback ran.
++pub(crate) fn dispatch_to_chain(
++    ctx: &DomCtx,
++    context: &mut Context,
++    chain: &[NodeId],
++    name: &str,
++    bubbles: bool,
++    include_window: bool,
++    event_obj: &JsObject,
++) -> bool {
++    let on_name = JsString::from(format!("on{name}"));
++    let flag = |f: &dyn Fn(&EventRef) -> bool| -> bool {
++        event_obj
++            .downcast_ref::<EventRef>()
++            .map(|event| f(&event))
++            .unwrap_or(false)
++    };
++    let mut any_called = false;
++
++    'chain: for (index, &node_id) in chain.iter().enumerate() {
++        let target = EventTarget::Node(node_id.into());
++        let ids = ctx.state.borrow().listener_ids(target, name);
++        let handler = ctx
++            .state
++            .borrow()
++            .node_wrappers
++            .get(&node_id)
++            .cloned()
++            .and_then(|wrapper| wrapper.get(on_name.clone(), context).ok())
++            .and_then(|handler| handler.as_object())
++            .filter(|handler| handler.is_callable());
++
++        if ids.is_empty() && handler.is_none() {
++            if !bubbles {
++                break;
++            }
++            continue;
++        }
++
++        let current_target: JsValue = node_wrapper(ctx, node_id, context).into();
++        crate::dom::define_value(event_obj, "currentTarget", current_target.clone(), context);
++        crate::dom::define_value(
++            event_obj,
++            "eventPhase",
++            JsValue::from(if index == 0 { 2 } else { 3 }),
++            context,
++        );
++
++        for id in ids {
++            let Some(callback) = ctx.state.borrow_mut().begin_invoke(target, name, id) else {
++                continue;
++            };
++            any_called = true;
++            if let Err(error) = callback.call(&current_target, &[event_obj.clone().into()], context)
++            {
++                report_js_error(ctx, context, "event listener", &error);
++            }
++            if flag(&|event| event.stopped_immediate.get()) {
++                break 'chain;
++            }
++        }
++        if let Some(handler) = handler {
++            any_called = true;
++            if let Err(error) = handler.call(&current_target, &[event_obj.clone().into()], context)
++            {
++                report_js_error(ctx, context, "event listener", &error);
++            }
++            if flag(&|event| event.stopped_immediate.get()) {
++                break 'chain;
++            }
++        }
++
++        if !bubbles || flag(&|event| event.stopped.get()) {
++            break;
++        }
++    }
++
++    // Window-level listeners
++    if include_window
++        && bubbles
++        && !flag(&|event| event.stopped.get() || event.stopped_immediate.get())
++    {
++        let ids = ctx.state.borrow().listener_ids(EventTarget::Window, name);
++        if !ids.is_empty() {
++            let global: JsValue = context.global_object().into();
++            crate::dom::define_value(event_obj, "currentTarget", global.clone(), context);
++            crate::dom::define_value(event_obj, "eventPhase", JsValue::from(3), context);
++            for id in ids {
++                let Some(callback) =
++                    ctx.state
++                        .borrow_mut()
++                        .begin_invoke(EventTarget::Window, name, id)
++                else {
++                    continue;
++                };
++                any_called = true;
++                if let Err(error) = callback.call(&global, &[event_obj.clone().into()], context) {
++                    report_js_error(ctx, context, "event listener", &error);
++                }
++                if flag(&|event| event.stopped_immediate.get()) {
++                    break;
++                }
++            }
++        }
++    }
++
++    crate::dom::define_value(event_obj, "currentTarget", JsValue::null(), context);
++    crate::dom::define_value(event_obj, "eventPhase", JsValue::from(0), context);
++    any_called
++}
++
+ fn register_global(context: &mut Context, name: &str, value: JsValue) {
+     context
+         .register_global_property(
+@@ -2195,7 +2269,7 @@ fn css_property_supported(
+     context: &mut Context,
+ ) -> JsResult<JsValue> {
+     let name = to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
+-    Ok(JsValue::from(blitz_dom::css_property_is_supported(&name)))
++    Ok(JsValue::from(canvas_dom_host::style::is_supported_property(&name)))
+ }
+ 
+ /// `__blitz_parse_transform(string)`: parse a CSS `<transform-list>` into a
+@@ -2335,6 +2409,18 @@ fn set_animation_time(_: &JsValue, args: &[JsValue], context: &mut Context) -> J
+     Ok(JsValue::from(found))
+ }
+ 
++fn performance_now(_: &JsValue, _: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
++    let ctx = dom_ctx(context)?;
++    let clock = ctx.state.borrow().clock.clone();
++    Ok(JsValue::from(clock.contract().performance_now(clock.elapsed_ms())))
++}
++
++fn time_origin(_: &JsValue, _: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
++    let ctx = dom_ctx(context)?;
++    let clock = ctx.state.borrow().clock.clone();
++    Ok(JsValue::from(clock.contract().time_origin()))
++}
++
+ fn send_message(_: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+     let ctx = dom_ctx(context)?;
+     let message = args
+@@ -2414,30 +2500,7 @@ fn window_add_event_listener(
+     args: &[JsValue],
+     context: &mut Context,
+ ) -> JsResult<JsValue> {
+-    let ctx = dom_ctx(context)?;
+-    let event_type =
+-        crate::dom::to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
+-    let Some(callback) = args
+-        .get(1)
+-        .and_then(|value| value.as_object())
+-        .filter(|obj| obj.is_callable())
+-    else {
+-        return Ok(JsValue::undefined());
+-    };
+-
+-    let mut state = ctx.state.borrow_mut();
+-    let listeners = state.window_listeners.entry(event_type).or_default();
+-    if !listeners
+-        .iter()
+-        .any(|l| JsObject::equals(&l.callback, &callback))
+-    {
+-        listeners.push(Listener {
+-            callback,
+-            capture: false,
+-            once: false,
+-        });
+-    }
+-    Ok(JsValue::undefined())
++    crate::dom::node::add_listener(EventTarget::Window, args, context)
+ }
+ 
+ fn window_remove_event_listener(
+@@ -2445,16 +2508,9 @@ fn window_remove_event_listener(
+     args: &[JsValue],
+     context: &mut Context,
+ ) -> JsResult<JsValue> {
+-    let ctx = dom_ctx(context)?;
+-    let event_type =
+-        crate::dom::to_rust_string(args.first().unwrap_or(&JsValue::undefined()), context)?;
+-    let Some(callback) = args.get(1).and_then(|value| value.as_object()) else {
+-        return Ok(JsValue::undefined());
+-    };
++    crate::dom::node::remove_listener(EventTarget::Window, args, context)
++}
+ 
+-    let mut state = ctx.state.borrow_mut();
+-    if let Some(listeners) = state.window_listeners.get_mut(&event_type) {
+-        listeners.retain(|l| !JsObject::equals(&l.callback, &callback));
+-    }
+-    Ok(JsValue::undefined())
++fn window_dispatch_event(_: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
++    crate::dom::node::dispatch_event_to(EventTarget::Window, args, context)
+ }
+diff --git a/packages/blitz-vibey-script/src/state.rs b/packages/blitz-vibey-script/src/state.rs
+index 39c7838f..91cfc80d 100644
+--- a/packages/blitz-vibey-script/src/state.rs
++++ b/packages/blitz-vibey-script/src/state.rs
+@@ -8,6 +8,7 @@ use std::rc::Rc;
+ use blitz_dom::{BaseDocument, NodeId};
+ use boa_engine::object::JsObject;
+ use boa_engine::{Finalize, JsData, Trace};
++use canvas_dom_host::events::{CallbackKey, EventTarget, ListenerId, ListenerRegistry};
+ use url::Url;
+ 
+ use crate::clock::ScriptClock;
+@@ -44,15 +45,46 @@ impl ReadyState {
+     }
+ }
+ 
+-/// An event listener registered via `addEventListener`
+-#[derive(Clone)]
+-pub(crate) struct Listener {
+-    pub callback: JsObject,
+-    pub capture: bool,
+-    pub once: bool,
++/// JS callbacks of event listeners, keyed by the [`CallbackKey`] that canvas-dom-host's
++/// listener registry stores. The callbacks are Boa GC roots owned by this runtime; a callback
++/// is released as soon as no registered listener uses its key.
++#[derive(Default)]
++pub(crate) struct CallbackTable {
++    next: u64,
++    entries: Vec<(CallbackKey, JsObject)>,
+ }
+ 
+-pub(crate) type ListenerMap = HashMap<String, Vec<Listener>>;
++impl CallbackTable {
++    fn find(&self, callback: &JsObject) -> Option<CallbackKey> {
++        self.entries
++            .iter()
++            .find(|(_, cb)| JsObject::equals(cb, callback))
++            .map(|(key, _)| *key)
++    }
++
++    fn key_for(&mut self, callback: &JsObject) -> CallbackKey {
++        if let Some(key) = self.find(callback) {
++            return key;
++        }
++        self.next += 1;
++        let key = CallbackKey(self.next);
++        self.entries.push((key, callback.clone()));
++        key
++    }
++
++    fn get(&self, key: CallbackKey) -> Option<JsObject> {
++        self.entries
++            .iter()
++            .find(|(k, _)| *k == key)
++            .map(|(_, cb)| cb.clone())
++    }
++
++    fn release_if_unused(&mut self, key: CallbackKey, registry: &ListenerRegistry) {
++        if !registry.callback_in_use(key) {
++            self.entries.retain(|(k, _)| *k != key);
++        }
++    }
++}
+ 
+ /// State owned by the script runtime but shared (via `Rc`) with the native
+ /// functions exposed to JavaScript.
+@@ -70,10 +102,14 @@ pub(crate) struct RuntimeState {
+     /// by the *same* JS object: scripts rely on object identity (`===`) and on
+     /// expando properties persisting across accesses.
+     pub node_wrappers: HashMap<NodeId, JsObject>,
+-    /// Event listeners registered on nodes, keyed by node id then event type.
+-    pub node_listeners: HashMap<NodeId, ListenerMap>,
+-    /// Event listeners registered on `window`.
+-    pub window_listeners: ListenerMap,
++    /// Event listener metadata (targets, types, flags, order), shared semantics from
++    /// canvas-dom-host. The callbacks themselves live in [`callbacks`](Self::callbacks).
++    pub listeners: ListenerRegistry,
++    /// Boa-owned callback objects of the registered listeners.
++    pub callbacks: CallbackTable,
++    /// Cache of `element.style` objects, so that `el.style === el.style`. Runtime-local,
++    /// keyed like [`node_wrappers`](Self::node_wrappers).
++    pub style_wrappers: HashMap<NodeId, JsObject>,
+     /// Pending timers (`setTimeout`/`setInterval`/`requestAnimationFrame`)
+     pub timers: TimerQueue,
+     /// The clock driving timer deadlines and `Date`
+@@ -118,6 +154,61 @@ impl RuntimeState {
+         }
+     }
+ 
++    /// `addEventListener`: duplicates (same callback and capture flag) are ignored.
++    pub fn add_listener(
++        &mut self,
++        target: EventTarget,
++        event_type: &str,
++        callback: &JsObject,
++        capture: bool,
++        once: bool,
++    ) {
++        let key = self.callbacks.key_for(callback);
++        self.listeners
++            .add(target, event_type, key, capture, once);
++        self.callbacks.release_if_unused(key, &self.listeners);
++    }
++
++    /// `removeEventListener`
++    pub fn remove_listener(
++        &mut self,
++        target: EventTarget,
++        event_type: &str,
++        callback: &JsObject,
++        capture: bool,
++    ) {
++        if let Some(key) = self.callbacks.find(callback) {
++            self.listeners.remove(target, event_type, key, capture);
++            self.callbacks.release_if_unused(key, &self.listeners);
++        }
++    }
++
++    pub fn has_listeners(&self, target: EventTarget, event_type: &str) -> bool {
++        self.listeners.has_listeners(target, event_type)
++    }
++
++    /// Snapshot of the listeners to run for one dispatch step.
++    pub fn listener_ids(&self, target: EventTarget, event_type: &str) -> Vec<ListenerId> {
++        self.listeners.listener_ids(target, event_type)
++    }
++
++    /// The callback to call for a snapshotted listener, or `None` if the listener was removed
++    /// meanwhile. `once` listeners are removed (and their callback released) here.
++    pub fn begin_invoke(
++        &mut self,
++        target: EventTarget,
++        event_type: &str,
++        id: ListenerId,
++    ) -> Option<JsObject> {
++        let listener = self.listeners.begin_invoke(target, event_type, id)?;
++        let callback = self.callbacks.get(listener.callback);
++        if listener.once {
++            self.callbacks
++                .release_if_unused(listener.callback, &self.listeners);
++        }
++        callback
++    }
++
+     pub fn protos(&self) -> &DomProtos {
+         self.protos
+             .as_ref()
+diff --git a/packages/blitz-vibey-script/src/timers.rs b/packages/blitz-vibey-script/src/timers.rs
+index 821c7602..924164a0 100644
+--- a/packages/blitz-vibey-script/src/timers.rs
++++ b/packages/blitz-vibey-script/src/timers.rs
+@@ -1,22 +1,32 @@
+-//! Timer support (`setTimeout` / `setInterval` / `requestAnimationFrame`)
++//! Timer support (`setTimeout` / `setInterval` / `requestAnimationFrame`).
++//!
++//! Ordering comes from canvas-dom-host's [`TimerSchedule`] (deadline, then insertion order),
++//! shared with the Deno adapter. Callbacks and arguments stay here, in the Boa runtime.
++
++use std::collections::HashMap;
+ 
+ use boa_engine::JsValue;
+ use boa_engine::object::JsObject;
++use canvas_dom_host::timers::{TimerId, TimerSchedule};
+ use web_time::{Duration, Instant};
+ 
+ pub(crate) struct Timer {
+-    pub id: u64,
+-    pub deadline: Instant,
+     /// `Some` for `setInterval` timers, which reschedule themselves.
+     pub interval: Option<Duration>,
+     pub callback: JsObject,
+     pub args: Vec<JsValue>,
+ }
+ 
++struct Entry {
++    interval: Option<Duration>,
++    callback: JsObject,
++    args: Vec<JsValue>,
++}
++
+ #[derive(Default)]
+ pub(crate) struct TimerQueue {
+-    next_id: u64,
+-    timers: Vec<Timer>,
++    schedule: TimerSchedule<Instant>,
++    entries: HashMap<u64, Entry>,
+ }
+ 
+ impl TimerQueue {
+@@ -28,54 +38,58 @@ impl TimerQueue {
+         callback: JsObject,
+         args: Vec<JsValue>,
+     ) -> u64 {
+-        self.next_id += 1;
+-        let id = self.next_id;
+-        self.timers.push(Timer {
++        let id = self.schedule.add(now + delay).0;
++        self.entries.insert(
+             id,
+-            deadline: now + delay,
+-            interval,
+-            callback,
+-            args,
+-        });
++            Entry {
++                interval,
++                callback,
++                args,
++            },
++        );
+         id
+     }
+ 
+     pub fn remove(&mut self, id: u64) {
+-        self.timers.retain(|timer| timer.id != id);
++        self.schedule.remove(TimerId(id));
++        self.entries.remove(&id);
+     }
+ 
+     /// The deadline of the timer which is due soonest (if any)
+     pub fn next_deadline(&self) -> Option<Instant> {
+-        self.timers.iter().map(|timer| timer.deadline).min()
++        self.schedule.next_deadline()
+     }
+ 
+-    /// Remove and return all timers that are due at `now`, soonest first.
+-    /// Interval timers are rescheduled.
+-    pub fn take_due(&mut self, now: Instant) -> Vec<Timer> {
+-        let mut due: Vec<Timer> = Vec::new();
+-        let mut idx = 0;
+-        while idx < self.timers.len() {
+-            if self.timers[idx].deadline <= now {
+-                due.push(self.timers.swap_remove(idx));
+-            } else {
+-                idx += 1;
++    /// The ids of all timers that are due at `now`, in run order (deadline, then insertion).
++    /// Interval timers are rescheduled here. Fetch each callback with
++    /// [`begin_run`](Self::begin_run) right before running it.
++    pub fn take_due(&mut self, now: Instant) -> Vec<u64> {
++        let mut due = Vec::new();
++        for (id, _deadline) in self.schedule.take_due(now) {
++            let Some(entry) = self.entries.get(&id.0) else {
++                continue;
++            };
++            if let Some(interval) = entry.interval {
++                self.schedule
++                    .reschedule(id, now + interval.max(Duration::from_millis(1)));
+             }
++            due.push(id.0);
+         }
++        due
++    }
+ 
+-        // Reschedule interval timers
+-        for timer in &due {
+-            if let Some(interval) = timer.interval {
+-                self.timers.push(Timer {
+-                    id: timer.id,
+-                    deadline: now + interval.max(Duration::from_millis(1)),
+-                    interval: timer.interval,
+-                    callback: timer.callback.clone(),
+-                    args: timer.args.clone(),
+-                });
+-            }
++    /// The timer to run now, or `None` if it was cleared since [`take_due`](Self::take_due)
++    /// (for example by an earlier callback of the same batch). One-shot timers are removed.
++    pub fn begin_run(&mut self, id: u64) -> Option<Timer> {
++        let entry = self.entries.get(&id)?;
++        let timer = Timer {
++            interval: entry.interval,
++            callback: entry.callback.clone(),
++            args: entry.args.clone(),
++        };
++        if timer.interval.is_none() {
++            self.entries.remove(&id);
+         }
+-
+-        due.sort_by_key(|timer| timer.deadline);
+-        due
++        Some(timer)
+     }
+ }
+-- 
+2.43.0
+

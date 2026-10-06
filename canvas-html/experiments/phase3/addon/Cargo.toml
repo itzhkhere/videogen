@@ -1,0 +1,26 @@
+[package]
+name = "phase3-addon"
+version = "0.1.0"
+edition = "2024"
+publish = false
+[lib]
+crate-type = ["cdylib"]
+[dependencies]
+canvas-dom-host = { path = "../../../dom-host" }
+phase3-engine = { path = "../engine" }
+anyhow.workspace = true
+serde_json.workspace = true
+napi = { version = "3", default-features = false, features = ["napi8", "serde-json"] }
+napi-derive = "3"
+libc = "0.2"
+blitz-dom = { git = "https://github.com/DioxusLabs/blitz", rev = "0db8c74a5f8a0df77eed1b33c846eb041515b6c7" }
+blitz-html = { git = "https://github.com/DioxusLabs/blitz", rev = "0db8c74a5f8a0df77eed1b33c846eb041515b6c7" }
+blitz-paint = { git = "https://github.com/DioxusLabs/blitz", rev = "0db8c74a5f8a0df77eed1b33c846eb041515b6c7" }
+blitz-traits = { git = "https://github.com/DioxusLabs/blitz", rev = "0db8c74a5f8a0df77eed1b33c846eb041515b6c7" }
+parley = { git = "https://github.com/linebender/parley", rev = "718dcb721941fd8e72128833122d31f5a4e80504", default-features = false, features = ["std", "system"] }
+anyrender = "0.14"
+anyrender_skia = "0.12"
+peniko = "0.6"
+png = "0.18"
+[build-dependencies]
+napi-build = "2"

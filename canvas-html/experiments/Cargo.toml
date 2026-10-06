@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["runtime-poc", "deno-core-smoke", "deno-napi-coexist", "deno-canvas-bridge", "phase2/host", "phase2/engine", "phase2/addon"]
+members = ["runtime-poc", "deno-core-smoke", "deno-napi-coexist", "deno-canvas-bridge", "phase2/host", "phase2/engine", "phase2/addon", "phase3/engine", "phase3/addon"]
 
 [workspace.dependencies]
 deno_core = "=0.412.0"

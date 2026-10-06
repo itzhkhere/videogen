@@ -1,0 +1,7 @@
+CSS motion, 30 fps       identical | 1 renderer 0.72 s, 2 workers 0.45 s (1.6x)
+GSAP, 30 fps             identical | 1 renderer 0.45 s, 2 workers 0.35 s (1.3x)
+Motion library, 24 fps   identical | 1 renderer 0.48 s, 2 workers 0.36 s (1.3x)
+
+real	0m2.882s
+user	0m3.559s
+sys	0m0.403s
