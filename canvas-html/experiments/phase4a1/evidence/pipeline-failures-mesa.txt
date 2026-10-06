@@ -1,0 +1,15 @@
+gpu-gl sync 1 frames 12 in order & identical to sequential render(): true latency ms -
+gpu-gl deferred 1 frames 12 in order & identical to sequential render(): true latency ms 4.0
+gpu-gl deferred 2 frames 12 in order & identical to sequential render(): true latency ms 13.8
+gpu-gl deferred 4 frames 12 in order & identical to sequential render(): true latency ms 29.4
+gpu-gl pbo 1 frames 12 in order & identical to sequential render(): true latency ms 2.9
+gpu-gl pbo 2 frames 12 in order & identical to sequential render(): true latency ms 13.0
+gpu-gl pbo 4 frames 12 in order & identical to sequential render(): true latency ms 29.4
+full pipeline: GPU pipeline submit failed (ganesh-gl): pipeline full (2 frames in flight): complete a frame first | close with 2 in flight: ok
+device lost while in flight: GPU pipeline completion failed: GPU context is lost (abandoned) | submit after loss: GPU pipeline submit failed (ganesh-gl): GPU context is lost (abandoned) | stop discarded 0
+gpu-vulkan sync 1 frames 12 in order & identical to sequential render(): true latency ms -
+gpu-vulkan deferred 1 frames 12 in order & identical to sequential render(): true latency ms 13.0
+gpu-vulkan deferred 2 frames 12 in order & identical to sequential render(): true latency ms 19.7
+gpu-vulkan deferred 4 frames 12 in order & identical to sequential render(): true latency ms 35.1
+full pipeline: GPU pipeline submit failed (ganesh-vulkan): pipeline full (2 frames in flight): complete a frame first | close with 2 in flight: ok
+device lost while in flight: GPU pipeline completion failed: GPU context is lost (abandoned) | submit after loss: GPU pipeline submit failed (ganesh-vulkan): GPU context is lost (abandoned) | stop discarded 0

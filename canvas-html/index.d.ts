@@ -153,7 +153,8 @@ export declare class HtmlRenderer {
   /**
    * Experimental (Phase 4A.1, Design C): render into a caller-owned byte view of exactly
    * pixelWidth × pixelHeight × 4 bytes (Buffer, Uint8Array, or a view of an ArrayBuffer or
-   * SharedArrayBuffer). Nothing is allocated or copied in canvas-html. The view is overwritten;
+   * SharedArrayBuffer; any other typed array of that byte length is written as raw bytes).
+   * Nothing is allocated or copied in canvas-html. The view is overwritten;
    * the caller decides when to reuse it, and must not let another thread touch it during the
    * call. Returns the timings (nanoseconds).
    */
