@@ -1,0 +1,67 @@
+## canvas-dom-host normal dependencies: engine crates
+blitz-dom v0.3.0-beta.2 (/home/user/videogen/blitz/packages/blitz-dom)
+blitz-traits v0.3.0-beta.2 (/home/user/videogen/blitz/packages/blitz-traits)
+parley v0.11.0 (https://github.com/linebender/parley?rev=718dcb721941fd8e72128833122d31f5a4e80504#718dcb72)
+parley_data v0.11.0 (https://github.com/linebender/parley?rev=718dcb721941fd8e72128833122d31f5a4e80504#718dcb72)
+parley_emoji v0.11.0 (https://github.com/linebender/parley?rev=718dcb721941fd8e72128833122d31f5a4e80504#718dcb72)
+parley_engine v0.11.0 (https://github.com/linebender/parley?rev=718dcb721941fd8e72128833122d31f5a4e80504#718dcb72)
+stylo v0.22.0 (/home/user/videogen/canvas-html/vendor/stylo)
+stylo v0.22.0 (/home/user/videogen/canvas-html/vendor/stylo) (*)
+stylo_atoms v0.22.0
+stylo_atoms v0.22.0 (*)
+stylo_derive v0.22.0 (proc-macro)
+stylo_dom v0.22.0
+stylo_dom v0.22.0 (*)
+stylo_malloc_size_of v0.22.0
+stylo_malloc_size_of v0.22.0 (*)
+stylo_static_prefs v0.22.0
+stylo_taffy v0.3.0-beta.2 (/home/user/videogen/blitz/packages/stylo_taffy)
+stylo_traits v0.22.0
+stylo_traits v0.22.0 (*)
+taffy v0.14.0 (https://github.com/DioxusLabs/taffy?rev=04965fc5ac0c0e9423f5aab8ca29b48231738c7a#04965fc5)
+taffy v0.14.0 (https://github.com/DioxusLabs/taffy?rev=04965fc5ac0c0e9423f5aab8ca29b48231738c7a#04965fc5) (*)
+## who depends on boa_engine (production)
+blitz-vibey-script v0.3.0-beta.2 (/home/user/videogen/blitz/packages/blitz-vibey-script)
+blitz-vibey-script v0.3.0-beta.2 (/home/user/videogen/blitz/packages/blitz-vibey-script) (*)
+boa_engine v0.22.0
+boa_runtime v0.22.0
+boa_runtime v0.22.0 (*)
+boa_wintertc v0.22.0
+canvas-html v0.5.0 (/home/user/videogen/canvas-html)
+## who depends on blitz-dom (production)
+blitz-dom v0.3.0-beta.2 (/home/user/videogen/blitz/packages/blitz-dom)
+├── blitz-html v0.3.0-beta.2 (/home/user/videogen/blitz/packages/blitz-html)
+├── blitz-paint v0.3.0-beta.2 (/home/user/videogen/blitz/packages/blitz-paint)
+├── blitz-vibey-script v0.3.0-beta.2 (/home/user/videogen/blitz/packages/blitz-vibey-script)
+├── canvas-dom-host v0.1.0 (/home/user/videogen/canvas-html/dom-host)
+└── canvas-html v0.5.0 (/home/user/videogen/canvas-html)
+## does blitz-paint / anyrender_skia depend on boa or the host?
+none
+none
+## who depends on v8 / deno_core (experiments)
+deno_core v0.412.0
+deno_core v0.412.0 (*)
+phase2-addon v0.1.0 (/home/user/videogen/canvas-html/experiments/phase2/addon)
+phase2-engine v0.1.0 (/home/user/videogen/canvas-html/experiments/phase2/engine)
+phase3-addon v0.1.0 (/home/user/videogen/canvas-html/experiments/phase3/addon)
+phase3-engine v0.1.0 (/home/user/videogen/canvas-html/experiments/phase3/engine)
+## phase3-addon document.rs-level deps on v8? (blitz-dom/paint trees)
+none
+## source-level: engine identifiers in shared host, layout/paint document, production lib
+dom-host/src/clock.rs                            0
+dom-host/src/document.rs                         0
+dom-host/src/errors.rs                           0
+dom-host/src/events.rs                           1
+dom-host/src/handles.rs                          0
+dom-host/src/lib.rs                              1
+dom-host/src/runtime.rs                          0
+dom-host/src/style.rs                            0
+dom-host/src/timers.rs                           0
+experiments/phase3/addon/src/document.rs         0
+src/lib.rs                                       0
+## unsafe in shared host
+dom-host/src/clock.rs:0 dom-host/src/document.rs:0 dom-host/src/errors.rs:0 dom-host/src/events.rs:0 dom-host/src/handles.rs:0 dom-host/src/lib.rs:1 dom-host/src/runtime.rs:0 dom-host/src/style.rs:0 dom-host/src/timers.rs:0 
+dom-host/src/events.rs:4://! each distinct JS callback object and keeps the callback itself (Boa: a rooted `JsObject`
+dom-host/src/lib.rs:16://! Dependency rule: nothing here may name `boa_engine`, `deno_core` or `v8` types.
+dom-host/src/lib.rs:24:#![forbid(unsafe_code)]
+(the hits above are doc comments and #![forbid(unsafe_code)]; no code uses engine types)

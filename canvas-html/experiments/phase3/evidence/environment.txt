@@ -1,0 +1,16 @@
+node v24.19.0
+rustc 1.97.0 (2d8144b78 2026-07-07)
+cargo 1.97.0 (c980f4866 2026-06-30)
+Linux 6.18.44-fc-v70 x86_64
+../../../Cargo.lock:name = "boa_engine"	../../../Cargo.lock-version = "0.22.0"
+../../../Cargo.lock:name = "napi"	../../../Cargo.lock-version = "3.14.0"
+../../../Cargo.lock:name = "skia-bindings"	../../../Cargo.lock-version = "0.153.3"
+../../Cargo.lock:name = "deno_core"	../../Cargo.lock-version = "0.412.0"
+../../Cargo.lock:name = "napi"	../../Cargo.lock-version = "3.14.1"
+../../Cargo.lock:name = "skia-bindings"	../../Cargo.lock-version = "0.153.3"
+../../Cargo.lock:name = "v8"	../../Cargo.lock-version = "150.4.0"
+graphify Version: 0.9.77
+blitz base 0db8c74 + upstream-patches/blitz 0001-0013 (local branch head 9c8bf129)
+4
+               total        used        free      shared  buff/cache   available
+Mem:              15           0           6           0           9          14

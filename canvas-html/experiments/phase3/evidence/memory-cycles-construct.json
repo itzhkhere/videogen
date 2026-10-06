@@ -1,0 +1,139 @@
+{
+  "mode": "memory-cycles-construct",
+  "points": [
+    {
+      "label": "loaded",
+      "peakRssBytes": 66125824,
+      "node": {
+        "rss": 65994752,
+        "heapTotal": 7860224,
+        "heapUsed": 5496504,
+        "external": 2332894,
+        "arrayBuffers": 143823
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 4186112,
+        "allocated": 3097376,
+        "freeInArenas": 1088736,
+        "mapped": 0,
+        "mappedRegions": 0
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 0,
+          "dropped": 0,
+          "watchdogs": 0
+        },
+        "openRenderers": 0,
+        "executionThreads": 0,
+        "wrongThreadDrops": 0
+      },
+      "deno": []
+    },
+    {
+      "label": "100 cycles",
+      "peakRssBytes": 101101568,
+      "node": {
+        "rss": 100876288,
+        "heapTotal": 8122368,
+        "heapUsed": 5135688,
+        "external": 2332898,
+        "arrayBuffers": 143787
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 11051008,
+        "allocated": 6866464,
+        "freeInArenas": 4184544,
+        "mapped": 0,
+        "mappedRegions": 0
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 100,
+          "dropped": 100,
+          "watchdogs": 0
+        },
+        "openRenderers": 0,
+        "executionThreads": 0,
+        "wrongThreadDrops": 0
+      },
+      "deno": []
+    },
+    {
+      "label": "200 cycles",
+      "peakRssBytes": 105218048,
+      "node": {
+        "rss": 104468480,
+        "heapTotal": 7073792,
+        "heapUsed": 5143736,
+        "external": 2332898,
+        "arrayBuffers": 143787
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 14675968,
+        "allocated": 10398928,
+        "freeInArenas": 4277040,
+        "mapped": 0,
+        "mappedRegions": 0
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 200,
+          "dropped": 200,
+          "watchdogs": 0
+        },
+        "openRenderers": 0,
+        "executionThreads": 0,
+        "wrongThreadDrops": 0
+      },
+      "deno": []
+    },
+    {
+      "label": "400 cycles",
+      "peakRssBytes": 112689152,
+      "node": {
+        "rss": 111923200,
+        "heapTotal": 7073792,
+        "heapUsed": 5154408,
+        "external": 2332898,
+        "arrayBuffers": 143787
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 22052864,
+        "allocated": 17433424,
+        "freeInArenas": 4619440,
+        "mapped": 0,
+        "mappedRegions": 0
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 400,
+          "dropped": 400,
+          "watchdogs": 0
+        },
+        "openRenderers": 0,
+        "executionThreads": 0,
+        "wrongThreadDrops": 0
+      },
+      "deno": []
+    }
+  ],
+  "lifecycle": {
+    "engine": {
+      "created": 400,
+      "dropped": 400,
+      "watchdogs": 0
+    },
+    "openRenderers": 0,
+    "executionThreads": 0,
+    "wrongThreadDrops": 0
+  }
+}

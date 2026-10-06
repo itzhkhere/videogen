@@ -1,0 +1,285 @@
+{
+ "note": "graphify extract canvas-html/experiments --cargo --code-only (crate -> crate, directed). The root canvas-html workspace could not be extracted: graphify 0.9.77 cargo_introspect crashes on workspace member \".\"",
+ "edges": [
+  {
+   "from": "deno-canvas-bridge",
+   "to": "runtime-poc"
+  },
+  {
+   "from": "deno-canvas-bridge",
+   "to": "pkg_anyhow"
+  },
+  {
+   "from": "deno-canvas-bridge",
+   "to": "pkg_serde_json"
+  },
+  {
+   "from": "deno-canvas-bridge",
+   "to": "pkg_blitz_dom"
+  },
+  {
+   "from": "deno-canvas-bridge",
+   "to": "pkg_blitz_html"
+  },
+  {
+   "from": "deno-canvas-bridge",
+   "to": "pkg_blitz_paint"
+  },
+  {
+   "from": "deno-canvas-bridge",
+   "to": "pkg_blitz_traits"
+  },
+  {
+   "from": "deno-canvas-bridge",
+   "to": "pkg_parley"
+  },
+  {
+   "from": "deno-canvas-bridge",
+   "to": "pkg_anyrender"
+  },
+  {
+   "from": "deno-canvas-bridge",
+   "to": "pkg_anyrender_skia"
+  },
+  {
+   "from": "deno-canvas-bridge",
+   "to": "pkg_peniko"
+  },
+  {
+   "from": "deno-canvas-bridge",
+   "to": "pkg_png"
+  },
+  {
+   "from": "deno-canvas-bridge",
+   "to": "pkg_sha2"
+  },
+  {
+   "from": "deno-core-smoke",
+   "to": "runtime-poc"
+  },
+  {
+   "from": "deno-core-smoke",
+   "to": "pkg_anyhow"
+  },
+  {
+   "from": "deno-napi-coexist",
+   "to": "runtime-poc"
+  },
+  {
+   "from": "deno-napi-coexist",
+   "to": "pkg_deno_core"
+  },
+  {
+   "from": "deno-napi-coexist",
+   "to": "pkg_napi"
+  },
+  {
+   "from": "deno-napi-coexist",
+   "to": "pkg_napi_derive"
+  },
+  {
+   "from": "phase2-addon",
+   "to": "phase2-host"
+  },
+  {
+   "from": "phase2-addon",
+   "to": "phase2-engine"
+  },
+  {
+   "from": "phase2-addon",
+   "to": "pkg_anyhow"
+  },
+  {
+   "from": "phase2-addon",
+   "to": "pkg_serde_json"
+  },
+  {
+   "from": "phase2-addon",
+   "to": "pkg_napi"
+  },
+  {
+   "from": "phase2-addon",
+   "to": "pkg_napi_derive"
+  },
+  {
+   "from": "phase2-addon",
+   "to": "pkg_libc"
+  },
+  {
+   "from": "phase2-addon",
+   "to": "pkg_blitz_dom"
+  },
+  {
+   "from": "phase2-addon",
+   "to": "pkg_blitz_html"
+  },
+  {
+   "from": "phase2-addon",
+   "to": "pkg_blitz_paint"
+  },
+  {
+   "from": "phase2-addon",
+   "to": "pkg_blitz_traits"
+  },
+  {
+   "from": "phase2-addon",
+   "to": "pkg_parley"
+  },
+  {
+   "from": "phase2-addon",
+   "to": "pkg_anyrender"
+  },
+  {
+   "from": "phase2-addon",
+   "to": "pkg_anyrender_skia"
+  },
+  {
+   "from": "phase2-addon",
+   "to": "pkg_peniko"
+  },
+  {
+   "from": "phase2-addon",
+   "to": "pkg_png"
+  },
+  {
+   "from": "phase2-engine",
+   "to": "phase2-host"
+  },
+  {
+   "from": "phase2-engine",
+   "to": "pkg_deno_core"
+  },
+  {
+   "from": "phase2-engine",
+   "to": "pkg_anyhow"
+  },
+  {
+   "from": "phase2-engine",
+   "to": "pkg_serde_json"
+  },
+  {
+   "from": "phase2-engine",
+   "to": "pkg_tokio"
+  },
+  {
+   "from": "phase2-engine",
+   "to": "pkg_deno_error"
+  },
+  {
+   "from": "phase2-host",
+   "to": "pkg_anyhow"
+  },
+  {
+   "from": "phase2-host",
+   "to": "pkg_serde_json"
+  },
+  {
+   "from": "phase3-addon",
+   "to": "pkg_canvas_dom_host"
+  },
+  {
+   "from": "phase3-addon",
+   "to": "phase3-engine"
+  },
+  {
+   "from": "phase3-addon",
+   "to": "pkg_anyhow"
+  },
+  {
+   "from": "phase3-addon",
+   "to": "pkg_serde_json"
+  },
+  {
+   "from": "phase3-addon",
+   "to": "pkg_napi"
+  },
+  {
+   "from": "phase3-addon",
+   "to": "pkg_napi_derive"
+  },
+  {
+   "from": "phase3-addon",
+   "to": "pkg_libc"
+  },
+  {
+   "from": "phase3-addon",
+   "to": "pkg_blitz_dom"
+  },
+  {
+   "from": "phase3-addon",
+   "to": "pkg_blitz_html"
+  },
+  {
+   "from": "phase3-addon",
+   "to": "pkg_blitz_paint"
+  },
+  {
+   "from": "phase3-addon",
+   "to": "pkg_blitz_traits"
+  },
+  {
+   "from": "phase3-addon",
+   "to": "pkg_parley"
+  },
+  {
+   "from": "phase3-addon",
+   "to": "pkg_anyrender"
+  },
+  {
+   "from": "phase3-addon",
+   "to": "pkg_anyrender_skia"
+  },
+  {
+   "from": "phase3-addon",
+   "to": "pkg_peniko"
+  },
+  {
+   "from": "phase3-addon",
+   "to": "pkg_png"
+  },
+  {
+   "from": "phase3-engine",
+   "to": "pkg_canvas_dom_host"
+  },
+  {
+   "from": "phase3-engine",
+   "to": "pkg_blitz_dom"
+  },
+  {
+   "from": "phase3-engine",
+   "to": "pkg_deno_core"
+  },
+  {
+   "from": "phase3-engine",
+   "to": "pkg_deno_error"
+  },
+  {
+   "from": "phase3-engine",
+   "to": "pkg_anyhow"
+  },
+  {
+   "from": "phase3-engine",
+   "to": "pkg_serde_json"
+  },
+  {
+   "from": "phase3-engine",
+   "to": "pkg_tokio"
+  },
+  {
+   "from": "runtime-poc",
+   "to": "pkg_deno_core"
+  },
+  {
+   "from": "runtime-poc",
+   "to": "pkg_anyhow"
+  },
+  {
+   "from": "runtime-poc",
+   "to": "pkg_serde_json"
+  },
+  {
+   "from": "runtime-poc",
+   "to": "pkg_tokio"
+  }
+ ]
+}

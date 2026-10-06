@@ -1,0 +1,12 @@
+import {spawnSync} from 'node:child_process';
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+// Phase 3 lifecycle matrix (Phase 2's, on the shared-host addon). DOM/clock/GSAP/determinism contracts
+// moved to ../contract (run on both engines).
+const selected=process.argv.slice(2),all=['contracts','cycles','long','simultaneous','workers','exit-alive','exit-closed','exit-multiple','exit-exception'];const results=[];
+for(const mode of selected.length?selected:all){const script=mode.startsWith('memory-')?'memory-probe':mode==='workers'?'workers':mode.startsWith('exit-')?'process':'suite';const args=mode.startsWith('exit-')?[mode.slice(5)]:[mode];const start=performance.now();const p=spawnSync(process.execPath,['--expose-gc',new URL('./'+script+'.mjs',import.meta.url).pathname,...args],{timeout:240000,maxBuffer:16*1024*1024,env:mode.startsWith('exit-')?{...process.env,PHASE3_TRACE_DROPS:'1'}:process.env});
+ const base=new URL('../evidence/'+mode,import.meta.url).pathname;fs.writeFileSync(base+'.stdout',p.stdout||'');fs.writeFileSync(base+'.stderr',p.stderr||'');const row={mode,status:p.status,signal:p.signal,error:p.error?.message,elapsedMs:performance.now()-start};results.push(row);console.log(JSON.stringify(row));if(p.status!==0){console.error(String(p.stderr).slice(-6000));continue;}
+ const text=String(p.stdout).trim();try{fs.writeFileSync(base+'.json',JSON.stringify(JSON.parse(text),null,2)+'\n');}catch(e){row.parseError=e.message;}
+ if(mode.startsWith('exit-')){const drops=String(p.stderr).split('\n').filter(s=>s.startsWith('PHASE3_DROP ')).map(s=>JSON.parse(s.slice(12)));row.finalizers=drops.length;row.finalState=drops.at(-1)?.lifecycle;row.ownerMatches=drops.every(d=>d.owner===d.current);assert.ok(drops.length);assert.equal(row.finalState.openRenderers,0);assert.equal(row.finalState.engine.created,row.finalState.engine.dropped);assert.equal(row.finalState.engine.watchdogs,0);assert.equal(row.finalState.wrongThreadDrops,0);}
+}
+fs.writeFileSync(new URL('../evidence/test-run-'+(selected.length?selected.join('-'):'all')+'.json',import.meta.url),JSON.stringify(results,null,2)+'\n');if(results.some(r=>r.status!==0||r.parseError))process.exitCode=1;

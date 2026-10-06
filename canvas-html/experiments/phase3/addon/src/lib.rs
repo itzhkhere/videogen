@@ -12,12 +12,12 @@ use std::sync::mpsc::{self, Sender, SyncSender};
 use std::thread::{self, JoinHandle, ThreadId};
 
 use anyhow::{Context, Result, bail};
-use canvas_dom_host::{DomHost, ScriptError, ScriptRuntime};
+use canvas_dom_host::{DomHost, HostDocument, ScriptError, ScriptRuntime};
 use document::Document;
 use napi::Error;
 use napi::bindgen_prelude::Buffer;
 use napi_derive::napi;
-use phase3_engine::{DenoRuntime, HostDocument};
+use phase3_engine::DenoRuntime;
 use serde_json::{Value, json};
 
 static OPEN: AtomicUsize = AtomicUsize::new(0);

@@ -1,0 +1,641 @@
+{
+  "mode": "simultaneous",
+  "points": [
+    {
+      "label": "baseline Node",
+      "peakRssBytes": 54525952,
+      "node": {
+        "rss": 54525952,
+        "heapTotal": 8384512,
+        "heapUsed": 5592432,
+        "external": 2392635,
+        "arrayBuffers": 143823
+      },
+      "currentRssUnavailable": null,
+      "deno": []
+    },
+    {
+      "label": "addon loaded",
+      "peakRssBytes": 66613248,
+      "node": {
+        "rss": 66482176,
+        "heapTotal": 8384512,
+        "heapUsed": 5653976,
+        "external": 2392676,
+        "arrayBuffers": 143823
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 4108288,
+        "allocated": 3135584,
+        "freeInArenas": 972704,
+        "mapped": 0,
+        "mappedRegions": 0
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 0,
+          "dropped": 0,
+          "watchdogs": 0
+        },
+        "openRenderers": 0,
+        "executionThreads": 0,
+        "wrongThreadDrops": 0
+      },
+      "deno": []
+    },
+    {
+      "label": "1 live renderers",
+      "peakRssBytes": 97177600,
+      "node": {
+        "rss": 97177600,
+        "heapTotal": 8384512,
+        "heapUsed": 5663072,
+        "external": 2515556,
+        "arrayBuffers": 143823
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 6582272,
+        "allocated": 4952880,
+        "freeInArenas": 1629392,
+        "mapped": 606208,
+        "mappedRegions": 1
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 1,
+          "dropped": 0,
+          "watchdogs": 1
+        },
+        "openRenderers": 1,
+        "executionThreads": 1,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1395392,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "2 live renderers",
+      "peakRssBytes": 103727104,
+      "node": {
+        "rss": 103727104,
+        "heapTotal": 10219520,
+        "heapUsed": 5210808,
+        "external": 2638400,
+        "arrayBuffers": 143787
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 10170368,
+        "allocated": 7816928,
+        "freeInArenas": 2353440,
+        "mapped": 0,
+        "mappedRegions": 0
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 3,
+          "dropped": 1,
+          "watchdogs": 2
+        },
+        "openRenderers": 2,
+        "executionThreads": 2,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 3670016,
+          "usedHeap": 1389960,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3145728,
+          "usedHeap": 1358392,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "4 live renderers",
+      "peakRssBytes": 116936704,
+      "node": {
+        "rss": 116936704,
+        "heapTotal": 10219520,
+        "heapUsed": 5226448,
+        "external": 2884160,
+        "arrayBuffers": 143787
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 17903616,
+        "allocated": 12534144,
+        "freeInArenas": 5369472,
+        "mapped": 0,
+        "mappedRegions": 0
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 7,
+          "dropped": 3,
+          "watchdogs": 4
+        },
+        "openRenderers": 4,
+        "executionThreads": 4,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1433432,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1433496,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1445064,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1394800,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "8 live renderers",
+      "peakRssBytes": 138616832,
+      "node": {
+        "rss": 138616832,
+        "heapTotal": 10219520,
+        "heapUsed": 5249480,
+        "external": 3375680,
+        "arrayBuffers": 143787
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 28700672,
+        "allocated": 21971232,
+        "freeInArenas": 6729440,
+        "mapped": 0,
+        "mappedRegions": 0
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 15,
+          "dropped": 7,
+          "watchdogs": 8
+        },
+        "openRenderers": 8,
+        "executionThreads": 8,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1433496,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1396040,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1396040,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1433568,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1433632,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3145728,
+          "usedHeap": 1358528,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1433568,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1433632,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "10 live renderers",
+      "peakRssBytes": 152891392,
+      "node": {
+        "rss": 152891392,
+        "heapTotal": 10219520,
+        "heapUsed": 5254776,
+        "external": 3621440,
+        "arrayBuffers": 143787
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 36589568,
+        "allocated": 26866800,
+        "freeInArenas": 9722768,
+        "mapped": 0,
+        "mappedRegions": 0
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 25,
+          "dropped": 15,
+          "watchdogs": 10
+        },
+        "openRenderers": 10,
+        "executionThreads": 10,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 3670016,
+          "usedHeap": 1433632,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1462648,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1395248,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1433632,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3145728,
+          "usedHeap": 1358528,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3145728,
+          "usedHeap": 1358592,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1433632,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3145728,
+          "usedHeap": 1358592,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3145728,
+          "usedHeap": 1358528,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3145728,
+          "usedHeap": 1358592,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "16 live renderers",
+      "peakRssBytes": 185634816,
+      "node": {
+        "rss": 185634816,
+        "heapTotal": 7073792,
+        "heapUsed": 5265520,
+        "external": 4358720,
+        "arrayBuffers": 143787
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 53153792,
+        "allocated": 41055136,
+        "freeInArenas": 12098656,
+        "mapped": 0,
+        "mappedRegions": 0
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 41,
+          "dropped": 25,
+          "watchdogs": 16
+        },
+        "openRenderers": 16,
+        "executionThreads": 16,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1396288,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1396352,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1395808,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1433632,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3145728,
+          "usedHeap": 1358592,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3145728,
+          "usedHeap": 1358528,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1433632,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3145728,
+          "usedHeap": 1358528,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3145728,
+          "usedHeap": 1358592,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3145728,
+          "usedHeap": 1358592,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1433632,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3145728,
+          "usedHeap": 1358808,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1433568,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3145728,
+          "usedHeap": 1358592,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3145728,
+          "usedHeap": 1358528,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        },
+        {
+          "totalHeap": 3145728,
+          "usedHeap": 1358592,
+          "external": 121295,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "after all closed",
+      "peakRssBytes": 185634816,
+      "node": {
+        "rss": 178266112,
+        "heapTotal": 7073792,
+        "heapUsed": 5244344,
+        "external": 2392640,
+        "arrayBuffers": 143787
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 53157888,
+        "allocated": 8464864,
+        "freeInArenas": 44693024,
+        "mapped": 0,
+        "mappedRegions": 0
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 41,
+          "dropped": 41,
+          "watchdogs": 0
+        },
+        "openRenderers": 0,
+        "executionThreads": 0,
+        "wrongThreadDrops": 0
+      },
+      "deno": []
+    },
+    {
+      "label": "final",
+      "peakRssBytes": 185634816,
+      "node": {
+        "rss": 178266112,
+        "heapTotal": 7073792,
+        "heapUsed": 5253568,
+        "external": 2392640,
+        "arrayBuffers": 143787
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 53157888,
+        "allocated": 8463616,
+        "freeInArenas": 44694272,
+        "mapped": 0,
+        "mappedRegions": 0
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 41,
+          "dropped": 41,
+          "watchdogs": 0
+        },
+        "openRenderers": 0,
+        "executionThreads": 0,
+        "wrongThreadDrops": 0
+      },
+      "deno": []
+    }
+  ],
+  "lifecycle": {
+    "engine": {
+      "created": 41,
+      "dropped": 41,
+      "watchdogs": 0
+    },
+    "openRenderers": 0,
+    "executionThreads": 0,
+    "wrongThreadDrops": 0
+  }
+}

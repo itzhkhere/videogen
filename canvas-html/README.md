@@ -18,13 +18,14 @@ const png = r.render({ format: 'png' })
 r.eval('document.title')          // run code in the page; the result comes back through JSON
 r.boxes()                         // layout boxes of elements with an id
 r.missingGlyphs()                 // text that no available font can draw
+r.close()                         // release the document and script runtime now (optional)
 ```
 
 ## The engine has no video concepts
 
 canvas-html draws a page as it is now. It has no frames, no fps and no timeline. Time reaches the page in one of two ways:
 
-- **The clock.** By default the clock is **frozen**: `Date.now()`, `performance.now()`, timers and CSS animations stand still, so rendering the same state twice gives the same pixels. `advanceClock(ms)` moves it forward and runs the timers that come due on the way, in order. With `clock: 'real'` the clock follows the wall clock, like a browser tab.
+- **The clock.** By default the clock is **frozen**: `Date.now()`, `performance.now()`, timers and CSS animations stand still, so rendering the same state twice gives the same pixels. `advanceClock(ms)` moves it forward and runs the timers that come due on the way, in order. With `clock: 'real'` the clock follows the wall clock, like a browser tab. `Date.now()` starts at the wall-clock time of the load unless you pass `epochMs`: then `Date.now() = floor(epochMs + clock)`, `performance.now() = clock` and `performance.timeOrigin = epochMs`, so pages that print the date also render the same pixels on every run.
 - **Your page.** Script can change anything before a render: styles, text, a GSAP timeline, Web Animations.
 
 `requestAnimationFrame` callbacks run once per `render()`, right before style and layout, like a browser's rendering step. Their timestamp is the clock time.

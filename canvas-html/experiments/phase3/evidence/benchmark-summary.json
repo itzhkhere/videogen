@@ -1,0 +1,127 @@
+{
+  "note": "median of 3 process runs; each run reports the median of 5 samples",
+  "table": {
+    "construction": {
+      "boa-before": 40.506692999999814,
+      "boa": 42.42884300000014,
+      "deno-phase2": 15.548747999999932,
+      "deno": 16.570408000000043
+    },
+    "firstEval": {
+      "boa-before": 0.39707899999996243,
+      "boa": 0.40483499999993455,
+      "deno-phase2": 0.22273100000006707,
+      "deno": 0.3901180000000295
+    },
+    "warmEval": {
+      "boa-before": 0.19102813100000002,
+      "boa": 0.18342212400000016,
+      "deno-phase2": 0.04884423700000002,
+      "deno": 0.05716439100000002
+    },
+    "rpcNoJs": {
+      "boa-before": 0.00033209100000021865,
+      "boa": 0.00031974399999990053,
+      "deno-phase2": null,
+      "deno": 0.02755492000000004
+    },
+    "jsLoop100k": {
+      "boa-before": 60.09610456666663,
+      "boa": 59.11325503333334,
+      "deno-phase2": 1.2814152666666663,
+      "deno": 0.14291759999999462
+    },
+    "js100PlainAssignments": {
+      "boa-before": 0.4276042999998026,
+      "boa": 0.42291800000002694,
+      "deno-phase2": 0.0679480999999896,
+      "deno": 0.07333860000001095
+    },
+    "dom100Mutations": {
+      "boa-before": 8.2040563999999,
+      "boa": 7.584859999999935,
+      "deno-phase2": 1.0639202000000068,
+      "deno": 0.8009242999999969
+    },
+    "querySelector100": {
+      "boa-before": 0.37720330000011015,
+      "boa": 0.37195629999987434,
+      "deno-phase2": 0.45348750000000565,
+      "deno": 0.12059870000000501
+    },
+    "querySelectorAll100": {
+      "boa-before": 0.47724710000002235,
+      "boa": 0.6369627000000037,
+      "deno-phase2": 0.3618938000000071,
+      "deno": 0.18344990000000508
+    },
+    "getComputedStyle100": {
+      "boa-before": 4.802583199999935,
+      "boa": 5.252291999999943,
+      "deno-phase2": 0.4417304999999942,
+      "deno": 0.33677030000001196
+    },
+    "getComputedStyleAfterMutation100": {
+      "boa-before": 13.336416399999871,
+      "boa": 12.131029399999898,
+      "deno-phase2": 2.2716257999999927,
+      "deno": 1.990899999999988
+    },
+    "getBoundingClientRect100": {
+      "boa-before": 1.7402883999999177,
+      "boa": 2.6048305000000256,
+      "deno-phase2": 0.5476584000000002,
+      "deno": 0.37386489999998956
+    },
+    "seek": {
+      "boa-before": 0.0004212360000019544,
+      "boa": 0.000435020999997505,
+      "deno-phase2": 0.057294280999999954,
+      "deno": 0.04160239799999999
+    },
+    "render": {
+      "boa-before": 0.07243701999999758,
+      "boa": 0.10158602999999858,
+      "deno-phase2": 0.09097678999999971,
+      "deno": 0.11130900999999994
+    },
+    "seekAndRender": {
+      "boa-before": 0.07525158000000375,
+      "boa": 0.09107224999999744,
+      "deno-phase2": 0.1506512399999974,
+      "deno": 0.1544224299999996
+    },
+    "gsapFrame": {
+      "boa-before": 0.4819512100000065,
+      "boa": 0.4393815999999788,
+      "deno-phase2": 0.23386993999999958,
+      "deno": 0.24991612999999688
+    }
+  },
+  "denoRenderBreakdown": [
+    {
+      "unit": "ms/op",
+      "renders": 530,
+      "frameJs": 0.02125195283018868,
+      "layout": 0.004280984905660377,
+      "paint": 0.050433469811320755,
+      "note": "inside the renderer thread; render minus these = channel + Buffer"
+    },
+    {
+      "unit": "ms/op",
+      "renders": 530,
+      "frameJs": 0.023927411320754717,
+      "layout": 0.0050682264150943394,
+      "paint": 0.05085906226415094,
+      "note": "inside the renderer thread; render minus these = channel + Buffer"
+    },
+    {
+      "unit": "ms/op",
+      "renders": 530,
+      "frameJs": 0.022748513207547172,
+      "layout": 0.004224107547169812,
+      "paint": 0.04668405471698113,
+      "note": "inside the renderer thread; render minus these = channel + Buffer"
+    }
+  ]
+}

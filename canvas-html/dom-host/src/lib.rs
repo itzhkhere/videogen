@@ -32,7 +32,7 @@ mod runtime;
 pub mod style;
 pub mod timers;
 
-pub use document::{DomHost, Rect};
+pub use document::{DomHost, HostDocument, Rect};
 pub use errors::{DomError, DomResult, JsErrorKind};
 pub use handles::NodeHandle;
 pub use runtime::{ScriptError, ScriptRuntime};

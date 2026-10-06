@@ -30,6 +30,13 @@ impl Rect {
     }
 }
 
+/// A renderer's document as seen by a script adapter: the adapter reaches the Blitz document
+/// only through this, so the document/layout/paint side depends on the shared host and never on
+/// an engine crate.
+pub trait HostDocument {
+    fn base(&mut self) -> &mut BaseDocument;
+}
+
 /// Engine-neutral DOM behaviour. Every method validates its handle first: a handle whose
 /// native node was dropped fails with [`DomError::InvalidHandle`]. A node detached with
 /// [`remove_node`](DomHost::remove_node) stays valid (as in browsers).

@@ -18,7 +18,8 @@ use canvas_dom_host::{ScriptError, ScriptRuntime};
 use deno_core::{JsRuntime, RuntimeOptions, v8};
 use serde_json::{Value, json};
 
-pub use ops::{HostDocument, HostState};
+pub use canvas_dom_host::HostDocument;
+pub use ops::HostState;
 
 static CREATED: AtomicUsize = AtomicUsize::new(0);
 static DROPPED: AtomicUsize = AtomicUsize::new(0);

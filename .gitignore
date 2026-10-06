@@ -4,3 +4,5 @@ target/
 node_modules/
 # Blitz is cloned next to canvas-html by canvas-html/scripts/setup-blitz.sh
 /blitz/
+/target-*/
+/*.log

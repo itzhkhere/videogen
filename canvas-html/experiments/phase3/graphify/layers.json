@@ -1,0 +1,130 @@
+{
+  "graph": {
+    "nodes": 1165,
+    "edges": 3533,
+    "directed": "raw Graphify extraction (source -> target)"
+  },
+  "crossLayerEdges": [
+    {
+      "from": "boa_adapter",
+      "to": "engine:boa",
+      "all": 776,
+      "extracted": 776
+    },
+    {
+      "from": "boa_adapter",
+      "to": "external/other",
+      "all": 149,
+      "extracted": 149
+    },
+    {
+      "from": "deno_engine",
+      "to": "engine:v8",
+      "all": 93,
+      "extracted": 93
+    },
+    {
+      "from": "boa_adapter",
+      "to": "shared_host",
+      "all": 75,
+      "extracted": 74
+    },
+    {
+      "from": "shared_host",
+      "to": "shared_api(ext ref)",
+      "all": 71,
+      "extracted": 71
+    },
+    {
+      "from": "deno_engine",
+      "to": "shared_host",
+      "all": 32,
+      "extracted": 27
+    },
+    {
+      "from": "production",
+      "to": "external/other",
+      "all": 32,
+      "extracted": 32
+    },
+    {
+      "from": "shared_host",
+      "to": "external/other",
+      "all": 31,
+      "extracted": 31
+    },
+    {
+      "from": "deno_addon",
+      "to": "external/other",
+      "all": 27,
+      "extracted": 27
+    },
+    {
+      "from": "deno_engine",
+      "to": "external/other",
+      "all": 25,
+      "extracted": 25
+    },
+    {
+      "from": "layout_paint(deno_addon/document.rs)",
+      "to": "external/other",
+      "all": 13,
+      "extracted": 13
+    },
+    {
+      "from": "boa_adapter",
+      "to": "shared_api(ext ref)",
+      "all": 5,
+      "extracted": 5
+    },
+    {
+      "from": "layout_paint(deno_addon/document.rs)",
+      "to": "shared_host",
+      "all": 3,
+      "extracted": 3
+    },
+    {
+      "from": "deno_engine",
+      "to": "shared_api(ext ref)",
+      "all": 3,
+      "extracted": 3
+    },
+    {
+      "from": "deno_addon",
+      "to": "deno_engine",
+      "all": 2,
+      "extracted": 2
+    },
+    {
+      "from": "production",
+      "to": "boa_adapter",
+      "all": 2,
+      "extracted": 2
+    },
+    {
+      "from": "production",
+      "to": "shared_host",
+      "all": 2,
+      "extracted": 2
+    },
+    {
+      "from": "boa_adapter",
+      "to": "deno_addon",
+      "all": 1,
+      "extracted": 1
+    },
+    {
+      "from": "deno_addon",
+      "to": "shared_api(ext ref)",
+      "all": 1,
+      "extracted": 1
+    },
+    {
+      "from": "deno_addon",
+      "to": "shared_host",
+      "all": 1,
+      "extracted": 1
+    }
+  ],
+  "forbiddenDirectionEdges": []
+}

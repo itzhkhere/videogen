@@ -1,0 +1,634 @@
+{
+  "mode": "long",
+  "points": [
+    {
+      "label": "baseline Node",
+      "peakRssBytes": 54665216,
+      "node": {
+        "rss": 54665216,
+        "heapTotal": 8122368,
+        "heapUsed": 5594336,
+        "external": 2392635,
+        "arrayBuffers": 143823
+      },
+      "currentRssUnavailable": null,
+      "deno": []
+    },
+    {
+      "label": "addon loaded",
+      "peakRssBytes": 66686976,
+      "node": {
+        "rss": 66686976,
+        "heapTotal": 8122368,
+        "heapUsed": 5655696,
+        "external": 2392676,
+        "arrayBuffers": 143823
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 4075520,
+        "allocated": 3128992,
+        "freeInArenas": 946528,
+        "mapped": 0,
+        "mappedRegions": 0
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 0,
+          "dropped": 0,
+          "watchdogs": 0
+        },
+        "openRenderers": 0,
+        "executionThreads": 0,
+        "wrongThreadDrops": 0
+      },
+      "deno": []
+    },
+    {
+      "label": "one renderer",
+      "peakRssBytes": 96530432,
+      "node": {
+        "rss": 96530432,
+        "heapTotal": 8122368,
+        "heapUsed": 5661248,
+        "external": 2392676,
+        "arrayBuffers": 143823
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 6549504,
+        "allocated": 4813424,
+        "freeInArenas": 1736080,
+        "mapped": 606208,
+        "mappedRegions": 1
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 1,
+          "dropped": 0,
+          "watchdogs": 1
+        },
+        "openRenderers": 1,
+        "executionThreads": 1,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 3407872,
+          "usedHeap": 1384960,
+          "external": 121159,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "operation 1000",
+      "peakRssBytes": 103018496,
+      "node": {
+        "rss": 103018496,
+        "heapTotal": 8122368,
+        "heapUsed": 5897504,
+        "external": 6529328,
+        "arrayBuffers": 143823
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 10645504,
+        "allocated": 9128496,
+        "freeInArenas": 1517008,
+        "mapped": 606208,
+        "mappedRegions": 1
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 1,
+          "dropped": 0,
+          "watchdogs": 1
+        },
+        "openRenderers": 1,
+        "executionThreads": 1,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 4194304,
+          "usedHeap": 1449840,
+          "external": 144079,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "operation 2000",
+      "peakRssBytes": 107474944,
+      "node": {
+        "rss": 107474944,
+        "heapTotal": 8122368,
+        "heapUsed": 5988264,
+        "external": 10625328,
+        "arrayBuffers": 143823
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 14798848,
+        "allocated": 13392512,
+        "freeInArenas": 1406336,
+        "mapped": 606208,
+        "mappedRegions": 1
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 1,
+          "dropped": 0,
+          "watchdogs": 1
+        },
+        "openRenderers": 1,
+        "executionThreads": 1,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 4194304,
+          "usedHeap": 1872048,
+          "external": 166999,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "operation 3000",
+      "peakRssBytes": 112455680,
+      "node": {
+        "rss": 112455680,
+        "heapTotal": 10743808,
+        "heapUsed": 5715024,
+        "external": 5505328,
+        "arrayBuffers": 143823
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 19038208,
+        "allocated": 17684144,
+        "freeInArenas": 1354064,
+        "mapped": 606208,
+        "mappedRegions": 1
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 1,
+          "dropped": 0,
+          "watchdogs": 1
+        },
+        "openRenderers": 1,
+        "executionThreads": 1,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 4194304,
+          "usedHeap": 2294280,
+          "external": 189919,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "operation 4000",
+      "peakRssBytes": 116912128,
+      "node": {
+        "rss": 116912128,
+        "heapTotal": 10743808,
+        "heapUsed": 5805784,
+        "external": 9601328,
+        "arrayBuffers": 143823
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 23285760,
+        "allocated": 21812144,
+        "freeInArenas": 1473616,
+        "mapped": 606208,
+        "mappedRegions": 1
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 1,
+          "dropped": 0,
+          "watchdogs": 1
+        },
+        "openRenderers": 1,
+        "executionThreads": 1,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 4718592,
+          "usedHeap": 2028392,
+          "external": 212839,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "operation 5000",
+      "peakRssBytes": 121237504,
+      "node": {
+        "rss": 121237504,
+        "heapTotal": 10743808,
+        "heapUsed": 5896544,
+        "external": 13697328,
+        "arrayBuffers": 143823
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 27443200,
+        "allocated": 26045664,
+        "freeInArenas": 1397536,
+        "mapped": 606208,
+        "mappedRegions": 1
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 1,
+          "dropped": 0,
+          "watchdogs": 1
+        },
+        "openRenderers": 1,
+        "executionThreads": 1,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 4718592,
+          "usedHeap": 2450640,
+          "external": 235759,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "operation 6000",
+      "peakRssBytes": 126087168,
+      "node": {
+        "rss": 126087168,
+        "heapTotal": 10743808,
+        "heapUsed": 5987304,
+        "external": 17793328,
+        "arrayBuffers": 143823
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 31850496,
+        "allocated": 30290496,
+        "freeInArenas": 1560000,
+        "mapped": 606208,
+        "mappedRegions": 1
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 1,
+          "dropped": 0,
+          "watchdogs": 1
+        },
+        "openRenderers": 1,
+        "executionThreads": 1,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 4980736,
+          "usedHeap": 2879400,
+          "external": 258679,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "operation 7000",
+      "peakRssBytes": 130412544,
+      "node": {
+        "rss": 130412544,
+        "heapTotal": 10743808,
+        "heapUsed": 6079368,
+        "external": 21889328,
+        "arrayBuffers": 143823
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 36175872,
+        "allocated": 34485680,
+        "freeInArenas": 1690192,
+        "mapped": 606208,
+        "mappedRegions": 1
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 1,
+          "dropped": 0,
+          "watchdogs": 1
+        },
+        "openRenderers": 1,
+        "executionThreads": 1,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 4980736,
+          "usedHeap": 2462000,
+          "external": 281599,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "operation 8000",
+      "peakRssBytes": 134737920,
+      "node": {
+        "rss": 134737920,
+        "heapTotal": 10743808,
+        "heapUsed": 6169824,
+        "external": 25985328,
+        "arrayBuffers": 143823
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 40345600,
+        "allocated": 38729504,
+        "freeInArenas": 1616096,
+        "mapped": 606208,
+        "mappedRegions": 1
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 1,
+          "dropped": 0,
+          "watchdogs": 1
+        },
+        "openRenderers": 1,
+        "executionThreads": 1,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 5242880,
+          "usedHeap": 2882616,
+          "external": 304519,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "operation 9000",
+      "peakRssBytes": 143675392,
+      "node": {
+        "rss": 143675392,
+        "heapTotal": 10743808,
+        "heapUsed": 6261520,
+        "external": 30081328,
+        "arrayBuffers": 143823
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 44527616,
+        "allocated": 42980400,
+        "freeInArenas": 1547216,
+        "mapped": 606208,
+        "mappedRegions": 1
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 1,
+          "dropped": 0,
+          "watchdogs": 1
+        },
+        "openRenderers": 1,
+        "executionThreads": 1,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 5242880,
+          "usedHeap": 3304064,
+          "external": 327439,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "operation 10000",
+      "peakRssBytes": 147869696,
+      "node": {
+        "rss": 147869696,
+        "heapTotal": 10743808,
+        "heapUsed": 6352360,
+        "external": 34177328,
+        "arrayBuffers": 143823
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 48771072,
+        "allocated": 47106208,
+        "freeInArenas": 1664864,
+        "mapped": 606208,
+        "mappedRegions": 1
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 1,
+          "dropped": 0,
+          "watchdogs": 1
+        },
+        "openRenderers": 1,
+        "executionThreads": 1,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 5505024,
+          "usedHeap": 2886616,
+          "external": 350359,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "after Deno GC",
+      "peakRssBytes": 148131840,
+      "node": {
+        "rss": 144633856,
+        "heapTotal": 10743808,
+        "heapUsed": 6359568,
+        "external": 34177328,
+        "arrayBuffers": 143823
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 48812032,
+        "allocated": 46414032,
+        "freeInArenas": 2398000,
+        "mapped": 606208,
+        "mappedRegions": 1
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 1,
+          "dropped": 0,
+          "watchdogs": 1
+        },
+        "openRenderers": 1,
+        "executionThreads": 1,
+        "wrongThreadDrops": 0
+      },
+      "deno": [
+        {
+          "totalHeap": 1835008,
+          "usedHeap": 979288,
+          "external": 115656,
+          "contexts": 1,
+          "globalHandles": 672,
+          "poisoned": false
+        }
+      ]
+    },
+    {
+      "label": "after close and Node GC",
+      "peakRssBytes": 148131840,
+      "node": {
+        "rss": 143695872,
+        "heapTotal": 10481664,
+        "heapUsed": 5323304,
+        "external": 2433292,
+        "arrayBuffers": 143787
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 48812032,
+        "allocated": 3479296,
+        "freeInArenas": 45332736,
+        "mapped": 0,
+        "mappedRegions": 0
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 1,
+          "dropped": 1,
+          "watchdogs": 0
+        },
+        "openRenderers": 0,
+        "executionThreads": 0,
+        "wrongThreadDrops": 0
+      },
+      "deno": []
+    },
+    {
+      "label": "final",
+      "peakRssBytes": 148131840,
+      "node": {
+        "rss": 143695872,
+        "heapTotal": 10481664,
+        "heapUsed": 5335520,
+        "external": 2433292,
+        "arrayBuffers": 143787
+      },
+      "currentRssUnavailable": null,
+      "native": {
+        "allocator": "glibc mallinfo2",
+        "arena": 48812032,
+        "allocated": 3486672,
+        "freeInArenas": 45325360,
+        "mapped": 0,
+        "mappedRegions": 0
+      },
+      "lifecycle": {
+        "engine": {
+          "created": 1,
+          "dropped": 1,
+          "watchdogs": 0
+        },
+        "openRenderers": 0,
+        "executionThreads": 0,
+        "wrongThreadDrops": 0
+      },
+      "deno": []
+    }
+  ],
+  "elapsedMs": 639.901259,
+  "operations": {
+    "eval": 10000,
+    "seek": 10000,
+    "render": 1000,
+    "extraDomEval": 1000
+  },
+  "afterV8Gc": {
+    "ownerThread": "ThreadId(1)",
+    "heap": {
+      "totalHeap": 1572864,
+      "usedHeap": 971936,
+      "external": 115636,
+      "contexts": 1,
+      "globalHandles": 672,
+      "poisoned": false
+    },
+    "bookkeeping": {
+      "hostListeners": 0,
+      "js": {
+        "wrappers": 1,
+        "callbacks": 0,
+        "timers": 0,
+        "raf": 0
+      }
+    },
+    "timingsNs": {
+      "frameJs": 15851852,
+      "layout": 59235352,
+      "paint": 77598067,
+      "renders": 1000
+    }
+  },
+  "lifecycle": {
+    "engine": {
+      "created": 1,
+      "dropped": 1,
+      "watchdogs": 0
+    },
+    "openRenderers": 0,
+    "executionThreads": 0,
+    "wrongThreadDrops": 0
+  }
+}

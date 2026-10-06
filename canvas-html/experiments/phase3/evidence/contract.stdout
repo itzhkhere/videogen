@@ -1,0 +1,31 @@
+  global aliases         boa:pass deno:pass same:yes window, self and document
+  getElementById         boa:pass deno:pass same:yes id lookup, missing id
+  querySelector          boa:pass deno:pass same:yes document and element scoped selectors
+  querySelectorAll       boa:pass deno:pass same:yes static list in document order
+  stable identity        boa:pass deno:pass same:yes one wrapper per native node
+  querySelector          boa:pass deno:pass same:yes invalid selector errors (both engines: SyntaxError DOMException)
+  textContent            boa:pass deno:pass same:yes set/get, wrapper stays, render reflects text
+  attributes             boa:pass deno:pass same:yes set/get/has/remove, lowercase names, missing is null
+  attributes             boa:pass deno:pass same:yes id and className reflect attributes
+  classList              boa:pass deno:pass same:yes add/remove/toggle/contains, identity, ordered set
+  classList              boa:pass deno:pass same:yes invalid tokens
+  classList              boa:pass deno:pass same:yes class change restyles (computed width)
+  style identity         boa:pass deno:pass same:yes element.style === element.style
+  inline style           boa:pass deno:pass same:yes motion properties: set, read back, native style attribute
+  inline style           boa:pass deno:pass same:yes one policy: kebab/camel, setProperty/removeProperty/cssText/length, invalid ignored
+  getComputedStyle       boa:pass deno:pass same:yes resolved values follow mutations without a render
+  getComputedStyle       boa:pass deno:pass same:yes non-element argument
+  getBoundingClientRect  boa:pass deno:pass same:yes resolved layout, mutation, detached element
+  createElement / tree   boa:pass deno:pass same:yes createElement, appendChild, children, remove
+  events                 boa:pass deno:pass same:yes add/dispatch/remove, target/currentTarget, bubbling to document and window
+  events                 boa:pass deno:pass same:yes preventDefault, stopPropagation, stopImmediatePropagation, once, removal during dispatch, errors
+  errors                 boa:pass deno:pass same:yes stale node after native removal: InvalidStateError everywhere in the subset
+  errors                 boa:pass deno:pass same:yes wrong this / non-node arguments: TypeError
+  errors                 boa:pass deno:pass same:yes closed renderer
+  errors                 boa:pass deno:pass same:yes eval exception, then continued use
+  deterministic timers   boa:pass deno:pass same:yes Date, performance and timeOrigin from visual time
+  deterministic timers   boa:pass deno:pass same:yes setTimeout/clearTimeout/setInterval order, microtasks after each timer
+  rAF                    boa:pass deno:pass same:yes callbacks run at render, in order, with performance.now(); cancel; next-frame registration
+  Promise ordering       boa:pass deno:pass same:yes microtasks: eval, timer, rAF and listener boundaries
+  unsupported operation  boa:diag deno:diag same:NO  APIs outside the shared subset (diagnostic, engines may differ)
+30/30 cases pass on both engines with identical results

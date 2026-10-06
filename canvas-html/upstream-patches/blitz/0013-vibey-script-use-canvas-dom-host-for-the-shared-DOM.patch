@@ -1,4 +1,4 @@
-From 73638f65868bced1e544203d5fea25f071ecae46 Mon Sep 17 00:00:00 2001
+From 9c8bf12935448b6b0cd9f5845d5261e1d76a0c7f Mon Sep 17 00:00:00 2001
 From: Claude <noreply@anthropic.com>
 Date: Tue, 6 Oct 2026 00:21:41 +0000
 Subject: [PATCH] vibey-script: use canvas-dom-host for the shared DOM subset
@@ -21,11 +21,11 @@ exact (fractional) clock time and the epoch can be set.
  packages/blitz-vibey-script/src/dom/event.rs  |  36 +-
  packages/blitz-vibey-script/src/dom/mod.rs    |  37 ++
  packages/blitz-vibey-script/src/dom/node.rs   | 256 ++++++----
- packages/blitz-vibey-script/src/dom/style.rs  | 111 ++---
- packages/blitz-vibey-script/src/runtime.rs    | 466 ++++++++++--------
+ packages/blitz-vibey-script/src/dom/style.rs  | 111 ++--
+ packages/blitz-vibey-script/src/runtime.rs    | 472 ++++++++++--------
  packages/blitz-vibey-script/src/state.rs      | 113 ++++-
  packages/blitz-vibey-script/src/timers.rs     |  92 ++--
- 12 files changed, 886 insertions(+), 617 deletions(-)
+ 12 files changed, 891 insertions(+), 618 deletions(-)
 
 diff --git a/packages/blitz-vibey-script/Cargo.toml b/packages/blitz-vibey-script/Cargo.toml
 index 052fe7cf..4b69ddaf 100644
@@ -1297,7 +1297,7 @@ index 40c299fa..1e489e55 100644
 +    Ok(js_str(&name))
  }
 diff --git a/packages/blitz-vibey-script/src/runtime.rs b/packages/blitz-vibey-script/src/runtime.rs
-index 45fb2adf..5d004396 100644
+index 45fb2adf..be879550 100644
 --- a/packages/blitz-vibey-script/src/runtime.rs
 +++ b/packages/blitz-vibey-script/src/runtime.rs
 @@ -27,7 +27,8 @@ use crate::dom::{
@@ -1853,7 +1853,20 @@ index 45fb2adf..5d004396 100644
  }
  
  /// `__blitz_parse_transform(string)`: parse a CSS `<transform-list>` into a
-@@ -2335,6 +2409,18 @@ fn set_animation_time(_: &JsValue, args: &[JsValue], context: &mut Context) -> J
+@@ -2297,7 +2371,11 @@ fn css_register_property(
+ 
+ fn get_computed_style(_: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
+     let ctx = dom_ctx(context)?;
+-    let Some(node_id) = args.first().and_then(node_id_of_value) else {
++    // Only elements have computed styles (shared host: `is_element`)
++    let Some(node_id) = args.first().and_then(node_id_of_value).filter(|id| {
++        use canvas_dom_host::DomHost as _;
++        ctx.doc.borrow().is_element((*id).into()).unwrap_or(true)
++    }) else {
+         return Err(boa_engine::JsNativeError::typ()
+             .with_message("getComputedStyle: argument is not an Element")
+             .into());
+@@ -2335,6 +2413,18 @@ fn set_animation_time(_: &JsValue, args: &[JsValue], context: &mut Context) -> J
      Ok(JsValue::from(found))
  }
  
@@ -1872,7 +1885,7 @@ index 45fb2adf..5d004396 100644
  fn send_message(_: &JsValue, args: &[JsValue], context: &mut Context) -> JsResult<JsValue> {
      let ctx = dom_ctx(context)?;
      let message = args
-@@ -2414,30 +2500,7 @@ fn window_add_event_listener(
+@@ -2414,30 +2504,7 @@ fn window_add_event_listener(
      args: &[JsValue],
      context: &mut Context,
  ) -> JsResult<JsValue> {
@@ -1904,7 +1917,7 @@ index 45fb2adf..5d004396 100644
  }
  
  fn window_remove_event_listener(
-@@ -2445,16 +2508,9 @@ fn window_remove_event_listener(
+@@ -2445,16 +2512,9 @@ fn window_remove_event_listener(
      args: &[JsValue],
      context: &mut Context,
  ) -> JsResult<JsValue> {

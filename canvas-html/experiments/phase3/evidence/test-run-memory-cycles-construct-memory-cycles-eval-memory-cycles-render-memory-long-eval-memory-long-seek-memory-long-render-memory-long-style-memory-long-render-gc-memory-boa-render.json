@@ -1,0 +1,56 @@
+[
+  {
+    "mode": "memory-cycles-construct",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 7361.263148
+  },
+  {
+    "mode": "memory-cycles-eval",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 7142.92799
+  },
+  {
+    "mode": "memory-cycles-render",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 7036.850528999999
+  },
+  {
+    "mode": "memory-long-eval",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 307.4180699999997
+  },
+  {
+    "mode": "memory-long-seek",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 286.85691999999835
+  },
+  {
+    "mode": "memory-long-render",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 2769.0607980000023
+  },
+  {
+    "mode": "memory-long-style",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 484.3882760000015
+  },
+  {
+    "mode": "memory-long-render-gc",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 3234.0096000000012
+  },
+  {
+    "mode": "memory-boa-render",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 3344.7949320000007
+  }
+]

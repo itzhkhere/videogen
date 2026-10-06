@@ -1,0 +1,8 @@
+  - L5912 seen_ids arity=unknown
+examples:
+  - boa_adapter_geometry -> boa_adapter_geometry_get edges=2 relations=['calls', 'contains'] locations=['L10', 'L367'] contexts=['', 'call']
+  - boa_adapter_geometry -> boa_adapter_geometry_has edges=2 relations=['calls', 'contains'] locations=['L1192', 'L375'] contexts=['', 'call']
+  - deno_engine_bootstrap -> deno_engine_bootstrap_domexception edges=2 relations=['calls', 'contains'] locations=['L12', 'L23'] contexts=['', 'call']
+  - deno_engine_bootstrap -> deno_engine_bootstrap_virtualdate edges=2 relations=['contains', 'indirect_call'] locations=['L37', 'L42'] contexts=['', 'collection']
+  - deno_engine_bootstrap -> deno_engine_bootstrap_get edges=2 relations=['calls', 'contains'] locations=['L246', 'L79'] contexts=['', 'call']
+note: normal graph.json is post-build; raw producer loss must be measured earlier.

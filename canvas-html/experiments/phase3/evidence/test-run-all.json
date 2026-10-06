@@ -1,0 +1,104 @@
+[
+  {
+    "mode": "contracts",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 651.431772
+  },
+  {
+    "mode": "cycles",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 50658.625283
+  },
+  {
+    "mode": "long",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 870.1806450000004
+  },
+  {
+    "mode": "simultaneous",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 1375.701936000005
+  },
+  {
+    "mode": "workers",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 6414.610923
+  },
+  {
+    "mode": "exit-alive",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 114.70249099999637,
+    "finalizers": 1,
+    "finalState": {
+      "engine": {
+        "created": 1,
+        "dropped": 1,
+        "watchdogs": 0
+      },
+      "openRenderers": 0,
+      "executionThreads": 0,
+      "wrongThreadDrops": 0
+    },
+    "ownerMatches": true
+  },
+  {
+    "mode": "exit-closed",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 103.26258900000539,
+    "finalizers": 1,
+    "finalState": {
+      "engine": {
+        "created": 1,
+        "dropped": 1,
+        "watchdogs": 0
+      },
+      "openRenderers": 0,
+      "executionThreads": 0,
+      "wrongThreadDrops": 0
+    },
+    "ownerMatches": true
+  },
+  {
+    "mode": "exit-multiple",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 267.6494539999985,
+    "finalizers": 8,
+    "finalState": {
+      "engine": {
+        "created": 8,
+        "dropped": 8,
+        "watchdogs": 0
+      },
+      "openRenderers": 0,
+      "executionThreads": 0,
+      "wrongThreadDrops": 0
+    },
+    "ownerMatches": true
+  },
+  {
+    "mode": "exit-exception",
+    "status": 0,
+    "signal": null,
+    "elapsedMs": 99.56720999999379,
+    "finalizers": 1,
+    "finalState": {
+      "engine": {
+        "created": 1,
+        "dropped": 1,
+        "watchdogs": 0
+      },
+      "openRenderers": 0,
+      "executionThreads": 0,
+      "wrongThreadDrops": 0
+    },
+    "ownerMatches": true
+  }
+]

@@ -9,15 +9,9 @@ use blitz_dom::BaseDocument;
 use canvas_dom_host::clock::ClockContract;
 use canvas_dom_host::events::{CallbackKey, EventTarget, ListenerId, ListenerRegistry};
 use canvas_dom_host::timers::{TimerId, TimerSchedule};
-use canvas_dom_host::{DomError, DomHost, JsErrorKind, NodeHandle, Rect};
+use canvas_dom_host::{DomError, DomHost, HostDocument, JsErrorKind, NodeHandle, Rect};
 use deno_core::{OpState, op2};
 use deno_error::JsErrorBox;
-
-/// The document as seen by the script adapter. Implemented by the renderer's document (the
-/// addon), so this crate never depends on layout or paint.
-pub trait HostDocument {
-    fn base(&mut self) -> &mut BaseDocument;
-}
 
 /// Per-runtime host state, owned by the Deno `OpState` on the renderer thread.
 pub struct HostState {

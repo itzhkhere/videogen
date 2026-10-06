@@ -1,5 +1,5 @@
-//! Document, layout and paint. Holds no engine types: the script adapter reaches it only
-//! through `HostDocument::base()` (the shared host operates on the Blitz document).
+//! Document, layout and paint. Depends on the shared host (for `HostDocument`), never on the
+//! engine crate: the script adapter reaches it only through `HostDocument::base()`.
 use std::sync::Arc;
 
 use anyhow::Result;
@@ -12,7 +12,7 @@ use blitz_traits::shell::{ColorScheme, Viewport};
 use parley::FontContext;
 use parley::fontique::{Blob, Collection, CollectionOptions, SourceCache};
 use peniko::{Fill, kurbo::Rect};
-use phase3_engine::HostDocument;
+use canvas_dom_host::HostDocument;
 
 pub struct Document {
     doc: HtmlDocument,
