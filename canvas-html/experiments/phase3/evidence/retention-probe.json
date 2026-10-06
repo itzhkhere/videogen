@@ -1,0 +1,293 @@
+{
+    "cycles": 400,
+    "results": [
+        {
+            "afterMiB": 0.367431640625,
+            "afterSkiaPurgeMiB": 0.367431640625,
+            "beforeMiB": 0.2176361083984375,
+            "kibPerCycle": 0.3834765625,
+            "marksMiB": [
+                0.3673858642578125,
+                0.36688232421875,
+                0.367431640625,
+                0.367431640625
+            ],
+            "skiaFontCacheLimitMiB": 2.0,
+            "skiaFontCacheMiB": 0.0,
+            "skiaResourceCacheLimitMiB": 32.0,
+            "skiaResourceCacheMiB": 0.0,
+            "skiaStrikes": 0,
+            "variant": "parse-only"
+        },
+        {
+            "afterMiB": 0.58941650390625,
+            "afterSkiaPurgeMiB": 0.58941650390625,
+            "beforeMiB": 0.5882110595703125,
+            "kibPerCycle": 0.0030859375,
+            "marksMiB": [
+                0.59075927734375,
+                0.5910186767578125,
+                0.590118408203125,
+                0.58941650390625
+            ],
+            "skiaFontCacheLimitMiB": 2.0,
+            "skiaFontCacheMiB": 0.0,
+            "skiaResourceCacheLimitMiB": 32.0,
+            "skiaResourceCacheMiB": 0.0,
+            "skiaStrikes": 0,
+            "variant": "resolve (phase3 doc)"
+        },
+        {
+            "afterMiB": 54.127593994140625,
+            "afterSkiaPurgeMiB": 0.597930908203125,
+            "beforeMiB": 3.940460205078125,
+            "kibPerCycle": 128.4790625,
+            "marksMiB": [
+                54.125885009765625,
+                54.12608337402344,
+                54.12632751464844,
+                54.127593994140625
+            ],
+            "skiaFontCacheLimitMiB": 2.0,
+            "skiaFontCacheMiB": 0.0402069091796875,
+            "skiaResourceCacheLimitMiB": 10.0,
+            "skiaResourceCacheMiB": 0.0,
+            "skiaStrikes": 80,
+            "variant": "resolve+paint"
+        },
+        {
+            "afterMiB": 0.5994873046875,
+            "afterSkiaPurgeMiB": 0.5994873046875,
+            "beforeMiB": 0.596923828125,
+            "kibPerCycle": 0.0065625,
+            "marksMiB": [
+                0.598419189453125,
+                0.5984649658203125,
+                0.59930419921875,
+                0.5994873046875
+            ],
+            "skiaFontCacheLimitMiB": 2.0,
+            "skiaFontCacheMiB": 0.0,
+            "skiaResourceCacheLimitMiB": 10.0,
+            "skiaResourceCacheMiB": 0.0,
+            "skiaStrikes": 0,
+            "variant": "resolve, no UA stylesheet"
+        },
+        {
+            "afterMiB": 0.597412109375,
+            "afterSkiaPurgeMiB": 0.597412109375,
+            "beforeMiB": 0.5997772216796875,
+            "kibPerCycle": -0.0060546875,
+            "marksMiB": [
+                0.5980682373046875,
+                0.597869873046875,
+                0.5981903076171875,
+                0.597412109375
+            ],
+            "skiaFontCacheLimitMiB": 2.0,
+            "skiaFontCacheMiB": 0.0,
+            "skiaResourceCacheLimitMiB": 10.0,
+            "skiaResourceCacheMiB": 0.0,
+            "skiaStrikes": 0,
+            "variant": "resolve, no text"
+        },
+        {
+            "afterMiB": 0.60028076171875,
+            "afterSkiaPurgeMiB": 0.60028076171875,
+            "beforeMiB": 0.5986328125,
+            "kibPerCycle": 0.00421875,
+            "marksMiB": [
+                0.600738525390625,
+                0.6014251708984375,
+                0.600006103515625,
+                0.60028076171875
+            ],
+            "skiaFontCacheLimitMiB": 2.0,
+            "skiaFontCacheMiB": 0.0,
+            "skiaResourceCacheLimitMiB": 10.0,
+            "skiaResourceCacheMiB": 0.0,
+            "skiaStrikes": 0,
+            "variant": "resolve, no fonts"
+        },
+        {
+            "afterMiB": 0.6024169921875,
+            "afterSkiaPurgeMiB": 0.6024169921875,
+            "beforeMiB": 0.6004638671875,
+            "kibPerCycle": 0.005,
+            "marksMiB": [
+                0.6010894775390625,
+                0.6018218994140625,
+                0.6020660400390625,
+                0.6024169921875
+            ],
+            "skiaFontCacheLimitMiB": 2.0,
+            "skiaFontCacheMiB": 0.0,
+            "skiaResourceCacheLimitMiB": 10.0,
+            "skiaResourceCacheMiB": 0.0,
+            "skiaStrikes": 0,
+            "variant": "resolve, same font blob"
+        },
+        {
+            "afterMiB": 14.137725830078125,
+            "afterSkiaPurgeMiB": 14.137725830078125,
+            "beforeMiB": 0.770538330078125,
+            "kibPerCycle": 34.22,
+            "marksMiB": [
+                4.11236572265625,
+                7.454193115234375,
+                10.796188354492188,
+                14.137725830078125
+            ],
+            "skiaFontCacheLimitMiB": 2.0,
+            "skiaFontCacheMiB": 0.0,
+            "skiaResourceCacheLimitMiB": 10.0,
+            "skiaResourceCacheMiB": 0.0,
+            "skiaStrikes": 0,
+            "variant": "resolve, thread per doc"
+        },
+        {
+            "afterMiB": 27.67254638671875,
+            "afterSkiaPurgeMiB": 27.67254638671875,
+            "beforeMiB": 14.305267333984375,
+            "kibPerCycle": 34.220234375,
+            "marksMiB": [
+                17.647247314453125,
+                20.989227294921875,
+                24.330657958984375,
+                27.67254638671875
+            ],
+            "skiaFontCacheLimitMiB": 2.0,
+            "skiaFontCacheMiB": 0.0,
+            "skiaResourceCacheLimitMiB": 10.0,
+            "skiaResourceCacheMiB": 0.0,
+            "skiaStrikes": 0,
+            "variant": "same blob, thread per doc"
+        },
+        {
+            "afterMiB": 81.20713806152344,
+            "afterSkiaPurgeMiB": 27.677520751953125,
+            "beforeMiB": 31.01922607421875,
+            "kibPerCycle": 128.4810546875,
+            "marksMiB": [
+                81.20462036132812,
+                81.206787109375,
+                81.20539855957031,
+                81.20713806152344
+            ],
+            "skiaFontCacheLimitMiB": 2.0,
+            "skiaFontCacheMiB": 0.0402069091796875,
+            "skiaResourceCacheLimitMiB": 10.0,
+            "skiaResourceCacheMiB": 0.0,
+            "skiaStrikes": 80,
+            "variant": "same blob, paint"
+        },
+        {
+            "afterMiB": 32.32395935058594,
+            "afterSkiaPurgeMiB": 27.677108764648438,
+            "beforeMiB": 27.96478271484375,
+            "kibPerCycle": 11.1594921875,
+            "marksMiB": [
+                32.32347106933594,
+                32.32286071777344,
+                32.32450866699219,
+                32.32395935058594
+            ],
+            "skiaFontCacheLimitMiB": 2.0,
+            "skiaFontCacheMiB": 0.0750732421875,
+            "skiaResourceCacheLimitMiB": 10.0,
+            "skiaResourceCacheMiB": 0.0,
+            "skiaStrikes": 80,
+            "variant": "paint, 41 KB font"
+        },
+        {
+            "afterMiB": 27.676971435546875,
+            "afterSkiaPurgeMiB": 27.676971435546875,
+            "beforeMiB": 27.676727294921875,
+            "kibPerCycle": 0.000625,
+            "marksMiB": [
+                27.676483154296875,
+                27.676971435546875,
+                27.676483154296875,
+                27.676971435546875
+            ],
+            "skiaFontCacheLimitMiB": 2.0,
+            "skiaFontCacheMiB": 0.0,
+            "skiaResourceCacheLimitMiB": 10.0,
+            "skiaResourceCacheMiB": 0.0,
+            "skiaStrikes": 0,
+            "variant": "tpd: parse-only"
+        },
+        {
+            "afterMiB": 41.209930419921875,
+            "afterSkiaPurgeMiB": 41.209930419921875,
+            "beforeMiB": 27.843338012695312,
+            "kibPerCycle": 34.2184765625,
+            "marksMiB": [
+                31.184951782226562,
+                34.526763916015625,
+                37.86836242675781,
+                41.209930419921875
+            ],
+            "skiaFontCacheLimitMiB": 2.0,
+            "skiaFontCacheMiB": 0.0,
+            "skiaResourceCacheLimitMiB": 10.0,
+            "skiaResourceCacheMiB": 0.0,
+            "skiaStrikes": 0,
+            "variant": "tpd: resolve, no text"
+        },
+        {
+            "afterMiB": 54.74468994140625,
+            "afterSkiaPurgeMiB": 54.74468994140625,
+            "beforeMiB": 41.37736511230469,
+            "kibPerCycle": 34.2203515625,
+            "marksMiB": [
+                44.71923828125,
+                48.061187744140625,
+                51.40306091308594,
+                54.74468994140625
+            ],
+            "skiaFontCacheLimitMiB": 2.0,
+            "skiaFontCacheMiB": 0.0,
+            "skiaResourceCacheLimitMiB": 10.0,
+            "skiaResourceCacheMiB": 0.0,
+            "skiaStrikes": 0,
+            "variant": "tpd: resolve, no UA"
+        },
+        {
+            "afterMiB": 68.28042602539062,
+            "afterSkiaPurgeMiB": 68.28042602539062,
+            "beforeMiB": 54.9124755859375,
+            "kibPerCycle": 34.221953125,
+            "marksMiB": [
+                58.25428771972656,
+                61.596282958984375,
+                64.93804931640625,
+                68.28042602539062
+            ],
+            "skiaFontCacheLimitMiB": 2.0,
+            "skiaFontCacheMiB": 0.0,
+            "skiaResourceCacheLimitMiB": 10.0,
+            "skiaResourceCacheMiB": 0.0,
+            "skiaStrikes": 0,
+            "variant": "tpd: resolve, no fonts"
+        },
+        {
+            "afterMiB": 81.8135986328125,
+            "afterSkiaPurgeMiB": 81.8135986328125,
+            "beforeMiB": 68.44735717773438,
+            "kibPerCycle": 34.217578125,
+            "marksMiB": [
+                71.78829956054688,
+                75.1300048828125,
+                78.47169494628906,
+                81.8135986328125
+            ],
+            "skiaFontCacheLimitMiB": 2.0,
+            "skiaFontCacheMiB": 0.0,
+            "skiaResourceCacheLimitMiB": 10.0,
+            "skiaResourceCacheMiB": 0.0,
+            "skiaStrikes": 0,
+            "variant": "tpd: no text, no UA, no fonts"
+        }
+    ]
+}

@@ -44,6 +44,12 @@ The architecture worked, measured end to end:
   Performance). The Deno adapter's typed ops make its DOM bridge 1.3–3.7× cheaper than Phase 2's
   JSON dispatch.
 
+- **Memory attribution**: the native retention left unresolved in Phase 2 now has two measured
+  sources, found with Graphify on the dependency sources plus a JS-free probe. Stylo
+  deliberately leaks 34.2 KiB of thread-local caches per thread that runs a style traversal, and
+  the Deno design has one thread per renderer. Skia's glyph cache pins up to ~80 copies of each
+  font across renderer churn. Neither involves V8 or the shared host.
+
 What does not work yet is listed under Remaining incompatibilities. The largest item is that
 Motion runs on Boa but not on Deno: Deno lacks the `EventTarget` global and Web Animations.
 
@@ -112,6 +118,9 @@ module; the only hits are doc comments and `#![forbid(unsafe_code)]`.
 
 ### Graphify (directed)
 
+Graphify was used at two levels: the Phase 3 code (the boundary checks below) and the dependency
+sources (the memory attribution in Memory observations).
+
 Graphify **0.9.77** (`graphifyy`) was installed in an isolated venv. It ran as a local AST
 extraction (`extract --code-only --no-cluster`): no LLM and no API key. Raw extraction keeps
 Graphify's directed `source → target` edges (calls, references, imports, implements). The staged
@@ -149,6 +158,31 @@ it gives the crate graph (`crate-graph.json`): `phase3-addon → {canvas-dom-hos
 and `phase3-engine → {canvas-dom-host, deno_core}`, with nothing pointing back.
 `graphify diagnose multigraph --directed` output and an interactive `graph.html` are kept beside
 it. The graph is a navigation aid, not a thread-safety proof.
+
+### Graphify on dependency sources
+
+A second code-only extraction covers the dependency sources: Blitz (`blitz-dom`, `blitz-html`,
+`blitz-paint`, `blitz-traits`, `stylo_taffy`), Stylo (servo build; Gecko-only modules removed),
+Parley/fontique, Taffy and `anyrender_skia`. That is 484 Rust files, 18,666 nodes and 44,438
+directed edges. `experiments/phase3/graphify/deps/reach.py` walks forward from what a renderer
+does per document (`HtmlDocument::from_html`, `BaseDocument::new`, `BaseDocument::resolve`,
+`SourceCache::new_shared`) along calls/references (787 nodes in 59 files within depth 5). It then
+scans the reached files for process-global state and found 14 candidates
+(`deps/reach-new-document.json`). Reading them, with one measurement each:
+
+- Stylo `UA_CASCADE_DATA_CACHE` (global): each new document re-parses Blitz's `DEFAULT_CSS`
+  into new stylesheet contents and so a new cache key, but `take_unused()` purges dead documents'
+  entries at the next flush. Bounded. It is a per-document construction cost, not a leak.
+- Blitz `LAYOUT_CTX` (thread-local Parley `LayoutContext`) and `FONT_DB` (`LazyLock`): one per
+  thread, and one per process. The probe shows no per-document growth on a reused thread.
+- Stylo `BLOOM_KEY` / `SHARING_CACHE_KEY` (thread-local, `Box::leak`): the per-thread
+  34.2 KiB, measured exactly.
+- `anyrender_skia`'s caches are per painter. The paint plateau comes from Skia's C++ glyph cache
+  (outside the Graphify corpus), confirmed with `skia_safe::graphics` counters and a purge.
+
+The 20 MB dependency graph is not committed; it is reproducible with
+`graphify extract <staged sources> --code-only --no-cluster`. Name-based resolution across
+crates is noisy, so every conclusion above was checked in source and by measurement.
 
 ## DOM contract matrix
 
@@ -367,15 +401,49 @@ keeps freed arenas, so use native allocated bytes for retention.
 | 400 Boa paint cycles (scripts off) | 2.95 → 40.28 | 63 → 427 | retention also present without any script engine |
 | 16 simultaneous renderers | 39.15 live → 8.07 after close | 177 live → 170 | about 1.32 MiB V8 heap per renderer |
 
-**New clue about the unresolved Phase 2 retention.** In Phase 2, construct-only churn was flat
-and render churn grew. The Phase 3 constructor now does the initial style/layout resolve that
-the Boa renderer always did, and construct-only churn now grows exactly like render churn
-(16.63 vs 16.64 MiB after 400). So the retained allocation follows the **first style/layout
-resolve of a new document** (Stylo/Parley/fontique per-document setup is the likely area). It
-does not follow paint, V8 or the shared host, and the Boa paint control retains as well. This is
-an inference from controls, not an allocation-stack attribution; the exact owner is still
-unresolved. No "no leak" claim is made. Phase 3 introduced no new growth: the long eval, seek
-and style probes stay bounded, and listener and wrapper bookkeeping is released at close.
+**Attribution of the native retention (open since Phase 2): two sources, both identified.**
+Graphify was run on the dependency sources too (see "Graphify on dependency sources" below). It
+narrowed the candidates, and a JS-free Rust probe (`experiments/phase3/retention-probe`, which
+churns 400 Blitz documents per variant and reads glibc `mallinfo2` after `malloc_trim`) measured
+each one. Evidence: `evidence/retention-probe.{txt,json}`.
+
+| Variant (400 documents) | Retained per document |
+|---|---:|
+| parse only, same thread | 0.4 KiB |
+| parse + style/layout resolve, same thread | **0.0 KiB** |
+| resolve, with/without UA stylesheet, text, fonts, same thread | 0.0 KiB |
+| resolve on **a new thread per document** | **34.2 KiB, linear** |
+| same, without text, UA stylesheet or fonts | 34.2 KiB |
+| parse only on a new thread per document | 0.0 KiB |
+| resolve + paint, same thread (Inter, 605 KB) | ramps to +50 MB within 100 documents, then flat |
+| resolve + paint, same thread (Noto Sans Tamil, 41 KB) | ramps to +4.4 MB, then flat |
+
+1. **34.2 KiB per thread that runs a style traversal: Stylo's intentional TLS leaks.**
+   `stylo/bloom.rs` (`BLOOM_KEY`) and `stylo/sharing/mod.rs` (`SHARING_CACHE_KEY`) allocate with
+   `Box::leak`, once per thread. Their comment says TLS destructors are not guaranteed on rayon
+   workers. Measured with a temporary size readout in the vendored Stylo (reverted afterwards):
+   bloom filter 4,104 B + 8 levels of sharing caches 30,920 B = **35,024 B = 34.2 KiB**. That is
+   exactly the measured slope, and it matches the ~34–36 KiB per cycle seen in Phase 2 and
+   Phase 3. The Deno design creates one owner thread per renderer, so it pays this once per
+   renderer created. Boa, on a long-lived thread, pays it once per thread. It is not V8, paint,
+   fonts or the shared host.
+2. **The paint plateau is Skia's glyph cache pinning typefaces.** Each painter's
+   `SkiaSceneCache` creates its own Skia typeface from the font bytes (`FontMgr::new_from_bytes`).
+   Skia's process-wide glyph cache keeps glyph entries, and each entry keeps its typeface and its
+   private copy of the font data alive. Skia reports only 0.04 MiB used because the font data is
+   not counted. After 400 painters, 80 entries remain, and `skia_safe::graphics::purge_all_caches()`
+   frees the full ~53.5 MB, back to 0.56 MiB. The plateau scales with font size: 80 × ~0.68 MB
+   for Inter, 80 × ~0.055 MB for the 41 KB Tamil font. It is bounded, not a leak. But with large
+   fonts (a 16 MB CJK font) the same bound would be about 1.3 GB, for Boa as much as for Deno:
+   every renderer, and every `load()` (fonts get new blob ids), makes new typeface copies.
+
+Mitigations (not implemented in Phase 3): for (1), reuse renderer owner threads in the Deno addon
+(a small pool: one isolate at a time per thread), or upstream a Stylo change that frees these TLS
+values on threads where destructors run. For (2), share one Skia typeface per font blob across
+painters (a process-wide cache in anyrender_skia keyed by blob content), keep blob ids stable
+across `load()`, or trim Skia's glyph cache when a renderer closes. No "no leak" claim is made
+beyond these two attributed sources. Phase 3 itself introduced no new growth: the long eval,
+seek and style probes stay bounded, and listener and wrapper bookkeeping is released at close.
 
 ## Remaining incompatibilities
 
@@ -383,7 +451,7 @@ and style probes stay bounded, and listener and wrapper bookkeeping is released 
 |---|---|---|---|---|
 | 1 | Only Linux x64 / Node 24.19.0 was run. Linux arm64, macOS arm64/x64 and Windows x64 had no runners | High for shipping Deno | Medium (CI) | Medium |
 | 2 | Deno lacks Web Animations (`element.animate`, `getAnimations`) and the `EventTarget` global, so Motion fails on Deno (`evidence/motion-probe.json`). Boa has them through canvas-html's prelude and patches | High for Deno parity, none for Boa | Medium: move the WAAPI prelude's natives (`__blitz_set_animation_time`, animation lists) into the host and run the prelude on both engines | Low: same pattern as this phase |
-| 3 | Native retention around a new document's first resolve (about 35 KiB per renderer) | Medium for long-lived services that churn renderers | Medium (allocation profiler) | Low for this architecture; likely Stylo/fontique |
+| 3 | Native retention, now attributed: Stylo leaks 34.2 KiB per traversal thread (one per Deno renderer); Skia's glyph cache pins up to ~80 typeface copies (≈80 × font size, about 50 MB with Inter, more with large fonts) across renderer churn and `load()` | Medium–high for services that churn renderers, or use large fonts | Small–medium: Deno thread reuse; a shared typeface cache or stable blob ids for Skia | Low; both outside the shared host |
 | 4 | Patch 0013 makes Blitz's vibey-script depend on `../../../canvas-html/dom-host` by path, so it cannot go upstream as is | Medium (maintenance) | Medium: fold vibey-script's Boa DOM into canvas-html, or upstream the host as a Blitz crate | Low |
 | 5 | Production Boa's default `Date` epoch is still the wall clock at load; determinism needs `epochMs` | Medium (a footgun for date-printing pages) | Small: change the default to 0 | Low; a behaviour change, so the owner decides |
 | 6 | Event model: no capture phase (capture listeners run in bubble order), no `composedPath`, no trusted input events in Deno | Low for animation | Small–medium | Low |
@@ -438,7 +506,7 @@ compatibility work.
 - Lifecycle: persistent, explicit close, finalizer close, worker graceful and forced, no wrong-thread destruction, watchdog ✔. Boa lifecycle tests ✔.
 - Production regression: core, JS, WAAPI, fonts, worker determinism, GSAP, Motion ✔; no assertion weakened ✔.
 - Performance: every listed workload measured ✔; JS separated from bridge, layout and paint where practical ✔; no universal speed claim ✔.
-- Memory: no new regression ✔; pixel-buffer finalizer behaviour reproduced ✔; render-churn retention documented, with a new clue ✔; no "no leak" claim ✔.
+- Memory: no new regression ✔; pixel-buffer finalizer behaviour reproduced ✔; render-churn retention attributed to Stylo TLS leaks (34.2 KiB per thread, measured exactly) and Skia's glyph cache pinning typefaces (bounded) ✔; no "no leak" claim ✔.
 - Scope: no WebGPU, wgpu, Dawn, Three.js, GSS, GPU Skia, CAD, networking, Node compatibility, full DOM or full WebIDL ✔.
 
 ## Reproduce

@@ -1,0 +1,155 @@
+{
+  "entries": [
+    "blitz_blitz_html_src_html_document_htmldocument_from_html",
+    "blitz_blitz_dom_src_document_basedocument_new",
+    "blitz_blitz_dom_src_resolve_basedocument_resolve",
+    "parley_fontique_src_source_cache_sourcecache_new_shared"
+  ],
+  "maxDepth": 5,
+  "reachedNodes": 787,
+  "reachedFiles": 59,
+  "reachedFilesByCrate": [
+    [
+      "blitz/blitz-dom",
+      25
+    ],
+    [
+      "parley/parley",
+      8
+    ],
+    [
+      "parley/parley_engine",
+      8
+    ],
+    [
+      "blitz/blitz-traits",
+      5
+    ],
+    [
+      "parley/fontique",
+      2
+    ],
+    [
+      "stylo/stylesheets",
+      2
+    ],
+    [
+      "stylo/servo",
+      2
+    ],
+    [
+      "blitz/blitz-html",
+      1
+    ],
+    [
+      "stylo/media_queries",
+      1
+    ],
+    [
+      "stylo/stylist.rs",
+      1
+    ],
+    [
+      "stylo/shared_lock.rs",
+      1
+    ],
+    [
+      "stylo/custom_properties.rs",
+      1
+    ],
+    [
+      "stylo/properties",
+      1
+    ],
+    [
+      "stylo/values",
+      1
+    ]
+  ],
+  "globalStateCandidates": [
+    {
+      "file": "blitz/blitz-dom/src/document.rs",
+      "line": 371,
+      "depth": 0,
+      "code": "static ID_GENERATOR: AtomicUsize = AtomicUsize::new(1);"
+    },
+    {
+      "file": "blitz/blitz-dom/src/resolve.rs",
+      "line": 17,
+      "depth": 0,
+      "code": "thread_local! {"
+    },
+    {
+      "file": "blitz/blitz-dom/src/resolve.rs",
+      "line": 18,
+      "depth": 0,
+      "code": "pub(crate) static LAYOUT_CTX: RefCell<Option<Box<LayoutContext<TextBrush>>>> = const { RefCell::new(None) };"
+    },
+    {
+      "file": "blitz/blitz-dom/src/util.rs",
+      "line": 47,
+      "depth": 3,
+      "code": "pub(crate) static FONT_DB: LazyLock<Arc<fontdb::Database>> = LazyLock::new(|| {"
+    },
+    {
+      "file": "parley/fontique/src/source.rs",
+      "line": 26,
+      "depth": 4,
+      "code": "static ID_COUNTER: AtomicCounter = AtomicCounter::new(1);"
+    },
+    {
+      "file": "stylo/stylist.rs",
+      "line": 354,
+      "depth": 4,
+      "code": "static UA_CASCADE_DATA_CACHE: LazyLock<Mutex<UserAgentCascadeDataCache>> ="
+    },
+    {
+      "file": "stylo/stylist.rs",
+      "line": 424,
+      "depth": 4,
+      "code": "static EMPTY_UA_CASCADE_DATA: LazyLock<Arc<UserAgentCascadeData>> = LazyLock::new(|| {"
+    },
+    {
+      "file": "stylo/stylist.rs",
+      "line": 3382,
+      "depth": 4,
+      "code": "static IMPLICIT_SCOPE: LazyLock<SelectorList<SelectorImpl>> = LazyLock::new(|| {"
+    },
+    {
+      "file": "blitz/blitz-dom/src/node/element.rs",
+      "line": 154,
+      "depth": 4,
+      "code": "pub(crate) static DEFAULT_LAYOUT_DATA: LayoutData = LayoutData::new();"
+    },
+    {
+      "file": "parley/parley_engine/src/analysis.rs",
+      "line": 123,
+      "depth": 4,
+      "code": "static JA: LanguageIdentifier = langid!(\"ja\");"
+    },
+    {
+      "file": "blitz/blitz-dom/src/net.rs",
+      "line": 88,
+      "depth": 4,
+      "code": "static REQUEST_ID_COUNTER: AtomicUsize = AtomicUsize::new(0);"
+    },
+    {
+      "file": "stylo/custom_properties.rs",
+      "line": 117,
+      "depth": 5,
+      "code": "static ENVIRONMENT_VARIABLES: [EnvironmentVariable; 4] = ["
+    },
+    {
+      "file": "stylo/custom_properties.rs",
+      "line": 159,
+      "depth": 5,
+      "code": "static CHROME_ENVIRONMENT_VARIABLES: [EnvironmentVariable; 9] = ["
+    },
+    {
+      "file": "parley/parley_engine/src/itemize.rs",
+      "line": 242,
+      "depth": 5,
+      "code": "static SHORT_NAMES: icu_properties::PropertyNamesShortBorrowed<'static, IcuScript> ="
+    }
+  ]
+}

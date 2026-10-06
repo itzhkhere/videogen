@@ -2444,6 +2444,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "phase3-retention-probe"
+version = "0.1.0"
+dependencies = [
+ "anyrender",
+ "anyrender_skia",
+ "blitz-dom",
+ "blitz-html",
+ "blitz-paint",
+ "blitz-traits",
+ "libc",
+ "parley",
+ "peniko",
+ "serde_json",
+ "skia-safe",
+]
+
+[[package]]
 name = "phf"
 version = "0.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
