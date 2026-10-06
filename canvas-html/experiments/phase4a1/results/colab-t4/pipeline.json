@@ -1,0 +1,1734 @@
+{
+  "frames": 120,
+  "fps": 30,
+  "rows": [
+    {
+      "phase": "check",
+      "backend": "gpu-gl",
+      "scene": "effects",
+      "res": "1080p",
+      "runs": [
+        {
+          "mode": "sync",
+          "depth": 1,
+          "identicalToSync": true,
+          "firstHash": "89f6b3f3c37e04b1"
+        },
+        {
+          "mode": "deferred",
+          "depth": 1,
+          "identicalToSync": true,
+          "firstHash": "89f6b3f3c37e04b1"
+        },
+        {
+          "mode": "deferred",
+          "depth": 2,
+          "identicalToSync": true,
+          "firstHash": "89f6b3f3c37e04b1"
+        },
+        {
+          "mode": "deferred",
+          "depth": 3,
+          "identicalToSync": true,
+          "firstHash": "89f6b3f3c37e04b1"
+        },
+        {
+          "mode": "deferred",
+          "depth": 4,
+          "identicalToSync": true,
+          "firstHash": "89f6b3f3c37e04b1"
+        },
+        {
+          "mode": "pbo",
+          "depth": 1,
+          "identicalToSync": true,
+          "firstHash": "89f6b3f3c37e04b1"
+        },
+        {
+          "mode": "pbo",
+          "depth": 2,
+          "identicalToSync": true,
+          "firstHash": "89f6b3f3c37e04b1"
+        },
+        {
+          "mode": "pbo",
+          "depth": 3,
+          "identicalToSync": true,
+          "firstHash": "89f6b3f3c37e04b1"
+        },
+        {
+          "mode": "pbo",
+          "depth": 4,
+          "identicalToSync": true,
+          "firstHash": "89f6b3f3c37e04b1"
+        }
+      ]
+    },
+    {
+      "phase": "bench",
+      "backend": "gpu-gl",
+      "scene": "effects",
+      "res": "1080p",
+      "runs": [
+        {
+          "mode": "sync",
+          "depth": 1,
+          "fps": 149.032,
+          "msPerFrame": 6.71,
+          "stageMedianMs": {
+            "gpuSubmit": 0.468,
+            "paint": 1.01,
+            "readback": 1.971,
+            "prepare": 0.519,
+            "gpuWait": 0.345,
+            "seek": 1.914
+          },
+          "rssMiB": 241.7,
+          "rssDeltaMiB": 5,
+          "gpu": null,
+          "upperBound": {
+            "waitPlusReadbackMedianMs": 2.322,
+            "shareOfFrame": 0.346
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 1,
+          "fps": 159.525,
+          "msPerFrame": 6.269,
+          "stageMedianMs": {
+            "gpuSubmit": 0.451,
+            "gpuWait": 0,
+            "latency": 4.472,
+            "prepare": 0.501,
+            "seek": 1.845,
+            "readback": 2.084,
+            "paint": 0.965
+          },
+          "rssMiB": 241.8,
+          "rssDeltaMiB": 0.1,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 4.472,
+            "mean": 4.786,
+            "p95": 5.95,
+            "min": 2.264,
+            "max": 7.625,
+            "cv": 0.147
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 2,
+          "fps": 157.749,
+          "msPerFrame": 6.339,
+          "stageMedianMs": {
+            "seek": 1.874,
+            "gpuWait": 0,
+            "paint": 0.957,
+            "gpuSubmit": 0.453,
+            "prepare": 0.504,
+            "readback": 2.109,
+            "latency": 11.13
+          },
+          "rssMiB": 242.1,
+          "rssDeltaMiB": 0.3,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 11.13,
+            "mean": 11.11,
+            "p95": 12.951,
+            "min": 4.271,
+            "max": 14.043,
+            "cv": 0.104
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 3,
+          "fps": 154.828,
+          "msPerFrame": 6.459,
+          "stageMedianMs": {
+            "paint": 0.979,
+            "gpuWait": 0,
+            "prepare": 0.506,
+            "gpuSubmit": 0.458,
+            "readback": 2.13,
+            "seek": 1.9,
+            "latency": 17.681
+          },
+          "rssMiB": 245.4,
+          "rssDeltaMiB": 3.6,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 17.681,
+            "mean": 17.624,
+            "p95": 20.217,
+            "min": 6.245,
+            "max": 20.984,
+            "cv": 0.095
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 4,
+          "fps": 146.978,
+          "msPerFrame": 6.804,
+          "stageMedianMs": {
+            "gpuWait": 0,
+            "latency": 24.183,
+            "readback": 2.142,
+            "seek": 1.891,
+            "prepare": 0.51,
+            "paint": 0.983,
+            "gpuSubmit": 0.462
+          },
+          "rssMiB": 247.4,
+          "rssDeltaMiB": 0,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 24.183,
+            "mean": 25.259,
+            "p95": 29.273,
+            "min": 8.26,
+            "max": 32.13,
+            "cv": 0.132
+          }
+        },
+        {
+          "mode": "pbo",
+          "depth": 1,
+          "fps": 157.658,
+          "msPerFrame": 6.343,
+          "stageMedianMs": {
+            "seek": 1.94,
+            "prepare": 0.522,
+            "paint": 1.015,
+            "gpuSubmit": 0.511,
+            "readback": 1.799,
+            "gpuWait": 0.006,
+            "latency": 4.342
+          },
+          "rssMiB": 255.8,
+          "rssDeltaMiB": 8.3,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 4.342,
+            "mean": 4.697,
+            "p95": 6.293,
+            "min": 2.895,
+            "max": 6.706,
+            "cv": 0.169
+          }
+        },
+        {
+          "mode": "pbo",
+          "depth": 2,
+          "fps": 161.448,
+          "msPerFrame": 6.194,
+          "stageMedianMs": {
+            "paint": 1.002,
+            "gpuWait": 0.006,
+            "prepare": 0.502,
+            "readback": 1.783,
+            "seek": 1.878,
+            "latency": 10.338,
+            "gpuSubmit": 0.499
+          },
+          "rssMiB": 264.2,
+          "rssDeltaMiB": 8.4,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 10.338,
+            "mean": 10.72,
+            "p95": 12.322,
+            "min": 3.485,
+            "max": 16.325,
+            "cv": 0.132
+          }
+        },
+        {
+          "mode": "pbo",
+          "depth": 3,
+          "fps": 163.427,
+          "msPerFrame": 6.119,
+          "stageMedianMs": {
+            "paint": 1.005,
+            "seek": 1.909,
+            "prepare": 0.511,
+            "gpuSubmit": 0.5,
+            "latency": 16.667,
+            "readback": 1.751,
+            "gpuWait": 0.006
+          },
+          "rssMiB": 272.7,
+          "rssDeltaMiB": 8.5,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 16.667,
+            "mean": 16.59,
+            "p95": 18.378,
+            "min": 5.316,
+            "max": 23.301,
+            "cv": 0.112
+          }
+        },
+        {
+          "mode": "pbo",
+          "depth": 4,
+          "fps": 164.023,
+          "msPerFrame": 6.097,
+          "stageMedianMs": {
+            "readback": 1.764,
+            "latency": 22.654,
+            "gpuSubmit": 0.497,
+            "seek": 1.848,
+            "gpuWait": 0.006,
+            "prepare": 0.498,
+            "paint": 0.987
+          },
+          "rssMiB": 281.4,
+          "rssDeltaMiB": 8.6,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 22.654,
+            "mean": 22.372,
+            "p95": 23.69,
+            "min": 6.81,
+            "max": 28.637,
+            "cv": 0.101
+          }
+        }
+      ]
+    },
+    {
+      "phase": "bench",
+      "backend": "gpu-gl",
+      "scene": "effects",
+      "res": "4K",
+      "runs": [
+        {
+          "mode": "sync",
+          "depth": 1,
+          "fps": 66.758,
+          "msPerFrame": 14.979,
+          "stageMedianMs": {
+            "seek": 1.918,
+            "gpuWait": 0.956,
+            "paint": 2.465,
+            "readback": 7.437,
+            "gpuSubmit": 0.521,
+            "prepare": 0.52
+          },
+          "rssMiB": 408.8,
+          "rssDeltaMiB": 64.1,
+          "gpu": null,
+          "upperBound": {
+            "waitPlusReadbackMedianMs": 8.4,
+            "shareOfFrame": 0.561
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 1,
+          "fps": 71.153,
+          "msPerFrame": 14.054,
+          "stageMedianMs": {
+            "readback": 7.793,
+            "latency": 10.255,
+            "paint": 2.487,
+            "gpuSubmit": 0.496,
+            "seek": 1.892,
+            "gpuWait": 0,
+            "prepare": 0.508
+          },
+          "rssMiB": 408.6,
+          "rssDeltaMiB": -0.2,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 10.255,
+            "mean": 10.985,
+            "p95": 14.624,
+            "min": 8.263,
+            "max": 17.951,
+            "cv": 0.147
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 2,
+          "fps": 71.218,
+          "msPerFrame": 14.041,
+          "stageMedianMs": {
+            "paint": 2.552,
+            "latency": 24.246,
+            "readback": 7.834,
+            "seek": 1.937,
+            "prepare": 0.52,
+            "gpuSubmit": 0.519,
+            "gpuWait": 0
+          },
+          "rssMiB": 410,
+          "rssDeltaMiB": 1.9,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 24.246,
+            "mean": 24.77,
+            "p95": 26.711,
+            "min": 15.796,
+            "max": 37.42,
+            "cv": 0.096
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 3,
+          "fps": 71.528,
+          "msPerFrame": 13.98,
+          "stageMedianMs": {
+            "paint": 2.505,
+            "gpuWait": 0,
+            "readback": 7.881,
+            "prepare": 0.503,
+            "gpuSubmit": 0.5,
+            "seek": 1.888,
+            "latency": 38.37
+          },
+          "rssMiB": 418,
+          "rssDeltaMiB": 4.1,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 38.37,
+            "mean": 38.467,
+            "p95": 42.135,
+            "min": 23.14,
+            "max": 58.064,
+            "cv": 0.093
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 4,
+          "fps": 70.765,
+          "msPerFrame": 14.131,
+          "stageMedianMs": {
+            "readback": 7.975,
+            "seek": 1.93,
+            "gpuSubmit": 0.506,
+            "prepare": 0.516,
+            "latency": 52.572,
+            "paint": 2.512,
+            "gpuWait": 0
+          },
+          "rssMiB": 414.5,
+          "rssDeltaMiB": -3.6,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 52.572,
+            "mean": 52.635,
+            "p95": 56.023,
+            "min": 31.299,
+            "max": 76.185,
+            "cv": 0.088
+          }
+        },
+        {
+          "mode": "pbo",
+          "depth": 1,
+          "fps": 64.017,
+          "msPerFrame": 15.621,
+          "stageMedianMs": {
+            "gpuWait": 0.956,
+            "readback": 6.339,
+            "seek": 2.061,
+            "latency": 10.41,
+            "prepare": 0.573,
+            "paint": 2.572,
+            "gpuSubmit": 0.592
+          },
+          "rssMiB": 446.5,
+          "rssDeltaMiB": 31.8,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 10.41,
+            "mean": 12.049,
+            "p95": 20.305,
+            "min": 9.153,
+            "max": 21.172,
+            "cv": 0.295
+          }
+        },
+        {
+          "mode": "pbo",
+          "depth": 2,
+          "fps": 79.05,
+          "msPerFrame": 12.65,
+          "stageMedianMs": {
+            "latency": 21.327,
+            "seek": 1.952,
+            "gpuWait": 0.006,
+            "prepare": 0.532,
+            "paint": 2.542,
+            "gpuSubmit": 0.566,
+            "readback": 6.313
+          },
+          "rssMiB": 479.9,
+          "rssDeltaMiB": 33.4,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 21.327,
+            "mean": 21.887,
+            "p95": 23.66,
+            "min": 12.641,
+            "max": 34.72,
+            "cv": 0.119
+          }
+        },
+        {
+          "mode": "pbo",
+          "depth": 3,
+          "fps": 79.619,
+          "msPerFrame": 12.56,
+          "stageMedianMs": {
+            "prepare": 0.524,
+            "paint": 2.485,
+            "gpuWait": 0.006,
+            "readback": 6.276,
+            "latency": 33.606,
+            "seek": 1.928,
+            "gpuSubmit": 0.558
+          },
+          "rssMiB": 513,
+          "rssDeltaMiB": 33,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 33.606,
+            "mean": 34.035,
+            "p95": 35.997,
+            "min": 18.871,
+            "max": 53.934,
+            "cv": 0.11
+          }
+        },
+        {
+          "mode": "pbo",
+          "depth": 4,
+          "fps": 80.236,
+          "msPerFrame": 12.463,
+          "stageMedianMs": {
+            "gpuWait": 0.006,
+            "readback": 6.264,
+            "latency": 45.568,
+            "seek": 1.903,
+            "prepare": 0.513,
+            "paint": 2.507,
+            "gpuSubmit": 0.545
+          },
+          "rssMiB": 546.1,
+          "rssDeltaMiB": 33.1,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 45.568,
+            "mean": 45.838,
+            "p95": 47.267,
+            "min": 25.053,
+            "max": 69.837,
+            "cv": 0.098
+          }
+        }
+      ]
+    },
+    {
+      "phase": "check",
+      "backend": "gpu-gl",
+      "scene": "css",
+      "res": "1080p",
+      "runs": [
+        {
+          "mode": "sync",
+          "depth": 1,
+          "identicalToSync": true,
+          "firstHash": "e5bdc4916c446bc4"
+        },
+        {
+          "mode": "deferred",
+          "depth": 1,
+          "identicalToSync": true,
+          "firstHash": "e5bdc4916c446bc4"
+        },
+        {
+          "mode": "deferred",
+          "depth": 2,
+          "identicalToSync": true,
+          "firstHash": "e5bdc4916c446bc4"
+        },
+        {
+          "mode": "deferred",
+          "depth": 3,
+          "identicalToSync": true,
+          "firstHash": "e5bdc4916c446bc4"
+        },
+        {
+          "mode": "deferred",
+          "depth": 4,
+          "identicalToSync": true,
+          "firstHash": "e5bdc4916c446bc4"
+        },
+        {
+          "mode": "pbo",
+          "depth": 1,
+          "identicalToSync": true,
+          "firstHash": "e5bdc4916c446bc4"
+        },
+        {
+          "mode": "pbo",
+          "depth": 2,
+          "identicalToSync": true,
+          "firstHash": "e5bdc4916c446bc4"
+        },
+        {
+          "mode": "pbo",
+          "depth": 3,
+          "identicalToSync": true,
+          "firstHash": "e5bdc4916c446bc4"
+        },
+        {
+          "mode": "pbo",
+          "depth": 4,
+          "identicalToSync": true,
+          "firstHash": "e5bdc4916c446bc4"
+        }
+      ]
+    },
+    {
+      "phase": "bench",
+      "backend": "gpu-gl",
+      "scene": "css",
+      "res": "1080p",
+      "runs": [
+        {
+          "mode": "sync",
+          "depth": 1,
+          "fps": 154.992,
+          "msPerFrame": 6.452,
+          "stageMedianMs": {
+            "readback": 1.955,
+            "prepare": 0.69,
+            "gpuSubmit": 0.389,
+            "paint": 0.788,
+            "seek": 1.862,
+            "gpuWait": 0.164
+          },
+          "rssMiB": 245.7,
+          "rssDeltaMiB": 21.9,
+          "gpu": null,
+          "upperBound": {
+            "waitPlusReadbackMedianMs": 2.157,
+            "shareOfFrame": 0.334
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 1,
+          "fps": 161.626,
+          "msPerFrame": 6.187,
+          "stageMedianMs": {
+            "prepare": 0.695,
+            "paint": 0.802,
+            "gpuWait": 0,
+            "seek": 1.884,
+            "latency": 4.745,
+            "gpuSubmit": 0.363,
+            "readback": 2.099
+          },
+          "rssMiB": 251.5,
+          "rssDeltaMiB": 5.8,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 4.745,
+            "mean": 5.114,
+            "p95": 6.329,
+            "min": 2.064,
+            "max": 8.623,
+            "cv": 0.153
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 2,
+          "fps": 157.773,
+          "msPerFrame": 6.338,
+          "stageMedianMs": {
+            "paint": 0.776,
+            "gpuSubmit": 0.414,
+            "prepare": 0.709,
+            "seek": 1.919,
+            "gpuWait": 0,
+            "latency": 11.256,
+            "readback": 2.147
+          },
+          "rssMiB": 255.8,
+          "rssDeltaMiB": 4.1,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 11.256,
+            "mean": 11.506,
+            "p95": 13.413,
+            "min": 4.158,
+            "max": 14.14,
+            "cv": 0.119
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 3,
+          "fps": 153.913,
+          "msPerFrame": 6.497,
+          "stageMedianMs": {
+            "readback": 2.157,
+            "latency": 18.173,
+            "paint": 0.834,
+            "gpuSubmit": 0.367,
+            "seek": 1.98,
+            "gpuWait": 0,
+            "prepare": 0.726
+          },
+          "rssMiB": 264.8,
+          "rssDeltaMiB": 3.6,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 18.173,
+            "mean": 18.153,
+            "p95": 21.087,
+            "min": 6.051,
+            "max": 23.293,
+            "cv": 0.123
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 4,
+          "fps": 132.289,
+          "msPerFrame": 7.559,
+          "stageMedianMs": {
+            "seek": 1.912,
+            "paint": 0.765,
+            "gpuWait": 0,
+            "gpuSubmit": 0.385,
+            "latency": 29.488,
+            "readback": 3.396,
+            "prepare": 0.698
+          },
+          "rssMiB": 268.6,
+          "rssDeltaMiB": 3.7,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 29.488,
+            "mean": 28.632,
+            "p95": 33.198,
+            "min": 14.607,
+            "max": 35.282,
+            "cv": 0.132
+          }
+        },
+        {
+          "mode": "pbo",
+          "depth": 1,
+          "fps": 160.247,
+          "msPerFrame": 6.24,
+          "stageMedianMs": {
+            "readback": 1.758,
+            "latency": 4.523,
+            "seek": 1.95,
+            "gpuWait": 0.006,
+            "gpuSubmit": 0.4,
+            "paint": 0.779,
+            "prepare": 0.722
+          },
+          "rssMiB": 280.1,
+          "rssDeltaMiB": 11.4,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 4.523,
+            "mean": 5.097,
+            "p95": 6.945,
+            "min": 2.62,
+            "max": 9.561,
+            "cv": 0.199
+          }
+        },
+        {
+          "mode": "pbo",
+          "depth": 2,
+          "fps": 163.381,
+          "msPerFrame": 6.121,
+          "stageMedianMs": {
+            "seek": 1.929,
+            "prepare": 0.724,
+            "paint": 0.833,
+            "readback": 1.761,
+            "latency": 10.866,
+            "gpuSubmit": 0.402,
+            "gpuWait": 0.006
+          },
+          "rssMiB": 291.6,
+          "rssDeltaMiB": 11.5,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 10.866,
+            "mean": 10.989,
+            "p95": 12.909,
+            "min": 3.605,
+            "max": 17.555,
+            "cv": 0.144
+          }
+        },
+        {
+          "mode": "pbo",
+          "depth": 3,
+          "fps": 162.284,
+          "msPerFrame": 6.162,
+          "stageMedianMs": {
+            "prepare": 0.713,
+            "paint": 0.823,
+            "gpuWait": 0.006,
+            "readback": 1.761,
+            "seek": 1.912,
+            "gpuSubmit": 0.447,
+            "latency": 17.401
+          },
+          "rssMiB": 303.3,
+          "rssDeltaMiB": 11.8,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 17.401,
+            "mean": 17.091,
+            "p95": 20.364,
+            "min": 5.366,
+            "max": 20.667,
+            "cv": 0.13
+          }
+        },
+        {
+          "mode": "pbo",
+          "depth": 4,
+          "fps": 155.491,
+          "msPerFrame": 6.431,
+          "stageMedianMs": {
+            "gpuSubmit": 0.429,
+            "seek": 2.039,
+            "prepare": 0.745,
+            "readback": 1.803,
+            "gpuWait": 0.006,
+            "latency": 24.264,
+            "paint": 0.822
+          },
+          "rssMiB": 315.1,
+          "rssDeltaMiB": 11.5,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 24.264,
+            "mean": 24.038,
+            "p95": 27.099,
+            "min": 6.998,
+            "max": 33.718,
+            "cv": 0.117
+          }
+        }
+      ]
+    },
+    {
+      "phase": "bench",
+      "backend": "gpu-gl",
+      "scene": "css",
+      "res": "4K",
+      "runs": [
+        {
+          "mode": "sync",
+          "depth": 1,
+          "fps": 74.329,
+          "msPerFrame": 13.454,
+          "stageMedianMs": {
+            "gpuWait": 0.561,
+            "seek": 1.971,
+            "readback": 7.492,
+            "prepare": 0.738,
+            "paint": 1.489,
+            "gpuSubmit": 0.547
+          },
+          "rssMiB": 354.7,
+          "rssDeltaMiB": 31.8,
+          "gpu": null,
+          "upperBound": {
+            "waitPlusReadbackMedianMs": 8.081,
+            "shareOfFrame": 0.601
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 1,
+          "fps": 77.038,
+          "msPerFrame": 12.981,
+          "stageMedianMs": {
+            "prepare": 0.715,
+            "seek": 1.952,
+            "paint": 1.318,
+            "gpuWait": 0,
+            "readback": 7.904,
+            "latency": 10.687,
+            "gpuSubmit": 0.501
+          },
+          "rssMiB": 361.6,
+          "rssDeltaMiB": 6.9,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 10.687,
+            "mean": 11.236,
+            "p95": 12.875,
+            "min": 7.79,
+            "max": 19.352,
+            "cv": 0.128
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 2,
+          "fps": 75.927,
+          "msPerFrame": 13.171,
+          "stageMedianMs": {
+            "paint": 1.312,
+            "prepare": 0.703,
+            "gpuWait": 0,
+            "readback": 7.824,
+            "latency": 23.688,
+            "seek": 1.887,
+            "gpuSubmit": 0.483
+          },
+          "rssMiB": 365.3,
+          "rssDeltaMiB": 3.5,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 23.688,
+            "mean": 24.511,
+            "p95": 31.83,
+            "min": 15.404,
+            "max": 35.836,
+            "cv": 0.133
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 3,
+          "fps": 74.923,
+          "msPerFrame": 13.347,
+          "stageMedianMs": {
+            "prepare": 0.718,
+            "paint": 1.326,
+            "gpuSubmit": 0.478,
+            "gpuWait": 0,
+            "readback": 7.843,
+            "seek": 1.931,
+            "latency": 36.892
+          },
+          "rssMiB": 377.9,
+          "rssDeltaMiB": 7.4,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 36.892,
+            "mean": 37.943,
+            "p95": 54.541,
+            "min": 23.236,
+            "max": 57.531,
+            "cv": 0.166
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 4,
+          "fps": 77.487,
+          "msPerFrame": 12.905,
+          "stageMedianMs": {
+            "seek": 1.944,
+            "gpuSubmit": 0.483,
+            "paint": 1.324,
+            "gpuWait": 0,
+            "readback": 7.849,
+            "latency": 49.887,
+            "prepare": 0.735
+          },
+          "rssMiB": 381.8,
+          "rssDeltaMiB": 3.8,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 49.887,
+            "mean": 49.209,
+            "p95": 54.841,
+            "min": 27.506,
+            "max": 70.63,
+            "cv": 0.096
+          }
+        },
+        {
+          "mode": "pbo",
+          "depth": 1,
+          "fps": 77.043,
+          "msPerFrame": 12.98,
+          "stageMedianMs": {
+            "gpuSubmit": 0.593,
+            "paint": 1.394,
+            "prepare": 0.752,
+            "readback": 6.314,
+            "latency": 9.709,
+            "gpuWait": 0.282,
+            "seek": 1.997
+          },
+          "rssMiB": 413.1,
+          "rssDeltaMiB": 31.2,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 9.709,
+            "mean": 11.04,
+            "p95": 17.791,
+            "min": 9.058,
+            "max": 17.927,
+            "cv": 0.237
+          }
+        },
+        {
+          "mode": "pbo",
+          "depth": 2,
+          "fps": 88.054,
+          "msPerFrame": 11.357,
+          "stageMedianMs": {
+            "latency": 20.331,
+            "seek": 1.908,
+            "paint": 1.345,
+            "prepare": 0.722,
+            "gpuSubmit": 0.508,
+            "gpuWait": 0.006,
+            "readback": 6.268
+          },
+          "rssMiB": 449.2,
+          "rssDeltaMiB": 36.1,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 20.331,
+            "mean": 20.818,
+            "p95": 23.405,
+            "min": 12.708,
+            "max": 32.956,
+            "cv": 0.121
+          }
+        },
+        {
+          "mode": "pbo",
+          "depth": 3,
+          "fps": 88.29,
+          "msPerFrame": 11.326,
+          "stageMedianMs": {
+            "latency": 31.715,
+            "seek": 1.903,
+            "gpuSubmit": 0.491,
+            "paint": 1.344,
+            "gpuWait": 0.006,
+            "prepare": 0.713,
+            "readback": 6.246
+          },
+          "rssMiB": 485.2,
+          "rssDeltaMiB": 36,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 31.715,
+            "mean": 31.816,
+            "p95": 35.522,
+            "min": 18.665,
+            "max": 46.805,
+            "cv": 0.108
+          }
+        },
+        {
+          "mode": "pbo",
+          "depth": 4,
+          "fps": 86.985,
+          "msPerFrame": 11.496,
+          "stageMedianMs": {
+            "readback": 6.269,
+            "latency": 44.086,
+            "gpuSubmit": 0.564,
+            "paint": 1.333,
+            "prepare": 0.72,
+            "seek": 1.917,
+            "gpuWait": 0.006
+          },
+          "rssMiB": 521.1,
+          "rssDeltaMiB": 35.9,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 44.086,
+            "mean": 43.489,
+            "p95": 51.13,
+            "min": 25.135,
+            "max": 62.259,
+            "cv": 0.109
+          }
+        }
+      ]
+    },
+    {
+      "phase": "check",
+      "backend": "gpu-vulkan",
+      "scene": "effects",
+      "res": "1080p",
+      "runs": [
+        {
+          "mode": "sync",
+          "depth": 1,
+          "identicalToSync": true,
+          "firstHash": "b4348f5f12b82e91"
+        },
+        {
+          "mode": "deferred",
+          "depth": 1,
+          "identicalToSync": true,
+          "firstHash": "b4348f5f12b82e91"
+        },
+        {
+          "mode": "deferred",
+          "depth": 2,
+          "identicalToSync": true,
+          "firstHash": "b4348f5f12b82e91"
+        },
+        {
+          "mode": "deferred",
+          "depth": 3,
+          "identicalToSync": true,
+          "firstHash": "b4348f5f12b82e91"
+        },
+        {
+          "mode": "deferred",
+          "depth": 4,
+          "identicalToSync": true,
+          "firstHash": "b4348f5f12b82e91"
+        }
+      ]
+    },
+    {
+      "phase": "bench",
+      "backend": "gpu-vulkan",
+      "scene": "effects",
+      "res": "1080p",
+      "runs": [
+        {
+          "mode": "sync",
+          "depth": 1,
+          "fps": 142.235,
+          "msPerFrame": 7.031,
+          "stageMedianMs": {
+            "seek": 1.906,
+            "paint": 0.771,
+            "prepare": 0.51,
+            "gpuSubmit": 0.279,
+            "gpuWait": 0.471,
+            "readback": 2.524
+          },
+          "rssMiB": 290.1,
+          "rssDeltaMiB": 0.5,
+          "gpu": null,
+          "upperBound": {
+            "waitPlusReadbackMedianMs": 2.997,
+            "shareOfFrame": 0.426
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 1,
+          "fps": 153.31,
+          "msPerFrame": 6.523,
+          "stageMedianMs": {
+            "seek": 1.964,
+            "gpuSubmit": 0.283,
+            "gpuWait": 0,
+            "prepare": 0.525,
+            "latency": 5.088,
+            "readback": 2.539,
+            "paint": 0.793
+          },
+          "rssMiB": 290.1,
+          "rssDeltaMiB": 0,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 5.088,
+            "mean": 5.386,
+            "p95": 6.811,
+            "min": 2.879,
+            "max": 8.318,
+            "cv": 0.145
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 2,
+          "fps": 154.827,
+          "msPerFrame": 6.459,
+          "stageMedianMs": {
+            "latency": 11.501,
+            "gpuSubmit": 0.272,
+            "gpuWait": 0,
+            "seek": 1.906,
+            "readback": 2.556,
+            "prepare": 0.507,
+            "paint": 0.763
+          },
+          "rssMiB": 290.6,
+          "rssDeltaMiB": 0.4,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 11.501,
+            "mean": 11.734,
+            "p95": 13.572,
+            "min": 5.525,
+            "max": 14.325,
+            "cv": 0.101
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 3,
+          "fps": 158.248,
+          "msPerFrame": 6.319,
+          "stageMedianMs": {
+            "seek": 1.841,
+            "prepare": 0.499,
+            "paint": 0.749,
+            "gpuSubmit": 0.262,
+            "latency": 17.851,
+            "readback": 2.501,
+            "gpuWait": 0
+          },
+          "rssMiB": 296,
+          "rssDeltaMiB": 0.3,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 17.851,
+            "mean": 17.662,
+            "p95": 19.464,
+            "min": 7.907,
+            "max": 22.862,
+            "cv": 0.09
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 4,
+          "fps": 129.475,
+          "msPerFrame": 7.724,
+          "stageMedianMs": {
+            "latency": 31.524,
+            "gpuWait": 0,
+            "prepare": 0.513,
+            "paint": 0.767,
+            "gpuSubmit": 0.272,
+            "readback": 4.357,
+            "seek": 1.873
+          },
+          "rssMiB": 296.5,
+          "rssDeltaMiB": 0.3,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 31.524,
+            "mean": 29.412,
+            "p95": 33.403,
+            "min": 10.304,
+            "max": 34.457,
+            "cv": 0.153
+          }
+        }
+      ]
+    },
+    {
+      "phase": "bench",
+      "backend": "gpu-vulkan",
+      "scene": "effects",
+      "res": "4K",
+      "runs": [
+        {
+          "mode": "sync",
+          "depth": 1,
+          "fps": 65.681,
+          "msPerFrame": 15.225,
+          "stageMedianMs": {
+            "paint": 1.751,
+            "prepare": 0.527,
+            "seek": 1.905,
+            "gpuSubmit": 0.315,
+            "gpuWait": 0.892,
+            "readback": 8.94
+          },
+          "rssMiB": 428,
+          "rssDeltaMiB": 13,
+          "gpu": null,
+          "upperBound": {
+            "waitPlusReadbackMedianMs": 9.853,
+            "shareOfFrame": 0.647
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 1,
+          "fps": 68.583,
+          "msPerFrame": 14.581,
+          "stageMedianMs": {
+            "gpuWait": 0,
+            "seek": 1.956,
+            "gpuSubmit": 0.315,
+            "paint": 1.788,
+            "prepare": 0.527,
+            "readback": 9.012,
+            "latency": 11.556
+          },
+          "rssMiB": 427.9,
+          "rssDeltaMiB": -0.1,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 11.556,
+            "mean": 12.407,
+            "p95": 17.163,
+            "min": 9.748,
+            "max": 22.29,
+            "cv": 0.169
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 2,
+          "fps": 71.53,
+          "msPerFrame": 13.98,
+          "stageMedianMs": {
+            "gpuWait": 0,
+            "gpuSubmit": 0.304,
+            "seek": 1.868,
+            "prepare": 0.515,
+            "paint": 1.702,
+            "readback": 8.933,
+            "latency": 25.287
+          },
+          "rssMiB": 432,
+          "rssDeltaMiB": 4.1,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 25.287,
+            "mean": 25.722,
+            "p95": 26.933,
+            "min": 18.7,
+            "max": 36.654,
+            "cv": 0.083
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 3,
+          "fps": 64.756,
+          "msPerFrame": 15.443,
+          "stageMedianMs": {
+            "paint": 1.828,
+            "latency": 40.555,
+            "gpuSubmit": 0.321,
+            "gpuWait": 0,
+            "seek": 1.985,
+            "prepare": 0.537,
+            "readback": 9.021
+          },
+          "rssMiB": 434.9,
+          "rssDeltaMiB": 3,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 40.555,
+            "mean": 43.708,
+            "p95": 64.696,
+            "min": 27.916,
+            "max": 77.963,
+            "cv": 0.213
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 4,
+          "fps": 67.042,
+          "msPerFrame": 14.916,
+          "stageMedianMs": {
+            "paint": 1.781,
+            "readback": 9.052,
+            "latency": 53.968,
+            "gpuSubmit": 0.317,
+            "gpuWait": 0,
+            "seek": 1.957,
+            "prepare": 0.541
+          },
+          "rssMiB": 437.8,
+          "rssDeltaMiB": 0.3,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 53.968,
+            "mean": 56.683,
+            "p95": 84.615,
+            "min": 32.658,
+            "max": 87.881,
+            "cv": 0.166
+          }
+        }
+      ]
+    },
+    {
+      "phase": "check",
+      "backend": "gpu-vulkan",
+      "scene": "css",
+      "res": "1080p",
+      "runs": [
+        {
+          "mode": "sync",
+          "depth": 1,
+          "identicalToSync": true,
+          "firstHash": "8077d0615263d585"
+        },
+        {
+          "mode": "deferred",
+          "depth": 1,
+          "identicalToSync": true,
+          "firstHash": "8077d0615263d585"
+        },
+        {
+          "mode": "deferred",
+          "depth": 2,
+          "identicalToSync": true,
+          "firstHash": "8077d0615263d585"
+        },
+        {
+          "mode": "deferred",
+          "depth": 3,
+          "identicalToSync": true,
+          "firstHash": "8077d0615263d585"
+        },
+        {
+          "mode": "deferred",
+          "depth": 4,
+          "identicalToSync": true,
+          "firstHash": "8077d0615263d585"
+        }
+      ]
+    },
+    {
+      "phase": "bench",
+      "backend": "gpu-vulkan",
+      "scene": "css",
+      "res": "1080p",
+      "runs": [
+        {
+          "mode": "sync",
+          "depth": 1,
+          "fps": 137.469,
+          "msPerFrame": 7.274,
+          "stageMedianMs": {
+            "readback": 2.539,
+            "gpuWait": 0.338,
+            "prepare": 0.744,
+            "paint": 0.651,
+            "gpuSubmit": 0.324,
+            "seek": 2.01
+          },
+          "rssMiB": 293.8,
+          "rssDeltaMiB": 10.4,
+          "gpu": null,
+          "upperBound": {
+            "waitPlusReadbackMedianMs": 2.872,
+            "shareOfFrame": 0.395
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 1,
+          "fps": 149.489,
+          "msPerFrame": 6.689,
+          "stageMedianMs": {
+            "gpuSubmit": 0.255,
+            "latency": 5.401,
+            "seek": 2.001,
+            "prepare": 0.72,
+            "readback": 2.566,
+            "gpuWait": 0,
+            "paint": 0.618
+          },
+          "rssMiB": 298.8,
+          "rssDeltaMiB": 5,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 5.401,
+            "mean": 5.812,
+            "p95": 7.57,
+            "min": 2.711,
+            "max": 9.326,
+            "cv": 0.164
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 2,
+          "fps": 151.853,
+          "msPerFrame": 6.585,
+          "stageMedianMs": {
+            "paint": 0.613,
+            "prepare": 0.704,
+            "latency": 12.075,
+            "seek": 1.97,
+            "readback": 2.547,
+            "gpuSubmit": 0.274,
+            "gpuWait": 0
+          },
+          "rssMiB": 302.6,
+          "rssDeltaMiB": 3.8,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 12.075,
+            "mean": 12.208,
+            "p95": 14.321,
+            "min": 5.193,
+            "max": 15.771,
+            "cv": 0.111
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 3,
+          "fps": 153.469,
+          "msPerFrame": 6.516,
+          "stageMedianMs": {
+            "readback": 2.531,
+            "paint": 0.627,
+            "gpuSubmit": 0.263,
+            "gpuWait": 0,
+            "seek": 1.918,
+            "latency": 18.671,
+            "prepare": 0.7
+          },
+          "rssMiB": 311.3,
+          "rssDeltaMiB": 3.5,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 18.671,
+            "mean": 18.458,
+            "p95": 20.198,
+            "min": 7.789,
+            "max": 23.794,
+            "cv": 0.097
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 4,
+          "fps": 132.23,
+          "msPerFrame": 7.563,
+          "stageMedianMs": {
+            "gpuWait": 0,
+            "latency": 27.163,
+            "paint": 0.65,
+            "seek": 2.013,
+            "readback": 2.655,
+            "gpuSubmit": 0.285,
+            "prepare": 0.744
+          },
+          "rssMiB": 315.4,
+          "rssDeltaMiB": 4,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 27.163,
+            "mean": 28.79,
+            "p95": 34.92,
+            "min": 17.532,
+            "max": 35.247,
+            "cv": 0.166
+          }
+        }
+      ]
+    },
+    {
+      "phase": "bench",
+      "backend": "gpu-vulkan",
+      "scene": "css",
+      "res": "4K",
+      "runs": [
+        {
+          "mode": "sync",
+          "depth": 1,
+          "fps": 69.435,
+          "msPerFrame": 14.402,
+          "stageMedianMs": {
+            "paint": 0.974,
+            "seek": 1.941,
+            "gpuSubmit": 0.377,
+            "gpuWait": 0.552,
+            "prepare": 0.704,
+            "readback": 8.929
+          },
+          "rssMiB": 420.9,
+          "rssDeltaMiB": 17,
+          "gpu": null,
+          "upperBound": {
+            "waitPlusReadbackMedianMs": 9.468,
+            "shareOfFrame": 0.657
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 1,
+          "fps": 71.784,
+          "msPerFrame": 13.931,
+          "stageMedianMs": {
+            "readback": 8.961,
+            "latency": 11.713,
+            "paint": 0.898,
+            "seek": 1.925,
+            "prepare": 0.711,
+            "gpuWait": 0,
+            "gpuSubmit": 0.343
+          },
+          "rssMiB": 425.4,
+          "rssDeltaMiB": 4.5,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 11.713,
+            "mean": 12.71,
+            "p95": 18.973,
+            "min": 9.748,
+            "max": 21.099,
+            "cv": 0.172
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 2,
+          "fps": 70.087,
+          "msPerFrame": 14.268,
+          "stageMedianMs": {
+            "prepare": 0.721,
+            "readback": 9.009,
+            "gpuWait": 0,
+            "paint": 0.937,
+            "gpuSubmit": 0.356,
+            "latency": 25.773,
+            "seek": 1.955
+          },
+          "rssMiB": 429,
+          "rssDeltaMiB": 3.6,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 25.773,
+            "mean": 27.108,
+            "p95": 39.452,
+            "min": 18.567,
+            "max": 41.555,
+            "cv": 0.166
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 3,
+          "fps": 71.439,
+          "msPerFrame": 13.998,
+          "stageMedianMs": {
+            "prepare": 0.73,
+            "seek": 1.96,
+            "gpuWait": 0,
+            "readback": 9.036,
+            "paint": 0.939,
+            "gpuSubmit": 0.352,
+            "latency": 39.602
+          },
+          "rssMiB": 435.4,
+          "rssDeltaMiB": 6.9,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 39.602,
+            "mean": 40.126,
+            "p95": 46.106,
+            "min": 28.077,
+            "max": 56.661,
+            "cv": 0.097
+          }
+        },
+        {
+          "mode": "deferred",
+          "depth": 4,
+          "fps": 68.129,
+          "msPerFrame": 14.678,
+          "stageMedianMs": {
+            "gpuWait": 0,
+            "seek": 1.999,
+            "prepare": 0.744,
+            "latency": 53.573,
+            "readback": 9.031,
+            "paint": 0.938,
+            "gpuSubmit": 0.362
+          },
+          "rssMiB": 441.7,
+          "rssDeltaMiB": 3.6,
+          "gpu": null,
+          "latencyMs": {
+            "n": 120,
+            "median": 53.573,
+            "mean": 56.556,
+            "p95": 79.858,
+            "min": 36.133,
+            "max": 103.378,
+            "cv": 0.181
+          }
+        }
+      ]
+    }
+  ]
+}

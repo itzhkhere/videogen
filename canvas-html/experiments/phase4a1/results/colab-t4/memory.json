@@ -1,0 +1,3592 @@
+{
+  "rows": [
+    {
+      "backend": "cpu",
+      "kind": "retained",
+      "mode": "render",
+      "res": "720p",
+      "frames": 100,
+      "frameMiB": 3.5,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 73.3,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.4
+        },
+        {
+          "label": "100 retained",
+          "rssMiB": 424.9,
+          "externalMiB": 353.9,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 355.1,
+          "expectedMiB": 351.6
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 73.6,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.4
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 73.6,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.2
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "cpu",
+      "kind": "retained",
+      "mode": "old-render",
+      "res": "720p",
+      "frames": 100,
+      "frameMiB": 3.5,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 76.3,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "100 retained",
+          "rssMiB": 428,
+          "externalMiB": 353.9,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null,
+          "expectedMiB": 351.6
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 76.6,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 73.1,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "cpu",
+      "kind": "retained",
+      "mode": "render",
+      "res": "720p",
+      "frames": 1000,
+      "frameMiB": 3.5,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 73.4,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.4
+        },
+        {
+          "label": "1000 retained",
+          "rssMiB": 3589.5,
+          "externalMiB": 3518,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3519.5,
+          "expectedMiB": 3515.6
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 3561.5,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.5
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 3561.6,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.2
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "cpu",
+      "kind": "retained",
+      "mode": "old-render",
+      "res": "720p",
+      "frames": 1000,
+      "frameMiB": 3.5,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 76.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "1000 retained",
+          "rssMiB": 3593.2,
+          "externalMiB": 3518,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null,
+          "expectedMiB": 3515.6
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 3396.4,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 3393,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "cpu",
+      "kind": "retained",
+      "mode": "render",
+      "res": "1080p",
+      "frames": 100,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 73.3,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.4
+        },
+        {
+          "label": "100 retained",
+          "rssMiB": 864.2,
+          "externalMiB": 793.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 794.5,
+          "expectedMiB": 791
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 73.3,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.4
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 73.3,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.2
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "cpu",
+      "kind": "retained",
+      "mode": "old-render",
+      "res": "1080p",
+      "frames": 100,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 81.2,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "100 retained",
+          "rssMiB": 872.4,
+          "externalMiB": 793.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null,
+          "expectedMiB": 791
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 81.6,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 73.6,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "cpu",
+      "kind": "retained",
+      "mode": "render",
+      "res": "4K",
+      "frames": 100,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 72.8,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.4
+        },
+        {
+          "label": "100 retained",
+          "rssMiB": 3237,
+          "externalMiB": 3166.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3167.5,
+          "expectedMiB": 3164.1
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 73.1,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.4
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 73.2,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.2
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "cpu",
+      "kind": "retained",
+      "mode": "old-render",
+      "res": "4K",
+      "frames": 100,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 104.4,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "100 retained",
+          "rssMiB": 3268.6,
+          "externalMiB": 3166.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null,
+          "expectedMiB": 3164.1
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 104.8,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 73.1,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "cpu",
+      "kind": "dropped-tight",
+      "mode": "render",
+      "res": "1080p",
+      "frames": 300,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 73.2,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.4
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 468.7,
+          "externalMiB": 41.9,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 398.9
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 864.3,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 794.5
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 1259.8,
+          "externalMiB": 49.8,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 1190
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 1655.3,
+          "externalMiB": 18.2,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 1585.5
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 2050.8,
+          "externalMiB": 57.8,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 1981
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 2446.3,
+          "externalMiB": 26.1,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 2376.6
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 73.5,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.4
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 73.6,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.2
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "kind": "dropped-tight",
+      "mode": "old-render",
+      "res": "1080p",
+      "frames": 300,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 81.4,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 477,
+          "externalMiB": 41.9,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 872.6,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 1268.1,
+          "externalMiB": 49.8,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 1663.6,
+          "externalMiB": 18.2,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 2059.1,
+          "externalMiB": 57.8,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 2454.6,
+          "externalMiB": 26.1,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 81.8,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 73.8,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "kind": "dropped-tight",
+      "mode": "into",
+      "res": "1080p",
+      "frames": 300,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 80.9,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 11.3
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 81,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 11.3
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 81,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 11.3
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 81,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 11.3
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 81.1,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 11.3
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 81.1,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 11.3
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 81.1,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 11.3
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 81.1,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 11.3
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 81.1,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 11.1
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "kind": "dropped-yield",
+      "mode": "render",
+      "res": "1080p",
+      "frames": 300,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 73,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.4
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 239.1,
+          "externalMiB": 168.5,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 90.4
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 159.9,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 11.3
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 159.9,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 11.3
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 159.9,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 11.3
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 159.9,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 11.3
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 159.9,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 11.3
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 73.1,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.4
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 73.3,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.2
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "kind": "dropped-yield",
+      "mode": "old-render",
+      "res": "1080p",
+      "frames": 300,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 80.9,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 167.8,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 167.8,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 167.8,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 168,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 168,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 168,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 81.2,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 73.3,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "kind": "dropped-yield",
+      "mode": "into",
+      "res": "1080p",
+      "frames": 300,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 81.3,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 11.3
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 81.4,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 11.3
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 81.4,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 11.3
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 81.4,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 11.3
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 81.4,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 11.3
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 81.4,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 11.3
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 81.4,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 11.3
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 81.4,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 11.3
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 81.4,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 11.1
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "kind": "dropped-tight",
+      "mode": "render",
+      "res": "4K",
+      "frames": 300,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 73.3,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.4
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 1655.5,
+          "externalMiB": 65.7,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 1585.5
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 3237.5,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3167.5
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 4819.6,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 4749.6
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 6401.6,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 6331.6
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 7983.6,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 7913.7
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 9565.8,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 9495.7
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 73.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.4
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 73.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.2
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "kind": "dropped-tight",
+      "mode": "old-render",
+      "res": "4K",
+      "frames": 300,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 104.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 1686.8,
+          "externalMiB": 65.7,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 3268.8,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 4850.8,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 6432.9,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 8014.9,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 9596.9,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 9280.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 9249.1,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "kind": "dropped-tight",
+      "mode": "into",
+      "res": "4K",
+      "frames": 300,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 104.9,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 35.1
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 104.9,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 35.1
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 104.9,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 35.1
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 104.9,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 35.1
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 105,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 35.1
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 105,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 35.1
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 105,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 35.1
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 105,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 35.1
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 105.1,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 34.8
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "kind": "dropped-yield",
+      "mode": "render",
+      "res": "4K",
+      "frames": 300,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 73.3,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.4
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 390,
+          "externalMiB": 65.7,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 66.7
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 484.7,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 35.1
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 453.1,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 98.4
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 484.7,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 35.1
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 453.1,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 98.4
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 484.7,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 35.1
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 73.6,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.4
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 73.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.2
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "kind": "dropped-yield",
+      "mode": "old-render",
+      "res": "4K",
+      "frames": 300,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 104.4,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 421.3,
+          "externalMiB": 65.7,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 516.1,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 484.4,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 421.3,
+          "externalMiB": 65.7,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 516.1,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 484.4,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 104.9,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 73.3,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ]
+    },
+    {
+      "backend": "cpu",
+      "kind": "dropped-yield",
+      "mode": "into",
+      "res": "4K",
+      "frames": 300,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 105.1,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 35.1
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 105.1,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 35.1
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 105.1,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 35.1
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 105.1,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 35.1
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 105.1,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 35.1
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 105.1,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 35.1
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 105.1,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 35.1
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 105.1,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 35.1
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 105.3,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 34.8
+        }
+      ]
+    },
+    {
+      "backend": "gpu-gl",
+      "kind": "retained",
+      "mode": "render",
+      "res": "720p",
+      "frames": 100,
+      "frameMiB": 3.5,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 168.8,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 13.7
+        },
+        {
+          "label": "100 retained",
+          "rssMiB": 520.8,
+          "externalMiB": 353.9,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 365.3,
+          "expectedMiB": 351.6
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 169.4,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 13.7
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 169.9,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 9.9
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "gpu-gl",
+      "kind": "retained",
+      "mode": "old-render",
+      "res": "720p",
+      "frames": 100,
+      "frameMiB": 3.5,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 172.3,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "100 retained",
+          "rssMiB": 524.3,
+          "externalMiB": 353.9,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null,
+          "expectedMiB": 351.6
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 173,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 170,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "gpu-gl",
+      "kind": "retained",
+      "mode": "render",
+      "res": "720p",
+      "frames": 1000,
+      "frameMiB": 3.5,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 168.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 13.7
+        },
+        {
+          "label": "1000 retained",
+          "rssMiB": 3693.7,
+          "externalMiB": 3518,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3529.8,
+          "expectedMiB": 3515.6
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 3693.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 13.8
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 3693.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 9.9
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "gpu-gl",
+      "kind": "retained",
+      "mode": "old-render",
+      "res": "720p",
+      "frames": 1000,
+      "frameMiB": 3.5,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 172.2,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "1000 retained",
+          "rssMiB": 3698.1,
+          "externalMiB": 3518,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null,
+          "expectedMiB": 3515.6
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 3698.1,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 3694.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "gpu-gl",
+      "kind": "retained",
+      "mode": "render",
+      "res": "1080p",
+      "frames": 100,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 168.8,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 18.1
+        },
+        {
+          "label": "100 retained",
+          "rssMiB": 960.8,
+          "externalMiB": 793.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 809.1,
+          "expectedMiB": 791
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 960.8,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 18.1
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 961.4,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 9.9
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "gpu-gl",
+      "kind": "retained",
+      "mode": "old-render",
+      "res": "1080p",
+      "frames": 100,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 176.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "100 retained",
+          "rssMiB": 969.1,
+          "externalMiB": 793.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null,
+          "expectedMiB": 791
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 969.1,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 961.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "gpu-gl",
+      "kind": "retained",
+      "mode": "render",
+      "res": "4K",
+      "frames": 100,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 168.5,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 41.8
+        },
+        {
+          "label": "100 retained",
+          "rssMiB": 3333.9,
+          "externalMiB": 3166.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3205.9,
+          "expectedMiB": 3164.1
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 3333.9,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 41.8
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 3334.4,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 9.9
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "gpu-gl",
+      "kind": "retained",
+      "mode": "old-render",
+      "res": "4K",
+      "frames": 100,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 200.6,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "100 retained",
+          "rssMiB": 3365.8,
+          "externalMiB": 3166.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null,
+          "expectedMiB": 3164.1
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 3365.8,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 3334.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "gpu-gl",
+      "kind": "dropped-tight",
+      "mode": "render",
+      "res": "1080p",
+      "frames": 300,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 168.6,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 18.1
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 564.6,
+          "externalMiB": 41.9,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 413.6
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 960.2,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 809.1
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 1356.2,
+          "externalMiB": 49.8,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 1204.7
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 1751.7,
+          "externalMiB": 18.2,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 1600.2
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 2147.7,
+          "externalMiB": 57.8,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 1995.7
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 2543.7,
+          "externalMiB": 26.1,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 2391.2
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 170.9,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 18.1
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 170.9,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 9.9
+        }
+      ]
+    },
+    {
+      "backend": "gpu-gl",
+      "kind": "dropped-tight",
+      "mode": "old-render",
+      "res": "1080p",
+      "frames": 300,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 176.5,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 572.6,
+          "externalMiB": 41.9,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 968.6,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 1365.1,
+          "externalMiB": 49.8,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 1761,
+          "externalMiB": 18.2,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 2157.4,
+          "externalMiB": 57.8,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 2553.7,
+          "externalMiB": 26.1,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 2553.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 2545.9,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ]
+    },
+    {
+      "backend": "gpu-gl",
+      "kind": "dropped-tight",
+      "mode": "into",
+      "res": "1080p",
+      "frames": 300,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 176.7,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 26
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 177.4,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 26
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 177.4,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 26
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 177.9,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 26
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 177.9,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 26
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 178.4,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 26
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 178.9,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 26
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 178.9,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 26
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 178.9,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 17.8
+        }
+      ]
+    },
+    {
+      "backend": "gpu-gl",
+      "kind": "dropped-yield",
+      "mode": "render",
+      "res": "1080p",
+      "frames": 300,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 168.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 18.1
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 264.2,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 26
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 264.2,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 26
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 264.7,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 26
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 264.7,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 26
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 265.2,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 26
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 265.7,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 26
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 265.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 18.1
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 265.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 9.9
+        }
+      ]
+    },
+    {
+      "backend": "gpu-gl",
+      "kind": "dropped-yield",
+      "mode": "old-render",
+      "res": "1080p",
+      "frames": 300,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 176.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 264.2,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 264.2,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 264.7,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 264.7,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 265.2,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 265.7,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 178.8,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 170.9,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ]
+    },
+    {
+      "backend": "gpu-gl",
+      "kind": "dropped-yield",
+      "mode": "into",
+      "res": "1080p",
+      "frames": 300,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 176.8,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 26
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 177.3,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 26
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 177.3,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 26
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 177.8,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 26
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 177.9,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 26
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 178.4,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 26
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 178.9,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 26
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 178.9,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 26
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 178.9,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 17.8
+        }
+      ]
+    },
+    {
+      "backend": "gpu-gl",
+      "kind": "dropped-tight",
+      "mode": "render",
+      "res": "4K",
+      "frames": 300,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 168.4,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 41.8
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 1751.4,
+          "externalMiB": 65.7,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 1623.9
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 3333.8,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3205.9
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 4916.8,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 4788
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 6499.3,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 6370
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 8082.3,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 7952.1
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 9665.1,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 9534.1
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 9665.1,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 41.9
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 9665.1,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 9.9
+        }
+      ]
+    },
+    {
+      "backend": "gpu-gl",
+      "kind": "dropped-tight",
+      "mode": "old-render",
+      "res": "4K",
+      "frames": 300,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 200.6,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 1783.6,
+          "externalMiB": 65.7,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 3365.9,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 4948.8,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 6531.3,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 8114.2,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 9697.2,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 9697.2,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 9665.8,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ]
+    },
+    {
+      "backend": "gpu-gl",
+      "kind": "dropped-tight",
+      "mode": "into",
+      "res": "4K",
+      "frames": 300,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 200.4,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 73.5
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 200.9,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 73.5
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 200.9,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 73.5
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 201.4,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 73.5
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 201.4,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 73.5
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 201.9,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 73.5
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 202.5,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 73.5
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 202.5,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 73.5
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 202.5,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 41.5
+        }
+      ]
+    },
+    {
+      "backend": "gpu-gl",
+      "kind": "dropped-yield",
+      "mode": "render",
+      "res": "4K",
+      "frames": 300,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 168.9,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 41.8
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 486,
+          "externalMiB": 65.7,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 105.1
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 580.8,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 73.4
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 549.7,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 136.8
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 581.3,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 73.4
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 550.2,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 136.8
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 582.3,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 73.5
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 171.1,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 41.8
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 171.1,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 9.8
+        }
+      ]
+    },
+    {
+      "backend": "gpu-gl",
+      "kind": "dropped-yield",
+      "mode": "old-render",
+      "res": "4K",
+      "frames": 300,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 200.4,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 517.6,
+          "externalMiB": 65.7,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 612.4,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 581.3,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 518.1,
+          "externalMiB": 65.7,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 613.4,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 582.3,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 202.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 171.2,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ]
+    },
+    {
+      "backend": "gpu-gl",
+      "kind": "dropped-yield",
+      "mode": "into",
+      "res": "4K",
+      "frames": 300,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 200.4,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 73.5
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 201,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 73.5
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 201,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 73.5
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 201.5,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 73.5
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 201.5,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 73.5
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 202,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 73.5
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 202.5,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 73.5
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 202.5,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 73.5
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 202.5,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 41.5
+        }
+      ]
+    },
+    {
+      "backend": "gpu-vulkan",
+      "kind": "retained",
+      "mode": "render",
+      "res": "720p",
+      "frames": 100,
+      "frameMiB": 3.5,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 212.9,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 14.6
+        },
+        {
+          "label": "100 retained",
+          "rssMiB": 564.7,
+          "externalMiB": 353.9,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 366.2,
+          "expectedMiB": 351.6
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 213.3,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 14.6
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 129.8,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.7
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "gpu-vulkan",
+      "kind": "retained",
+      "mode": "old-render",
+      "res": "720p",
+      "frames": 100,
+      "frameMiB": 3.5,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 216.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "100 retained",
+          "rssMiB": 568.5,
+          "externalMiB": 353.9,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null,
+          "expectedMiB": 351.6
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 568.5,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 481.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "gpu-vulkan",
+      "kind": "retained",
+      "mode": "render",
+      "res": "720p",
+      "frames": 1000,
+      "frameMiB": 3.5,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 213,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 14.6
+        },
+        {
+          "label": "1000 retained",
+          "rssMiB": 3735.7,
+          "externalMiB": 3518,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3530.9,
+          "expectedMiB": 3515.6
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 3735.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 14.9
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 3652.4,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.8
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "gpu-vulkan",
+      "kind": "retained",
+      "mode": "old-render",
+      "res": "720p",
+      "frames": 1000,
+      "frameMiB": 3.5,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 216.9,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "1000 retained",
+          "rssMiB": 3740.4,
+          "externalMiB": 3518,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null,
+          "expectedMiB": 3515.6
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 3740.4,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 3653.6,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "gpu-vulkan",
+      "kind": "retained",
+      "mode": "render",
+      "res": "1080p",
+      "frames": 100,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 216.9,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 14.6
+        },
+        {
+          "label": "100 retained",
+          "rssMiB": 1008.7,
+          "externalMiB": 793.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 805.7,
+          "expectedMiB": 791
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 1008.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 14.6
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 921.4,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.8
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "gpu-vulkan",
+      "kind": "retained",
+      "mode": "old-render",
+      "res": "1080p",
+      "frames": 100,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 226.3,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "100 retained",
+          "rssMiB": 1018.2,
+          "externalMiB": 793.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null,
+          "expectedMiB": 791
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 1018.2,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 922.8,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "gpu-vulkan",
+      "kind": "retained",
+      "mode": "render",
+      "res": "4K",
+      "frames": 100,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 241,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 14.6
+        },
+        {
+          "label": "100 retained",
+          "rssMiB": 3406.1,
+          "externalMiB": 3166.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3178.7,
+          "expectedMiB": 3164.1
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 3406.1,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 14.6
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 3294.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.8
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "gpu-vulkan",
+      "kind": "retained",
+      "mode": "old-render",
+      "res": "4K",
+      "frames": 100,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 272.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "100 retained",
+          "rssMiB": 3437.4,
+          "externalMiB": 3166.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null,
+          "expectedMiB": 3164.1
+        },
+        {
+          "label": "dropped + gc",
+          "rssMiB": 3437.4,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 3294.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ],
+      "intact": true
+    },
+    {
+      "backend": "gpu-vulkan",
+      "kind": "dropped-tight",
+      "mode": "render",
+      "res": "1080p",
+      "frames": 300,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 217,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 14.6
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 612.6,
+          "externalMiB": 41.9,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 410.1
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 1008.7,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 805.7
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 1404.6,
+          "externalMiB": 49.8,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 1201.2
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 1800.5,
+          "externalMiB": 18.2,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 1596.7
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 2196.5,
+          "externalMiB": 57.8,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 1992.3
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 2592.4,
+          "externalMiB": 26.1,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 2387.9
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 2592.4,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 14.8
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 2505.1,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.8
+        }
+      ]
+    },
+    {
+      "backend": "gpu-vulkan",
+      "kind": "dropped-tight",
+      "mode": "old-render",
+      "res": "1080p",
+      "frames": 300,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 225.5,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 621.4,
+          "externalMiB": 41.9,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 1017.5,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 1413.4,
+          "externalMiB": 49.8,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 1809.2,
+          "externalMiB": 18.2,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 2205.1,
+          "externalMiB": 57.8,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 2601.1,
+          "externalMiB": 26.1,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 2601.1,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 2506,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ]
+    },
+    {
+      "backend": "gpu-vulkan",
+      "kind": "dropped-tight",
+      "mode": "into",
+      "res": "1080p",
+      "frames": 300,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 225,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 22.5
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 225.1,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 22.5
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 225.1,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 22.5
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 225.1,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 22.5
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 225.3,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 22.5
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 225.1,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 22.6
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 225.1,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 22.7
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 225.1,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 22.7
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 137.9,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 11.7
+        }
+      ]
+    },
+    {
+      "backend": "gpu-vulkan",
+      "kind": "dropped-yield",
+      "mode": "render",
+      "res": "1080p",
+      "frames": 300,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 216.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 14.6
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 303.7,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 22.5
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 303.7,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 22.5
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 303.7,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 22.5
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 303.9,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 22.5
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 311.9,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 22.7
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 296.3,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 22.7
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 241,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 14.8
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 153.6,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.8
+        }
+      ]
+    },
+    {
+      "backend": "gpu-vulkan",
+      "kind": "dropped-yield",
+      "mode": "old-render",
+      "res": "1080p",
+      "frames": 300,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 225.4,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 320.3,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 320.3,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 320.3,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 320.5,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 320.5,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 320.5,
+          "externalMiB": 89.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 320.5,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 225.5,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ]
+    },
+    {
+      "backend": "gpu-vulkan",
+      "kind": "dropped-yield",
+      "mode": "into",
+      "res": "1080p",
+      "frames": 300,
+      "frameMiB": 7.9,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 224.9,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 22.5
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 225,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 22.5
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 225,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 22.5
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 225,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 22.5
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 225,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 22.5
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 225.1,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 22.6
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 225.1,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 22.7
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 225.1,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 22.7
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 137.7,
+          "externalMiB": 10.3,
+          "arrayBuffersMiB": 8,
+          "nativeInUseMiB": 11.7
+        }
+      ]
+    },
+    {
+      "backend": "gpu-vulkan",
+      "kind": "dropped-tight",
+      "mode": "render",
+      "res": "4K",
+      "frames": 300,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 241,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 14.6
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 1823.6,
+          "externalMiB": 65.7,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 1596.7
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 3406,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3178.7
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 4988.5,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 4760.8
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 6570.9,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 6342.8
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 8153.2,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 7925
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 9735.7,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 9507.1
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 9735.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 14.8
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 9624.4,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.8
+        }
+      ]
+    },
+    {
+      "backend": "gpu-vulkan",
+      "kind": "dropped-tight",
+      "mode": "old-render",
+      "res": "4K",
+      "frames": 300,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 272.9,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 1855.3,
+          "externalMiB": 65.7,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 3437.8,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 5020.2,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 6602.7,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 8185.2,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 9767.7,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 9767.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 9624.7,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ]
+    },
+    {
+      "backend": "gpu-vulkan",
+      "kind": "dropped-tight",
+      "mode": "into",
+      "res": "4K",
+      "frames": 300,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 272.5,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 46.2
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 272.5,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 46.2
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 272.5,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 46.3
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 272.5,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 46.3
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 272.6,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 46.3
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 272.6,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 46.3
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 272.6,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 46.4
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 272.7,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 46.4
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 161.5,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 35.4
+        }
+      ]
+    },
+    {
+      "backend": "gpu-vulkan",
+      "kind": "dropped-yield",
+      "mode": "render",
+      "res": "4K",
+      "frames": 300,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 241.1,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 14.6
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 652.6,
+          "externalMiB": 65.7,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 77.9
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 652.6,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 46.3
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 652.6,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 109.6
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 652.6,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 46.3
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 652.6,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 109.7
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 652.6,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 46.4
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 652.6,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 14.8
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 541.2,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": 3.8
+        }
+      ]
+    },
+    {
+      "backend": "gpu-vulkan",
+      "kind": "dropped-yield",
+      "mode": "old-render",
+      "res": "4K",
+      "frames": 300,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 273.1,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 589.8,
+          "externalMiB": 65.7,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 684.5,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 589.9,
+          "externalMiB": 65.7,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 684.5,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 652.9,
+          "externalMiB": 97.3,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 747.8,
+          "externalMiB": 65.7,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 747.8,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 605.1,
+          "externalMiB": 2.4,
+          "arrayBuffersMiB": 0.1,
+          "nativeInUseMiB": null
+        }
+      ]
+    },
+    {
+      "backend": "gpu-vulkan",
+      "kind": "dropped-yield",
+      "mode": "into",
+      "res": "4K",
+      "frames": 300,
+      "frameMiB": 31.6,
+      "samples": [
+        {
+          "label": "baseline",
+          "rssMiB": 272.9,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 46.2
+        },
+        {
+          "label": "frame 50",
+          "rssMiB": 273,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 46.3
+        },
+        {
+          "label": "frame 100",
+          "rssMiB": 273,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 46.3
+        },
+        {
+          "label": "frame 150",
+          "rssMiB": 273.2,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 46.3
+        },
+        {
+          "label": "frame 200",
+          "rssMiB": 273.2,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 46.3
+        },
+        {
+          "label": "frame 250",
+          "rssMiB": 273,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 46.3
+        },
+        {
+          "label": "frame 300",
+          "rssMiB": 273,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 46.5
+        },
+        {
+          "label": "after turns + gc",
+          "rssMiB": 273,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 46.5
+        },
+        {
+          "label": "renderer closed",
+          "rssMiB": 161.8,
+          "externalMiB": 34,
+          "arrayBuffersMiB": 31.8,
+          "nativeInUseMiB": 35.4
+        }
+      ]
+    }
+  ]
+}

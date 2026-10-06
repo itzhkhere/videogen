@@ -1,0 +1,5 @@
+{"mode":"clone","workerHash":"1e41570b8082bfc1","postMs":5.245861999999988,"workerViewLengthAfter":8294400,"received":true,"parentHash":"1e41570b8082bfc1","readableAfterWorkerExit":true,"identical":true}
+{"mode":"transfer","workerHash":"1e41570b8082bfc1","error":"DataCloneError: Cannot transfer object of unsupported type.","received":false,"parentHash":null,"readableAfterWorkerExit":false,"identical":false}
+{"mode":"shared","workerHash":"1e41570b8082bfc1","postMs":0.03113299999999697,"received":true,"parentHash":"1e41570b8082bfc1","readableAfterWorkerExit":true,"identical":true}
+{"mode":"into-transfer","workerHash":"1e41570b8082bfc1","postMs":0.07393199999999922,"workerViewLengthAfter":0,"received":true,"parentHash":"1e41570b8082bfc1","readableAfterWorkerExit":true,"identical":true}
+{"addon":"phase4a","mode":"transfer","workerHash":"1e41570b8082bfc1","error":"DataCloneError: Cannot transfer object of unsupported type.","received":false,"parentHash":null,"readableAfterWorkerExit":false,"identical":false}

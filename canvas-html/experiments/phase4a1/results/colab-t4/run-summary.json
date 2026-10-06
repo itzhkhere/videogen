@@ -1,0 +1,38 @@
+[
+  {
+    "step": "transport",
+    "code": 0,
+    "signal": null,
+    "seconds": 770.2
+  },
+  {
+    "step": "animated",
+    "code": 0,
+    "signal": null,
+    "seconds": 342
+  },
+  {
+    "step": "pipeline",
+    "code": 0,
+    "signal": null,
+    "seconds": 100.5
+  },
+  {
+    "step": "memory",
+    "code": 0,
+    "signal": null,
+    "seconds": 183.3
+  },
+  {
+    "step": "workers",
+    "code": 0,
+    "signal": null,
+    "seconds": 71.7
+  },
+  {
+    "step": "lifetimes",
+    "code": 0,
+    "signal": null,
+    "seconds": 24.8
+  }
+]

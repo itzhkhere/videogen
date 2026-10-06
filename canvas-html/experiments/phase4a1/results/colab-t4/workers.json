@@ -1,0 +1,357 @@
+{
+  "frames": 60,
+  "scene": "effects",
+  "rows": [
+    {
+      "backend": "cpu",
+      "runs": [
+        {
+          "mode": "clone",
+          "workers": 1,
+          "wallMs": 2386.789,
+          "fps": 25.138,
+          "exitCodes": [
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "clone",
+          "workers": 2,
+          "wallMs": 1214.329,
+          "fps": 49.41,
+          "exitCodes": [
+            0,
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "clone",
+          "workers": 4,
+          "wallMs": 764.333,
+          "fps": 78.5,
+          "exitCodes": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "into-transfer",
+          "workers": 1,
+          "wallMs": 2165.652,
+          "fps": 27.705,
+          "exitCodes": [
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "into-transfer",
+          "workers": 2,
+          "wallMs": 1185.317,
+          "fps": 50.619,
+          "exitCodes": [
+            0,
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "into-transfer",
+          "workers": 4,
+          "wallMs": 708.65,
+          "fps": 84.668,
+          "exitCodes": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "shared",
+          "workers": 1,
+          "wallMs": 2099.544,
+          "fps": 28.578,
+          "exitCodes": [
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "shared",
+          "workers": 2,
+          "wallMs": 1129.443,
+          "fps": 53.124,
+          "exitCodes": [
+            0,
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "shared",
+          "workers": 4,
+          "wallMs": 896.615,
+          "fps": 66.918,
+          "exitCodes": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        }
+      ],
+      "processExit": 0
+    },
+    {
+      "backend": "gpu-gl",
+      "runs": [
+        {
+          "mode": "clone",
+          "workers": 1,
+          "wallMs": 1048.371,
+          "fps": 57.232,
+          "exitCodes": [
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "clone",
+          "workers": 2,
+          "wallMs": 712.673,
+          "fps": 84.19,
+          "exitCodes": [
+            0,
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "clone",
+          "workers": 4,
+          "wallMs": 796.121,
+          "fps": 75.365,
+          "exitCodes": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "into-transfer",
+          "workers": 1,
+          "wallMs": 838.73,
+          "fps": 71.537,
+          "exitCodes": [
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "into-transfer",
+          "workers": 2,
+          "wallMs": 590.177,
+          "fps": 101.664,
+          "exitCodes": [
+            0,
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "into-transfer",
+          "workers": 4,
+          "wallMs": 771.358,
+          "fps": 77.785,
+          "exitCodes": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "shared",
+          "workers": 1,
+          "wallMs": 806.079,
+          "fps": 74.434,
+          "exitCodes": [
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "shared",
+          "workers": 2,
+          "wallMs": 729.654,
+          "fps": 82.231,
+          "exitCodes": [
+            0,
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "shared",
+          "workers": 4,
+          "wallMs": 960.117,
+          "fps": 62.492,
+          "exitCodes": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        }
+      ],
+      "processExit": 0
+    },
+    {
+      "backend": "gpu-vulkan",
+      "runs": [
+        {
+          "mode": "clone",
+          "workers": 1,
+          "wallMs": 1313.099,
+          "fps": 45.693,
+          "exitCodes": [
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "clone",
+          "workers": 2,
+          "wallMs": 1081.209,
+          "fps": 55.493,
+          "exitCodes": [
+            0,
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "clone",
+          "workers": 4,
+          "wallMs": 1165.327,
+          "fps": 51.488,
+          "exitCodes": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "into-transfer",
+          "workers": 1,
+          "wallMs": 989.904,
+          "fps": 60.612,
+          "exitCodes": [
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "into-transfer",
+          "workers": 2,
+          "wallMs": 927.445,
+          "fps": 64.694,
+          "exitCodes": [
+            0,
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "into-transfer",
+          "workers": 4,
+          "wallMs": 1160.778,
+          "fps": 51.689,
+          "exitCodes": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "shared",
+          "workers": 1,
+          "wallMs": 1072.68,
+          "fps": 55.935,
+          "exitCodes": [
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "shared",
+          "workers": 2,
+          "wallMs": 930.565,
+          "fps": 64.477,
+          "exitCodes": [
+            0,
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        },
+        {
+          "mode": "shared",
+          "workers": 4,
+          "wallMs": 1043.079,
+          "fps": 57.522,
+          "exitCodes": [
+            0,
+            0,
+            0,
+            0
+          ],
+          "mismatches": 0,
+          "missing": 0
+        }
+      ],
+      "processExit": 0
+    }
+  ]
+}

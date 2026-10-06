@@ -1,0 +1,4 @@
+Phase 4A.1 GPU build (T4) vs Phase 4A colab-t4: 52 identical, 2 different, 0 not compared
+  differs 1080p B gpu-gl: 97889c3f42d42d8f -> 10c20cf06e5bf139
+  differs 1080p B gpu-vulkan: fa3beee0b11b4fb1 -> c957349adb626852
+Phase 4A.1 GPU build (T4) vs Phase 4A colab-t4-fix: 54 identical, 0 different, 0 not compared

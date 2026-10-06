@@ -1,0 +1,360 @@
+[14:23:04] A 720p cpu old-render wall 2.791 ms
+[14:23:04] A 720p cpu old-timed  wall 2.792 ms (paint 0.912, readback 0, alloc -, copy 1.827, buffer 1.827, rust total 2.743)
+[14:23:04] A 1080p cpu old-render wall 5.976 ms
+[14:23:04] A 1080p cpu old-timed  wall 6.177 ms (paint 1.881, readback 0, alloc -, copy 4.039, buffer 4.039, rust total 5.961)
+[14:23:04] A 4K cpu old-render wall 31.964 ms
+[14:23:04] A 4K cpu old-timed  wall 32.059 ms (paint 11.574, readback 0, alloc -, copy 19.808, buffer 19.808, rust total 31.658)
+[14:23:04] C 720p cpu old-render wall 124.88 ms
+[14:23:04] C 720p cpu old-timed  wall 120.741 ms (paint 118.455, readback 0, alloc -, copy 1.949, buffer 1.949, rust total 120.636)
+[14:23:04] C 1080p cpu old-render wall 268.145 ms
+[14:23:04] C 1080p cpu old-timed  wall 271.27 ms (paint 266.903, readback 0, alloc -, copy 3.835, buffer 3.835, rust total 271.148)
+[14:23:04] C 4K cpu old-render wall 1005.855 ms
+[14:23:04] C 4K cpu old-timed  wall 994.966 ms (paint 975.821, readback 0, alloc -, copy 17.517, buffer 17.517, rust total 993.359)
+[14:23:04] E 720p cpu old-render wall 97.926 ms
+[14:23:04] E 720p cpu old-timed  wall 98.443 ms (paint 96.469, readback 0, alloc -, copy 1.846, buffer 1.846, rust total 98.35)
+[14:23:04] E 1080p cpu old-render wall 168.332 ms
+[14:23:04] E 1080p cpu old-timed  wall 175.02 ms (paint 170.262, readback 0, alloc -, copy 4.361, buffer 4.361, rust total 174.911)
+[14:23:04] E 4K cpu old-render wall 370.875 ms
+[14:23:04] E 4K cpu old-timed  wall 369.648 ms (paint 349.473, readback 0, alloc -, copy 20.093, buffer 20.093, rust total 369.355)
+[14:23:04] F 720p cpu old-render wall 174.08 ms
+[14:23:04] F 720p cpu old-timed  wall 168.887 ms (paint 166.98, readback 0, alloc -, copy 1.823, buffer 1.823, rust total 168.785)
+[14:23:04] F 1080p cpu old-render wall 323.157 ms
+[14:23:04] F 1080p cpu old-timed  wall 320.41 ms (paint 315.344, readback 0, alloc -, copy 4.183, buffer 4.183, rust total 319.566)
+[14:23:04] F 4K cpu old-render wall 1099.004 ms
+[14:23:04] F 4K cpu old-timed  wall 1116.028 ms (paint 1101.266, readback 0, alloc -, copy 14.337, buffer 14.337, rust total 1115.541)
+[14:23:04] G1000 720p cpu old-render wall 100.534 ms
+[14:23:04] G1000 720p cpu old-timed  wall 101.142 ms (paint 97.828, readback 0, alloc -, copy 1.851, buffer 1.851, rust total 100.535)
+[14:23:04] G1000 1080p cpu old-render wall 147.242 ms
+[14:23:04] G1000 1080p cpu old-timed  wall 149.259 ms (paint 143.71, readback 0, alloc -, copy 4.374, buffer 4.374, rust total 149.108)
+[14:23:04] G1000 4K cpu old-render wall 312.011 ms
+[14:23:04] G1000 4K cpu old-timed  wall 322.41 ms (paint 301.026, readback 0, alloc -, copy 19.959, buffer 19.959, rust total 322.296)
+[14:29:24] A 720p cpu render     wall 2.393 ms
+[14:29:24] A 720p cpu clone      wall 2.665 ms (paint 0.866, readback 0, alloc 0, copy 1.717, buffer 0.01, rust total 2.636)
+[14:29:24] A 720p cpu transfer   wall 2.389 ms (paint 2.326, readback 0, alloc 0.013, copy 0.009, buffer 0.009, rust total 2.361)
+[14:29:24] A 720p cpu pool       wall 2.382 ms (paint 2.311, readback 0, alloc 0.013, copy 0.009, buffer 0.009, rust total 2.354)
+[14:29:24] A 720p cpu pool-yield wall 2.349 ms (paint 2.219, readback 0, alloc 0.073, copy 0.009, buffer 0.009, rust total 2.318)
+[14:29:24] A 720p cpu into       wall 0.867 ms (paint 0.837, readback 0, alloc -, copy undefined, buffer -, rust total 0.845)
+[14:29:24] A 1080p cpu render     wall 5.267 ms
+[14:29:24] A 1080p cpu clone      wall 5.874 ms (paint 1.876, readback 0, alloc 0, copy 3.901, buffer 0.013, rust total 5.833)
+[14:29:24] A 1080p cpu transfer   wall 5.295 ms (paint 5.201, readback 0, alloc 0.015, copy 0.011, buffer 0.011, rust total 5.255)
+[14:29:24] A 1080p cpu pool       wall 5.447 ms (paint 5.308, readback 0, alloc 0.017, copy 0.014, buffer 0.014, rust total 5.4)
+[14:29:24] A 1080p cpu pool-yield wall 3.414 ms (paint 2.837, readback 0, alloc 0.08, copy 0.011, buffer 0.011, rust total 3.383)
+[14:29:24] A 1080p cpu into       wall 1.863 ms (paint 1.83, readback 0, alloc -, copy undefined, buffer -, rust total 1.839)
+[14:29:24] A 4K cpu render     wall 23.955 ms
+[14:29:24] A 4K cpu clone      wall 31.333 ms (paint 10.839, readback 0, alloc 0, copy 20.069, buffer 0.393, rust total 31.266)
+[14:29:24] A 4K cpu transfer   wall 23.768 ms (paint 23.178, readback 0, alloc 0.029, copy 0.422, buffer 0.422, rust total 23.692)
+[14:29:24] A 4K cpu pool       wall 23.786 ms (paint 22.971, readback 0, alloc 0.031, copy 0.432, buffer 0.432, rust total 23.711)
+[14:29:24] A 4K cpu pool-yield wall 14.809 ms (paint 14.413, readback 0, alloc 0, copy 0.228, buffer 0.228, rust total 14.715)
+[14:29:24] A 4K cpu into       wall 9.634 ms (paint 9.543, readback 0, alloc -, copy undefined, buffer -, rust total 9.567)
+[14:29:24] C 720p cpu render     wall 120.935 ms
+[14:29:24] C 720p cpu clone      wall 117.976 ms (paint 115.647, readback 0, alloc 0, copy 1.865, buffer 0.031, rust total 117.903)
+[14:29:24] C 720p cpu transfer   wall 119.004 ms (paint 118.72, readback 0, alloc 0.084, copy 0.03, buffer 0.03, rust total 118.935)
+[14:29:24] C 720p cpu pool       wall 119.772 ms (paint 118.852, readback 0, alloc 0.086, copy 0.03, buffer 0.03, rust total 119.706)
+[14:29:24] C 720p cpu pool-yield wall 116.554 ms (paint 115.842, readback 0, alloc 0.516, copy 0.029, buffer 0.029, rust total 116.488)
+[14:29:24] C 720p cpu into       wall 116.308 ms (paint 116.134, readback 0, alloc -, copy undefined, buffer -, rust total 116.233)
+[14:29:24] C 1080p cpu render     wall 256.574 ms
+[14:29:24] C 1080p cpu clone      wall 256.735 ms (paint 253.283, readback 0, alloc 0, copy 1.64, buffer 0.031, rust total 256.656)
+[14:29:24] C 1080p cpu transfer   wall 256.129 ms (paint 254.299, readback 0, alloc 0.088, copy 0.031, buffer 0.031, rust total 256.05)
+[14:29:24] C 1080p cpu pool       wall 256.218 ms (paint 255.913, readback 0, alloc 0.087, copy 0.031, buffer 0.031, rust total 256.149)
+[14:29:24] C 1080p cpu pool-yield wall 249.34 ms (paint 247.931, readback 0, alloc 1.157, copy 0.031, buffer 0.031, rust total 249.265)
+[14:29:24] C 1080p cpu into       wall 253.642 ms (paint 253.463, readback 0, alloc -, copy undefined, buffer -, rust total 253.574)
+[14:29:24] C 4K cpu render     wall 960.344 ms
+[14:29:24] C 4K cpu clone      wall 963.992 ms (paint 943.789, readback 0, alloc 0, copy 19.851, buffer 0.378, rust total 963.918)
+[14:29:24] C 4K cpu transfer   wall 942.703 ms (paint 942.204, readback 0, alloc 0.092, copy 0.38, buffer 0.38, rust total 942.629)
+[14:29:24] C 4K cpu pool       wall 992.413 ms (paint 991.835, readback 0, alloc 0.102, copy 0.466, buffer 0.466, rust total 992.328)
+[14:29:24] C 4K cpu pool-yield wall 948.918 ms (paint 947.944, readback 0, alloc 0, copy 0.428, buffer 0.428, rust total 948.84)
+[14:29:24] C 4K cpu into       wall 944.899 ms (paint 944.708, readback 0, alloc -, copy undefined, buffer -, rust total 944.827)
+[14:29:24] E 720p cpu render     wall 100.495 ms
+[14:29:24] E 720p cpu clone      wall 101.187 ms (paint 100.211, readback 0, alloc 0, copy 0.611, buffer 0.03, rust total 101.118)
+[14:29:24] E 720p cpu transfer   wall 98.838 ms (paint 97.914, readback 0, alloc 0.527, copy 0.028, buffer 0.028, rust total 98.763)
+[14:29:24] E 720p cpu pool       wall 99.978 ms (paint 99.1, readback 0, alloc 0.521, copy 0.03, buffer 0.03, rust total 99.911)
+[14:29:24] E 720p cpu pool-yield wall 101.416 ms (paint 100.633, readback 0, alloc 0.525, copy 0.03, buffer 0.03, rust total 101.331)
+[14:29:24] E 720p cpu into       wall 97.414 ms (paint 97.273, readback 0, alloc -, copy undefined, buffer -, rust total 97.341)
+[14:29:24] E 1080p cpu render     wall 163.199 ms
+[14:29:24] E 1080p cpu clone      wall 164.957 ms (paint 163.292, readback 0, alloc 0, copy 1.486, buffer 0.031, rust total 164.886)
+[14:29:24] E 1080p cpu transfer   wall 165.125 ms (paint 163.691, readback 0, alloc 1.204, copy 0.03, buffer 0.03, rust total 165.056)
+[14:29:24] E 1080p cpu pool       wall 164.548 ms (paint 163.058, readback 0, alloc 1.21, copy 0.031, buffer 0.031, rust total 164.472)
+[14:29:24] E 1080p cpu pool-yield wall 161.438 ms (paint 160.618, readback 0, alloc 1.166, copy 0.03, buffer 0.03, rust total 161.371)
+[14:29:24] E 1080p cpu into       wall 161.485 ms (paint 161.333, readback 0, alloc -, copy undefined, buffer -, rust total 161.407)
+[14:29:24] E 4K cpu render     wall 356.629 ms
+[14:29:24] E 4K cpu clone      wall 367.9 ms (paint 347.459, readback 0, alloc 0, copy 19.807, buffer 0.387, rust total 367.818)
+[14:29:24] E 4K cpu transfer   wall 365.606 ms (paint 365.08, readback 0, alloc 0.096, copy 0.406, buffer 0.406, rust total 365.521)
+[14:29:24] E 4K cpu pool       wall 360.648 ms (paint 358.917, readback 0, alloc 0.089, copy 0.403, buffer 0.403, rust total 360.58)
+[14:29:24] E 4K cpu pool-yield wall 348.557 ms (paint 346.447, readback 0, alloc 0, copy 0.403, buffer 0.403, rust total 348.479)
+[14:29:24] E 4K cpu into       wall 349.248 ms (paint 349.095, readback 0, alloc -, copy undefined, buffer -, rust total 349.177)
+[14:29:24] F 720p cpu render     wall 168.273 ms
+[14:29:24] F 720p cpu clone      wall 167.784 ms (paint 166.585, readback 0, alloc 0, copy 0.63, buffer 0.032, rust total 167.717)
+[14:29:24] F 720p cpu transfer   wall 168.44 ms (paint 167.768, readback 0, alloc 0.522, copy 0.032, buffer 0.032, rust total 168.371)
+[14:29:24] F 720p cpu pool       wall 169.601 ms (paint 168.936, readback 0, alloc 0.524, copy 0.031, buffer 0.031, rust total 169.535)
+[14:29:24] F 720p cpu pool-yield wall 170.872 ms (paint 170.364, readback 0, alloc 0.518, copy 0.033, buffer 0.033, rust total 170.8)
+[14:29:24] F 720p cpu into       wall 171.364 ms (paint 171.254, readback 0, alloc -, copy undefined, buffer -, rust total 171.286)
+[14:29:24] F 1080p cpu render     wall 322.335 ms
+[14:29:24] F 1080p cpu clone      wall 321.621 ms (paint 319.137, readback 0, alloc 0, copy 1.506, buffer 0.032, rust total 321.554)
+[14:29:24] F 1080p cpu transfer   wall 322.599 ms (paint 321.268, readback 0, alloc 1.197, copy 0.032, buffer 0.032, rust total 322.531)
+[14:29:24] F 1080p cpu pool       wall 317.363 ms (paint 316.048, readback 0, alloc 1.173, copy 0.03, buffer 0.03, rust total 317.292)
+[14:29:24] F 1080p cpu pool-yield wall 322.057 ms (paint 321.932, readback 0, alloc 0.848, copy 0.033, buffer 0.033, rust total 321.991)
+[14:29:24] F 1080p cpu into       wall 321.04 ms (paint 320.945, readback 0, alloc -, copy undefined, buffer -, rust total 320.974)
+[14:29:24] F 4K cpu render     wall 1075.687 ms
+[14:29:24] F 4K cpu clone      wall 1099.539 ms (paint 1079.001, readback 0, alloc 0, copy 19.832, buffer 0.445, rust total 1099.455)
+[14:29:24] F 4K cpu transfer   wall 1090.993 ms (paint 1089.863, readback 0, alloc 0.127, copy 0.423, buffer 0.423, rust total 1090.906)
+[14:29:24] F 4K cpu pool       wall 1091.535 ms (paint 1090.281, readback 0, alloc 0.11, copy 0.424, buffer 0.424, rust total 1091.445)
+[14:29:24] F 4K cpu pool-yield wall 1087.339 ms (paint 1086.207, readback 0, alloc 0, copy 0.475, buffer 0.475, rust total 1087.244)
+[14:29:24] F 4K cpu into       wall 1074.738 ms (paint 1074.627, readback 0, alloc -, copy undefined, buffer -, rust total 1074.657)
+[14:29:24] G1000 720p cpu render     wall 100.804 ms
+[14:29:24] G1000 720p cpu clone      wall 103.422 ms (paint 101.397, readback 0, alloc 0, copy 0.617, buffer 0.03, rust total 103.354)
+[14:29:24] G1000 720p cpu transfer   wall 99.336 ms (paint 97.842, readback 0, alloc 0.518, copy 0.029, buffer 0.029, rust total 99.272)
+[14:29:24] G1000 720p cpu pool       wall 100.481 ms (paint 99.007, readback 0, alloc 0.52, copy 0.029, buffer 0.029, rust total 100.413)
+[14:29:24] G1000 720p cpu pool-yield wall 99.997 ms (paint 98.596, readback 0, alloc 0.519, copy 0.028, buffer 0.028, rust total 99.928)
+[14:29:24] G1000 720p cpu into       wall 102.381 ms (paint 101.343, readback 0, alloc -, copy undefined, buffer -, rust total 102.284)
+[14:29:24] G1000 1080p cpu render     wall 153.443 ms
+[14:29:24] G1000 1080p cpu clone      wall 149.823 ms (paint 147.037, readback 0, alloc 0.001, copy 1.565, buffer 0.032, rust total 149.752)
+[14:29:24] G1000 1080p cpu transfer   wall 147.774 ms (paint 145.59, readback 0, alloc 1.225, copy 0.032, buffer 0.032, rust total 147.707)
+[14:29:24] G1000 1080p cpu pool       wall 148.367 ms (paint 146.248, readback 0, alloc 1.208, copy 0.031, buffer 0.031, rust total 148.3)
+[14:29:24] G1000 1080p cpu pool-yield wall 146.663 ms (paint 144.533, readback 0, alloc 1.165, copy 0.032, buffer 0.032, rust total 146.573)
+[14:29:24] G1000 1080p cpu into       wall 145.954 ms (paint 144.938, readback 0, alloc -, copy undefined, buffer -, rust total 145.883)
+[14:29:24] G1000 4K cpu render     wall 301.469 ms
+[14:29:24] G1000 4K cpu clone      wall 323.404 ms (paint 301.244, readback 0, alloc 0, copy 20.164, buffer 0.438, rust total 323.327)
+[14:29:24] G1000 4K cpu transfer   wall 318.12 ms (paint 315.762, readback 0, alloc 0.089, copy 0.406, buffer 0.406, rust total 318.047)
+[14:29:24] G1000 4K cpu pool       wall 309.407 ms (paint 307.841, readback 0, alloc 0.092, copy 0.393, buffer 0.393, rust total 309.329)
+[14:29:24] G1000 4K cpu pool-yield wall 302.373 ms (paint 301.058, readback 0, alloc 0.001, copy 0.401, buffer 0.401, rust total 302.295)
+[14:29:24] G1000 4K cpu into       wall 300.735 ms (paint 299.641, readback 0, alloc -, copy undefined, buffer -, rust total 300.662)
+[14:29:57] A 720p gpu-gl old-render wall 3.256 ms
+[14:29:57] A 720p gpu-gl old-timed  wall 3.317 ms (paint 0.101, readback 0.89, alloc -, copy 2.007, buffer 2.007, rust total 3.23)
+[14:29:57] A 1080p gpu-gl old-render wall 7.28 ms
+[14:29:57] A 1080p gpu-gl old-timed  wall 6.703 ms (paint 0.111, readback 1.86, alloc -, copy 4.353, buffer 4.353, rust total 6.572)
+[14:29:57] A 4K gpu-gl old-render wall 26.557 ms
+[14:29:57] A 4K gpu-gl old-timed  wall 28.03 ms (paint 0.172, readback 6.806, alloc -, copy 19.942, buffer 19.942, rust total 27.223)
+[14:29:57] C 720p gpu-gl old-render wall 6.705 ms
+[14:29:57] C 720p gpu-gl old-timed  wall 6.56 ms (paint 1.95, readback 0.873, alloc -, copy 1.937, buffer 1.937, rust total 6.508)
+[14:29:57] C 1080p gpu-gl old-render wall 11.991 ms
+[14:29:57] C 1080p gpu-gl old-timed  wall 12.639 ms (paint 3.852, readback 1.863, alloc -, copy 4.488, buffer 4.488, rust total 12.303)
+[14:29:57] C 4K gpu-gl old-render wall 42.504 ms
+[14:29:57] C 4K gpu-gl old-timed  wall 42.277 ms (paint 10.939, readback 7.254, alloc -, copy 19.123, buffer 19.123, rust total 41.676)
+[14:29:57] E 720p gpu-gl old-render wall 21.33 ms
+[14:29:57] E 720p gpu-gl old-timed  wall 21.585 ms (paint 11.77, readback 0.927, alloc -, copy 2.054, buffer 2.054, rust total 21.472)
+[14:29:57] E 1080p gpu-gl old-render wall 32.953 ms
+[14:29:57] E 1080p gpu-gl old-timed  wall 31.886 ms (paint 16.817, readback 1.913, alloc -, copy 4.48, buffer 4.48, rust total 31.698)
+[14:29:57] E 4K gpu-gl old-render wall 69.861 ms
+[14:29:57] E 4K gpu-gl old-timed  wall 69.415 ms (paint 28.169, readback 7.308, alloc -, copy 19.425, buffer 19.425, rust total 68.84)
+[14:29:57] F 720p gpu-gl old-render wall 41.958 ms
+[14:29:57] F 720p gpu-gl old-timed  wall 42.672 ms (paint 28.929, readback 0.902, alloc -, copy 2.015, buffer 2.015, rust total 42.563)
+[14:29:57] F 1080p gpu-gl old-render wall 90.936 ms
+[14:29:57] F 1080p gpu-gl old-timed  wall 89.774 ms (paint 59.221, readback 1.914, alloc -, copy 4.511, buffer 4.511, rust total 89.661)
+[14:29:57] F 4K gpu-gl old-render wall 350.688 ms
+[14:29:57] F 4K gpu-gl old-timed  wall 351.737 ms (paint 212.416, readback 7.439, alloc -, copy 10.711, buffer 10.711, rust total 351.378)
+[14:29:57] G1000 720p gpu-gl old-render wall 71.657 ms
+[14:29:57] G1000 720p gpu-gl old-timed  wall 72.305 ms (paint 15.356, readback 1.056, alloc -, copy 0.761, buffer 0.761, rust total 72.164)
+[14:29:57] G1000 1080p gpu-gl old-render wall 86.017 ms
+[14:29:57] G1000 1080p gpu-gl old-timed  wall 75.058 ms (paint 15.682, readback 2.143, alloc -, copy 3.41, buffer 3.41, rust total 74.936)
+[14:29:57] G1000 4K gpu-gl old-render wall 97.054 ms
+[14:29:57] G1000 4K gpu-gl old-timed  wall 98.659 ms (paint 15.593, readback 6.961, alloc -, copy 20.031, buffer 20.031, rust total 97.452)
+[14:31:21] A 720p gpu-gl render     wall 2.878 ms
+[14:31:21] A 720p gpu-gl clone      wall 3.192 ms (paint 0.096, readback 0.89, alloc 0, copy 1.95, buffer 0.012, rust total 3.144)
+[14:31:21] A 720p gpu-gl transfer   wall 2.894 ms (paint 0.093, readback 2.504, alloc 0.013, copy 0.012, buffer 0.012, rust total 2.857)
+[14:31:21] A 720p gpu-gl pool       wall 2.857 ms (paint 0.094, readback 2.499, alloc 0.012, copy 0.013, buffer 0.013, rust total 2.82)
+[14:31:21] A 720p gpu-gl pool-yield wall 2.932 ms (paint 0.098, readback 2.502, alloc 0.075, copy 0.012, buffer 0.012, rust total 2.896)
+[14:31:21] A 720p gpu-gl into       wall 1.265 ms (paint 0.095, readback 0.942, alloc -, copy undefined, buffer -, rust total 1.231)
+[14:31:21] A 1080p gpu-gl render     wall 5.858 ms
+[14:31:21] A 1080p gpu-gl clone      wall 6.6 ms (paint 0.125, readback 1.797, alloc 0, copy 4.314, buffer 0.02, rust total 6.552)
+[14:31:21] A 1080p gpu-gl transfer   wall 6.428 ms (paint 0.125, readback 5.78, alloc 0.014, copy 0.019, buffer 0.019, rust total 6.375)
+[14:31:21] A 1080p gpu-gl pool       wall 6.278 ms (paint 0.118, readback 5.824, alloc 0.015, copy 0.016, buffer 0.016, rust total 6.225)
+[14:31:21] A 1080p gpu-gl pool-yield wall 3.36 ms (paint 0.105, readback 1.915, alloc 1.18, copy 0.012, buffer 0.012, rust total 3.314)
+[14:31:21] A 1080p gpu-gl into       wall 2.191 ms (paint 0.091, readback 1.836, alloc -, copy undefined, buffer -, rust total 2.154)
+[14:31:21] A 4K gpu-gl render     wall 23.263 ms
+[14:31:21] A 4K gpu-gl clone      wall 27.728 ms (paint 0.168, readback 7.218, alloc 0, copy 19.575, buffer 0.384, rust total 27.656)
+[14:31:21] A 4K gpu-gl transfer   wall 22.505 ms (paint 0.139, readback 21.577, alloc 0.019, copy 0.363, buffer 0.363, rust total 22.437)
+[14:31:21] A 4K gpu-gl pool       wall 22.485 ms (paint 0.136, readback 21.605, alloc 0.019, copy 0.334, buffer 0.334, rust total 22.431)
+[14:31:21] A 4K gpu-gl pool-yield wall 8.151 ms (paint 0.12, readback 7.551, alloc 0, copy 0.199, buffer 0.199, rust total 8.096)
+[14:31:21] A 4K gpu-gl into       wall 7.394 ms (paint 0.093, readback 7.059, alloc -, copy undefined, buffer -, rust total 7.361)
+[14:31:21] C 720p gpu-gl render     wall 6.433 ms
+[14:31:21] C 720p gpu-gl clone      wall 6.648 ms (paint 1.985, readback 0.866, alloc 0, copy 1.928, buffer 0.012, rust total 6.603)
+[14:31:21] C 720p gpu-gl transfer   wall 6.801 ms (paint 2.135, readback 2.501, alloc 0.079, copy 0.013, buffer 0.013, rust total 6.765)
+[14:31:21] C 720p gpu-gl pool       wall 11.208 ms (paint 2.101, readback 2.708, alloc 0.077, copy 0.013, buffer 0.013, rust total 11.168)
+[14:31:21] C 720p gpu-gl pool-yield wall 9.933 ms (paint 2.1, readback 1.308, alloc 0.53, copy 0.013, buffer 0.013, rust total 9.895)
+[14:31:21] C 720p gpu-gl into       wall 4.675 ms (paint 1.983, readback 0.909, alloc -, copy undefined, buffer -, rust total 4.615)
+[14:31:21] C 1080p gpu-gl render     wall 8.916 ms
+[14:31:21] C 1080p gpu-gl clone      wall 11.338 ms (paint 3.502, readback 1.845, alloc 0, copy 3.776, buffer 0.014, rust total 11.299)
+[14:31:21] C 1080p gpu-gl transfer   wall 10.752 ms (paint 3.345, readback 5.365, alloc 0.074, copy 0.012, buffer 0.012, rust total 10.711)
+[14:31:21] C 1080p gpu-gl pool       wall 11.118 ms (paint 3.467, readback 5.409, alloc 0.076, copy 0.013, buffer 0.013, rust total 11.076)
+[14:31:21] C 1080p gpu-gl pool-yield wall 8.263 ms (paint 3.456, readback 1.778, alloc 1.18, copy 0.012, buffer 0.012, rust total 8.226)
+[14:31:21] C 1080p gpu-gl into       wall 7.656 ms (paint 3.672, readback 1.896, alloc -, copy undefined, buffer -, rust total 7.618)
+[14:31:21] C 4K gpu-gl render     wall 27.019 ms
+[14:31:21] C 4K gpu-gl clone      wall 42.501 ms (paint 10.771, readback 7.191, alloc 0, copy 19.682, buffer 0.423, rust total 42.402)
+[14:31:21] C 4K gpu-gl transfer   wall 37.421 ms (paint 10.718, readback 21.342, alloc 0.097, copy 0.449, buffer 0.449, rust total 37.34)
+[14:31:21] C 4K gpu-gl pool       wall 37.822 ms (paint 10.927, readback 21.53, alloc 0.103, copy 0.476, buffer 0.476, rust total 37.729)
+[14:31:21] C 4K gpu-gl pool-yield wall 23.765 ms (paint 11.088, readback 7.332, alloc 0, copy 0.258, buffer 0.258, rust total 23.592)
+[14:31:21] C 4K gpu-gl into       wall 21.48 ms (paint 9.907, readback 6.951, alloc -, copy undefined, buffer -, rust total 21.421)
+[14:31:21] E 720p gpu-gl render     wall 19.942 ms
+[14:31:21] E 720p gpu-gl clone      wall 20.033 ms (paint 11.581, readback 0.921, alloc 0, copy 0.817, buffer 0.023, rust total 19.965)
+[14:31:21] E 720p gpu-gl transfer   wall 19.587 ms (paint 11.463, readback 0.895, alloc 0.528, copy 0.018, buffer 0.018, rust total 19.54)
+[14:31:21] E 720p gpu-gl pool       wall 19.977 ms (paint 11.731, readback 0.92, alloc 0.529, copy 0.019, buffer 0.019, rust total 19.929)
+[14:31:21] E 720p gpu-gl pool-yield wall 19.985 ms (paint 11.841, readback 0.921, alloc 0.532, copy 0.017, buffer 0.017, rust total 19.93)
+[14:31:21] E 720p gpu-gl into       wall 19.357 ms (paint 11.697, readback 0.896, alloc -, copy undefined, buffer -, rust total 19.29)
+[14:31:21] E 1080p gpu-gl render     wall 29.501 ms
+[14:31:21] E 1080p gpu-gl clone      wall 30.013 ms (paint 17.184, readback 1.939, alloc 0, copy 1.759, buffer 0.028, rust total 29.944)
+[14:31:21] E 1080p gpu-gl transfer   wall 28.698 ms (paint 16.592, readback 1.927, alloc 1.206, copy 0.025, buffer 0.025, rust total 28.637)
+[14:31:21] E 1080p gpu-gl pool       wall 28.216 ms (paint 16.42, readback 1.902, alloc 1.174, copy 0.023, buffer 0.023, rust total 28.154)
+[14:31:21] E 1080p gpu-gl pool-yield wall 28.269 ms (paint 16.549, readback 1.935, alloc 1.168, copy 0.023, buffer 0.023, rust total 28.207)
+[14:31:21] E 1080p gpu-gl into       wall 27.245 ms (paint 16.502, readback 1.942, alloc -, copy undefined, buffer -, rust total 27.174)
+[14:31:21] E 4K gpu-gl render     wall 57.325 ms
+[14:31:21] E 4K gpu-gl clone      wall 74.63 ms (paint 30.958, readback 7.177, alloc 0, copy 20.928, buffer 0.473, rust total 74.541)
+[14:31:21] E 4K gpu-gl transfer   wall 67.936 ms (paint 30.513, readback 21.637, alloc 0.105, copy 0.563, buffer 0.563, rust total 67.844)
+[14:31:21] E 4K gpu-gl pool       wall 65.535 ms (paint 28.89, readback 21.247, alloc 0.101, copy 0.57, buffer 0.57, rust total 65.444)
+[14:31:21] E 4K gpu-gl pool-yield wall 50.916 ms (paint 28.82, readback 7.502, alloc 0, copy 0.538, buffer 0.538, rust total 50.843)
+[14:31:21] E 4K gpu-gl into       wall 50.768 ms (paint 28.375, readback 8.397, alloc -, copy undefined, buffer -, rust total 50.695)
+[14:31:21] F 720p gpu-gl render     wall 42.558 ms
+[14:31:21] F 720p gpu-gl clone      wall 43.063 ms (paint 30.438, readback 1.034, alloc 0, copy 0.792, buffer 0.033, rust total 42.982)
+[14:31:21] F 720p gpu-gl transfer   wall 43.479 ms (paint 31.289, readback 0.964, alloc 0.566, copy 0.034, buffer 0.034, rust total 43.36)
+[14:31:21] F 720p gpu-gl pool       wall 42.731 ms (paint 30.476, readback 0.944, alloc 0.574, copy 0.032, buffer 0.032, rust total 42.652)
+[14:31:21] F 720p gpu-gl pool-yield wall 41.647 ms (paint 29.491, readback 0.943, alloc 0.58, copy 0.032, buffer 0.032, rust total 41.546)
+[14:31:21] F 720p gpu-gl into       wall 41.581 ms (paint 29.675, readback 1.032, alloc -, copy undefined, buffer -, rust total 41.371)
+[14:31:21] F 1080p gpu-gl render     wall 85.718 ms
+[14:31:21] F 1080p gpu-gl clone      wall 86.947 ms (paint 59.151, readback 1.949, alloc 0, copy 1.797, buffer 0.033, rust total 86.864)
+[14:31:21] F 1080p gpu-gl transfer   wall 87.973 ms (paint 60.721, readback 2.002, alloc 1.231, copy 0.032, buffer 0.032, rust total 87.897)
+[14:31:21] F 1080p gpu-gl pool       wall 86.596 ms (paint 59.452, readback 1.979, alloc 1.253, copy 0.034, buffer 0.034, rust total 86.511)
+[14:31:21] F 1080p gpu-gl pool-yield wall 86.848 ms (paint 59.91, readback 1.953, alloc 1.237, copy 0.032, buffer 0.032, rust total 86.764)
+[14:31:21] F 1080p gpu-gl into       wall 84.255 ms (paint 58.289, readback 1.972, alloc -, copy undefined, buffer -, rust total 84.161)
+[14:31:21] F 4K gpu-gl render     wall 337.277 ms
+[14:31:21] F 4K gpu-gl clone      wall 348.378 ms (paint 206.901, readback 7.385, alloc 0, copy 11.398, buffer 0.536, rust total 348.286)
+[14:31:21] F 4K gpu-gl transfer   wall 325.976 ms (paint 189.648, readback 14.294, alloc 2.4, copy 0.542, buffer 0.542, rust total 325.878)
+[14:31:21] F 4K gpu-gl pool       wall 330.062 ms (paint 188.564, readback 21.895, alloc 0.112, copy 0.562, buffer 0.562, rust total 329.971)
+[14:31:21] F 4K gpu-gl pool-yield wall 316.67 ms (paint 189.781, readback 7.66, alloc 0, copy 0.546, buffer 0.546, rust total 316.561)
+[14:31:21] F 4K gpu-gl into       wall 306.636 ms (paint 185.065, readback 7.337, alloc -, copy undefined, buffer -, rust total 306.551)
+[14:31:21] G1000 720p gpu-gl render     wall 70.748 ms
+[14:31:21] G1000 720p gpu-gl clone      wall 74.191 ms (paint 14.914, readback 1.346, alloc 0, copy 0.763, buffer 0.032, rust total 74.116)
+[14:31:21] G1000 720p gpu-gl transfer   wall 73.008 ms (paint 15.345, readback 0.934, alloc 0.55, copy 0.032, buffer 0.032, rust total 72.934)
+[14:31:21] G1000 720p gpu-gl pool       wall 78.845 ms (paint 15.591, readback 1.496, alloc 0.533, copy 0.032, buffer 0.032, rust total 78.771)
+[14:31:21] G1000 720p gpu-gl pool-yield wall 73.698 ms (paint 14.919, readback 1.463, alloc 0.526, copy 0.031, buffer 0.031, rust total 73.629)
+[14:31:21] G1000 720p gpu-gl into       wall 68.816 ms (paint 14.838, readback 0.934, alloc -, copy undefined, buffer -, rust total 68.745)
+[14:31:21] G1000 1080p gpu-gl render     wall 68.844 ms
+[14:31:21] G1000 1080p gpu-gl clone      wall 70.07 ms (paint 15.467, readback 1.862, alloc 0, copy 1.734, buffer 0.035, rust total 69.993)
+[14:31:21] G1000 1080p gpu-gl transfer   wall 68.508 ms (paint 15.102, readback 1.929, alloc 1.165, copy 0.031, buffer 0.031, rust total 68.436)
+[14:31:21] G1000 1080p gpu-gl pool       wall 67.779 ms (paint 15.001, readback 1.892, alloc 1.155, copy 0.03, buffer 0.03, rust total 67.701)
+[14:31:21] G1000 1080p gpu-gl pool-yield wall 68.611 ms (paint 15.451, readback 1.94, alloc 1.157, copy 0.033, buffer 0.033, rust total 68.528)
+[14:31:21] G1000 1080p gpu-gl into       wall 70.63 ms (paint 15.77, readback 1.934, alloc -, copy undefined, buffer -, rust total 70.55)
+[14:31:21] G1000 4K gpu-gl render     wall 83.347 ms
+[14:31:21] G1000 4K gpu-gl clone      wall 83.636 ms (paint 15.559, readback 7.283, alloc 0, copy 6.692, buffer 0.409, rust total 83.563)
+[14:31:21] G1000 4K gpu-gl transfer   wall 82.35 ms (paint 15.626, readback 7.245, alloc 4.622, copy 0.401, buffer 0.401, rust total 82.269)
+[14:31:21] G1000 4K gpu-gl pool       wall 84.804 ms (paint 16.223, readback 7.359, alloc 4.757, copy 0.488, buffer 0.488, rust total 84.729)
+[14:31:21] G1000 4K gpu-gl pool-yield wall 77.075 ms (paint 15.192, readback 7.189, alloc 0, copy 0.438, buffer 0.438, rust total 76.999)
+[14:31:21] G1000 4K gpu-gl into       wall 76.884 ms (paint 15.417, readback 7.319, alloc -, copy undefined, buffer -, rust total 76.804)
+[14:32:01] A 720p gpu-vulkan old-render wall 3.022 ms
+[14:32:01] A 720p gpu-vulkan old-timed  wall 3.017 ms (paint 0.101, readback 0.849, alloc -, copy 1.724, buffer 1.724, rust total 2.949)
+[14:32:01] A 1080p gpu-vulkan old-render wall 6.384 ms
+[14:32:01] A 1080p gpu-vulkan old-timed  wall 6.365 ms (paint 0.111, readback 1.741, alloc -, copy 4.167, buffer 4.167, rust total 6.255)
+[14:32:01] A 4K gpu-vulkan old-render wall 29.205 ms
+[14:32:01] A 4K gpu-vulkan old-timed  wall 28.764 ms (paint 0.122, readback 8.381, alloc -, copy 19.331, buffer 19.331, rust total 28.17)
+[14:32:01] C 720p gpu-vulkan old-render wall 6.166 ms
+[14:32:01] C 720p gpu-vulkan old-timed  wall 6.147 ms (paint 1.779, readback 0.782, alloc -, copy 1.824, buffer 1.824, rust total 6.055)
+[14:32:01] C 1080p gpu-vulkan old-render wall 11.978 ms
+[14:32:01] C 1080p gpu-vulkan old-timed  wall 10.968 ms (paint 2.917, readback 1.734, alloc -, copy 4.059, buffer 4.059, rust total 10.83)
+[14:32:01] C 4K gpu-vulkan old-render wall 42.071 ms
+[14:32:01] C 4K gpu-vulkan old-timed  wall 42.234 ms (paint 8.194, readback 8.851, alloc -, copy 20.336, buffer 20.336, rust total 41.898)
+[14:32:01] E 720p gpu-vulkan old-render wall 16.774 ms
+[14:32:01] E 720p gpu-vulkan old-timed  wall 17.926 ms (paint 9.444, readback 0.853, alloc -, copy 1.942, buffer 1.942, rust total 17.854)
+[14:32:01] E 1080p gpu-vulkan old-render wall 26.618 ms
+[14:32:01] E 1080p gpu-vulkan old-timed  wall 26.477 ms (paint 13.326, readback 1.841, alloc -, copy 4.195, buffer 4.195, rust total 26.196)
+[14:32:01] E 4K gpu-vulkan old-render wall 84.869 ms
+[14:32:01] E 4K gpu-vulkan old-timed  wall 85.702 ms (paint 27.388, readback 20.224, alloc -, copy 19.721, buffer 19.721, rust total 84.855)
+[14:32:01] F 720p gpu-vulkan old-render wall 35.03 ms
+[14:32:01] F 720p gpu-vulkan old-timed  wall 34.774 ms (paint 20.377, readback 0.874, alloc -, copy 1.867, buffer 1.867, rust total 34.682)
+[14:32:01] F 1080p gpu-vulkan old-render wall 88.704 ms
+[14:32:01] F 1080p gpu-vulkan old-timed  wall 90.021 ms (paint 47.289, readback 5.537, alloc -, copy 4.19, buffer 4.19, rust total 89.913)
+[14:32:01] F 4K gpu-vulkan old-render wall 542.564 ms
+[14:32:01] F 4K gpu-vulkan old-timed  wall 547.245 ms (paint 368.466, readback 23.501, alloc -, copy 20.091, buffer 20.091, rust total 546.89)
+[14:32:01] G1000 720p gpu-vulkan old-render wall 61.298 ms
+[14:32:01] G1000 720p gpu-vulkan old-timed  wall 62.064 ms (paint 15.164, readback 1.01, alloc -, copy 1.841, buffer 1.841, rust total 61.904)
+[14:32:01] G1000 1080p gpu-vulkan old-render wall 65.76 ms
+[14:32:01] G1000 1080p gpu-vulkan old-timed  wall 63.001 ms (paint 16.03, readback 2.128, alloc -, copy 4.229, buffer 4.229, rust total 62.595)
+[14:32:01] G1000 4K gpu-vulkan old-render wall 91.841 ms
+[14:32:01] G1000 4K gpu-vulkan old-timed  wall 89.86 ms (paint 15.746, readback 8.95, alloc -, copy 19.588, buffer 19.588, rust total 88.84)
+[14:33:44] A 720p gpu-vulkan render     wall 2.826 ms
+[14:33:44] A 720p gpu-vulkan clone      wall 3.08 ms (paint 0.097, readback 0.842, alloc 0, copy 1.799, buffer 0.012, rust total 3.039)
+[14:33:44] A 720p gpu-vulkan transfer   wall 2.779 ms (paint 0.094, readback 2.38, alloc 0.013, copy 0.011, buffer 0.011, rust total 2.742)
+[14:33:44] A 720p gpu-vulkan pool       wall 2.914 ms (paint 0.105, readback 2.457, alloc 0.013, copy 0.012, buffer 0.012, rust total 2.874)
+[14:33:44] A 720p gpu-vulkan pool-yield wall 2.747 ms (paint 0.102, readback 2.286, alloc 0.074, copy 0.011, buffer 0.011, rust total 2.709)
+[14:33:44] A 720p gpu-vulkan into       wall 1.196 ms (paint 0.096, readback 0.847, alloc -, copy undefined, buffer -, rust total 1.162)
+[14:33:44] A 1080p gpu-vulkan render     wall 5.711 ms
+[14:33:44] A 1080p gpu-vulkan clone      wall 6.543 ms (paint 0.116, readback 1.766, alloc 0, copy 4.278, buffer 0.015, rust total 6.491)
+[14:33:44] A 1080p gpu-vulkan transfer   wall 5.687 ms (paint 0.102, readback 5.204, alloc 0.076, copy 0.011, buffer 0.011, rust total 5.637)
+[14:33:44] A 1080p gpu-vulkan pool       wall 5.964 ms (paint 0.101, readback 5.066, alloc 0.106, copy 0.012, buffer 0.012, rust total 5.91)
+[14:33:44] A 1080p gpu-vulkan pool-yield wall 3.305 ms (paint 0.099, readback 1.779, alloc 1.155, copy 0.011, buffer 0.011, rust total 3.271)
+[14:33:44] A 1080p gpu-vulkan into       wall 2.127 ms (paint 0.092, readback 1.755, alloc -, copy undefined, buffer -, rust total 2.096)
+[14:33:44] A 4K gpu-vulkan render     wall 14.362 ms
+[14:33:44] A 4K gpu-vulkan clone      wall 30.841 ms (paint 0.176, readback 8.989, alloc 0, copy 20.64, buffer 0.443, rust total 30.761)
+[14:33:44] A 4K gpu-vulkan transfer   wall 23.524 ms (paint 0.123, readback 22.694, alloc 0.017, copy 0.358, buffer 0.358, rust total 23.473)
+[14:33:44] A 4K gpu-vulkan pool       wall 23.289 ms (paint 0.124, readback 22.286, alloc 0.016, copy 0.337, buffer 0.337, rust total 23.21)
+[14:33:44] A 4K gpu-vulkan pool-yield wall 9.717 ms (paint 0.117, readback 9.019, alloc 0, copy 0.032, buffer 0.032, rust total 9.66)
+[14:33:44] A 4K gpu-vulkan into       wall 9.219 ms (paint 0.102, readback 8.834, alloc -, copy undefined, buffer -, rust total 9.183)
+[14:33:44] C 720p gpu-vulkan render     wall 4.824 ms
+[14:33:44] C 720p gpu-vulkan clone      wall 4.828 ms (paint 1.795, readback 0.771, alloc 0, copy 0.636, buffer 0.012, rust total 4.79)
+[14:33:44] C 720p gpu-vulkan transfer   wall 4.77 ms (paint 1.772, readback 0.833, alloc 0.554, copy 0.011, buffer 0.011, rust total 4.735)
+[14:33:44] C 720p gpu-vulkan pool       wall 4.866 ms (paint 1.809, readback 0.846, alloc 0.552, copy 0.011, buffer 0.011, rust total 4.827)
+[14:33:44] C 720p gpu-vulkan pool-yield wall 4.861 ms (paint 1.845, readback 0.859, alloc 0.543, copy 0.012, buffer 0.012, rust total 4.821)
+[14:33:44] C 720p gpu-vulkan into       wall 4.28 ms (paint 1.798, readback 0.825, alloc -, copy undefined, buffer -, rust total 4.228)
+[14:33:44] C 1080p gpu-vulkan render     wall 8.023 ms
+[14:33:44] C 1080p gpu-vulkan clone      wall 8.52 ms (paint 2.932, readback 1.811, alloc 0, copy 1.443, buffer 0.017, rust total 8.472)
+[14:33:44] C 1080p gpu-vulkan transfer   wall 8.457 ms (paint 3.079, readback 1.921, alloc 1.207, copy 0.015, buffer 0.015, rust total 8.415)
+[14:33:44] C 1080p gpu-vulkan pool       wall 8.913 ms (paint 2.909, readback 1.937, alloc 1.223, copy 0.015, buffer 0.015, rust total 8.865)
+[14:33:44] C 1080p gpu-vulkan pool-yield wall 7.961 ms (paint 2.936, readback 1.915, alloc 1.185, copy 0.013, buffer 0.013, rust total 7.925)
+[14:33:44] C 1080p gpu-vulkan into       wall 6.844 ms (paint 2.853, readback 1.931, alloc -, copy undefined, buffer -, rust total 6.798)
+[14:33:44] C 4K gpu-vulkan render     wall 26.287 ms
+[14:33:44] C 4K gpu-vulkan clone      wall 41.973 ms (paint 7.731, readback 8.92, alloc 0, copy 20.045, buffer 0.405, rust total 41.911)
+[14:33:44] C 4K gpu-vulkan transfer   wall 37.507 ms (paint 8.015, readback 8.781, alloc 15.906, copy 0.481, buffer 0.481, rust total 37.427)
+[14:33:44] C 4K gpu-vulkan pool       wall 37.362 ms (paint 7.865, readback 8.768, alloc 15.694, copy 0.485, buffer 0.485, rust total 37.286)
+[14:33:44] C 4K gpu-vulkan pool-yield wall 22.054 ms (paint 7.64, readback 8.888, alloc 0, copy 0.259, buffer 0.259, rust total 21.996)
+[14:33:44] C 4K gpu-vulkan into       wall 21.623 ms (paint 7.54, readback 8.997, alloc -, copy undefined, buffer -, rust total 21.56)
+[14:33:44] E 720p gpu-vulkan render     wall 15.862 ms
+[14:33:44] E 720p gpu-vulkan clone      wall 16.192 ms (paint 9.161, readback 0.885, alloc 0, copy 0.687, buffer 0.018, rust total 16.139)
+[14:33:44] E 720p gpu-vulkan transfer   wall 15.802 ms (paint 9.003, readback 0.985, alloc 0.524, copy 0.016, buffer 0.016, rust total 15.756)
+[14:33:44] E 720p gpu-vulkan pool       wall 15.984 ms (paint 9.255, readback 1.001, alloc 0.527, copy 0.016, buffer 0.016, rust total 15.938)
+[14:33:44] E 720p gpu-vulkan pool-yield wall 16.62 ms (paint 9.494, readback 1.08, alloc 0.527, copy 0.021, buffer 0.021, rust total 16.552)
+[14:33:44] E 720p gpu-vulkan into       wall 16.094 ms (paint 9.133, readback 1.032, alloc -, copy undefined, buffer -, rust total 16.051)
+[14:33:44] E 1080p gpu-vulkan render     wall 25.128 ms
+[14:33:44] E 1080p gpu-vulkan clone      wall 23.829 ms (paint 13.293, readback 1.792, alloc 0, copy 1.442, buffer 0.027, rust total 23.755)
+[14:33:44] E 1080p gpu-vulkan transfer   wall 25.808 ms (paint 14.361, readback 2.271, alloc 1.19, copy 0.031, buffer 0.031, rust total 25.745)
+[14:33:44] E 1080p gpu-vulkan pool       wall 25.311 ms (paint 13.935, readback 2.428, alloc 1.197, copy 0.027, buffer 0.027, rust total 25.246)
+[14:33:44] E 1080p gpu-vulkan pool-yield wall 24.694 ms (paint 13.182, readback 2.389, alloc 1.143, copy 0.024, buffer 0.024, rust total 24.62)
+[14:33:44] E 1080p gpu-vulkan into       wall 24.088 ms (paint 13.525, readback 2.43, alloc -, copy undefined, buffer -, rust total 24.025)
+[14:33:44] E 4K gpu-vulkan render     wall 74.433 ms
+[14:33:44] E 4K gpu-vulkan clone      wall 71.332 ms (paint 27.406, readback 20.274, alloc 0, copy 6.533, buffer 0.444, rust total 71.255)
+[14:33:44] E 4K gpu-vulkan transfer   wall 74.592 ms (paint 28.812, readback 20.958, alloc 4.964, copy 0.596, buffer 0.596, rust total 74.515)
+[14:33:44] E 4K gpu-vulkan pool       wall 73.664 ms (paint 28.011, readback 20.576, alloc 4.763, copy 0.537, buffer 0.537, rust total 73.587)
+[14:33:44] E 4K gpu-vulkan pool-yield wall 70.858 ms (paint 28.147, readback 21.195, alloc 0, copy 0.583, buffer 0.583, rust total 70.724)
+[14:33:44] E 4K gpu-vulkan into       wall 69.544 ms (paint 28.402, readback 20.815, alloc -, copy undefined, buffer -, rust total 69.465)
+[14:33:44] F 720p gpu-vulkan render     wall 34.955 ms
+[14:33:44] F 720p gpu-vulkan clone      wall 35.191 ms (paint 21.277, readback 0.962, alloc 0, copy 0.669, buffer 0.032, rust total 35.116)
+[14:33:44] F 720p gpu-vulkan transfer   wall 35.53 ms (paint 21.056, readback 1.154, alloc 0.548, copy 0.028, buffer 0.028, rust total 35.462)
+[14:33:44] F 720p gpu-vulkan pool       wall 35.228 ms (paint 20.969, readback 1.122, alloc 0.551, copy 0.029, buffer 0.029, rust total 35.163)
+[14:33:44] F 720p gpu-vulkan pool-yield wall 34.915 ms (paint 20.487, readback 1.148, alloc 0.552, copy 0.026, buffer 0.026, rust total 34.851)
+[14:33:44] F 720p gpu-vulkan into       wall 36.145 ms (paint 21.275, readback 1.141, alloc -, copy undefined, buffer -, rust total 35.98)
+[14:33:44] F 1080p gpu-vulkan render     wall 87.039 ms
+[14:33:44] F 1080p gpu-vulkan clone      wall 88.273 ms (paint 49.383, readback 5.663, alloc 0, copy 1.493, buffer 0.035, rust total 88.178)
+[14:33:44] F 1080p gpu-vulkan transfer   wall 87.693 ms (paint 47.777, readback 5.598, alloc 1.233, copy 0.033, buffer 0.033, rust total 87.601)
+[14:33:44] F 1080p gpu-vulkan pool       wall 88.639 ms (paint 47.625, readback 5.598, alloc 1.235, copy 0.032, buffer 0.032, rust total 88.563)
+[14:33:44] F 1080p gpu-vulkan pool-yield wall 87.614 ms (paint 46.892, readback 5.66, alloc 1.208, copy 0.032, buffer 0.032, rust total 87.533)
+[14:33:44] F 1080p gpu-vulkan into       wall 87.225 ms (paint 46.56, readback 5.649, alloc -, copy undefined, buffer -, rust total 87.139)
+[14:33:44] F 4K gpu-vulkan render     wall 537.234 ms
+[14:33:44] F 4K gpu-vulkan clone      wall 545.273 ms (paint 375.342, readback 23.869, alloc 0, copy 6.731, buffer 0.592, rust total 545.187)
+[14:33:44] F 4K gpu-vulkan transfer   wall 540.731 ms (paint 374.38, readback 23.5, alloc 4.833, copy 0.528, buffer 0.528, rust total 540.61)
+[14:33:44] F 4K gpu-vulkan pool       wall 549.895 ms (paint 379.911, readback 23.56, alloc 5.163, copy 0.595, buffer 0.595, rust total 549.808)
+[14:33:44] F 4K gpu-vulkan pool-yield wall 531.012 ms (paint 370.002, readback 23.526, alloc 0, copy 0.661, buffer 0.661, rust total 530.928)
+[14:33:44] F 4K gpu-vulkan into       wall 531.619 ms (paint 369.338, readback 23.453, alloc -, copy undefined, buffer -, rust total 531.539)
+[14:33:44] G1000 720p gpu-vulkan render     wall 58.737 ms
+[14:33:44] G1000 720p gpu-vulkan clone      wall 59.904 ms (paint 15.585, readback 1.074, alloc 0, copy 0.631, buffer 0.035, rust total 59.824)
+[14:33:44] G1000 720p gpu-vulkan transfer   wall 72.058 ms (paint 15.336, readback 2.315, alloc 0.525, copy 0.03, buffer 0.03, rust total 71.984)
+[14:33:44] G1000 720p gpu-vulkan pool       wall 72.631 ms (paint 15.26, readback 2.719, alloc 0.523, copy 0.031, buffer 0.031, rust total 72.537)
+[14:33:44] G1000 720p gpu-vulkan pool-yield wall 72.645 ms (paint 15.265, readback 2.68, alloc 0.517, copy 0.031, buffer 0.031, rust total 72.571)
+[14:33:44] G1000 720p gpu-vulkan into       wall 73.096 ms (paint 15.507, readback 2.665, alloc -, copy undefined, buffer -, rust total 72.99)
+[14:33:44] G1000 1080p gpu-vulkan render     wall 58.559 ms
+[14:33:44] G1000 1080p gpu-vulkan clone      wall 57.245 ms (paint 15.203, readback 2.131, alloc 0, copy 1.428, buffer 0.032, rust total 57.17)
+[14:33:44] G1000 1080p gpu-vulkan transfer   wall 57.431 ms (paint 15.303, readback 2.422, alloc 1.214, copy 0.031, buffer 0.031, rust total 57.352)
+[14:33:44] G1000 1080p gpu-vulkan pool       wall 80.751 ms (paint 15.833, readback 5.002, alloc 1.225, copy 0.031, buffer 0.031, rust total 80.662)
+[14:33:44] G1000 1080p gpu-vulkan pool-yield wall 58.388 ms (paint 15.256, readback 2.501, alloc 1.177, copy 0.032, buffer 0.032, rust total 58.317)
+[14:33:44] G1000 1080p gpu-vulkan into       wall 55.431 ms (paint 15.194, readback 2.451, alloc -, copy undefined, buffer -, rust total 55.359)
+[14:33:44] G1000 4K gpu-vulkan render     wall 72.182 ms
+[14:33:44] G1000 4K gpu-vulkan clone      wall 75.621 ms (paint 16.473, readback 8.919, alloc 0, copy 6.528, buffer 0.456, rust total 75.529)
+[14:33:44] G1000 4K gpu-vulkan transfer   wall 76.589 ms (paint 16.617, readback 8.967, alloc 5.081, copy 0.475, buffer 0.475, rust total 76.494)
+[14:33:44] G1000 4K gpu-vulkan pool       wall 76.788 ms (paint 16.339, readback 9.012, alloc 5.036, copy 0.486, buffer 0.486, rust total 76.7)
+[14:33:44] G1000 4K gpu-vulkan pool-yield wall 77.396 ms (paint 16.672, readback 9.13, alloc 0.001, copy 0.465, buffer 0.465, rust total 77.303)
+[14:33:44] G1000 4K gpu-vulkan into       wall 75.052 ms (paint 16.732, readback 8.933, alloc -, copy undefined, buffer -, rust total 74.953)
