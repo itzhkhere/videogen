@@ -1,0 +1,42 @@
+[14:46:57] check gpu-gl effects 1080p sync         identical to sync: true
+[14:46:57] check gpu-gl effects 1080p deferred d1  identical to sync: true
+[14:46:57] check gpu-gl effects 1080p deferred d2  identical to sync: true
+[14:46:57] check gpu-gl effects 1080p deferred d3  identical to sync: true
+[14:46:57] check gpu-gl effects 1080p deferred d4  identical to sync: true
+[14:46:57] check gpu-gl effects 1080p pbo d1       identical to sync: true
+[14:46:57] check gpu-gl effects 1080p pbo d2       identical to sync: true
+[14:46:57] check gpu-gl effects 1080p pbo d3       identical to sync: true
+[14:46:57] check gpu-gl effects 1080p pbo d4       identical to sync: true
+[14:47:05] bench gpu-gl effects 1080p sync         138.029 fps (7.245 ms/frame), upper bound 27% of frame (1.936 ms), rss 237.6 MiB
+[14:47:05] bench gpu-gl effects 1080p deferred d1  140.211 fps (7.132 ms/frame), latency median 4.801 ms, rss 237.9 MiB
+[14:47:05] bench gpu-gl effects 1080p deferred d2  139.749 fps (7.156 ms/frame), latency median 11.977 ms, rss 239.3 MiB
+[14:47:05] bench gpu-gl effects 1080p deferred d3  140.122 fps (7.137 ms/frame), latency median 19.752 ms, rss 243.6 MiB
+[14:47:05] bench gpu-gl effects 1080p deferred d4  139.848 fps (7.151 ms/frame), latency median 26.787 ms, rss 243.8 MiB
+[14:47:05] bench gpu-gl effects 1080p pbo d1       139.102 fps (7.189 ms/frame), latency median 4.713 ms, rss 251.9 MiB
+[14:47:05] bench gpu-gl effects 1080p pbo d2       138.148 fps (7.239 ms/frame), latency median 11.694 ms, rss 260.4 MiB
+[14:47:05] bench gpu-gl effects 1080p pbo d3       137.809 fps (7.256 ms/frame), latency median 19.839 ms, rss 268.8 MiB
+[14:47:05] bench gpu-gl effects 1080p pbo d4       137.177 fps (7.29 ms/frame), latency median 26.799 ms, rss 277.7 MiB
+[14:47:22] bench gpu-gl effects 4K sync         65.18 fps (15.342 ms/frame), upper bound 49% of frame (7.534 ms), rss 405.2 MiB
+[14:47:22] bench gpu-gl effects 4K deferred d1  66.515 fps (15.034 ms/frame), latency median 10.365 ms, rss 405 MiB
+[14:47:22] bench gpu-gl effects 4K deferred d2  66.498 fps (15.038 ms/frame), latency median 25.155 ms, rss 406.3 MiB
+[14:47:22] bench gpu-gl effects 4K deferred d3  66.38 fps (15.065 ms/frame), latency median 40.9 ms, rss 410.4 MiB
+[14:47:22] bench gpu-gl effects 4K deferred d4  66.155 fps (15.116 ms/frame), latency median 55.713 ms, rss 410.8 MiB
+[14:47:22] bench gpu-gl effects 4K pbo d1       63.124 fps (15.842 ms/frame), latency median 9.89 ms, rss 442.7 MiB
+[14:47:22] bench gpu-gl effects 4K pbo d2       70.424 fps (14.2 ms/frame), latency median 23.223 ms, rss 476.1 MiB
+[14:47:22] bench gpu-gl effects 4K pbo d3       69.973 fps (14.291 ms/frame), latency median 38.333 ms, rss 509.4 MiB
+[14:47:22] bench gpu-gl effects 4K pbo d4       70.478 fps (14.189 ms/frame), latency median 51.493 ms, rss 542.5 MiB
+[14:47:28] check gpu-vulkan effects 1080p sync         identical to sync: true
+[14:47:28] check gpu-vulkan effects 1080p deferred d1  identical to sync: true
+[14:47:28] check gpu-vulkan effects 1080p deferred d2  identical to sync: true
+[14:47:28] check gpu-vulkan effects 1080p deferred d3  identical to sync: true
+[14:47:28] check gpu-vulkan effects 1080p deferred d4  identical to sync: true
+[14:47:33] bench gpu-vulkan effects 1080p sync         132.604 fps (7.541 ms/frame), upper bound 36% of frame (2.677 ms), rss 286 MiB
+[14:47:33] bench gpu-vulkan effects 1080p deferred d1  139.573 fps (7.165 ms/frame), latency median 5.37 ms, rss 286.1 MiB
+[14:47:33] bench gpu-vulkan effects 1080p deferred d2  138.159 fps (7.238 ms/frame), latency median 12.466 ms, rss 286.5 MiB
+[14:47:33] bench gpu-vulkan effects 1080p deferred d3  137.911 fps (7.251 ms/frame), latency median 20.583 ms, rss 291.9 MiB
+[14:47:33] bench gpu-vulkan effects 1080p deferred d4  138.159 fps (7.238 ms/frame), latency median 27.54 ms, rss 292.3 MiB
+[14:47:43] bench gpu-vulkan effects 4K sync         61.75 fps (16.194 ms/frame), upper bound 59% of frame (9.472 ms), rss 424.1 MiB
+[14:47:43] bench gpu-vulkan effects 4K deferred d1  65.123 fps (15.356 ms/frame), latency median 11.984 ms, rss 424 MiB
+[14:47:43] bench gpu-vulkan effects 4K deferred d2  65.14 fps (15.352 ms/frame), latency median 27.045 ms, rss 429.4 MiB
+[14:47:43] bench gpu-vulkan effects 4K deferred d3  65.198 fps (15.338 ms/frame), latency median 43.202 ms, rss 433.4 MiB
+[14:47:43] bench gpu-vulkan effects 4K deferred d4  65.271 fps (15.321 ms/frame), latency median 57.977 ms, rss 433.6 MiB

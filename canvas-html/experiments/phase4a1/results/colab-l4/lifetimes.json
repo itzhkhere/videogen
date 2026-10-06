@@ -1,0 +1,306 @@
+{
+  "rows": [
+    {
+      "probe": "buffer-outlives-renderer",
+      "backend": "gpu-gl",
+      "exitCode": 0,
+      "signal": null,
+      "crashed": false,
+      "result": {
+        "afterRenders": true,
+        "afterClose": true,
+        "afterRendererGc": true,
+        "pooledAfterRendererGc": true
+      }
+    },
+    {
+      "probe": "pool-finalizers-after-close",
+      "backend": "gpu-gl",
+      "exitCode": 0,
+      "signal": null,
+      "crashed": false,
+      "result": {
+        "statsBeforeClose": {
+          "allocated": 8,
+          "discarded": 0,
+          "frameBytes": 3686400,
+          "free": 0,
+          "maxFree": 3,
+          "returned": 0,
+          "reused": 0
+        },
+        "finalizedWithoutRenderer": true
+      }
+    },
+    {
+      "probe": "many-retained-then-dropped",
+      "backend": "gpu-gl",
+      "exitCode": 0,
+      "signal": null,
+      "crashed": false,
+      "result": {
+        "intact": true,
+        "inUseMiBWhileRetained": 1601,
+        "inUseMiBAfterDrop": 18
+      }
+    },
+    {
+      "probe": "_renderInto-misuse",
+      "backend": "gpu-gl",
+      "exitCode": 0,
+      "signal": null,
+      "crashed": false,
+      "result": {
+        "tooSmall": {
+          "ok": false,
+          "error": "target Buffer is 3686396 bytes, the frame needs 3686400"
+        },
+        "tooLarge": {
+          "ok": false,
+          "error": "target Buffer is 3686404 bytes, the frame needs 3686400"
+        },
+        "detachedView": {
+          "ok": false,
+          "error": "target Buffer is 0 bytes, the frame needs 3686400"
+        },
+        "plainUint8Array": {
+          "ok": true,
+          "value": true
+        },
+        "notBytes": {
+          "ok": true,
+          "value": {
+            "backend": "ganesh-gl",
+            "timingsNs": {
+              "gpuSubmit": 64179,
+              "resolve": 15500,
+              "paint": 63520,
+              "gpuWait": 24293,
+              "frameJs": 89,
+              "readback": 2674775,
+              "total": 2854020
+            }
+          }
+        },
+        "notAnObject": {
+          "ok": false,
+          "error": "Failed to get Buffer pointer and length"
+        },
+        "ok": {
+          "ok": true,
+          "value": true
+        },
+        "afterClose": {
+          "ok": false,
+          "error": "renderer is closed"
+        }
+      }
+    },
+    {
+      "probe": "frame-size-limits",
+      "backend": "gpu-gl",
+      "exitCode": 0,
+      "signal": null,
+      "crashed": false,
+      "result": {
+        "huge": {
+          "ok": false,
+          "error": "frame of 100000x100000 device pixels is out of range (1..=32767 per side)"
+        },
+        "hugeDpr": {
+          "ok": false,
+          "error": "frame of 40000x40000 device pixels is out of range (1..=32767 per side)"
+        },
+        "infiniteDpr": {
+          "ok": false,
+          "error": "frame of 4294967295x4294967295 device pixels is out of range (1..=32767 per side)"
+        },
+        "maxSide": {
+          "ok": true,
+          "value": 32767
+        }
+      }
+    },
+    {
+      "probe": "full-pool",
+      "backend": "gpu-gl",
+      "exitCode": 0,
+      "signal": null,
+      "crashed": false,
+      "result": {
+        "heldFrames": 6,
+        "distinctMemory": 6,
+        "stats": {
+          "allocated": 6,
+          "discarded": 0,
+          "frameBytes": 8294400,
+          "free": 0,
+          "maxFree": 1,
+          "returned": 0,
+          "reused": 0
+        },
+        "statsAfterRelease": {
+          "allocated": 6,
+          "discarded": 5,
+          "frameBytes": 8294400,
+          "free": 0,
+          "maxFree": 1,
+          "returned": 1,
+          "reused": 1
+        },
+        "renderAfter": 8294400
+      }
+    },
+    {
+      "probe": "buffer-outlives-renderer",
+      "backend": "gpu-vulkan",
+      "exitCode": 0,
+      "signal": null,
+      "crashed": false,
+      "result": {
+        "afterRenders": true,
+        "afterClose": true,
+        "afterRendererGc": true,
+        "pooledAfterRendererGc": true
+      }
+    },
+    {
+      "probe": "pool-finalizers-after-close",
+      "backend": "gpu-vulkan",
+      "exitCode": 0,
+      "signal": null,
+      "crashed": false,
+      "result": {
+        "statsBeforeClose": {
+          "allocated": 8,
+          "discarded": 0,
+          "frameBytes": 3686400,
+          "free": 0,
+          "maxFree": 3,
+          "returned": 0,
+          "reused": 0
+        },
+        "finalizedWithoutRenderer": true
+      }
+    },
+    {
+      "probe": "many-retained-then-dropped",
+      "backend": "gpu-vulkan",
+      "exitCode": 0,
+      "signal": null,
+      "crashed": false,
+      "result": {
+        "intact": true,
+        "inUseMiBWhileRetained": 1612,
+        "inUseMiBAfterDrop": 29
+      }
+    },
+    {
+      "probe": "_renderInto-misuse",
+      "backend": "gpu-vulkan",
+      "exitCode": 0,
+      "signal": null,
+      "crashed": false,
+      "result": {
+        "tooSmall": {
+          "ok": false,
+          "error": "target Buffer is 3686396 bytes, the frame needs 3686400"
+        },
+        "tooLarge": {
+          "ok": false,
+          "error": "target Buffer is 3686404 bytes, the frame needs 3686400"
+        },
+        "detachedView": {
+          "ok": false,
+          "error": "target Buffer is 0 bytes, the frame needs 3686400"
+        },
+        "plainUint8Array": {
+          "ok": true,
+          "value": true
+        },
+        "notBytes": {
+          "ok": true,
+          "value": {
+            "backend": "ganesh-vulkan",
+            "timingsNs": {
+              "resolve": 24466,
+              "total": 2644336,
+              "gpuWait": 47199,
+              "gpuSubmit": 89702,
+              "frameJs": 69,
+              "paint": 87596,
+              "readback": 2386835
+            }
+          }
+        },
+        "notAnObject": {
+          "ok": false,
+          "error": "Failed to get Buffer pointer and length"
+        },
+        "ok": {
+          "ok": true,
+          "value": true
+        },
+        "afterClose": {
+          "ok": false,
+          "error": "renderer is closed"
+        }
+      }
+    },
+    {
+      "probe": "frame-size-limits",
+      "backend": "gpu-vulkan",
+      "exitCode": 0,
+      "signal": null,
+      "crashed": false,
+      "result": {
+        "huge": {
+          "ok": false,
+          "error": "frame of 100000x100000 device pixels is out of range (1..=32767 per side)"
+        },
+        "hugeDpr": {
+          "ok": false,
+          "error": "frame of 40000x40000 device pixels is out of range (1..=32767 per side)"
+        },
+        "infiniteDpr": {
+          "ok": false,
+          "error": "frame of 4294967295x4294967295 device pixels is out of range (1..=32767 per side)"
+        },
+        "maxSide": {
+          "ok": true,
+          "value": 32767
+        }
+      }
+    },
+    {
+      "probe": "full-pool",
+      "backend": "gpu-vulkan",
+      "exitCode": 0,
+      "signal": null,
+      "crashed": false,
+      "result": {
+        "heldFrames": 6,
+        "distinctMemory": 6,
+        "stats": {
+          "allocated": 6,
+          "discarded": 0,
+          "frameBytes": 8294400,
+          "free": 0,
+          "maxFree": 1,
+          "returned": 0,
+          "reused": 0
+        },
+        "statsAfterRelease": {
+          "allocated": 6,
+          "discarded": 5,
+          "frameBytes": 8294400,
+          "free": 0,
+          "maxFree": 1,
+          "returned": 1,
+          "reused": 1
+        },
+        "renderAfter": 8294400
+      }
+    }
+  ]
+}
