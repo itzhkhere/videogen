@@ -537,6 +537,16 @@ impl Painter {
 }
 
 #[napi(object)]
+pub struct FramesOptions {
+    /// "sync" (default), "deferred" or "pbo".
+    pub mode: Option<String>,
+    /// Frames in flight for "deferred"/"pbo" (default 2).
+    pub depth: Option<u32>,
+    /// "page" (the page's seek(t); default with scripts) or "clock" (the frozen clock).
+    pub seek: Option<String>,
+}
+
+#[napi(object)]
 pub struct TimedRenderOptions {
     /// "rgba" (default), "png", or "none" (render without returning pixels).
     pub format: Option<String>,
@@ -1012,6 +1022,227 @@ impl HtmlRenderer {
         self.timed_result(env, t, None)
     }
 
+    /// Moves the page to `t` ms: the page's own `seek(t)` (page contract) or the frozen clock.
+    fn seek_to(&mut self, t: f64, page: bool) -> Result<()> {
+        if !t.is_finite() || t < 0.0 {
+            return Err(Error::from_reason(format!("frame time must be a finite number >= 0, got {t}")));
+        }
+        if page {
+            self.run_due_timers();
+            let code = format!("(() => {{ const f = globalThis.seek; if (typeof f !== 'function') throw new TypeError('seek is not a function on the page'); return f({t}); }})()");
+            self.eval_json(&code).map(|_| ())
+        } else {
+            let d = t - self.clock_ms;
+            if d < 0.0 {
+                return Err(Error::from_reason(format!("clock seeking cannot go back: at {} ms, asked for {t} ms", self.clock_ms)));
+            }
+            self.advance_clock(d)
+        }
+    }
+
+    /// Phase 4A.1: record the current document into the GPU pipeline and submit it.
+    #[cfg(feature = "experimental-gpu")]
+    fn pipeline_submit_inner(&mut self) -> Result<(u64, PaintTimings)> {
+        let pw = (self.width as f64 * self.dpr).round() as u32;
+        let ph = (self.height as f64 * self.dpr).round() as u32;
+        let bg = self.background;
+        let dpr = self.dpr;
+        let doc = self.doc.as_mut().expect("document");
+        let draw = |scene: &mut anyrender_skia::SkiaScenePainter<'_>| {
+            scene.fill(Fill::NonZero, Default::default(), bg, Default::default(), &Rect::new(0.0, 0.0, pw as f64, ph as f64));
+            doc.with_base(|b| paint_scene(scene, b, dpr, pw, ph, 0, 0));
+        };
+        let Painter::Gpu(r) = &mut self.renderer else {
+            return Err(Error::from_reason("pipelined readback needs a Ganesh GPU backend (gpu-gl or gpu-vulkan)"));
+        };
+        let (index, t) = r
+            .pipeline_submit(draw)
+            .map_err(|e| Error::from_reason(format!("GPU pipeline submit failed ({}): {e}", r.device().kind().name())))?;
+        Ok((index, PaintTimings { record_ns: t.record_ns, submit_ns: t.submit_ns, ..Default::default() }))
+    }
+
+    #[cfg(feature = "experimental-gpu")]
+    fn gpu_renderer(&mut self) -> Result<&mut anyrender_skia::SkiaGpuImageRenderer> {
+        match &mut self.renderer {
+            Painter::Gpu(r) => Ok(r),
+            _ => Err(Error::from_reason("pipelined readback needs a Ganesh GPU backend (gpu-gl or gpu-vulkan)")),
+        }
+    }
+
+    /// Experimental (Phase 4A.1): start a readback pipeline. `mode`: "deferred" (ring of
+    /// surfaces, synchronous readback later; GL or Vulkan) or "pbo" (GL pixel-pack buffers +
+    /// fences). `depth`: frames in flight, 1–8.
+    #[napi(js_name = "_pipelineStart")]
+    pub fn pipeline_start(&mut self, mode: String, depth: u32) -> Result<()> {
+        self.check_open()?;
+        #[cfg(feature = "experimental-gpu")]
+        {
+            let m = match mode.as_str() {
+                "deferred" => anyrender_skia::PipelineMode::Deferred,
+                "pbo" => anyrender_skia::PipelineMode::GlPbo,
+                other => return Err(Error::from_reason(format!("pipeline mode must be \"deferred\" or \"pbo\", got {other:?}"))),
+            };
+            return self.gpu_renderer()?.pipeline_start(m, depth as usize).map_err(|e| Error::from_reason(e.to_string()));
+        }
+        #[allow(unreachable_code)]
+        {
+            let _ = (mode, depth);
+            Err(Error::from_reason("pipelined readback needs a build with the experimental-gpu feature"))
+        }
+    }
+
+    /// Experimental (Phase 4A.1): render the document as it is now into the pipeline (frame JS,
+    /// style, layout, paint, submit) without waiting for the GPU. Throws when the pipeline is
+    /// full. Returns the frame index and timings.
+    #[napi(js_name = "_pipelineSubmit")]
+    pub fn pipeline_submit<'env>(&mut self, env: &'env Env) -> Result<Object<'env>> {
+        let mut t: HashMap<String, f64> = HashMap::new();
+        self.prepare_timed(&mut t, false)?;
+        #[cfg(feature = "experimental-gpu")]
+        {
+            let (index, p) = self.pipeline_submit_inner()?;
+            t.insert("paint".into(), p.record_ns as f64);
+            t.insert("gpuSubmit".into(), p.submit_ns as f64);
+            let mut o = Object::new(env)?;
+            o.set("index", index as f64)?;
+            o.set("timingsNs", t)?;
+            return Ok(o);
+        }
+        #[allow(unreachable_code)]
+        {
+            let _ = env;
+            Err(Error::from_reason("pipelined readback needs a build with the experimental-gpu feature"))
+        }
+    }
+
+    /// Experimental (Phase 4A.1): complete the oldest frame in flight into `target` (exactly one
+    /// frame of bytes). Returns its index and timings (gpuWait, readback, latency).
+    #[napi(js_name = "_pipelineComplete")]
+    pub fn pipeline_complete<'env>(&mut self, env: &'env Env, mut target: BufferSlice<'env>) -> Result<Object<'env>> {
+        self.check_open()?;
+        #[cfg(feature = "experimental-gpu")]
+        {
+            let c = self.gpu_renderer()?.pipeline_complete(&mut target[..]).map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
+            let mut o = Object::new(env)?;
+            o.set("index", c.index as f64)?;
+            let t: HashMap<String, f64> = [("gpuWait", c.wait_ns), ("readback", c.readback_ns), ("latency", c.latency_ns)].into_iter().map(|(k, v)| (k.to_string(), v as f64)).collect();
+            o.set("timingsNs", t)?;
+            return Ok(o);
+        }
+        #[allow(unreachable_code)]
+        {
+            let _ = (env, &mut target);
+            Err(Error::from_reason("pipelined readback needs a build with the experimental-gpu feature"))
+        }
+    }
+
+    /// Experimental (Phase 4A.1): cancel the pipeline: wait for the GPU, discard frames in flight,
+    /// free its surfaces and buffers. Returns the number of frames discarded.
+    #[napi(js_name = "_pipelineStop")]
+    pub fn pipeline_stop(&mut self) -> u32 {
+        #[cfg(feature = "experimental-gpu")]
+        if let Painter::Gpu(r) = &mut self.renderer {
+            return r.pipeline_stop() as u32;
+        }
+        0
+    }
+
+    /// Experimental (Phase 4A.1): render a sequence without Node round-trips between stages. For
+    /// every time in `times` the page is moved there (`seek: "page"`: the page's own `seek(t)`,
+    /// the default with scripts; `"clock"`: the frozen clock), rendered, and its pixels written
+    /// into `targets[i % targets.length]` (each exactly one frame), in input order.
+    /// `mode`: "sync" (render, wait, read back; any backend), "deferred" or "pbo" (GPU pipeline
+    /// with up to `depth` frames in flight). Returns per-frame timings.
+    #[napi(js_name = "_renderFramesExperimental")]
+    pub fn render_frames_experimental<'env>(&mut self, env: &'env Env, times: Vec<f64>, mut targets: Vec<BufferSlice<'env>>, options: Option<FramesOptions>) -> Result<Object<'env>> {
+        self.check_open()?;
+        let o = options.unwrap_or(FramesOptions { mode: None, depth: None, seek: None });
+        let mode = o.mode.unwrap_or_else(|| "sync".into());
+        let depth = o.depth.unwrap_or(2) as usize;
+        let page = match o.seek.as_deref() {
+            None => self.scripts,
+            Some("page") => true,
+            Some("clock") => false,
+            Some(other) => return Err(Error::from_reason(format!("seek must be \"page\" or \"clock\", got {other:?}"))),
+        };
+        if targets.is_empty() {
+            return Err(Error::from_reason("targets must hold at least one frame Buffer"));
+        }
+        if let Some(bad) = targets.iter().find(|b| b.len() != self.frame_bytes) {
+            return Err(Error::from_reason(format!("every target must be {} bytes, one is {}", self.frame_bytes, bad.len())));
+        }
+        let k = targets.len();
+        let mut series: HashMap<String, Vec<f64>> = HashMap::new();
+        let mut push = |k: &str, v: f64| series.entry(k.to_string()).or_default().push(v);
+        let total = Instant::now();
+        match mode.as_str() {
+            "sync" => {
+                for (i, &t) in times.iter().enumerate() {
+                    let start = Instant::now();
+                    self.seek_to(t, page)?;
+                    push("seek", start.elapsed().as_nanos() as f64);
+                    let start = Instant::now();
+                    self.prepare_frame()?;
+                    push("prepare", start.elapsed().as_nanos() as f64);
+                    let p = self.paint_into(Some(&mut targets[i % k][..]))?;
+                    push("paint", p.record_ns as f64);
+                    push("gpuSubmit", p.submit_ns as f64);
+                    push("gpuWait", p.wait_ns as f64);
+                    push("readback", p.readback_ns as f64);
+                }
+            }
+            #[cfg(feature = "experimental-gpu")]
+            "deferred" | "pbo" => {
+                let m = if mode == "pbo" { anyrender_skia::PipelineMode::GlPbo } else { anyrender_skia::PipelineMode::Deferred };
+                self.gpu_renderer()?.pipeline_start(m, depth).map_err(|e| Error::from_reason(e.to_string()))?;
+                let mut next_out = 0usize;
+                let run = (|| -> Result<()> {
+                    for &t in times.iter() {
+                        let start = Instant::now();
+                        self.seek_to(t, page)?;
+                        push("seek", start.elapsed().as_nanos() as f64);
+                        let start = Instant::now();
+                        self.prepare_frame()?;
+                        push("prepare", start.elapsed().as_nanos() as f64);
+                        if self.gpu_renderer()?.pipeline_in_flight() >= depth {
+                            let c = self.gpu_renderer()?.pipeline_complete(&mut targets[next_out % k][..]).map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
+                            next_out += 1;
+                            push("gpuWait", c.wait_ns as f64);
+                            push("readback", c.readback_ns as f64);
+                            push("latency", c.latency_ns as f64);
+                        }
+                        let (_, p) = self.pipeline_submit_inner()?;
+                        push("paint", p.record_ns as f64);
+                        push("gpuSubmit", p.submit_ns as f64);
+                    }
+                    while self.gpu_renderer()?.pipeline_in_flight() > 0 {
+                        let c = self.gpu_renderer()?.pipeline_complete(&mut targets[next_out % k][..]).map_err(|e| Error::from_reason(format!("GPU pipeline completion failed: {e}")))?;
+                        next_out += 1;
+                        push("gpuWait", c.wait_ns as f64);
+                        push("readback", c.readback_ns as f64);
+                        push("latency", c.latency_ns as f64);
+                    }
+                    Ok(())
+                })();
+                if let Ok(r) = self.gpu_renderer() {
+                    r.pipeline_stop();
+                }
+                run?;
+            }
+            other => {
+                let _ = depth;
+                return Err(Error::from_reason(format!("mode must be \"sync\", \"deferred\" or \"pbo\" (GPU builds), got {other:?}")));
+            }
+        }
+        let mut obj = Object::new(env)?;
+        obj.set("backend", self.renderer.name())?;
+        obj.set("mode", mode.as_str())?;
+        obj.set("frames", times.len() as f64)?;
+        obj.set("totalNs", total.elapsed().as_nanos() as f64)?;
+        obj.set("seriesNs", series)?;
+        Ok(obj)
+    }
+
     /// Experimental (Phase 4A.1): the C heap as glibc sees it (`mallinfo2`): bytes in use from
     /// the arenas and from mmap. Frames live here until their Buffer's finalizer frees them.
     /// Null where mallinfo2 is unavailable.
@@ -1114,6 +1345,8 @@ impl HtmlRenderer {
         self.buffer = Vec::new();
         // Outstanding pooled Buffers keep the pool alive through their finalizers.
         self.pool = None;
+        // Frames in flight are discarded after the GPU finished them (Phase 4A.1 pipeline).
+        self.pipeline_stop();
         self.renderer = Painter::Closed;
     }
 

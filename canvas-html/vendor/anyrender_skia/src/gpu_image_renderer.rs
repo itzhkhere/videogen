@@ -227,6 +227,10 @@ impl GlDevice {
             .make_current_surfaceless()
             .map_err(|e| err("EGL surfaceless make-current failed", e))?;
 
+        // The `gl` crate's global function pointers, for the pipelined readback experiment
+        // (pixel-pack buffers and fences); Skia keeps its own table.
+        gl::load_with(|name| display.get_proc_address(CString::new(name).unwrap().as_c_str()));
+
         let interface = skia_safe::gpu::gl::Interface::new_load_with(|name| {
             if name == "eglGetCurrentDisplay" {
                 return std::ptr::null();
@@ -273,6 +277,8 @@ impl GlDevice {
 /// before the device (the last device reference destroys the context and then the API objects).
 pub struct SkiaGpuImageRenderer {
     surface: Surface,
+    /// Phase 4A.1 experiment: frames in flight (pipelined readback). Dropped before the device.
+    pipeline: Option<GpuPipeline>,
     scene_cache: SkiaSceneCache,
     image_info: ImageInfo,
     device: Rc<GpuDevice>,
@@ -293,7 +299,7 @@ impl SkiaGpuImageRenderer {
         graphics::set_resource_cache_total_bytes_limit(10485760);
         let image_info = ImageInfo::new((width as i32, height as i32), ColorType::RGBA8888, AlphaType::Opaque, None);
         let surface = Self::make_surface(&device, &image_info)?;
-        Ok(Self { device, surface, image_info, scene_cache: SkiaSceneCache::default() })
+        Ok(Self { device, surface, pipeline: None, image_info, scene_cache: SkiaSceneCache::default() })
     }
 
     fn make_surface(device: &GpuDevice, image_info: &ImageInfo) -> Result<Surface, GpuError> {
@@ -386,3 +392,262 @@ impl SkiaGpuImageRenderer {
     }
 }
 
+
+// ------------------------------------------------------------------- pipelined readback (4A.1)
+
+/// How frames in flight are read back.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum PipelineMode {
+    /// A ring of `depth` surfaces; frame N is read back with Skia's synchronous `readPixels`
+    /// only after later frames were recorded and submitted. Any API.
+    Deferred,
+    /// OpenGL: right after frame N is submitted, `glReadPixels` into a pixel-pack buffer and a
+    /// fence are queued; completing frame N waits for its fence and copies from the mapped buffer.
+    /// One surface (GL orders the read before later draws), `depth` buffers.
+    GlPbo,
+}
+
+struct InFlight {
+    index: u64,
+    slot: usize,
+    submitted: Instant,
+    fence: Option<gl::types::GLsync>,
+}
+
+/// Frames submitted to the GPU and not yet read back, in submission order.
+pub struct GpuPipeline {
+    mode: PipelineMode,
+    depth: usize,
+    surfaces: Vec<Surface>,
+    pbos: Vec<u32>,
+    inflight: std::collections::VecDeque<InFlight>,
+    next_index: u64,
+}
+
+impl Drop for GpuPipeline {
+    fn drop(&mut self) {
+        // GL objects; the renderer made its context current before dropping fields.
+        for f in self.inflight.drain(..) {
+            if let Some(fence) = f.fence {
+                unsafe { gl::DeleteSync(fence) };
+            }
+        }
+        if !self.pbos.is_empty() {
+            unsafe { gl::DeleteBuffers(self.pbos.len() as i32, self.pbos.as_ptr()) };
+        }
+    }
+}
+
+/// Timings of one completed pipelined frame (nanoseconds).
+#[derive(Debug, Clone, Copy, Default)]
+pub struct PipelineCompletion {
+    pub index: u64,
+    /// Waiting for the frame's GPU work (fence) — GlPbo only; Deferred waits inside readback.
+    pub wait_ns: u128,
+    /// Copy into the caller's memory (GlPbo: from the mapped buffer; Deferred: Skia readPixels).
+    pub readback_ns: u128,
+    /// From submission to completion.
+    pub latency_ns: u128,
+}
+
+impl SkiaGpuImageRenderer {
+    fn frame_bytes(&self) -> usize {
+        self.image_info.compute_min_byte_size()
+    }
+
+    /// Starts a pipeline with up to `depth` frames in flight (1..=8). A running one is stopped.
+    pub fn pipeline_start(&mut self, mode: PipelineMode, depth: usize) -> Result<(), GpuError> {
+        if !(1..=8).contains(&depth) {
+            return Err(GpuError(format!("pipeline depth must be 1..=8, got {depth}")));
+        }
+        self.pipeline_stop();
+        self.device.make_current()?;
+        if self.device.context.borrow_mut().abandoned() {
+            return Err(GpuError("GPU context is lost (abandoned)".into()));
+        }
+        let mut p = GpuPipeline { mode, depth, surfaces: Vec::new(), pbos: Vec::new(), inflight: Default::default(), next_index: 0 };
+        match mode {
+            PipelineMode::Deferred => {
+                for _ in 0..depth {
+                    p.surfaces.push(Self::make_surface(&self.device, &self.image_info)?);
+                }
+            }
+            PipelineMode::GlPbo => {
+                if self.device.kind() != GpuApi::Gl {
+                    return Err(GpuError("pipeline mode \"pbo\" needs the GL backend".into()));
+                }
+                p.pbos = vec![0; depth];
+                unsafe {
+                    gl::GenBuffers(depth as i32, p.pbos.as_mut_ptr());
+                    for &b in &p.pbos {
+                        gl::BindBuffer(gl::PIXEL_PACK_BUFFER, b);
+                        gl::BufferData(gl::PIXEL_PACK_BUFFER, self.frame_bytes() as isize, std::ptr::null(), gl::STREAM_READ);
+                    }
+                    gl::BindBuffer(gl::PIXEL_PACK_BUFFER, 0);
+                    if gl::GetError() != gl::NO_ERROR {
+                        gl::DeleteBuffers(depth as i32, p.pbos.as_ptr());
+                        return Err(GpuError("could not allocate pixel-pack buffers".into()));
+                    }
+                }
+                self.device.context.borrow_mut().reset(None);
+            }
+        }
+        self.pipeline = Some(p);
+        Ok(())
+    }
+
+    pub fn pipeline_in_flight(&self) -> usize {
+        self.pipeline.as_ref().map_or(0, |p| p.inflight.len())
+    }
+
+    /// Records the frame and submits it without waiting. Fails when `depth` frames are already in
+    /// flight (complete one first) — the pipeline never grows past its depth.
+    pub fn pipeline_submit<F: FnOnce(&mut SkiaScenePainter<'_>)>(&mut self, draw_fn: F) -> Result<(u64, GpuFrameTimings), GpuError> {
+        self.device.make_current()?;
+        if self.device.context.borrow_mut().abandoned() {
+            return Err(GpuError("GPU context is lost (abandoned)".into()));
+        }
+        let Some(p) = self.pipeline.as_mut() else {
+            return Err(GpuError("no pipeline: call pipeline_start first".into()));
+        };
+        if p.inflight.len() >= p.depth {
+            return Err(GpuError(format!("pipeline full ({} frames in flight): complete a frame first", p.depth)));
+        }
+        let index = p.next_index;
+        let slot = (index % p.depth as u64) as usize;
+        let mut t = GpuFrameTimings::default();
+        let surface = match p.mode {
+            PipelineMode::Deferred => &mut p.surfaces[slot],
+            PipelineMode::GlPbo => &mut self.surface,
+        };
+        let start = Instant::now();
+        surface.canvas().clear(Color::TRANSPARENT);
+        draw_fn(&mut SkiaScenePainter {
+            inner: surface.canvas(),
+            cache: &mut self.scene_cache,
+            #[cfg(feature = "headless-graphite")]
+            graphite_recorder: None,
+        });
+        self.scene_cache.next_gen();
+        t.record_ns = start.elapsed().as_nanos();
+
+        let start = Instant::now();
+        let mut fence = None;
+        {
+            let mut ctx = self.device.context.borrow_mut();
+            ctx.flush_surface(surface);
+            if !ctx.submit(SyncCpu::No) {
+                return Err(GpuError("GPU submit failed".into()));
+            }
+            if p.mode == PipelineMode::GlPbo {
+                let fbo = gpu::surfaces::get_backend_render_target(surface, skia_safe::surface::BackendHandleAccess::FlushRead)
+                    .and_then(|rt| rt.gl_framebuffer_info())
+                    .ok_or_else(|| GpuError("surface has no GL framebuffer".into()))?
+                    .fboid;
+                let (w, h) = (self.image_info.width(), self.image_info.height());
+                unsafe {
+                    gl::BindFramebuffer(gl::READ_FRAMEBUFFER, fbo);
+                    gl::BindBuffer(gl::PIXEL_PACK_BUFFER, p.pbos[slot]);
+                    gl::PixelStorei(gl::PACK_ALIGNMENT, 1);
+                    gl::PixelStorei(gl::PACK_ROW_LENGTH, 0);
+                    gl::ReadPixels(0, 0, w, h, gl::RGBA, gl::UNSIGNED_BYTE, std::ptr::null_mut());
+                    let f = gl::FenceSync(gl::SYNC_GPU_COMMANDS_COMPLETE, 0);
+                    gl::BindBuffer(gl::PIXEL_PACK_BUFFER, 0);
+                    gl::Flush();
+                    if f.is_null() || gl::GetError() != gl::NO_ERROR {
+                        if !f.is_null() {
+                            gl::DeleteSync(f);
+                        }
+                        ctx.reset(None);
+                        return Err(GpuError("queuing the GL readback failed".into()));
+                    }
+                    fence = Some(f);
+                }
+                // Skia caches GL state; it must not trust it after our calls.
+                ctx.reset(None);
+            }
+        }
+        t.submit_ns = start.elapsed().as_nanos();
+        p.inflight.push_back(InFlight { index, slot, submitted: Instant::now(), fence });
+        p.next_index += 1;
+        Ok((index, t))
+    }
+
+    /// Completes the oldest frame in flight into `out` (exactly one frame). The frame is
+    /// consumed even on error.
+    pub fn pipeline_complete(&mut self, out: &mut [u8]) -> Result<PipelineCompletion, GpuError> {
+        if out.len() != self.frame_bytes() {
+            return Err(GpuError(format!("output buffer is {} bytes, the frame needs {}", out.len(), self.frame_bytes())));
+        }
+        self.device.make_current()?;
+        let Some(p) = self.pipeline.as_mut() else {
+            return Err(GpuError("no pipeline: call pipeline_start first".into()));
+        };
+        let Some(f) = p.inflight.pop_front() else {
+            return Err(GpuError("no frame in flight".into()));
+        };
+        let mut c = PipelineCompletion { index: f.index, ..Default::default() };
+        let abandoned = self.device.context.borrow_mut().abandoned();
+        match p.mode {
+            PipelineMode::Deferred => {
+                if abandoned {
+                    return Err(GpuError("GPU context is lost (abandoned)".into()));
+                }
+                let start = Instant::now();
+                let row_bytes = self.image_info.min_row_bytes();
+                if !p.surfaces[f.slot].read_pixels(&self.image_info, out, row_bytes, (0, 0)) {
+                    return Err(GpuError("GPU readback failed".into()));
+                }
+                c.readback_ns = start.elapsed().as_nanos();
+            }
+            PipelineMode::GlPbo => {
+                let fence = f.fence.expect("GlPbo frames carry a fence");
+                let start = Instant::now();
+                let status = unsafe { gl::ClientWaitSync(fence, gl::SYNC_FLUSH_COMMANDS_BIT, 10_000_000_000) };
+                unsafe { gl::DeleteSync(fence) };
+                c.wait_ns = start.elapsed().as_nanos();
+                if abandoned {
+                    return Err(GpuError("GPU context is lost (abandoned)".into()));
+                }
+                if status != gl::ALREADY_SIGNALED && status != gl::CONDITION_SATISFIED {
+                    return Err(GpuError(format!("waiting for the GL readback failed (status {status:#x})")));
+                }
+                let start = Instant::now();
+                let ok = unsafe {
+                    gl::BindBuffer(gl::PIXEL_PACK_BUFFER, p.pbos[f.slot]);
+                    let src = gl::MapBufferRange(gl::PIXEL_PACK_BUFFER, 0, out.len() as isize, gl::MAP_READ_BIT);
+                    let ok = !src.is_null();
+                    if ok {
+                        std::ptr::copy_nonoverlapping(src as *const u8, out.as_mut_ptr(), out.len());
+                        gl::UnmapBuffer(gl::PIXEL_PACK_BUFFER);
+                    }
+                    gl::BindBuffer(gl::PIXEL_PACK_BUFFER, 0);
+                    ok
+                };
+                self.device.context.borrow_mut().reset(None);
+                if !ok {
+                    return Err(GpuError("mapping the GL readback buffer failed".into()));
+                }
+                c.readback_ns = start.elapsed().as_nanos();
+            }
+        }
+        c.latency_ns = f.submitted.elapsed().as_nanos();
+        Ok(c)
+    }
+
+    /// Cancels the pipeline: waits for the GPU (unless the context is lost), discards frames in
+    /// flight and frees the pipeline's surfaces and buffers. Returns the frames discarded.
+    pub fn pipeline_stop(&mut self) -> usize {
+        let Some(p) = self.pipeline.take() else { return 0 };
+        let n = p.inflight.len();
+        let _ = self.device.make_current();
+        {
+            let mut ctx = self.device.context.borrow_mut();
+            if !ctx.abandoned() {
+                ctx.flush_submit_and_sync_cpu();
+            }
+        }
+        drop(p);
+        n
+    }
+}

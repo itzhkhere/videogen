@@ -22,7 +22,7 @@ pub use gpu_common::{GpuError, GpuFrameTimings};
 #[cfg(all(feature = "headless-gpu", not(any(target_os = "macos", target_os = "ios"))))]
 mod gpu_image_renderer;
 #[cfg(all(feature = "headless-gpu", not(any(target_os = "macos", target_os = "ios"))))]
-pub use gpu_image_renderer::{GpuApi, GpuDevice, GpuResourceUsage, SkiaGpuImageRenderer};
+pub use gpu_image_renderer::{GpuApi, GpuDevice, GpuResourceUsage, PipelineCompletion, PipelineMode, SkiaGpuImageRenderer};
 #[cfg(all(feature = "headless-graphite", not(any(target_os = "macos", target_os = "ios"))))]
 mod graphite_image_renderer;
 #[cfg(all(feature = "headless-graphite", not(any(target_os = "macos", target_os = "ios"))))]
