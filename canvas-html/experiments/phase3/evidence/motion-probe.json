@@ -1,0 +1,127 @@
+{
+  "boa": {
+    "steps": [
+      {
+        "label": "load motion.min.js",
+        "ok": true,
+        "value": "object"
+      },
+      {
+        "label": "typeof Motion.animate",
+        "ok": true,
+        "value": "function"
+      },
+      {
+        "label": "animate(#box, {opacity, x}) paused",
+        "ok": true,
+        "value": "object"
+      },
+      {
+        "label": "seek 0",
+        "ok": true,
+        "value": [
+          "1",
+          "none"
+        ]
+      },
+      {
+        "label": "seek 500",
+        "ok": true,
+        "value": [
+          "0.75",
+          "none"
+        ]
+      },
+      {
+        "label": "seek 1000",
+        "ok": true,
+        "value": [
+          "0.5",
+          "none"
+        ]
+      },
+      {
+        "label": "render, then computed at 1000",
+        "ok": true,
+        "value": null
+      },
+      {
+        "label": "computed after render",
+        "ok": true,
+        "value": [
+          "0.5",
+          "matrix(1, 0, 0, 1, 100, 0)"
+        ]
+      },
+      {
+        "label": "animate(0, 100, onUpdate) value animation",
+        "ok": true,
+        "value": []
+      }
+    ],
+    "jsErrors": []
+  },
+  "deno": {
+    "steps": [
+      {
+        "label": "load motion.min.js",
+        "ok": true,
+        "value": "object"
+      },
+      {
+        "label": "typeof Motion.animate",
+        "ok": true,
+        "value": "function"
+      },
+      {
+        "label": "animate(#box, {opacity, x}) paused",
+        "ok": false,
+        "error": "ReferenceError: EventTarget is not defined"
+      },
+      {
+        "label": "seek 0",
+        "ok": false,
+        "error": "ReferenceError: c is not defined"
+      },
+      {
+        "label": "seek 500",
+        "ok": false,
+        "error": "ReferenceError: c is not defined"
+      },
+      {
+        "label": "seek 1000",
+        "ok": false,
+        "error": "ReferenceError: c is not defined"
+      },
+      {
+        "label": "render, then computed at 1000",
+        "ok": true,
+        "value": null
+      },
+      {
+        "label": "computed after render",
+        "ok": true,
+        "value": [
+          "1",
+          "none"
+        ]
+      },
+      {
+        "label": "animate(0, 100, onUpdate) value animation",
+        "ok": true,
+        "value": []
+      },
+      {
+        "label": "with stand-in EventTarget: animate",
+        "ok": true,
+        "value": "1"
+      },
+      {
+        "label": "typeof element.animate",
+        "ok": true,
+        "value": "undefined"
+      }
+    ],
+    "jsErrors": []
+  }
+}

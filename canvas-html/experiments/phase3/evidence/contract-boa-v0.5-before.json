@@ -1,0 +1,618 @@
+[
+  {
+    "row": "global aliases",
+    "name": "window, self and document",
+    "pass": true,
+    "value": [
+      true,
+      true,
+      "object",
+      true,
+      9
+    ],
+    "error": null
+  },
+  {
+    "row": "getElementById",
+    "name": "id lookup, missing id",
+    "pass": true,
+    "value": [
+      "DIV",
+      null,
+      "box"
+    ],
+    "error": null
+  },
+  {
+    "row": "querySelector",
+    "name": "document and element scoped selectors",
+    "pass": true,
+    "value": [
+      "one",
+      null,
+      "one",
+      "box"
+    ],
+    "error": null
+  },
+  {
+    "row": "querySelectorAll",
+    "name": "static list in document order",
+    "pass": true,
+    "value": [
+      2,
+      "one",
+      "two",
+      true,
+      2,
+      0
+    ],
+    "error": null
+  },
+  {
+    "row": "stable identity",
+    "name": "one wrapper per native node",
+    "pass": true,
+    "value": [
+      true,
+      true,
+      7,
+      true,
+      true
+    ],
+    "error": null
+  },
+  {
+    "row": "querySelector",
+    "name": "invalid selector errors (both engines: SyntaxError DOMException)",
+    "pass": true,
+    "value": [
+      [
+        "SyntaxError",
+        true,
+        false
+      ],
+      [
+        "SyntaxError",
+        true,
+        false
+      ],
+      [
+        "SyntaxError",
+        true,
+        false
+      ]
+    ],
+    "error": null
+  },
+  {
+    "row": "textContent",
+    "name": "set/get, wrapper stays, render reflects text",
+    "pass": true,
+    "value": [
+      "hello",
+      true,
+      "onetwo",
+      true,
+      true
+    ],
+    "error": null
+  },
+  {
+    "row": "attributes",
+    "name": "set/get/has/remove, lowercase names, missing is null",
+    "pass": true,
+    "value": [
+      "1",
+      "1",
+      true,
+      null,
+      false,
+      null
+    ],
+    "error": null
+  },
+  {
+    "row": "attributes",
+    "name": "id and className reflect attributes",
+    "pass": true,
+    "value": [
+      "x y",
+      "x y",
+      true,
+      null
+    ],
+    "error": null
+  },
+  {
+    "row": "classList",
+    "name": "add/remove/toggle/contains, identity, ordered set",
+    "pass": false,
+    "value": [
+      false,
+      true,
+      2,
+      "a b c",
+      "b c",
+      false,
+      true,
+      false,
+      true,
+      true,
+      false,
+      "b c"
+    ],
+    "error": null
+  },
+  {
+    "row": "classList",
+    "name": "invalid tokens",
+    "pass": false,
+    "value": [
+      null,
+      null,
+      null,
+      false
+    ],
+    "error": null
+  },
+  {
+    "row": "classList",
+    "name": "class change restyles (computed width)",
+    "pass": true,
+    "value": [
+      "50px",
+      50
+    ],
+    "error": null
+  },
+  {
+    "row": "style identity",
+    "name": "element.style === element.style",
+    "pass": false,
+    "value": [
+      false,
+      false,
+      "0.5"
+    ],
+    "error": null
+  },
+  {
+    "row": "inline style",
+    "name": "motion properties: set, read back, native style attribute",
+    "pass": true,
+    "value": {
+      "background": [
+        "blue",
+        "background: blue;"
+      ],
+      "backgroundColor": [
+        "rgb(0, 128, 0)",
+        "background-color: rgb(0, 128, 0);"
+      ],
+      "borderRadius": [
+        "4px",
+        "border-radius: 4px;"
+      ],
+      "bottom": [
+        "8px",
+        "bottom: 8px;"
+      ],
+      "color": [
+        "red",
+        "color: red;"
+      ],
+      "display": [
+        "block",
+        "display: block;"
+      ],
+      "fontSize": [
+        "13px",
+        "font-size: 13px;"
+      ],
+      "fontWeight": [
+        "700",
+        "font-weight: 700;"
+      ],
+      "height": [
+        "19px",
+        "height: 19px;"
+      ],
+      "left": [
+        "5px",
+        "left: 5px;"
+      ],
+      "letterSpacing": [
+        "2px",
+        "letter-spacing: 2px;"
+      ],
+      "opacity": [
+        "0.5",
+        "opacity: 0.5;"
+      ],
+      "position": [
+        "absolute",
+        "position: absolute;"
+      ],
+      "right": [
+        "7px",
+        "right: 7px;"
+      ],
+      "top": [
+        "6px",
+        "top: 6px;"
+      ],
+      "transform": [
+        "translateX(12px)",
+        "transform: translateX(12px);"
+      ],
+      "transformOrigin": [
+        "left top 0px",
+        "transform-origin: left top 0px;"
+      ],
+      "visibility": [
+        "hidden",
+        "visibility: hidden;"
+      ],
+      "width": [
+        "23px",
+        "width: 23px;"
+      ]
+    },
+    "error": null
+  },
+  {
+    "row": "inline style",
+    "name": "one policy: kebab/camel, setProperty/removeProperty/cssText/length, invalid ignored",
+    "pass": false,
+    "value": [
+      "red",
+      "red",
+      "",
+      "0.25",
+      "10px",
+      "background-color: red; opacity: 0.25; width: 10px !important;",
+      "10px",
+      "",
+      null,
+      "background-color: red; opacity: 0.25;",
+      "height: 5px;",
+      "",
+      "",
+      true,
+      false
+    ],
+    "error": null
+  },
+  {
+    "row": "getComputedStyle",
+    "name": "resolved values follow mutations without a render",
+    "pass": true,
+    "value": [
+      "1",
+      "none",
+      "30px",
+      "40px",
+      "10px",
+      "block",
+      "0.5",
+      "matrix(2, 0, 0, 2, 12, 0)",
+      "70px",
+      "40px",
+      "rgb(255, 0, 0)"
+    ],
+    "error": null
+  },
+  {
+    "row": "getComputedStyle",
+    "name": "non-element argument",
+    "pass": false,
+    "value": [
+      [
+        "TypeError",
+        false,
+        true
+      ],
+      null
+    ],
+    "error": null
+  },
+  {
+    "row": "getBoundingClientRect",
+    "name": "resolved layout, mutation, detached element",
+    "pass": false,
+    "value": [
+      [
+        10,
+        20,
+        30,
+        40,
+        20,
+        40,
+        60,
+        10
+      ],
+      [
+        10,
+        5,
+        70,
+        40,
+        5,
+        80,
+        45,
+        10
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        100,
+        12,
+        22,
+        15,
+        12,
+        122,
+        27,
+        100
+      ],
+      70,
+      40,
+      10,
+      5,
+      70,
+      false
+    ],
+    "error": null
+  },
+  {
+    "row": "createElement / tree",
+    "name": "createElement, appendChild, children, remove",
+    "pass": true,
+    "value": [
+      "SECTION",
+      null,
+      false,
+      true,
+      true,
+      4,
+      true,
+      true,
+      true,
+      [
+        false,
+        3,
+        "SECTION"
+      ]
+    ],
+    "error": null
+  },
+  {
+    "row": "events",
+    "name": "add/dispatch/remove, target/currentTarget, bubbling to document and window",
+    "pass": false,
+    "error": "TypeError: Illegal constructor"
+  },
+  {
+    "row": "events",
+    "name": "preventDefault, stopPropagation, stopImmediatePropagation, once, removal during dispatch, errors",
+    "pass": false,
+    "error": "TypeError: Illegal constructor"
+  },
+  {
+    "row": "errors",
+    "name": "stale node after native removal: InvalidStateError everywhere in the subset",
+    "pass": false,
+    "error": "r._dropNodeForTesting is not a function"
+  },
+  {
+    "row": "errors",
+    "name": "wrong this / non-node arguments: TypeError",
+    "pass": true,
+    "value": [
+      [
+        "TypeError",
+        false,
+        true
+      ],
+      [
+        "TypeError",
+        false,
+        true
+      ],
+      [
+        "TypeError",
+        false,
+        true
+      ]
+    ],
+    "error": null
+  },
+  {
+    "row": "errors",
+    "name": "closed renderer",
+    "pass": false,
+    "error": "r.close is not a function"
+  },
+  {
+    "row": "errors",
+    "name": "eval exception, then continued use",
+    "pass": true,
+    "value": [
+      true,
+      42,
+      0,
+      "number",
+      "undefined"
+    ],
+    "error": null
+  },
+  {
+    "row": "deterministic timers",
+    "name": "Date, performance and timeOrigin from visual time",
+    "pass": false,
+    "value": [
+      [
+        1791246990546,
+        0,
+        1791246990546,
+        1791246990546,
+        100,
+        true
+      ],
+      [
+        1791246990796,
+        250,
+        1791246990796
+      ],
+      true,
+      250.5
+    ],
+    "error": null
+  },
+  {
+    "row": "deterministic timers",
+    "name": "setTimeout/clearTimeout/setInterval order, microtasks after each timer",
+    "pass": false,
+    "value": [
+      [
+        [
+          "micro",
+          1791246990610,
+          0
+        ]
+      ],
+      [
+        [
+          "micro",
+          1791246990610,
+          0
+        ],
+        [
+          "interval1",
+          1791246990670,
+          60
+        ],
+        [
+          "timer",
+          1791246990710,
+          100
+        ],
+        [
+          "peer",
+          1791246990710,
+          100
+        ],
+        [
+          "timerMicro",
+          1791246990710,
+          100
+        ],
+        [
+          "interval2",
+          1791246990730,
+          120
+        ],
+        [
+          "same0",
+          1791246990760,
+          150
+        ],
+        [
+          "same4",
+          1791246990760,
+          150
+        ],
+        [
+          "same3",
+          1791246990760,
+          150
+        ],
+        [
+          "same2",
+          1791246990760,
+          150
+        ],
+        [
+          "same1",
+          1791246990760,
+          150
+        ],
+        [
+          "interval3",
+          1791246990790,
+          180
+        ],
+        [
+          "outer",
+          1791246990810,
+          200
+        ],
+        [
+          "nested0",
+          1791246990810,
+          200
+        ]
+      ]
+    ],
+    "error": null
+  },
+  {
+    "row": "rAF",
+    "name": "callbacks run at render, in order, with performance.now(); cancel; next-frame registration",
+    "pass": false,
+    "value": [
+      [],
+      [
+        [
+          "timer"
+        ]
+      ],
+      [
+        [
+          "timer"
+        ],
+        [
+          "a",
+          16,
+          1791246990666
+        ],
+        [
+          "b",
+          16
+        ]
+      ],
+      [
+        [
+          "timer"
+        ],
+        [
+          "a",
+          16,
+          1791246990666
+        ],
+        [
+          "b",
+          16
+        ],
+        [
+          "next",
+          32
+        ]
+      ]
+    ],
+    "error": null
+  },
+  {
+    "row": "Promise ordering",
+    "name": "microtasks: eval, timer, rAF and listener boundaries",
+    "pass": false,
+    "error": "TypeError: Illegal constructor"
+  }
+]

@@ -1,0 +1,2255 @@
+{
+  "node": "v24.19.0",
+  "cases": [
+    {
+      "row": "global aliases",
+      "name": "window, self and document",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          true,
+          true,
+          "object",
+          true,
+          9
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          true,
+          true,
+          "object",
+          true,
+          9
+        ],
+        "error": null
+      },
+      "expect": [
+        true,
+        true,
+        "object",
+        true,
+        9
+      ]
+    },
+    {
+      "row": "getElementById",
+      "name": "id lookup, missing id",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          "DIV",
+          null,
+          "box"
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          "DIV",
+          null,
+          "box"
+        ],
+        "error": null
+      },
+      "expect": [
+        "DIV",
+        null,
+        "box"
+      ]
+    },
+    {
+      "row": "querySelector",
+      "name": "document and element scoped selectors",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          "one",
+          null,
+          "one",
+          "box"
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          "one",
+          null,
+          "one",
+          "box"
+        ],
+        "error": null
+      },
+      "expect": [
+        "one",
+        null,
+        "one",
+        "box"
+      ]
+    },
+    {
+      "row": "querySelectorAll",
+      "name": "static list in document order",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          2,
+          "one",
+          "two",
+          true,
+          2,
+          0
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          2,
+          "one",
+          "two",
+          true,
+          2,
+          0
+        ],
+        "error": null
+      },
+      "expect": [
+        2,
+        "one",
+        "two",
+        true,
+        2,
+        0
+      ]
+    },
+    {
+      "row": "stable identity",
+      "name": "one wrapper per native node",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          true,
+          true,
+          7,
+          true,
+          true
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          true,
+          true,
+          7,
+          true,
+          true
+        ],
+        "error": null
+      },
+      "expect": [
+        true,
+        true,
+        7,
+        true,
+        true
+      ]
+    },
+    {
+      "row": "querySelector",
+      "name": "invalid selector errors (both engines: SyntaxError DOMException)",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          [
+            "SyntaxError",
+            true,
+            false
+          ],
+          [
+            "SyntaxError",
+            true,
+            false
+          ],
+          [
+            "SyntaxError",
+            true,
+            false
+          ]
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          [
+            "SyntaxError",
+            true,
+            false
+          ],
+          [
+            "SyntaxError",
+            true,
+            false
+          ],
+          [
+            "SyntaxError",
+            true,
+            false
+          ]
+        ],
+        "error": null
+      },
+      "expect": [
+        [
+          "SyntaxError",
+          true,
+          false
+        ],
+        [
+          "SyntaxError",
+          true,
+          false
+        ],
+        [
+          "SyntaxError",
+          true,
+          false
+        ]
+      ]
+    },
+    {
+      "row": "textContent",
+      "name": "set/get, wrapper stays, render reflects text",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          "hello",
+          true,
+          "onetwo",
+          true,
+          true
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          "hello",
+          true,
+          "onetwo",
+          true,
+          true
+        ],
+        "error": null
+      },
+      "expect": [
+        "hello",
+        true,
+        "onetwo",
+        true,
+        true
+      ]
+    },
+    {
+      "row": "attributes",
+      "name": "set/get/has/remove, lowercase names, missing is null",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          "1",
+          "1",
+          true,
+          null,
+          false,
+          null
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          "1",
+          "1",
+          true,
+          null,
+          false,
+          null
+        ],
+        "error": null
+      },
+      "expect": [
+        "1",
+        "1",
+        true,
+        null,
+        false,
+        null
+      ]
+    },
+    {
+      "row": "attributes",
+      "name": "id and className reflect attributes",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          "x y",
+          "x y",
+          true,
+          null
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          "x y",
+          "x y",
+          true,
+          null
+        ],
+        "error": null
+      },
+      "expect": [
+        "x y",
+        "x y",
+        true,
+        null
+      ]
+    },
+    {
+      "row": "classList",
+      "name": "add/remove/toggle/contains, identity, ordered set",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          true,
+          true,
+          2,
+          "a b c",
+          "b c",
+          false,
+          true,
+          false,
+          true,
+          true,
+          false,
+          "b c"
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          true,
+          true,
+          2,
+          "a b c",
+          "b c",
+          false,
+          true,
+          false,
+          true,
+          true,
+          false,
+          "b c"
+        ],
+        "error": null
+      },
+      "expect": [
+        true,
+        true,
+        2,
+        "a b c",
+        "b c",
+        false,
+        true,
+        false,
+        true,
+        true,
+        false,
+        "b c"
+      ]
+    },
+    {
+      "row": "classList",
+      "name": "invalid tokens",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          [
+            "SyntaxError",
+            true,
+            false
+          ],
+          [
+            "InvalidCharacterError",
+            true,
+            false
+          ],
+          [
+            "SyntaxError",
+            true,
+            false
+          ],
+          false
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          [
+            "SyntaxError",
+            true,
+            false
+          ],
+          [
+            "InvalidCharacterError",
+            true,
+            false
+          ],
+          [
+            "SyntaxError",
+            true,
+            false
+          ],
+          false
+        ],
+        "error": null
+      },
+      "expect": [
+        [
+          "SyntaxError",
+          true,
+          false
+        ],
+        [
+          "InvalidCharacterError",
+          true,
+          false
+        ],
+        [
+          "SyntaxError",
+          true,
+          false
+        ],
+        false
+      ]
+    },
+    {
+      "row": "classList",
+      "name": "class change restyles (computed width)",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          "50px",
+          50
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          "50px",
+          50
+        ],
+        "error": null
+      },
+      "expect": [
+        "50px",
+        50
+      ]
+    },
+    {
+      "row": "style identity",
+      "name": "element.style === element.style",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          true,
+          true,
+          "0.5"
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          true,
+          true,
+          "0.5"
+        ],
+        "error": null
+      },
+      "expect": [
+        true,
+        true,
+        "0.5"
+      ]
+    },
+    {
+      "row": "inline style",
+      "name": "motion properties: set, read back, native style attribute",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": {
+          "background": [
+            "blue",
+            "background: blue;"
+          ],
+          "backgroundColor": [
+            "rgb(0, 128, 0)",
+            "background-color: rgb(0, 128, 0);"
+          ],
+          "borderRadius": [
+            "4px",
+            "border-radius: 4px;"
+          ],
+          "bottom": [
+            "8px",
+            "bottom: 8px;"
+          ],
+          "color": [
+            "red",
+            "color: red;"
+          ],
+          "display": [
+            "block",
+            "display: block;"
+          ],
+          "fontSize": [
+            "13px",
+            "font-size: 13px;"
+          ],
+          "fontWeight": [
+            "700",
+            "font-weight: 700;"
+          ],
+          "height": [
+            "19px",
+            "height: 19px;"
+          ],
+          "left": [
+            "5px",
+            "left: 5px;"
+          ],
+          "letterSpacing": [
+            "2px",
+            "letter-spacing: 2px;"
+          ],
+          "opacity": [
+            "0.5",
+            "opacity: 0.5;"
+          ],
+          "position": [
+            "absolute",
+            "position: absolute;"
+          ],
+          "right": [
+            "7px",
+            "right: 7px;"
+          ],
+          "top": [
+            "6px",
+            "top: 6px;"
+          ],
+          "transform": [
+            "translateX(12px)",
+            "transform: translateX(12px);"
+          ],
+          "transformOrigin": [
+            "left top 0px",
+            "transform-origin: left top 0px;"
+          ],
+          "visibility": [
+            "hidden",
+            "visibility: hidden;"
+          ],
+          "width": [
+            "23px",
+            "width: 23px;"
+          ]
+        },
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": {
+          "opacity": [
+            "0.5",
+            "opacity: 0.5;"
+          ],
+          "transform": [
+            "translateX(12px)",
+            "transform: translateX(12px);"
+          ],
+          "width": [
+            "23px",
+            "width: 23px;"
+          ],
+          "height": [
+            "19px",
+            "height: 19px;"
+          ],
+          "background": [
+            "blue",
+            "background: blue;"
+          ],
+          "left": [
+            "5px",
+            "left: 5px;"
+          ],
+          "top": [
+            "6px",
+            "top: 6px;"
+          ],
+          "right": [
+            "7px",
+            "right: 7px;"
+          ],
+          "bottom": [
+            "8px",
+            "bottom: 8px;"
+          ],
+          "display": [
+            "block",
+            "display: block;"
+          ],
+          "position": [
+            "absolute",
+            "position: absolute;"
+          ],
+          "color": [
+            "red",
+            "color: red;"
+          ],
+          "backgroundColor": [
+            "rgb(0, 128, 0)",
+            "background-color: rgb(0, 128, 0);"
+          ],
+          "fontSize": [
+            "13px",
+            "font-size: 13px;"
+          ],
+          "fontWeight": [
+            "700",
+            "font-weight: 700;"
+          ],
+          "letterSpacing": [
+            "2px",
+            "letter-spacing: 2px;"
+          ],
+          "borderRadius": [
+            "4px",
+            "border-radius: 4px;"
+          ],
+          "transformOrigin": [
+            "left top 0px",
+            "transform-origin: left top 0px;"
+          ],
+          "visibility": [
+            "hidden",
+            "visibility: hidden;"
+          ]
+        },
+        "error": null
+      },
+      "expect": null
+    },
+    {
+      "row": "inline style",
+      "name": "one policy: kebab/camel, setProperty/removeProperty/cssText/length, invalid ignored",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          "red",
+          "red",
+          "",
+          "0.25",
+          "10px",
+          "background-color: red; opacity: 0.25; width: 10px !important;",
+          "10px",
+          2,
+          "background-color",
+          "background-color: red; opacity: 0.25;",
+          "height: 5px;",
+          1,
+          "",
+          true,
+          false
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          "red",
+          "red",
+          "",
+          "0.25",
+          "10px",
+          "background-color: red; opacity: 0.25; width: 10px !important;",
+          "10px",
+          2,
+          "background-color",
+          "background-color: red; opacity: 0.25;",
+          "height: 5px;",
+          1,
+          "",
+          true,
+          false
+        ],
+        "error": null
+      },
+      "expect": [
+        "red",
+        "red",
+        "",
+        "0.25",
+        "10px",
+        "background-color: red; opacity: 0.25; width: 10px !important;",
+        "10px",
+        2,
+        "background-color",
+        "background-color: red; opacity: 0.25;",
+        "height: 5px;",
+        1,
+        "",
+        true,
+        false
+      ]
+    },
+    {
+      "row": "getComputedStyle",
+      "name": "resolved values follow mutations without a render",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          "1",
+          "none",
+          "30px",
+          "40px",
+          "10px",
+          "block",
+          "0.5",
+          "matrix(2, 0, 0, 2, 12, 0)",
+          "70px",
+          "40px",
+          "rgb(255, 0, 0)"
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          "1",
+          "none",
+          "30px",
+          "40px",
+          "10px",
+          "block",
+          "0.5",
+          "matrix(2, 0, 0, 2, 12, 0)",
+          "70px",
+          "40px",
+          "rgb(255, 0, 0)"
+        ],
+        "error": null
+      },
+      "expect": [
+        "1",
+        "none",
+        "30px",
+        "40px",
+        "10px",
+        "block",
+        "0.5",
+        "matrix(2, 0, 0, 2, 12, 0)",
+        "70px",
+        "40px",
+        "rgb(255, 0, 0)"
+      ]
+    },
+    {
+      "row": "getComputedStyle",
+      "name": "non-element argument",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          [
+            "TypeError",
+            false,
+            true
+          ],
+          [
+            "TypeError",
+            false,
+            true
+          ]
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          [
+            "TypeError",
+            false,
+            true
+          ],
+          [
+            "TypeError",
+            false,
+            true
+          ]
+        ],
+        "error": null
+      },
+      "expect": [
+        [
+          "TypeError",
+          false,
+          true
+        ],
+        [
+          "TypeError",
+          false,
+          true
+        ]
+      ]
+    },
+    {
+      "row": "getBoundingClientRect",
+      "name": "resolved layout, mutation, detached element",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          [
+            10,
+            20,
+            30,
+            40,
+            20,
+            40,
+            60,
+            10
+          ],
+          [
+            10,
+            5,
+            70,
+            40,
+            5,
+            80,
+            45,
+            10
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          70,
+          40,
+          10,
+          5,
+          70,
+          false
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          [
+            10,
+            20,
+            30,
+            40,
+            20,
+            40,
+            60,
+            10
+          ],
+          [
+            10,
+            5,
+            70,
+            40,
+            5,
+            80,
+            45,
+            10
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          70,
+          40,
+          10,
+          5,
+          70,
+          false
+        ],
+        "error": null
+      },
+      "expect": [
+        [
+          10,
+          20,
+          30,
+          40,
+          20,
+          40,
+          60,
+          10
+        ],
+        [
+          10,
+          5,
+          70,
+          40,
+          5,
+          80,
+          45,
+          10
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        70,
+        40,
+        10,
+        5,
+        70,
+        false
+      ]
+    },
+    {
+      "row": "createElement / tree",
+      "name": "createElement, appendChild, children, remove",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          "SECTION",
+          null,
+          false,
+          true,
+          true,
+          4,
+          true,
+          true,
+          true,
+          [
+            false,
+            3,
+            "SECTION"
+          ]
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          "SECTION",
+          null,
+          false,
+          true,
+          true,
+          4,
+          true,
+          true,
+          true,
+          [
+            false,
+            3,
+            "SECTION"
+          ]
+        ],
+        "error": null
+      },
+      "expect": [
+        "SECTION",
+        null,
+        false,
+        true,
+        true,
+        4,
+        true,
+        true,
+        true,
+        [
+          false,
+          3,
+          "SECTION"
+        ]
+      ]
+    },
+    {
+      "row": "events",
+      "name": "add/dispatch/remove, target/currentTarget, bubbling to document and window",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          true,
+          [
+            [
+              "box",
+              "ping",
+              true,
+              true,
+              2
+            ],
+            [
+              "body",
+              true,
+              3
+            ],
+            [
+              "document",
+              true
+            ],
+            [
+              "window",
+              true
+            ],
+            "--",
+            [
+              "box",
+              "ping",
+              true,
+              true,
+              2
+            ],
+            "--",
+            [
+              "body",
+              true,
+              3
+            ],
+            [
+              "document",
+              true
+            ],
+            [
+              "window",
+              true
+            ],
+            [
+              null,
+              null,
+              false,
+              false,
+              false,
+              false
+            ]
+          ]
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          true,
+          [
+            [
+              "box",
+              "ping",
+              true,
+              true,
+              2
+            ],
+            [
+              "body",
+              true,
+              3
+            ],
+            [
+              "document",
+              true
+            ],
+            [
+              "window",
+              true
+            ],
+            "--",
+            [
+              "box",
+              "ping",
+              true,
+              true,
+              2
+            ],
+            "--",
+            [
+              "body",
+              true,
+              3
+            ],
+            [
+              "document",
+              true
+            ],
+            [
+              "window",
+              true
+            ],
+            [
+              null,
+              null,
+              false,
+              false,
+              false,
+              false
+            ]
+          ]
+        ],
+        "error": null
+      },
+      "expect": [
+        true,
+        [
+          [
+            "box",
+            "ping",
+            true,
+            true,
+            2
+          ],
+          [
+            "body",
+            true,
+            3
+          ],
+          [
+            "document",
+            true
+          ],
+          [
+            "window",
+            true
+          ],
+          "--",
+          [
+            "box",
+            "ping",
+            true,
+            true,
+            2
+          ],
+          "--",
+          [
+            "body",
+            true,
+            3
+          ],
+          [
+            "document",
+            true
+          ],
+          [
+            "window",
+            true
+          ],
+          [
+            null,
+            null,
+            false,
+            false,
+            false,
+            false
+          ]
+        ]
+      ]
+    },
+    {
+      "row": "events",
+      "name": "preventDefault, stopPropagation, stopImmediatePropagation, once, removal during dispatch, errors",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          [
+            [
+              false,
+              true,
+              [
+                "TypeError",
+                false,
+                true
+              ]
+            ],
+            [
+              "s1",
+              "s2",
+              "i1",
+              "once",
+              "r1",
+              "after-throw",
+              1,
+              true,
+              [
+                "InvalidStateError",
+                true,
+                false
+              ]
+            ]
+          ],
+          1
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          [
+            [
+              false,
+              true,
+              [
+                "TypeError",
+                false,
+                true
+              ]
+            ],
+            [
+              "s1",
+              "s2",
+              "i1",
+              "once",
+              "r1",
+              "after-throw",
+              1,
+              true,
+              [
+                "InvalidStateError",
+                true,
+                false
+              ]
+            ]
+          ],
+          1
+        ],
+        "error": null
+      },
+      "expect": [
+        [
+          [
+            false,
+            true,
+            [
+              "TypeError",
+              false,
+              true
+            ]
+          ],
+          [
+            "s1",
+            "s2",
+            "i1",
+            "once",
+            "r1",
+            "after-throw",
+            1,
+            true,
+            [
+              "InvalidStateError",
+              true,
+              false
+            ]
+          ]
+        ],
+        1
+      ]
+    },
+    {
+      "row": "errors",
+      "name": "stale node after native removal: InvalidStateError everywhere in the subset",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          true,
+          [
+            [
+              "InvalidStateError",
+              true,
+              false
+            ],
+            [
+              "InvalidStateError",
+              true,
+              false
+            ],
+            [
+              "InvalidStateError",
+              true,
+              false
+            ],
+            [
+              "InvalidStateError",
+              true,
+              false
+            ],
+            [
+              "InvalidStateError",
+              true,
+              false
+            ],
+            [
+              "InvalidStateError",
+              true,
+              false
+            ],
+            [
+              "InvalidStateError",
+              true,
+              false
+            ],
+            [
+              "InvalidStateError",
+              true,
+              false
+            ],
+            null
+          ]
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          true,
+          [
+            [
+              "InvalidStateError",
+              true,
+              false
+            ],
+            [
+              "InvalidStateError",
+              true,
+              false
+            ],
+            [
+              "InvalidStateError",
+              true,
+              false
+            ],
+            [
+              "InvalidStateError",
+              true,
+              false
+            ],
+            [
+              "InvalidStateError",
+              true,
+              false
+            ],
+            [
+              "InvalidStateError",
+              true,
+              false
+            ],
+            [
+              "InvalidStateError",
+              true,
+              false
+            ],
+            [
+              "InvalidStateError",
+              true,
+              false
+            ],
+            null
+          ]
+        ],
+        "error": null
+      },
+      "expect": [
+        true,
+        [
+          [
+            "InvalidStateError",
+            true,
+            false
+          ],
+          [
+            "InvalidStateError",
+            true,
+            false
+          ],
+          [
+            "InvalidStateError",
+            true,
+            false
+          ],
+          [
+            "InvalidStateError",
+            true,
+            false
+          ],
+          [
+            "InvalidStateError",
+            true,
+            false
+          ],
+          [
+            "InvalidStateError",
+            true,
+            false
+          ],
+          [
+            "InvalidStateError",
+            true,
+            false
+          ],
+          [
+            "InvalidStateError",
+            true,
+            false
+          ],
+          null
+        ]
+      ]
+    },
+    {
+      "row": "errors",
+      "name": "wrong this / non-node arguments: TypeError",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          [
+            "TypeError",
+            false,
+            true
+          ],
+          [
+            "TypeError",
+            false,
+            true
+          ],
+          [
+            "TypeError",
+            false,
+            true
+          ]
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          [
+            "TypeError",
+            false,
+            true
+          ],
+          [
+            "TypeError",
+            false,
+            true
+          ],
+          [
+            "TypeError",
+            false,
+            true
+          ]
+        ],
+        "error": null
+      },
+      "expect": [
+        [
+          "TypeError",
+          false,
+          true
+        ],
+        [
+          "TypeError",
+          false,
+          true
+        ],
+        [
+          "TypeError",
+          false,
+          true
+        ]
+      ]
+    },
+    {
+      "row": "errors",
+      "name": "closed renderer",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          true,
+          true,
+          true
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          true,
+          true,
+          true
+        ],
+        "error": null
+      },
+      "expect": [
+        true,
+        true,
+        true
+      ]
+    },
+    {
+      "row": "errors",
+      "name": "eval exception, then continued use",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          true,
+          42,
+          0,
+          "number",
+          "undefined"
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          true,
+          42,
+          0,
+          "number",
+          "undefined"
+        ],
+        "error": null
+      },
+      "expect": [
+        true,
+        42,
+        0,
+        "number",
+        "undefined"
+      ]
+    },
+    {
+      "row": "deterministic timers",
+      "name": "Date, performance and timeOrigin from visual time",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          [
+            12345,
+            0,
+            12345,
+            12345,
+            100,
+            true
+          ],
+          [
+            12595,
+            250.5,
+            12595
+          ],
+          true,
+          250.5
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          [
+            12345,
+            0,
+            12345,
+            12345,
+            100,
+            true
+          ],
+          [
+            12595,
+            250.5,
+            12595
+          ],
+          true,
+          250.5
+        ],
+        "error": null
+      },
+      "expect": [
+        [
+          12345,
+          0,
+          12345,
+          12345,
+          100,
+          true
+        ],
+        [
+          12595,
+          250.5,
+          12595
+        ],
+        true,
+        250.5
+      ]
+    },
+    {
+      "row": "deterministic timers",
+      "name": "setTimeout/clearTimeout/setInterval order, microtasks after each timer",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          [
+            [
+              "micro",
+              12345,
+              0
+            ]
+          ],
+          [
+            [
+              "micro",
+              12345,
+              0
+            ],
+            [
+              "interval1",
+              12405,
+              60
+            ],
+            [
+              "timer",
+              12445,
+              100
+            ],
+            [
+              "timerMicro",
+              12445,
+              100
+            ],
+            [
+              "peer",
+              12445,
+              100
+            ],
+            [
+              "interval2",
+              12465,
+              120
+            ],
+            [
+              "same0",
+              12495,
+              150
+            ],
+            [
+              "same1",
+              12495,
+              150
+            ],
+            [
+              "same2",
+              12495,
+              150
+            ],
+            [
+              "same3",
+              12495,
+              150
+            ],
+            [
+              "same4",
+              12495,
+              150
+            ],
+            [
+              "interval3",
+              12525,
+              180
+            ],
+            [
+              "outer",
+              12545,
+              200
+            ],
+            [
+              "nested0",
+              12545,
+              200
+            ]
+          ]
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          [
+            [
+              "micro",
+              12345,
+              0
+            ]
+          ],
+          [
+            [
+              "micro",
+              12345,
+              0
+            ],
+            [
+              "interval1",
+              12405,
+              60
+            ],
+            [
+              "timer",
+              12445,
+              100
+            ],
+            [
+              "timerMicro",
+              12445,
+              100
+            ],
+            [
+              "peer",
+              12445,
+              100
+            ],
+            [
+              "interval2",
+              12465,
+              120
+            ],
+            [
+              "same0",
+              12495,
+              150
+            ],
+            [
+              "same1",
+              12495,
+              150
+            ],
+            [
+              "same2",
+              12495,
+              150
+            ],
+            [
+              "same3",
+              12495,
+              150
+            ],
+            [
+              "same4",
+              12495,
+              150
+            ],
+            [
+              "interval3",
+              12525,
+              180
+            ],
+            [
+              "outer",
+              12545,
+              200
+            ],
+            [
+              "nested0",
+              12545,
+              200
+            ]
+          ]
+        ],
+        "error": null
+      },
+      "expect": [
+        [
+          [
+            "micro",
+            12345,
+            0
+          ]
+        ],
+        [
+          [
+            "micro",
+            12345,
+            0
+          ],
+          [
+            "interval1",
+            12405,
+            60
+          ],
+          [
+            "timer",
+            12445,
+            100
+          ],
+          [
+            "timerMicro",
+            12445,
+            100
+          ],
+          [
+            "peer",
+            12445,
+            100
+          ],
+          [
+            "interval2",
+            12465,
+            120
+          ],
+          [
+            "same0",
+            12495,
+            150
+          ],
+          [
+            "same1",
+            12495,
+            150
+          ],
+          [
+            "same2",
+            12495,
+            150
+          ],
+          [
+            "same3",
+            12495,
+            150
+          ],
+          [
+            "same4",
+            12495,
+            150
+          ],
+          [
+            "interval3",
+            12525,
+            180
+          ],
+          [
+            "outer",
+            12545,
+            200
+          ],
+          [
+            "nested0",
+            12545,
+            200
+          ]
+        ]
+      ]
+    },
+    {
+      "row": "rAF",
+      "name": "callbacks run at render, in order, with performance.now(); cancel; next-frame registration",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          [],
+          [
+            [
+              "timer"
+            ]
+          ],
+          [
+            [
+              "timer"
+            ],
+            [
+              "a",
+              16,
+              12361
+            ],
+            [
+              "b",
+              16
+            ]
+          ],
+          [
+            [
+              "timer"
+            ],
+            [
+              "a",
+              16,
+              12361
+            ],
+            [
+              "b",
+              16
+            ],
+            [
+              "next",
+              32
+            ]
+          ]
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          [],
+          [
+            [
+              "timer"
+            ]
+          ],
+          [
+            [
+              "timer"
+            ],
+            [
+              "a",
+              16,
+              12361
+            ],
+            [
+              "b",
+              16
+            ]
+          ],
+          [
+            [
+              "timer"
+            ],
+            [
+              "a",
+              16,
+              12361
+            ],
+            [
+              "b",
+              16
+            ],
+            [
+              "next",
+              32
+            ]
+          ]
+        ],
+        "error": null
+      },
+      "expect": [
+        [],
+        [
+          [
+            "timer"
+          ]
+        ],
+        [
+          [
+            "timer"
+          ],
+          [
+            "a",
+            16,
+            12361
+          ],
+          [
+            "b",
+            16
+          ]
+        ],
+        [
+          [
+            "timer"
+          ],
+          [
+            "a",
+            16,
+            12361
+          ],
+          [
+            "b",
+            16
+          ],
+          [
+            "next",
+            32
+          ]
+        ]
+      ]
+    },
+    {
+      "row": "Promise ordering",
+      "name": "microtasks: eval, timer, rAF and listener boundaries",
+      "diagnostic": false,
+      "sameAcrossEngines": true,
+      "boa": {
+        "pass": true,
+        "value": [
+          [
+            "sync",
+            "listener",
+            "after-dispatch",
+            "p1",
+            "q",
+            "listener-micro",
+            "p2"
+          ],
+          [
+            "sync",
+            "listener",
+            "after-dispatch",
+            "p1",
+            "q",
+            "listener-micro",
+            "p2",
+            "t1",
+            "t1-micro",
+            "t2"
+          ],
+          [
+            "sync",
+            "listener",
+            "after-dispatch",
+            "p1",
+            "q",
+            "listener-micro",
+            "p2",
+            "t1",
+            "t1-micro",
+            "t2",
+            "raf",
+            "raf-micro"
+          ]
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": true,
+        "value": [
+          [
+            "sync",
+            "listener",
+            "after-dispatch",
+            "p1",
+            "q",
+            "listener-micro",
+            "p2"
+          ],
+          [
+            "sync",
+            "listener",
+            "after-dispatch",
+            "p1",
+            "q",
+            "listener-micro",
+            "p2",
+            "t1",
+            "t1-micro",
+            "t2"
+          ],
+          [
+            "sync",
+            "listener",
+            "after-dispatch",
+            "p1",
+            "q",
+            "listener-micro",
+            "p2",
+            "t1",
+            "t1-micro",
+            "t2",
+            "raf",
+            "raf-micro"
+          ]
+        ],
+        "error": null
+      },
+      "expect": [
+        [
+          "sync",
+          "listener",
+          "after-dispatch",
+          "p1",
+          "q",
+          "listener-micro",
+          "p2"
+        ],
+        [
+          "sync",
+          "listener",
+          "after-dispatch",
+          "p1",
+          "q",
+          "listener-micro",
+          "p2",
+          "t1",
+          "t1-micro",
+          "t2"
+        ],
+        [
+          "sync",
+          "listener",
+          "after-dispatch",
+          "p1",
+          "q",
+          "listener-micro",
+          "p2",
+          "t1",
+          "t1-micro",
+          "t2",
+          "raf",
+          "raf-micro"
+        ]
+      ]
+    },
+    {
+      "row": "unsupported operation",
+      "name": "APIs outside the shared subset (diagnostic, engines may differ)",
+      "diagnostic": true,
+      "sameAcrossEngines": false,
+      "boa": {
+        "pass": null,
+        "value": [
+          "function",
+          "function",
+          "function",
+          "function",
+          "object",
+          "function"
+        ],
+        "error": null
+      },
+      "deno": {
+        "pass": null,
+        "value": [
+          "undefined",
+          "undefined",
+          "undefined",
+          "undefined",
+          "undefined",
+          "undefined"
+        ],
+        "error": null
+      },
+      "expect": null
+    }
+  ]
+}

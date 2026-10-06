@@ -1,0 +1,940 @@
+{
+  "paused-boa": {
+    "version": "3.15.0",
+    "expectedValues": true,
+    "states": [
+      {
+        "t": 0,
+        "inlineOpacity": "1",
+        "inlineTransform": "translate(0px)",
+        "opacity": "1",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "x": 0
+      },
+      {
+        "t": 250,
+        "inlineOpacity": "0.875",
+        "inlineTransform": "translate3d(25px, 0px, 0px)",
+        "opacity": "0.875",
+        "transform": "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 25, 0, 0, 1)",
+        "x": 25
+      },
+      {
+        "t": 500,
+        "inlineOpacity": "0.75",
+        "inlineTransform": "translate3d(50px, 0px, 0px)",
+        "opacity": "0.75",
+        "transform": "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 50, 0, 0, 1)",
+        "x": 50
+      },
+      {
+        "t": 750,
+        "inlineOpacity": "0.625",
+        "inlineTransform": "translate3d(75px, 0px, 0px)",
+        "opacity": "0.625",
+        "transform": "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 75, 0, 0, 1)",
+        "x": 75
+      },
+      {
+        "t": 1000,
+        "inlineOpacity": "0.5",
+        "inlineTransform": "translate(100px)",
+        "opacity": "0.5",
+        "transform": "matrix(1, 0, 0, 1, 100, 0)",
+        "x": 100
+      }
+    ],
+    "frames": [
+      {
+        "t": 0,
+        "dom": {
+          "box": [
+            "",
+            "translate: none; rotate: none; scale: none; opacity: 1; transform: translate(0px);",
+            ""
+          ]
+        },
+        "layout": {
+          "box": [
+            0,
+            20,
+            16,
+            16
+          ]
+        },
+        "style": {
+          "box": [
+            "1",
+            "matrix(1, 0, 0, 1, 0, 0)",
+            "16px",
+            "16px",
+            "rgb(255, 0, 0)",
+            "0px",
+            "20px"
+          ]
+        },
+        "timing": [
+          0,
+          0
+        ],
+        "pixels": "5674f8890e6d3e755dfe7b7ce5faaae588e23cd9ced36bc5e3f56f07c09687e3"
+      },
+      {
+        "t": 250,
+        "dom": {
+          "box": [
+            "",
+            "translate: none; rotate: none; scale: none; opacity: 0.875; transform: translate3d(25px, 0px, 0px);",
+            ""
+          ]
+        },
+        "layout": {
+          "box": [
+            0,
+            20,
+            16,
+            16
+          ]
+        },
+        "style": {
+          "box": [
+            "0.875",
+            "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 25, 0, 0, 1)",
+            "16px",
+            "16px",
+            "rgb(255, 0, 0)",
+            "0px",
+            "20px"
+          ]
+        },
+        "timing": [
+          250,
+          250
+        ],
+        "pixels": "f897072e9445036401a35c8659db22cb436b430d799bd1e5c14bb74b049aae3c"
+      },
+      {
+        "t": 500,
+        "dom": {
+          "box": [
+            "",
+            "translate: none; rotate: none; scale: none; opacity: 0.75; transform: translate3d(50px, 0px, 0px);",
+            ""
+          ]
+        },
+        "layout": {
+          "box": [
+            0,
+            20,
+            16,
+            16
+          ]
+        },
+        "style": {
+          "box": [
+            "0.75",
+            "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 50, 0, 0, 1)",
+            "16px",
+            "16px",
+            "rgb(255, 0, 0)",
+            "0px",
+            "20px"
+          ]
+        },
+        "timing": [
+          500,
+          500
+        ],
+        "pixels": "2fab8a5a3e7c587ed1161a2b3021de93046f9b058b90dfe9cdb8cdd624572f94"
+      },
+      {
+        "t": 750,
+        "dom": {
+          "box": [
+            "",
+            "translate: none; rotate: none; scale: none; opacity: 0.625; transform: translate3d(75px, 0px, 0px);",
+            ""
+          ]
+        },
+        "layout": {
+          "box": [
+            0,
+            20,
+            16,
+            16
+          ]
+        },
+        "style": {
+          "box": [
+            "0.625",
+            "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 75, 0, 0, 1)",
+            "16px",
+            "16px",
+            "rgb(255, 0, 0)",
+            "0px",
+            "20px"
+          ]
+        },
+        "timing": [
+          750,
+          750
+        ],
+        "pixels": "df73b7013373af8f6851b78aeb3d08657e57ba690f8cc8f995c952651c2cac4f"
+      },
+      {
+        "t": 1000,
+        "dom": {
+          "box": [
+            "",
+            "translate: none; rotate: none; scale: none; opacity: 0.5; transform: translate(100px);",
+            ""
+          ]
+        },
+        "layout": {
+          "box": [
+            0,
+            20,
+            16,
+            16
+          ]
+        },
+        "style": {
+          "box": [
+            "0.5",
+            "matrix(1, 0, 0, 1, 100, 0)",
+            "16px",
+            "16px",
+            "rgb(255, 0, 0)",
+            "0px",
+            "20px"
+          ]
+        },
+        "timing": [
+          1000,
+          1000
+        ],
+        "pixels": "25e78ea415b5c01e18dcb30dbe0c9ef3e5c91b4b4b9a6af9238f1595071d8688"
+      }
+    ],
+    "errors": [],
+    "console": null
+  },
+  "paused-deno": {
+    "version": "3.15.0",
+    "expectedValues": true,
+    "states": [
+      {
+        "t": 0,
+        "x": 0,
+        "opacity": "1",
+        "transform": "matrix(1, 0, 0, 1, 0, 0)",
+        "inlineTransform": "translate(0px)",
+        "inlineOpacity": "1"
+      },
+      {
+        "t": 250,
+        "x": 25,
+        "opacity": "0.875",
+        "transform": "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 25, 0, 0, 1)",
+        "inlineTransform": "translate3d(25px, 0px, 0px)",
+        "inlineOpacity": "0.875"
+      },
+      {
+        "t": 500,
+        "x": 50,
+        "opacity": "0.75",
+        "transform": "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 50, 0, 0, 1)",
+        "inlineTransform": "translate3d(50px, 0px, 0px)",
+        "inlineOpacity": "0.75"
+      },
+      {
+        "t": 750,
+        "x": 75,
+        "opacity": "0.625",
+        "transform": "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 75, 0, 0, 1)",
+        "inlineTransform": "translate3d(75px, 0px, 0px)",
+        "inlineOpacity": "0.625"
+      },
+      {
+        "t": 1000,
+        "x": 100,
+        "opacity": "0.5",
+        "transform": "matrix(1, 0, 0, 1, 100, 0)",
+        "inlineTransform": "translate(100px)",
+        "inlineOpacity": "0.5"
+      }
+    ],
+    "frames": [
+      {
+        "t": 0,
+        "dom": {
+          "box": [
+            "",
+            "translate: none; rotate: none; scale: none; opacity: 1; transform: translate(0px);",
+            ""
+          ]
+        },
+        "style": {
+          "box": [
+            "1",
+            "matrix(1, 0, 0, 1, 0, 0)",
+            "16px",
+            "16px",
+            "rgb(255, 0, 0)",
+            "0px",
+            "20px"
+          ]
+        },
+        "layout": {
+          "box": [
+            0,
+            20,
+            16,
+            16
+          ]
+        },
+        "timing": [
+          0,
+          0
+        ],
+        "pixels": "5674f8890e6d3e755dfe7b7ce5faaae588e23cd9ced36bc5e3f56f07c09687e3"
+      },
+      {
+        "t": 250,
+        "dom": {
+          "box": [
+            "",
+            "translate: none; rotate: none; scale: none; opacity: 0.875; transform: translate3d(25px, 0px, 0px);",
+            ""
+          ]
+        },
+        "style": {
+          "box": [
+            "0.875",
+            "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 25, 0, 0, 1)",
+            "16px",
+            "16px",
+            "rgb(255, 0, 0)",
+            "0px",
+            "20px"
+          ]
+        },
+        "layout": {
+          "box": [
+            0,
+            20,
+            16,
+            16
+          ]
+        },
+        "timing": [
+          250,
+          250
+        ],
+        "pixels": "f897072e9445036401a35c8659db22cb436b430d799bd1e5c14bb74b049aae3c"
+      },
+      {
+        "t": 500,
+        "dom": {
+          "box": [
+            "",
+            "translate: none; rotate: none; scale: none; opacity: 0.75; transform: translate3d(50px, 0px, 0px);",
+            ""
+          ]
+        },
+        "style": {
+          "box": [
+            "0.75",
+            "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 50, 0, 0, 1)",
+            "16px",
+            "16px",
+            "rgb(255, 0, 0)",
+            "0px",
+            "20px"
+          ]
+        },
+        "layout": {
+          "box": [
+            0,
+            20,
+            16,
+            16
+          ]
+        },
+        "timing": [
+          500,
+          500
+        ],
+        "pixels": "2fab8a5a3e7c587ed1161a2b3021de93046f9b058b90dfe9cdb8cdd624572f94"
+      },
+      {
+        "t": 750,
+        "dom": {
+          "box": [
+            "",
+            "translate: none; rotate: none; scale: none; opacity: 0.625; transform: translate3d(75px, 0px, 0px);",
+            ""
+          ]
+        },
+        "style": {
+          "box": [
+            "0.625",
+            "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 75, 0, 0, 1)",
+            "16px",
+            "16px",
+            "rgb(255, 0, 0)",
+            "0px",
+            "20px"
+          ]
+        },
+        "layout": {
+          "box": [
+            0,
+            20,
+            16,
+            16
+          ]
+        },
+        "timing": [
+          750,
+          750
+        ],
+        "pixels": "df73b7013373af8f6851b78aeb3d08657e57ba690f8cc8f995c952651c2cac4f"
+      },
+      {
+        "t": 1000,
+        "dom": {
+          "box": [
+            "",
+            "translate: none; rotate: none; scale: none; opacity: 0.5; transform: translate(100px);",
+            ""
+          ]
+        },
+        "style": {
+          "box": [
+            "0.5",
+            "matrix(1, 0, 0, 1, 100, 0)",
+            "16px",
+            "16px",
+            "rgb(255, 0, 0)",
+            "0px",
+            "20px"
+          ]
+        },
+        "layout": {
+          "box": [
+            0,
+            20,
+            16,
+            16
+          ]
+        },
+        "timing": [
+          1000,
+          1000
+        ],
+        "pixels": "25e78ea415b5c01e18dcb30dbe0c9ef3e5c91b4b4b9a6af9238f1595071d8688"
+      }
+    ],
+    "errors": [],
+    "console": []
+  },
+  "paused-crossEngine": [
+    {
+      "t": 0,
+      "identical": true,
+      "firstDifferingLayer": null
+    },
+    {
+      "t": 250,
+      "identical": true,
+      "firstDifferingLayer": null
+    },
+    {
+      "t": 500,
+      "identical": true,
+      "firstDifferingLayer": null
+    },
+    {
+      "t": 750,
+      "identical": true,
+      "firstDifferingLayer": null
+    },
+    {
+      "t": 1000,
+      "identical": true,
+      "firstDifferingLayer": null
+    }
+  ],
+  "auto-boa": {
+    "version": "3.15.0",
+    "expectedValues": true,
+    "states": [
+      {
+        "t": 0,
+        "inlineOpacity": "",
+        "inlineTransform": "",
+        "opacity": "1",
+        "transform": "none",
+        "x": 0
+      },
+      {
+        "t": 250,
+        "inlineOpacity": "0.875",
+        "inlineTransform": "translate3d(25px, 0px, 0px)",
+        "opacity": "0.875",
+        "transform": "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 25, 0, 0, 1)",
+        "x": 25
+      },
+      {
+        "t": 500,
+        "inlineOpacity": "0.75",
+        "inlineTransform": "translate3d(50px, 0px, 0px)",
+        "opacity": "0.75",
+        "transform": "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 50, 0, 0, 1)",
+        "x": 50
+      },
+      {
+        "t": 750,
+        "inlineOpacity": "0.625",
+        "inlineTransform": "translate3d(75px, 0px, 0px)",
+        "opacity": "0.625",
+        "transform": "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 75, 0, 0, 1)",
+        "x": 75
+      },
+      {
+        "t": 1000,
+        "inlineOpacity": "0.5",
+        "inlineTransform": "translate(100px)",
+        "opacity": "0.5",
+        "transform": "matrix(1, 0, 0, 1, 100, 0)",
+        "x": 100
+      }
+    ],
+    "frames": [
+      {
+        "t": 0,
+        "dom": {
+          "box": [
+            "",
+            null,
+            ""
+          ]
+        },
+        "layout": {
+          "box": [
+            0,
+            20,
+            16,
+            16
+          ]
+        },
+        "style": {
+          "box": [
+            "1",
+            "none",
+            "16px",
+            "16px",
+            "rgb(255, 0, 0)",
+            "0px",
+            "20px"
+          ]
+        },
+        "timing": [
+          0,
+          0
+        ],
+        "pixels": "5674f8890e6d3e755dfe7b7ce5faaae588e23cd9ced36bc5e3f56f07c09687e3"
+      },
+      {
+        "t": 250,
+        "dom": {
+          "box": [
+            "",
+            "translate: none; rotate: none; scale: none; opacity: 0.875; transform: translate3d(25px, 0px, 0px);",
+            ""
+          ]
+        },
+        "layout": {
+          "box": [
+            0,
+            20,
+            16,
+            16
+          ]
+        },
+        "style": {
+          "box": [
+            "0.875",
+            "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 25, 0, 0, 1)",
+            "16px",
+            "16px",
+            "rgb(255, 0, 0)",
+            "0px",
+            "20px"
+          ]
+        },
+        "timing": [
+          250,
+          250
+        ],
+        "pixels": "f897072e9445036401a35c8659db22cb436b430d799bd1e5c14bb74b049aae3c"
+      },
+      {
+        "t": 500,
+        "dom": {
+          "box": [
+            "",
+            "translate: none; rotate: none; scale: none; opacity: 0.75; transform: translate3d(50px, 0px, 0px);",
+            ""
+          ]
+        },
+        "layout": {
+          "box": [
+            0,
+            20,
+            16,
+            16
+          ]
+        },
+        "style": {
+          "box": [
+            "0.75",
+            "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 50, 0, 0, 1)",
+            "16px",
+            "16px",
+            "rgb(255, 0, 0)",
+            "0px",
+            "20px"
+          ]
+        },
+        "timing": [
+          500,
+          500
+        ],
+        "pixels": "2fab8a5a3e7c587ed1161a2b3021de93046f9b058b90dfe9cdb8cdd624572f94"
+      },
+      {
+        "t": 750,
+        "dom": {
+          "box": [
+            "",
+            "translate: none; rotate: none; scale: none; opacity: 0.625; transform: translate3d(75px, 0px, 0px);",
+            ""
+          ]
+        },
+        "layout": {
+          "box": [
+            0,
+            20,
+            16,
+            16
+          ]
+        },
+        "style": {
+          "box": [
+            "0.625",
+            "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 75, 0, 0, 1)",
+            "16px",
+            "16px",
+            "rgb(255, 0, 0)",
+            "0px",
+            "20px"
+          ]
+        },
+        "timing": [
+          750,
+          750
+        ],
+        "pixels": "df73b7013373af8f6851b78aeb3d08657e57ba690f8cc8f995c952651c2cac4f"
+      },
+      {
+        "t": 1000,
+        "dom": {
+          "box": [
+            "",
+            "translate: none; rotate: none; scale: none; opacity: 0.5; transform: translate(100px);",
+            ""
+          ]
+        },
+        "layout": {
+          "box": [
+            0,
+            20,
+            16,
+            16
+          ]
+        },
+        "style": {
+          "box": [
+            "0.5",
+            "matrix(1, 0, 0, 1, 100, 0)",
+            "16px",
+            "16px",
+            "rgb(255, 0, 0)",
+            "0px",
+            "20px"
+          ]
+        },
+        "timing": [
+          1000,
+          1000
+        ],
+        "pixels": "25e78ea415b5c01e18dcb30dbe0c9ef3e5c91b4b4b9a6af9238f1595071d8688"
+      }
+    ],
+    "errors": [],
+    "console": null
+  },
+  "auto-deno": {
+    "version": "3.15.0",
+    "expectedValues": true,
+    "states": [
+      {
+        "t": 0,
+        "x": 0,
+        "opacity": "1",
+        "transform": "none",
+        "inlineTransform": "",
+        "inlineOpacity": ""
+      },
+      {
+        "t": 250,
+        "x": 25,
+        "opacity": "0.875",
+        "transform": "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 25, 0, 0, 1)",
+        "inlineTransform": "translate3d(25px, 0px, 0px)",
+        "inlineOpacity": "0.875"
+      },
+      {
+        "t": 500,
+        "x": 50,
+        "opacity": "0.75",
+        "transform": "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 50, 0, 0, 1)",
+        "inlineTransform": "translate3d(50px, 0px, 0px)",
+        "inlineOpacity": "0.75"
+      },
+      {
+        "t": 750,
+        "x": 75,
+        "opacity": "0.625",
+        "transform": "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 75, 0, 0, 1)",
+        "inlineTransform": "translate3d(75px, 0px, 0px)",
+        "inlineOpacity": "0.625"
+      },
+      {
+        "t": 1000,
+        "x": 100,
+        "opacity": "0.5",
+        "transform": "matrix(1, 0, 0, 1, 100, 0)",
+        "inlineTransform": "translate(100px)",
+        "inlineOpacity": "0.5"
+      }
+    ],
+    "frames": [
+      {
+        "t": 0,
+        "dom": {
+          "box": [
+            "",
+            null,
+            ""
+          ]
+        },
+        "style": {
+          "box": [
+            "1",
+            "none",
+            "16px",
+            "16px",
+            "rgb(255, 0, 0)",
+            "0px",
+            "20px"
+          ]
+        },
+        "layout": {
+          "box": [
+            0,
+            20,
+            16,
+            16
+          ]
+        },
+        "timing": [
+          0,
+          0
+        ],
+        "pixels": "5674f8890e6d3e755dfe7b7ce5faaae588e23cd9ced36bc5e3f56f07c09687e3"
+      },
+      {
+        "t": 250,
+        "dom": {
+          "box": [
+            "",
+            "translate: none; rotate: none; scale: none; opacity: 0.875; transform: translate3d(25px, 0px, 0px);",
+            ""
+          ]
+        },
+        "style": {
+          "box": [
+            "0.875",
+            "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 25, 0, 0, 1)",
+            "16px",
+            "16px",
+            "rgb(255, 0, 0)",
+            "0px",
+            "20px"
+          ]
+        },
+        "layout": {
+          "box": [
+            0,
+            20,
+            16,
+            16
+          ]
+        },
+        "timing": [
+          250,
+          250
+        ],
+        "pixels": "f897072e9445036401a35c8659db22cb436b430d799bd1e5c14bb74b049aae3c"
+      },
+      {
+        "t": 500,
+        "dom": {
+          "box": [
+            "",
+            "translate: none; rotate: none; scale: none; opacity: 0.75; transform: translate3d(50px, 0px, 0px);",
+            ""
+          ]
+        },
+        "style": {
+          "box": [
+            "0.75",
+            "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 50, 0, 0, 1)",
+            "16px",
+            "16px",
+            "rgb(255, 0, 0)",
+            "0px",
+            "20px"
+          ]
+        },
+        "layout": {
+          "box": [
+            0,
+            20,
+            16,
+            16
+          ]
+        },
+        "timing": [
+          500,
+          500
+        ],
+        "pixels": "2fab8a5a3e7c587ed1161a2b3021de93046f9b058b90dfe9cdb8cdd624572f94"
+      },
+      {
+        "t": 750,
+        "dom": {
+          "box": [
+            "",
+            "translate: none; rotate: none; scale: none; opacity: 0.625; transform: translate3d(75px, 0px, 0px);",
+            ""
+          ]
+        },
+        "style": {
+          "box": [
+            "0.625",
+            "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 75, 0, 0, 1)",
+            "16px",
+            "16px",
+            "rgb(255, 0, 0)",
+            "0px",
+            "20px"
+          ]
+        },
+        "layout": {
+          "box": [
+            0,
+            20,
+            16,
+            16
+          ]
+        },
+        "timing": [
+          750,
+          750
+        ],
+        "pixels": "df73b7013373af8f6851b78aeb3d08657e57ba690f8cc8f995c952651c2cac4f"
+      },
+      {
+        "t": 1000,
+        "dom": {
+          "box": [
+            "",
+            "translate: none; rotate: none; scale: none; opacity: 0.5; transform: translate(100px);",
+            ""
+          ]
+        },
+        "style": {
+          "box": [
+            "0.5",
+            "matrix(1, 0, 0, 1, 100, 0)",
+            "16px",
+            "16px",
+            "rgb(255, 0, 0)",
+            "0px",
+            "20px"
+          ]
+        },
+        "layout": {
+          "box": [
+            0,
+            20,
+            16,
+            16
+          ]
+        },
+        "timing": [
+          1000,
+          1000
+        ],
+        "pixels": "25e78ea415b5c01e18dcb30dbe0c9ef3e5c91b4b4b9a6af9238f1595071d8688"
+      }
+    ],
+    "errors": [],
+    "console": []
+  },
+  "auto-crossEngine": [
+    {
+      "t": 0,
+      "identical": true,
+      "firstDifferingLayer": null
+    },
+    {
+      "t": 250,
+      "identical": true,
+      "firstDifferingLayer": null
+    },
+    {
+      "t": 500,
+      "identical": true,
+      "firstDifferingLayer": null
+    },
+    {
+      "t": 750,
+      "identical": true,
+      "firstDifferingLayer": null
+    },
+    {
+      "t": 1000,
+      "identical": true,
+      "firstDifferingLayer": null
+    }
+  ],
+  "pausedVsAutoIdentical": {
+    "boa": true,
+    "deno": true
+  }
+}
