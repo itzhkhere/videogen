@@ -586,6 +586,12 @@ impl HtmlRenderer {
         self.errors.lock().unwrap().clear();
         self.js_errors.clear();
         self.doc = Some(self.build_document()?);
+        // GPU (Ganesh): cached path data (triangulations reused within a tolerance) would make a
+        // document's pixels depend on what this context drew before; start every document clean.
+        #[cfg(feature = "experimental-gpu")]
+        if let Painter::Gpu(r) = &self.renderer {
+            r.device().free_resources();
+        }
         Ok(())
     }
 
